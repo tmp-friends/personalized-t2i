@@ -4,3 +4,6 @@
 [submodule "fan-repro/upstream"]
 	path = fan-repro/upstream
 	url = https://github.com/Burf/FAN.git
+[submodule "tailored-visions-repro/upstream"]
+	path = tailored-visions-repro/upstream
+	url = https://github.com/zzjchen/Tailored-Visions.git
