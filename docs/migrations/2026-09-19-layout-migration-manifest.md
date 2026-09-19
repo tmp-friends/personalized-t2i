@@ -141,7 +141,7 @@ and the move is a one-time post-integration operation.
 | 5 | `430d8ff` | Tailored Visions compatibility patch series |
 | 6 | `0ecd9c0` | Tailored Visions local package and output layout |
 | 7 | `963bd4f` | Tailored Visions submodule and outer integration |
-| 8 | recorded by Task 9 after Task 8 exists | Root documentation and repository contract; a commit cannot contain its own SHA |
+| 8 | `560087b` | Root documentation and repository contract |
 
 ## Verification on the Task 8 working tree
 
