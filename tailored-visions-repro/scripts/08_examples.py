@@ -17,9 +17,9 @@ import random
 import sys
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
-from tv.metrics import token_f1  # noqa: E402
+from tailored_visions_repro.metrics import token_f1  # noqa: E402
 
 ORDER = [
     "shortened_prompt",
@@ -34,8 +34,8 @@ ORDER = [
 
 def main() -> int:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--rewrites-dir", default="results/rewrites")
-    ap.add_argument("--out", default="results/EXAMPLES.md")
+    ap.add_argument("--rewrites-dir", default="outputs/rewrites")
+    ap.add_argument("--out", default="outputs/EXAMPLES.md")
     ap.add_argument("--n", type=int, default=12)
     ap.add_argument("--seed", type=int, default=0)
     ap.add_argument("--anchor", default="personalized_pr_icl_ebr")

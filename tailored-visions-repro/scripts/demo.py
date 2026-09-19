@@ -20,12 +20,12 @@ from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
-from tv import prompt_templates as PT  # noqa: E402
-from tv.pipeline import PERSONALIZED, MethodSpec, build_rewriter_input  # noqa: E402
-from tv.retrieval import BM25Retriever, EBRRetriever  # noqa: E402
-from tv.rewriter import build_rewriter, clean_output  # noqa: E402
+from tailored_visions_repro import prompt_templates as PT  # noqa: E402
+from tailored_visions_repro.pipeline import PERSONALIZED, MethodSpec, build_rewriter_input  # noqa: E402
+from tailored_visions_repro.retrieval import BM25Retriever, EBRRetriever  # noqa: E402
+from tailored_visions_repro.rewriter import build_rewriter, clean_output  # noqa: E402
 
 
 class _Sample:
@@ -45,7 +45,7 @@ def main() -> int:
     ap.add_argument("--backend", default="local", choices=["local", "openai"])
     ap.add_argument("--model", default=None)
     ap.add_argument("--no-t2i", dest="t2i", action="store_false")
-    ap.add_argument("--out-dir", default="results/demo")
+    ap.add_argument("--out-dir", default="outputs/demo")
     args = ap.parse_args()
 
     cache = Path(args.cache_dir)
@@ -103,7 +103,7 @@ def main() -> int:
     print(f"\nRewritten prompt: {new_prompt}\n{'=' * 72}")
 
     if args.t2i:
-        from tv.generate import SDGenerator, seed_for
+        from tailored_visions_repro.generate import SDGenerator, seed_for
 
         if args.backend == "local" and hasattr(llm, "unload"):
             llm.unload()

@@ -21,10 +21,10 @@ from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
-from tv.metrics import CLIPScorer, image_align, pms, rouge_l, summarize  # noqa: E402
-from tv.pipeline import DEMO_COPY_THRESHOLD, demo_copy_ratio  # noqa: E402
+from tailored_visions_repro.metrics import CLIPScorer, image_align, pms, rouge_l, summarize  # noqa: E402
+from tailored_visions_repro.pipeline import DEMO_COPY_THRESHOLD, demo_copy_ratio  # noqa: E402
 
 GT_PROXY = "gt_proxy"
 BASELINE = "shortened_prompt"
@@ -78,12 +78,12 @@ def load_preferences(path: Path) -> dict[str, str]:
 
 def main() -> int:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--rewrites-dir", default="results/rewrites")
-    ap.add_argument("--embeddings-dir", default="results/embeddings")
+    ap.add_argument("--rewrites-dir", default="outputs/rewrites")
+    ap.add_argument("--embeddings-dir", default="outputs/embeddings")
     ap.add_argument("--preferences", default="data/cache/preferences.jsonl")
-    ap.add_argument("--leakage", default="results/leakage.json")
-    ap.add_argument("--out-json", default="results/metrics.json")
-    ap.add_argument("--out-md", default="results/RESULTS.md")
+    ap.add_argument("--leakage", default="outputs/leakage.json")
+    ap.add_argument("--out-json", default="outputs/metrics.json")
+    ap.add_argument("--out-md", default="outputs/RESULTS.md")
     args = ap.parse_args()
 
     rewrites_dir = Path(args.rewrites_dir)

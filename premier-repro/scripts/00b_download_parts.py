@@ -17,7 +17,7 @@ PARTS = {"diffusiondb": 6, "coco": 4}
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--split", default="diffusiondb")
-    ap.add_argument("--data-dir", default=str(ROOT / "data" / "prefbench"))
+    ap.add_argument("--data-dir", default=str(ROOT / "data" / "raw" / "prefbench"))
     ap.add_argument("--workers", type=int, default=3)
     ap.add_argument("--keep-parts", action="store_true")
     args = ap.parse_args()

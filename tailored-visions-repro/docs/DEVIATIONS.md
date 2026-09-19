@@ -8,6 +8,29 @@ Paper: Chen, Zhang, Weng, Pan, Lan. *Tailored Visions: Enhancing Text-to-Image
 Generation with Personalized Prompt Rewriting.* CVPR 2024. arXiv:2310.08129.
 Official code: <https://github.com/zzjchen/Tailored-Visions>.
 
+## Official compatibility patch series
+
+The clean `upstream/` submodule is pinned to
+`d0f4454ca08c68c5d30f08a01ff4a23a8b33b610`. It is never edited in place.
+`scripts/prepare_upstream.py` applies these patches to `.work/upstream/`:
+
+| Patch | Affected files | Reason |
+|---|---|---|
+| `0001-fix-official-runtime-bugs.patch` | `apiuse.py`, `demo.py`, `download.py`, `language.py`, `main.py`, `prompts.py` | bounded API retry; valid CLI/retrieval branches; BM25 tokenization and stable ordering; per-query ICL; safe paths; cached CLIP ranking |
+| `0002-support-current-diffusers-and-sdxl.patch` | `SD.py`, `apiuse.py`, `demo.py`, `main.py`, `requirements-2026.txt` | current diffusers and OpenAI clients, SDXL / SD v1.5 support, fp16 fallback, VAE slicing, 24 GB memory policy, current Python dependencies |
+| `0003-add-bounded-experiment-cli.patch` | `main.py` | `--data_folder` and `--limit_users` for bounded, relocatable runs |
+
+Validation:
+
+```bash
+python scripts/prepare_upstream.py
+python -m unittest discover -s tests -v
+.venv/bin/python -m py_compile .work/upstream/*.py
+.venv/bin/python .work/upstream/demo.py --help
+.venv/bin/python .work/upstream/main.py --help
+git -C upstream status --short
+```
+
 ---
 
 ## 1. The rewriter is a different model — this is the biggest one
@@ -112,11 +135,25 @@ Fixed rather than reproduced. Each one is a real defect, not a stylistic choice.
   (`openai/clip-vit-large-patch14` for EBR retrieval,
   `openai/clip-vit-base-patch32` for the metrics — the same split as the
   reference, which uses ViT-L/14 in `main.py` and ViT-B/32 in `metrics.py`).
-* **Stable Diffusion v1-5** — `runwayml/stable-diffusion-v1-5` was taken down in
-  August 2024; the identical weights are loaded from
-  `stable-diffusion-v1-5/stable-diffusion-v1-5`. Scheduler (PNDM), steps (50),
-  guidance scale (7.0) and resolution (512×512) follow Sec. 5.1.
-* **ROUGE-L** — the vendored `tv/rougeL/` from the official repo, because the
+* **Generator: SDXL, not SD v1-5** — the paper uses SD v1-5 at 512×512 with the
+  PNDM scheduler (Sec. 5.1). The default here is
+  `stabilityai/stable-diffusion-xl-base-1.0` at 1024×1024 with the scheduler the
+  repo ships (EulerDiscrete) — PNDM is a v1-5 setting and SDXL is not tuned for
+  it. Steps (50) and guidance scale (7.0) still follow Sec. 5.1.
+
+  This changes the image-side numbers: the Image-Align proxy is a CLIP score
+  over generated images, so **results produced under SDXL are not comparable
+  with results produced under v1-5**, or with the paper's. `gen_meta.json`
+  records the model, scheduler and resolution of each run for that reason.
+  Text-side metrics (ROUGE-L, PMS) are unaffected — they never touch the
+  generator.
+
+  Pass `--model stable-diffusion-v1-5/stable-diffusion-v1-5` to
+  `05_generate.py` (or set `TV_SD_MODEL`) for the paper-faithful configuration;
+  resolution, scheduler and batch size follow the model automatically. Note that
+  `runwayml/stable-diffusion-v1-5` was taken down in August 2024, so the
+  identical weights come from the `stable-diffusion-v1-5` org instead.
+* **ROUGE-L** — the vendored `src/tailored_visions_repro/rougeL/` from the official repo, because the
   paper needs β=5 (recall-weighted) and Google's `rouge_score` hardcodes β=1.
   Substituting it would shift the entire ROUGE-L column.
 * **Demonstration ranking** — the reference ranks the five in-context examples
@@ -135,7 +172,7 @@ methods at full scale would be ~44k images (~24 GPU-hours) to resolve gaps of
 standard error is ~0.003, roughly 10–20× smaller than the gaps in question, so
 the image metrics run on a **fixed 500-user (1,000-sample) subset** chosen once
 by `03_subset.py` and shared by every method. Every table reports its own `n`,
-and `results/metrics.json` carries a standard error for every mean.
+and `outputs/metrics.json` carries a standard error for every mean.
 
 ## 9. What the leakage check found
 

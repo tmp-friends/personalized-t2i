@@ -22,7 +22,6 @@
 **/image_result/
 
 # Downloaded datasets, caches, and model weights
-premier-repro/data/
 **/data/cache/
 **/weights/
 **/checkpoints/
@@ -37,3 +36,12 @@ premier-repro/data/
 .idea/
 .vscode/
 *~
+# Reproduction workspaces and downloaded artifacts
+**/.work/
+**/data/raw/
+**/artifacts/
+# Retained until fresh-clone verification and explicit human approval.
+.migration-backup/
+
+# Isolated feature worktrees
+.worktrees/

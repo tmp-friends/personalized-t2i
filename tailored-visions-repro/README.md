@@ -1,125 +1,125 @@
-# Tailored Visions — 公式実装のセットアップと再現実装
+# Tailored Visions — 公式実装と評価パイプライン
+
+## 1. 手法概要
 
 **Tailored Visions: Enhancing Text-to-Image Generation with Personalized Prompt Rewriting**
-(Chen et al., CVPR 2024, [arXiv:2310.08129](https://arxiv.org/abs/2310.08129)) を
-このマシンで動く状態にしたものです。
+（Chen et al., CVPR 2024, [arXiv:2310.08129](https://arxiv.org/abs/2310.08129)）の
+公式実装と独自評価パイプラインを扱う。
 
-手法の中身: あるユーザが過去に書いたプロンプト群から、いま入力された短いプロンプトに
-関連するものを検索し、それを「このユーザの好み」の証拠として LLM に渡して
-プロンプトを書き換えてから Stable Diffusion に投げます。生成モデル自体は触りません。
+ユーザーの過去 prompt から現在の短い query に関連する履歴を検索し、履歴を嗜好の証拠として
+LLM に渡す。LLM が prompt を書き換え、その結果を画像生成モデルへ入力する。生成モデル自体は変更しない。
 
-```
-短いクエリ ──► retriever ──► このユーザの過去プロンプト top-k
-                                        │
-                指示文 + デモ例 + ────────┘ ──► LLM 書き換え ──► SD v1-5
-```
+## 2. 現在の再現状況
 
----
-
-## ディレクトリ構成
-
-| | 中身 |
-|---|---|
-| **`official/`** | **公式実装 (zzjchen/Tailored-Visions) + 2026年に動かすためのパッチ。動作確認済み。** |
-| `tv/`, `scripts/` | 自作の再現実装（評価パイプライン込み）。公式に足りない部分を埋めたもの |
-| `data/user_data/` | PIP データセット (3,116 ユーザ / 300,255 プロンプト) |
-| `docs/DEVIATIONS.md` | 論文・公式実装との差分と、その理由 |
-| `.venv/` | 両方が共有する Python 環境 (`uv sync` 済み) |
-
----
-
-## 1. 公式実装を動かす ← まずはこちら
-
-詳細は **[`official/SETUP.md`](official/SETUP.md)**。
-
-```bash
-cd official
-./run.sh demo 'a cat'              # 書き換え + 画像2枚 (元 / パーソナライズ後)
-./run.sh demo 'a cat' --no-t2i     # 書き換えのみ、数秒
-./run.sh main --limit_users=5      # PIP データセットで実験
-./run.sh stop                      # ローカル LLM サーバを停止
-```
-
-`run.sh` が ChatGPT の代わりのローカル LLM サーバ (`Qwen3.5-4B`) を自動で立てます。
-**OpenAI のキーがあるならそちらを使ってください** — 書き換えモデルは手法そのものなので、
-論文の数値を再現したい場合はローカル LLM では合いません。
-
-```bash
-export TV_OPENAI_KEY=sk-... ; unset TV_OPENAI_BASE
-python demo.py --input_prompt='a cat'
-```
-
-### 公式コードは配布状態では動きません
-
-`git log`／`git diff` に全差分が残してあります（各所に `[2026 patch]` コメント）。
-主なもの:
-
-- `main.py` が `MY_BASE` を import しておらず、**全実行が `NameError`** で落ちる
-- `main.py` が `retrieval=='full'` で分岐しているが CLI は `'ebr'`/`'bm25'` しか受け付けない。
-  つまり **`--retrieval=ebr` は黙って BM25 で動いていた**（公開コードでは論文の EBR 行を再現できない）
-- `language.py` が BM25 に生のクエリ文字列を渡しており、**1文字ずつ**のマッチに退化していた
-- `demo.py` が参照する `demo_user.jsonl` がリポジトリに存在しない
-- `runwayml/stable-diffusion-v1-5` は 2024年8月に Hub から削除済み
-- `apiuse.py` が失敗時に無限リトライするため、キーが不正だと無言でハングする
-
-全 17 項目の一覧は [`official/SETUP.md`](official/SETUP.md) §4。
-
----
-
-## 2. 自作の再現実装（公式に足りない部分）
-
-公式リポジトリは**書き換えと画像生成まで**で、論文の評価指標を回すスクリプトが
-含まれていません。加えて PIP データセットの画像 URL は 2024年から死んでおり、
-PMS が必要とするユーザ嗜好要約 `P_u` も同梱されていません。
-
-そこを埋めたのが `tv/` + `scripts/` です。
-
-```bash
-./run_all.sh                    # 一式 (RTX 4090 で 3〜4時間)
-./run_all.sh --skip-ablations   # Table 2 と画像指標のみ (約1.5時間)
-```
-
-各ステージは再開可能で、既に出力があるものはスキップします。
-
-| ステージ | スクリプト | 出力 |
+| 実装 | パス | 状態 |
 |---|---|---|
-| 0 | `00_download_data.py` | `data/user_data/*.jsonl` |
-| 1 | `01_prepare.py` | 履歴の重複除去 + CLIP ViT-L/14 埋め込み |
-| 2 | `02_rewrite.py` | `results/rewrites/<method>.jsonl` |
-| 3 | `03_subset.py` | 画像指標を計算する固定ユーザ集合 |
-| 4 | `04_preferences.py` | PMS 用の嗜好要約 `P_u` |
-| 5 | `05_generate.py` | 生成画像の CLIP 埋め込み |
-| 6 | `06_evaluate.py` | `results/RESULTS.md`, `results/metrics.json` |
-| 7 | `07_leakage.py` | `results/leakage.json` |
-| 8 | `08_examples.py` | `results/EXAMPLES.md`（論文 Figure 8 相当） |
+| 公式実装 | `upstream/` + `patches/` | 固定 SHA に compatibility patches を適用して動作確認済み |
+| 公式 runner | `scripts/run_official.sh` | local LLM、demo、bounded main、停止を一括管理 |
+| 独自評価 | `src/tailored_visions_repro/`, `scripts/00_*.py`〜`08_*.py` | Table 2、ablations、PMS / Image-Align proxy / ROUGE-L、leakage analysis |
+| 詳細ノート | `docs/OFFICIAL_SETUP.md`, `docs/DEVIATIONS.md`, `docs/summary.html` | setup、差分、論文サマリー |
 
-実装した手法は Table 2 の 7 行と、Table 4（retrieval top-k）・Table 5（ICL shot 数）の
-アブレーション、Table 3 の入力長バリエーション（`--prompt-type`）です。
+## 3. Quick start
 
-**現在の実行状態**: Table 2 の 7 手法のうち `shortened_prompt` / `promptist` /
-`general_pr` が全 6,232 サンプルで完了済み（`results/rewrites/`）。残り 4 手法は
-未実行です（`./run_all.sh` で続きから走ります）。
+```bash
+git submodule update --init --recursive
+cd tailored-visions-repro
+uv sync --locked
+uv run python scripts/prepare_upstream.py
+bash scripts/run_official.sh --help
+```
 
-### 途中で分かったこと
+公式 demo を local LLM で実行する場合:
 
-いずれも `docs/DEVIATIONS.md` に根拠つきで記載しています。
+```bash
+scripts/run_official.sh demo 'a cat' --no-t2i
+scripts/run_official.sh stop
+```
 
-1. **テストセットの約 1/3 が学習履歴にリークしています。** テストの正解プロンプトが
-   同一ユーザの履歴に**完全一致で 35.6%**、token-F1 ≥ 0.8 で 49.1% 存在します。
-   さらに 18.2% はクエリ自体が正解プロンプトと同一（データ生成時に 6 語以下の
-   プロンプトは要約されないため）。ROUGE-L は履歴を参照する手法を過大評価します。
-   `06_evaluate.py` はリーク除外後の列も併記します。
-2. **モデルを使わない "Shortened Prompt" 行が論文と一致しません**（0.3964 vs 0.3268）。
-   この行は入力をそのまま使うだけなので、データと指標設定だけで決まり、本来は完全一致する
-   はずです。論文の ROUGE-L の前処理が公開物からは復元できないことを意味するので、
-   絶対値の比較はできません。ベースラインからの差分で比較してください。
-3. `rougeL` の実装が "." で文分割してから summary-level LCS を取るため、
-   長い複数文の書き換えが +0.016 有利になります（4語のベースラインでは +0.0002）。
-   `RESULTS.md` に 1 セグメント版も併記します。
+## 4. ディレクトリ構成
 
----
+```text
+tailored-visions-repro/
+├── upstream/                        # 公式 Git submodule（直接編集しない）
+├── patches/                         # 公式実装への 3 compatibility patches
+├── .work/upstream/                  # patch 適用済み実行 tree（Git 対象外）
+├── src/tailored_visions_repro/      # 独自再現・評価 package
+├── scripts/                         # 公式 runner と 00〜08 pipeline
+├── docs/                            # setup、deviations、summary
+├── data/raw/user_data/              # PIP dataset（Git 対象外）
+├── outputs/official/                # 公式 runner の出力（Git 対象外）
+└── outputs/                         # 独自 pipeline の出力（Git 対象外）
+```
 
-## 引用
+## 5. 公式実装と固定コミット
+
+- URL: <https://github.com/zzjchen/Tailored-Visions>
+- 固定コミット: `d0f4454ca08c68c5d30f08a01ff4a23a8b33b610`
+- submodule: `upstream/`
+- patch 適用済み source: `.work/upstream/`
+- patch order: `patches/series`
+
+`scripts/prepare_upstream.py` は SHA を検証し、3 patches を順番に一時 tree へ適用してから
+`.work/upstream/` を原子的に更新する。詳細は [docs/DEVIATIONS.md](docs/DEVIATIONS.md) を参照。
+
+## 6. 生成・学習・評価手順
+
+公式実装:
+
+```bash
+scripts/run_official.sh demo 'a cat'              # rewrite + images
+scripts/run_official.sh demo 'a cat' --no-t2i     # rewrite only
+scripts/run_official.sh main --limit_users=5      # bounded PIP run
+scripts/run_official.sh main --limit_users=5 --t2i
+scripts/run_official.sh stop
+```
+
+独自評価 pipeline:
+
+```bash
+./run_all.sh                    # 全 stage
+./run_all.sh --skip-ablations   # Table 2 + image metrics
+```
+
+```text
+00 download → 01 prepare → 02 rewrite → 07 leakage → 03 subset
+→ 04 preferences → 05 generate → 06 evaluate → 08 examples
+```
+
+各 stage は既存出力をスキップするため再開可能。公式 runner の詳細と OpenAI API の使い方は
+[docs/OFFICIAL_SETUP.md](docs/OFFICIAL_SETUP.md) に記載する。
+
+## 7. 動作確認結果
+
+- 公式 `demo.py` / `main.py` は EBR・BM25、naive・ICL、T2I 有無の組合せで確認済み。
+- 移行前の実行では Table 2 の `shortened_prompt`、`promptist`、`general_pr` が全 6,232 sample で完了。
+- released dataset は 3,116 users / 300,255 prompts。論文記載より 1 user / 18 samples 多い。
+- test ground truth prompt は履歴に完全一致で 35.6%、token-F1 ≥ 0.8 で 49.1% 存在し、ROUGE-L を押し上げる。
+- query 自体が ground truth と同一の sample は 18.2%。
+
+結果解釈と未完了 stage は [docs/DEVIATIONS.md](docs/DEVIATIONS.md) を参照。
+
+## 8. 論文・公式実装との差分
+
+- paper の `gpt-3.5-turbo` の代わりに、既定では local `Qwen/Qwen3.5-4B` を使う。絶対値は論文と一致しない。
+- dataset の画像 URL が失効しているため、Image-Align は ground-truth prompt から生成した proxy image との比較になる。
+- PMS 用 user preference summaries は未公開のため再構成する。
+- 生成モデル既定は SDXL。paper-faithful な SD v1.5 は `--model stable-diffusion-v1-5/stable-diffusion-v1-5` で指定する。
+- official compatibility fixes は source を直接変更せず、3 patches として管理する。
+
+## 9. データ、重み、生成物
+
+| 種類 | パス | Git |
+|---|---|---|
+| PIP dataset | `data/raw/user_data/` | 追跡しない |
+| patch 適用済み公式 tree | `.work/upstream/` | 追跡しない |
+| local LLM / diffusion model cache | Hugging Face cache | 追跡しない |
+| 公式実装の出力 | `outputs/official/` | 追跡しない |
+| 評価 pipeline の出力 | `outputs/` | 追跡しない |
+
+移行前 checkout に `data/user_data/` や `results/` が残っている場合は、branch 統合前にそれぞれ
+`data/raw/user_data/`、`outputs/` へ一度だけ移す。Git は再取得可能なデータと生成物を管理しない。
+
+## 10. 引用
 
 ```bibtex
 @inproceedings{chen2024tailored,
@@ -129,6 +129,3 @@ PMS が必要とするユーザ嗜好要約 `P_u` も同梱されていません
   year      = {2024}
 }
 ```
-
-PIP データセットと 5 つの in-context デモ例は著者らのものです
-（[公式リポジトリ](https://github.com/zzjchen/Tailored-Visions)）。

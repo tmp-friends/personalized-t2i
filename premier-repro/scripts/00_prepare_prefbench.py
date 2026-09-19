@@ -13,8 +13,8 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-sys.path.insert(0, str(ROOT))
-from premier.data.prefbench import build_manifest, manifest_image_list  # noqa: E402
+sys.path.insert(0, str(ROOT / "src"))
+from premier_repro.data.prefbench import build_manifest, manifest_image_list  # noqa: E402
 
 HF = "https://huggingface.co/datasets/wenyii/PrefBench/resolve/main"
 PARTS = {"diffusiondb": 6, "coco": 4}
@@ -28,7 +28,7 @@ def main():
     ap.add_argument("--min-pos", type=int, default=8)
     ap.add_argument("--min-neg", type=int, default=6)
     ap.add_argument("--seed", type=int, default=0)
-    ap.add_argument("--data-dir", default=str(ROOT / "data" / "prefbench"))
+    ap.add_argument("--data-dir", default=str(ROOT / "data" / "raw" / "prefbench"))
     ap.add_argument("--extract", action="store_true", help="stream tar parts and extract manifest images")
     args = ap.parse_args()
 

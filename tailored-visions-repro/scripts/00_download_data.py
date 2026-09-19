@@ -38,7 +38,7 @@ def download(dest_zip: Path) -> None:
 
 def main() -> int:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--data-dir", default="data")
+    ap.add_argument("--data-dir", default="data/raw")
     ap.add_argument("--force", action="store_true")
     args = ap.parse_args()
 
@@ -70,8 +70,8 @@ def main() -> int:
     if n != EXPECTED_USERS:
         print(f"  note: expected {EXPECTED_USERS} files (the paper reports 3115 users)")
 
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-    from tv.data import dataset_stats
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
+    from tailored_visions_repro.data import dataset_stats
 
     print(f"[download] {dataset_stats(user_dir)}")
     return 0

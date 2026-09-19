@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Premier (CVPR 2026) — 論文まとめと RTX 4090 での動作確認</title>
+<style>
+  :root { --fg:#1f2328; --muted:#57606a; --line:#d0d7de; --bg:#ffffff; --code:#f6f8fa; --accent:#0969da; --ok:#1a7f37; --warn:#9a6700; }
+  body { margin:0; font-family: -apple-system, "Segoe UI", "Hiragino Sans", "Noto Sans JP", sans-serif; color:var(--fg); background:var(--bg); line-height:1.65; }
+  main { max-width: 1000px; margin: 0 auto; padding: 32px 24px 80px; }
+  h1 { font-size: 1.8rem; border-bottom: 2px solid var(--line); padding-bottom: 8px; }
+  h2 { font-size: 1.35rem; margin-top: 2.2em; border-bottom: 1px solid var(--line); padding-bottom: 4px; }
+  h3 { font-size: 1.1rem; margin-top: 1.6em; }
+  p, li { font-size: 0.97rem; }
+  .meta { color: var(--muted); font-size: 0.9rem; }
+  table { border-collapse: collapse; width: 100%; margin: 12px 0; font-size: 0.92rem; }
+  th, td { border: 1px solid var(--line); padding: 6px 10px; vertical-align: top; text-align: left; }
+  th { background: var(--code); }
+  code { background: var(--code); padding: 1px 5px; border-radius: 4px; font-size: 0.9em; }
+  pre { background: var(--code); padding: 12px 14px; border-radius: 6px; overflow-x: auto; font-size: 0.86rem; line-height: 1.5; }
+  pre code { background: none; padding: 0; }
+  .formula { background: var(--code); padding: 10px 14px; border-left: 3px solid var(--accent); margin: 10px 0; font-family: "Cambria Math", "STIX Two Math", serif; font-size: 1.02rem; }
+  figure { margin: 16px 0; }
+  figure img { max-width: 100%; border: 1px solid var(--line); border-radius: 4px; }
+  figcaption { color: var(--muted); font-size: 0.88rem; margin-top: 6px; }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media (max-width: 720px) { .grid2 { grid-template-columns: 1fr; } }
+  .tag { display: inline-block; padding: 1px 8px; border-radius: 10px; font-size: 0.8rem; font-weight: 600; }
+  .ok { background: #dafbe1; color: var(--ok); } .warn { background: #fff8c5; color: var(--warn); }
+  .note { border: 1px solid var(--line); border-left: 4px solid var(--warn); padding: 8px 14px; background: #fffdf5; border-radius: 4px; }
+  nav ul { columns: 2; padding-left: 20px; } nav li { margin: 2px 0; }
+  a { color: var(--accent); }
+</style>
+</head>
+<body>
+<main>
+
+<h1>Premier: Personalized Preference Modulation with Learnable User Embedding in Text-to-Image Generation</h1>
+<p class="meta">Zihao Wang, Yuxiang Wei, Xinpeng Zhou, Tianyu Zhang, Tao Liang, Yalong Bai, Hongzhi Zhang, Wangmeng Zuo (HIT / Duxiaoman) — CVPR 2026 Highlight —
+<a href="https://arxiv.org/abs/2603.20725">arXiv:2603.20725</a> ·
+<a href="https://github.com/120L020904/Premier">公式コード</a> ·
+<a href="https://huggingface.co/pino10010/Premier">公開重み</a> ·
+<a href="https://premier-img.github.io/">プロジェクトページ</a><br>
+このメモ: 2026-09-05、<code>~/stable-diffusion/personalized-t2i/premier-repro/</code> で実施した動作確認の記録</p>
+
+<nav><ul>
+<li><a href="#paper">1. 論文の内容</a></li>
+<li><a href="#method">1.2 手法</a></li>
+<li><a href="#results">1.4 論文の実験結果</a></li>
+<li><a href="#work">2. 今回対応した内容</a></li>
+<li><a href="#verify">2.4 動作確認結果</a></li>
+<li><a href="#howto">3. 起動方法</a></li>
+<li><a href="#layout">4. ディレクトリ構成</a></li>
+<li><a href="#notes">5. 未対応・注意点</a></li>
+</ul></nav>
+
+<h2 id="paper">1. 論文の内容</h2>
+
+<h3>1.1 問題設定</h3>
+<p>ユーザーが過去に「好んだ」画像から、そのユーザーの美的嗜好 (画風・色調・構図など) を学習し、任意のテキストプロンプトの生成結果に反映する
+<strong>preference personalization</strong>。DreamBooth 等の「特定の被写体を再現する」subject personalization とは区別される。</p>
+<p>従来手法 (ViPer, DrUM など) は嗜好を MLLM で文章や特徴に変換してから生成モデルへ渡すが、表現空間の不一致による情報損失と
+指示追従の弱さが問題になる。Premier は <strong>生成モデルの表現空間の中で直接学習される user embedding</strong> でこれを置き換える。</p>
+
+<h3 id="method">1.2 手法</h3>
+<figure>
+  <img src="../upstream/assets/fig_method.png" alt="Premier method figure">
+  <figcaption>公式リポジトリの手法図。テキストトークンを Query、ユーザー埋め込みを Key/Value とする Preference Adapter が、トークンごとの modulation 方向 Δ を出力し、MM-DiT の AdaLN 入力に加算する。</figcaption>
+</figure>
+
+<table>
+<tr><th style="width:24%">構成要素</th><th>内容</th></tr>
+<tr><td>ベースモデル</td><td>FLUX.1-dev (MM-DiT, flow matching)。DiT 本体は凍結。</td></tr>
+<tr><td>Learnable user embedding <i>e<sub>u</sub></i></td><td>ユーザーごとに <b>30 × 1024</b> の学習可能テンソル (1 ユーザー約 61 KB)。</td></tr>
+<tr><td>Preference Adapter × 2</td><td>T5 のテキストトークン埋め込み <i>e<sub>p_i</sub></i> を Query、<i>e<sub>u</sub></i> を Key/Value とする cross-attention を 3 層重ねた小さな Transformer。
+テキストトークン <i>i</i> ごとに modulation 方向 Δ を出力する。<b>block-shared</b> (全 DiT block で共通の Δ) と <b>block-distinct</b> (最終層の出力次元を block 数倍に広げ、block ごとに異なる Δ) の 2 種。</td></tr>
+<tr><td>Prompt Preference Modulation (PPM)</td><td>MM-DiT では timestep と CLIP テキスト埋め込みから作った modulation ベクトル <i>y</i> が AdaLN を通じて全トークンを変調する。Premier はテキストトークン <i>i</i>・block <i>j</i> ごとに
+<div class="formula">y<sub>i</sub><sup>j</sup> = y + Δ<sub>shared</sub>(e<sub>u</sub>, e<sub>p_i</sub>) + Δ<sup>j</sup><sub>distinct</sub>(e<sub>u</sub>, e<sub>p_i</sub>)</div>
+と置き換える (TokenVerse / Mod-Adapter 系の「token modulation space」の考え方)。画像トークン側の <i>y</i> は変更しない。</td></tr>
+<tr><td>Dispersion loss</td><td>Flow matching 損失だけだとアダプタがテキストに過適合し、ユーザー間の差が出ない。そこで空プロンプトで計算した Δ をバッチ内の他ユーザーと引き離す InfoNCE 型損失 (Diffuse and Disperse, Wang &amp; He 2025 に倣う) を導入:
+<div class="formula">L<sub>disp</sub> = log Σ<sub>u'≠u</sub> exp(−D(Δ(e<sub>u</sub>, e<sub>∅</sub>), Δ(e<sub>u'</sub>, e<sub>∅</sub>))),&nbsp;&nbsp; D = L2 距離</div>
+<div class="formula">L = L<sub>flow</sub> + λ<sub>shared</sub> L<sub>disp</sub><sup>shared</sup> + λ<sub>distinct</sub> L<sub>disp</sub><sup>distinct</sup>,&nbsp;&nbsp; λ = 0.1</div></td></tr>
+<tr><td>Stage 1 学習</td><td>学習ユーザー 1000 人 (各 40〜80 枚) で、アダプタ 2 つ + 1000 人分の embedding を同時に学習。Prodigy (lr 1.0)、batch 16、8×A800。</td></tr>
+<tr><td>Stage 2: 新規ユーザー</td><td>アダプタと学習ユーザー embedding を凍結し、新規ユーザーを <b>学習ユーザー embedding の線形結合</b> <i>e<sub>new</sub> = Σ<sub>k</sub> α<sub>k</sub> e<sub>k</sub></i> で表し、係数 α (1000 個) だけを Flow matching 損失で学習する。
+履歴が 8 枚未満では embedding を直接学習するより安定して良い (8 枚以上なら直接学習が同等以上)。1 ユーザー約 30 分 (A800)。</td></tr>
+</table>
+
+<p>推薦システムの言葉では、学習済みユーザーは user embedding、新規ユーザーは既存ユーザー埋め込みの重み付き和で cold-start に対応する構成に相当する。</p>
+
+<h3>1.3 公開重みの実際の構成 (adapter_config.yaml より)</h3>
+<ul>
+<li>アダプタ幅 3072、3 層、heads 8。block-distinct 側は <b>double block 19 個のみ</b> を変調 (single block は変調しない)。</li>
+<li><code>uncond: true</code>: block-distinct アダプタへの入力テキストは <b>空プロンプト</b> (ユーザー埋め込みのみに依存)、block-shared 側は実プロンプトを使う。</li>
+<li>T5 の系列長 512、学習解像度 512px、学習ユーザー 1000 人、アダプタ 907M パラメータ (1.8 GB)。</li>
+</ul>
+
+<h3 id="results">1.4 論文の実験結果 (PrefBench, テストユーザー 50 人、履歴 8 枚)</h3>
+<table>
+<tr><th></th><th>Data</th><th>FLUX.1-dev</th><th>InstantStyle</th><th>Bagel</th><th>Qwen-Image-Edit</th><th>DrUM</th><th>ViPer</th><th><b>Premier</b></th></tr>
+<tr><td>ViPer Score ↑</td><td>0.889</td><td>0.395</td><td>0.628</td><td>0.508</td><td>0.469</td><td>0.479</td><td>0.516</td><td><b>0.689</b></td></tr>
+<tr><td>ViPer 勝率 vs FLUX ↑</td><td>-</td><td>-</td><td>0.777</td><td>0.703</td><td>0.613</td><td>0.573</td><td>0.676</td><td><b>0.876</b></td></tr>
+<tr><td>CLIP T2I ↑</td><td>0.303</td><td>0.309</td><td>0.299</td><td>0.311</td><td>0.310</td><td>0.307</td><td>0.298</td><td><b>0.318</b></td></tr>
+<tr><td>LPIPS (対 好み画像) ↓</td><td>-</td><td>-</td><td>0.664</td><td>0.644</td><td>0.641</td><td>0.654</td><td>0.656</td><td><b>0.599</b></td></tr>
+</table>
+<ul>
+<li>Ablation: dispersion loss を外すと ViPer Score 0.689 → 0.450 と最も落ちる。shared / distinct どちらか一方を外しても 0.48〜0.49。PPM (プロンプトを空にする) を外すと 0.649。</li>
+<li>LoRA (rank 1, 5000 step) と比べ嗜好の再現は同等 (0.710 vs 0.689) だがテキスト追従は Premier が上 (CLIP 0.301 vs 0.318)。保存容量は 61 KB vs 10.7 MB、学習時間 30 分 vs 1.2 時間、推論オーバーヘッド約 1 秒。</li>
+<li>学習ユーザーを 1000 人 → 100 人にすると ViPer Score 0.70 → 0.50 と大きく劣化 (ユーザー数が多いほど新規ユーザーの表現力が上がる)。</li>
+<li>40 人の専門家による A/B 評価でも全ベースラインに対して Premier が選好された。</li>
+</ul>
+
+<h2 id="work">2. 今回対応した内容</h2>
+
+<h3>2.1 方針</h3>
+<p>公式実装と公開重み (アダプタ + 学習ユーザー 1000 人 + テストユーザー 50 人分) が存在したため、<b>公式コードを一切改変せず</b> (バグ修正 1 行を除く)、
+著者環境のハードコードされたパスを外して CLI から呼ぶ薄いラッパを用意し、RTX 4090 (24 GB) で <b>生成</b> と <b>新規ユーザー学習 (Stage 2)</b> が動くことを確認した。</p>
+<p>公式実装が見つかる前に論文 (TeX ソース) から書いた独自再現 (<code>src/premier_repro/</code>) はコア部分の動作確認まで行い、参考として残している。</p>
+
+<h3>2.2 環境構築</h3>
+<table>
+<tr><th style="width:30%">項目</th><th>内容</th></tr>
+<tr><td>公式リポジトリ</td><td><code>upstream/</code> submodule に固定。OminiControl + XVerse ベース。</td></tr>
+<tr><td>公開重み</td><td><code>artifacts/weights/pino10010_Premier/</code>: <code>mod_adapter.safetensors</code> (1.8 GB)、<code>user_embedding.safetensors</code> (1000 × 30720)、<code>users/</code> (テスト 50 人、直接学習)、<code>users_linear/</code> (同、線形結合係数)、<code>adapter_config.yaml</code></td></tr>
+<tr><td>Python 環境</td><td><code>.venv</code> (Python 3.12)。公式 <code>requirements.txt</code> の pin 通り (torch 2.6.0 / diffusers 0.33.0 / transformers 4.52.4 / lightning 2.5.2 / peft 0.14.0)。社内 index 行を除去し、不足していた <code>einops</code>, <code>sentencepiece</code>, <code>protobuf</code> と、int8 用の <code>optimum-quanto</code> を追加 (<code>pyproject.toml</code> / <code>requirements-official.txt</code>)。</td></tr>
+<tr><td>FLUX の重み</td><td>ローカルには FLUX.1-dev の transformer のみキャッシュされていたため、VAE / CLIP-L / T5-XXL は同一重みの FLUX.1-schnell キャッシュから読み、scheduler は dev の設定値をコードで指定 (追加ダウンロード無し)。</td></tr>
+</table>
+
+<h3>2.3 24 GB GPU で動かすための対策</h3>
+<p>公式コードは <code>FluxPipeline.from_pretrained(...).to("cuda")</code> を bf16 で行う前提 (transformer 24 GB + T5 9.5 GB、著者環境は A800 80 GB)。</p>
+<table>
+<tr><th style="width:36%">問題</th><th>対策 (<code>src/premier_repro/official.py</code>)</th></tr>
+<tr><td>transformer 24 GB が載らない</td><td>推論: diffusers の layerwise casting で float8 保存・bf16 計算 (<code>--memory fp8</code>, 12 GB)。学習: optimum-quanto の int8 重み (<code>--memory int8</code>、逆伝播可、nvcc 不要)。</td></tr>
+<tr><td>diffusers の fp8 化は名前に <code>norm</code> を含む層を除外するため、FLUX の AdaLN 射影 (<code>norm1.linear</code> 等、3.2B params) が bf16 に残り +3 GB</td><td>FLUX には除外パターン <code>pos_embed</code> のみを指定して AdaLN 射影も fp8 化。</td></tr>
+<tr><td>T5 は <code>T5LayerNorm</code> と <code>wo</code> が活性を重みの dtype にキャストするため fp8 化すると失敗</td><td>T5 は norm / embedding / <code>wo</code> を bf16 のまま残す (5.8 GB)。</td></tr>
+<tr><td>他プロセスが GPU を使っていて空きが 20 GB 未満</td><td><code>--t5 offload</code> (自動判定) で T5 を CPU RAM に置き accelerate で層ごとにストリーミング。<code>encode_prompt</code> をメモ化して空プロンプトの再エンコードを省く。</td></tr>
+<tr><td>学習は Lightning + bf16 全載せ、gradient checkpointing 無効</td><td><code>scripts/train_official_user.py</code>: 公式 <code>training_step</code> をそのまま素の PyTorch ループに移植し、int8 transformer + gradient checkpointing で実行。T5 はプロンプトを先にエンコードして解放。</td></tr>
+<tr><td>公式 <code>transformer_forward_verse</code> の checkpointing 分岐が single block に存在しない引数 <code>use_img_mod</code> を渡して落ちる</td><td><code>patches/0001-fix-single-block-checkpoint-kwarg.patch</code> (1 行削除) を適用。</td></tr>
+<tr><td>公式スクリプトは著者のパス・ユーザー ID がハードコード</td><td><code>scripts/run_official.py</code> / <code>scripts/train_official_user.py</code> が同じ関数 (<code>generate_xverse</code>, <code>load_modulation_adapter</code>, <code>transformer_forward_verse</code>, <code>EmbeddingLinearCombination</code>) を CLI 引数で呼ぶ。</td></tr>
+</table>
+
+<h3 id="verify">2.4 動作確認結果 (RTX 4090 24 GB)</h3>
+<table>
+<tr><th style="width:34%">項目</th><th>結果</th></tr>
+<tr><td>生成 (fp8, 512px, 20 step)</td><td><span class="tag ok">OK</span> 5.4 秒/枚、GPU ピーク 19.4 GB</td></tr>
+<tr><td>新規ユーザー学習 (int8 + checkpointing, 線形結合, 512px, batch 1)</td><td><span class="tag ok">OK</span> 0.8 秒/step、ピーク 14.2 GB。300 step で 4 分 (公式設定の 5000 step なら約 70 分)</td></tr>
+<tr><td>学習した embedding での生成</td><td><span class="tag ok">OK</span> 未学習プロンプトでもスタイルが移る (下図)</td></tr>
+</table>
+
+<figure>
+  <img src="../outputs/official/results/check1_users_grid.jpg" alt="users grid">
+  <figcaption><b>公開重みでの生成。</b> 上から: 素の FLUX.1-dev / 学習ユーザー #0 / 学習ユーザー #1 / テストユーザー 3685 (直接学習) / 同 (線形結合)。列は「a cat sitting on a windowsill」「a city street at night」、列ごとに同じ seed。
+  ユーザーごとに色調・画風が明確に変わり、直接学習と線形結合はほぼ同じ絵になる (論文の主張と整合)。</figcaption>
+</figure>
+
+<div class="grid2">
+<figure>
+  <img src="../outputs/official/results/watercolor_trainset.jpg" alt="watercolor train set">
+  <figcaption><b>新規ユーザーの「好きな画像」8 枚。</b> FLUX で水彩画風に生成したもの。学習時のキャプションからはスタイル語を除き (例: "a cat sitting on a windowsill")、スタイルは embedding が学習するしかない設定。</figcaption>
+</figure>
+<figure>
+  <img src="../outputs/official/results/watercolor_newuser_grid.jpg" alt="new user generation">
+  <figcaption><b>学習した embedding での生成 (300 step)。</b> 上: 素の FLUX.1-dev、下: 新規ユーザー embedding。プロンプトは学習に無い 4 件。写真調から紙の質感・平坦な塗り・イラスト調へ寄る。</figcaption>
+</figure>
+</div>
+
+<h2 id="howto">3. 起動方法</h2>
+
+<h3>3.1 セットアップ (構築済み。再現する場合)</h3>
+<pre><code>cd ~/stable-diffusion/personalized-t2i/premier-repro
+git submodule update --init upstream
+uv sync --locked
+uv run python scripts/prepare_upstream.py
+uv run python -c "from huggingface_hub import snapshot_download; snapshot_download('pino10010/Premier', local_dir='artifacts/weights/pino10010_Premier')"
+</code></pre>
+
+<h3>3.2 画像生成</h3>
+<pre><code>cd ~/stable-diffusion/personalized-t2i/premier-repro
+source .venv/bin/activate
+uv run python scripts/run_official.py \
+  --users none train:0 train:1 test:3685 linear:3685 \
+  --prompts "a cat sitting on a windowsill" "a city street at night" \
+  --out outputs/official/demo --steps 28 --guidance 3.5 --size 512
+# → outputs/official/demo/grid.jpg (行 = ユーザー, 列 = プロンプト, 列ごとに同じ seed) と個別 PNG, grid.json
+</code></pre>
+<table>
+<tr><th style="width:26%"><code>--users</code></th><th>内容</th></tr>
+<tr><td><code>none</code></td><td>素の FLUX.1-dev (比較用)</td></tr>
+<tr><td><code>train:&lt;0-999&gt;</code></td><td>学習ユーザー 1000 人の embedding</td></tr>
+<tr><td><code>test:&lt;id&gt;</code></td><td>公開テストユーザー (直接学習)。id は <code>artifacts/weights/pino10010_Premier/users/</code> のファイル名 (3685〜4279)</td></tr>
+<tr><td><code>linear:&lt;id&gt;</code></td><td>同テストユーザーの線形結合版</td></tr>
+<tr><td><code>file:&lt;path&gt;</code></td><td><code>scripts/train_official_user.py</code> の出力 (<code>user_combination_*.safetensors</code> または <code>user_embedding_*.safetensors</code>)</td></tr>
+</table>
+<p>主なオプション: <code>--steps</code> (既定 28) · <code>--guidance</code> (3.5) · <code>--size</code> (512) · <code>--seed</code> · <code>--memory fp8|int8|bf16|offload</code> · <code>--t5 auto|gpu|offload</code>。</p>
+
+<h3>3.3 新規ユーザーの学習 (数枚の好きな画像から)</h3>
+<pre><code># items.json: [{"image": "img1.png", "caption": "a cat sitting on a windowsill"}, ...]
+#   (公式の CSV 形式 positive_image,caption も --csv で可。画像パスは JSON/CSV からの相対、または --data-path)
+uv run python scripts/train_official_user.py --name alice --json items.json --mode linear --steps 1000 --out outputs/official/users
+# → outputs/official/users/alice/user_combination_alice.safetensors (公式形式), user_embedding_alice.safetensors, meta.json, log.jsonl
+
+uv run python scripts/run_official.py --users none file:outputs/official/users/alice/user_combination_alice.safetensors \
+  --prompts "a castle on a hill" "a portrait of an old fisherman" --out outputs/official/alice
+</code></pre>
+<ul>
+<li><code>--mode linear</code> (論文の既定): 学習ユーザー 1000 人の embedding の線形結合係数のみ学習。AdamW lr 0.01 (公式設定)。</li>
+<li><code>--mode direct</code>: 30 × 1024 の embedding を一から学習。Prodigy lr 1.0 (公式設定)。画像が 8 枚以上あるとき向け。</li>
+<li>公式は 5000 step。4090 で 0.8 秒/step なので、まず 300〜1000 step で傾向を見て伸ばすのが現実的。</li>
+<li>公式の学習ステップと同じ: t ~ sigmoid(N(1,1))、guidance embedding = 1、損失 = MSE(v, x<sub>1</sub> − x<sub>0</sub>)、勾配クリップ 0.5。</li>
+</ul>
+
+<h3>3.4 公式スクリプトをそのまま使う場合</h3>
+<p><code>upstream/monitor_pid_*.sh</code> → <code>accelerate launch -m scripts.train_flux.train_*</code> は、著者環境のパス (<code>../pickapic_dxm_coco/...</code>, <code>/home/disk3/...</code>) と
+bf16 全載せ (40〜70 GB) を前提にしており、24 GB では動かない。データ形式 (pkl / CSV) と config の意味は <code>upstream/README.md</code> と <code>upstream/train/config/*.yaml</code> を参照。</p>
+
+<h2 id="layout">4. ディレクトリ構成</h2>
+<pre><code>~/stable-diffusion/personalized-t2i/premier-repro/
+├── README.md
+├── upstream/                         公式 Git submodule（直接編集しない）
+├── patches/                          公式実装へ適用する差分
+├── .work/upstream/                   patch 適用済み作業コピー（Git 管理外）
+├── src/premier_repro/                独自再現と公式 integration helper
+├── scripts/                          公式 wrapper と独自再現 pipeline
+├── configs/                          独自再現設定
+├── docs/summary.html                 このファイル
+├── docs/OFFICIAL_SETUP.md            公式実装の詳細手順
+├── data/examples/watercolor/         小さな学習 fixture
+├── artifacts/weights/                公開重み（Git 管理外）
+└── outputs/official/                 結果画像・checkpoint・ログ（Git 管理外）
+</code></pre>
+
+<h2 id="notes">5. 未対応・注意点</h2>
+<ul>
+<li><span class="tag warn">未実施</span> Stage 1 (アダプタ + 1000 ユーザー embedding の学習)。公式スクリプトは 4×A800 + 著者データ形式前提で、公開重みがあるため通常は不要。24 GB で回すには <code>scripts/train_official_user.py</code> と同じ int8 + checkpointing 化と PrefBench の整備が必要。</li>
+<li><span class="tag warn">未実施</span> ViPer / CLIP / LPIPS による定量評価 (公式コードに評価スクリプトは含まれない。独自実装 <code>src/premier_repro/eval/metrics.py</code> はあるが未実行)。</li>
+<li>テストユーザー 50 人 (id 3685〜4279) は著者の内部データの id で、元となる好み画像は公開されていない。</li>
+<li>T5 の系列長は公式の 512 のまま (<code>--max-seq-len</code>)。公開重みは 512px で学習されているため、まず 512px で使うのが無難。</li>
+<li>GPU に別プロセス (例: ローカル LLM サーバ) が載っていると fp8 モードでも空きが足りない。<code>--t5 offload</code> で回避できるが、学習は T5 解放後で 14 GB 程度あれば足りる。</li>
+<li>展示用途では、学習ユーザー 1000 人の embedding をそのまま「嗜好プリセット」として使える。新規ユーザーの線形結合係数 (1000 個) は「どの既存ユーザーに近いか」の可視化にも使える (<code>meta.json</code> の <code>top_train_users</code>)。</li>
+</ul>
+
+</main>
+</body>
+</html>

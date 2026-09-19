@@ -5,13 +5,13 @@
 """
 import sys, time
 from pathlib import Path
-sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 import torch
-from premier.model.loading import (load_transformer, pack_latents, latent_image_ids, text_ids, count_params)
-from premier.model.flux_modulation import premier_transformer_forward
-from premier.model.premier import PremierModel, PremierConfig
-from premier.model.user_embedding import UserEmbeddingBank
-from premier.model.losses import flow_matching_loss, dispersion_loss, sample_timesteps
+from premier_repro.model.loading import (load_transformer, pack_latents, latent_image_ids, text_ids, count_params)
+from premier_repro.model.flux_modulation import premier_transformer_forward
+from premier_repro.model.premier import PremierModel, PremierConfig
+from premier_repro.model.user_embedding import UserEmbeddingBank
+from premier_repro.model.losses import flow_matching_loss, dispersion_loss, sample_timesteps
 
 dev = "cuda"
 quant = sys.argv[1] if len(sys.argv) > 1 else "quanto_fp8"

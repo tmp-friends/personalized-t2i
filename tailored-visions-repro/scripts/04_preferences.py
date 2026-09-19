@@ -6,7 +6,7 @@ P_u into 5 phrases from his history prompts using ChatGPT." The summaries are
 not in the released dataset and the summarization prompt is not published, so
 this regenerates them -- see ``docs/DEVIATIONS.md``.
 
-    python scripts/04_preferences.py --users-from results/eval_subset.json
+    python scripts/04_preferences.py --users-from outputs/eval_subset.json
 
 Note that PMS scores a generated image against a summary of the same history the
 rewriter conditions on. Any method that copies history-derived style tokens into
@@ -22,10 +22,10 @@ import sys
 import time
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
-from tv import prompt_templates as PT  # noqa: E402
-from tv.rewriter import build_rewriter, clean_output  # noqa: E402
+from tailored_visions_repro import prompt_templates as PT  # noqa: E402
+from tailored_visions_repro.rewriter import build_rewriter, clean_output  # noqa: E402
 
 
 def select_history(history: list[str], max_prompts: int) -> list[str]:

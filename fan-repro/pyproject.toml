@@ -1,0 +1,22 @@
+[project]
+name = "fan-repro"
+version = "0.1.0"
+description = "Environment for the official FAN implementation (Foundation Encoders Are All You Need for Preference-Aware Personalization, CVPR 2026)"
+requires-python = ">=3.10,<3.13"
+dependencies = [
+    "torch>=2.6",
+    "torchvision>=0.21",
+    "diffusers>=0.36,<0.41",
+    "transformers>=4.57,<5",
+    "accelerate>=1.0",
+    "safetensors>=0.4",
+    "sentencepiece>=0.2",
+    "protobuf>=4.25",
+    "huggingface-hub>=0.26",
+    "numpy>=1.26",
+    "pillow>=10.0",
+    "matplotlib>=3.8",
+]
+
+[tool.uv]
+package = false

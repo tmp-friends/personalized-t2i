@@ -1,0 +1,9 @@
+[submodule "premier-repro/upstream"]
+	path = premier-repro/upstream
+	url = https://github.com/120L020904/Premier.git
+[submodule "fan-repro/upstream"]
+	path = fan-repro/upstream
+	url = https://github.com/Burf/FAN.git
+[submodule "tailored-visions-repro/upstream"]
+	path = tailored-visions-repro/upstream
+	url = https://github.com/zzjchen/Tailored-Visions.git
