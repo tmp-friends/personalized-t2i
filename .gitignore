@@ -37,3 +37,5 @@ premier-repro/data/
 .idea/
 .vscode/
 *~
+# Isolated feature worktrees
+.worktrees/
