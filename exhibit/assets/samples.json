@@ -1,0 +1,1730 @@
+[
+  {
+    "id": "h1-cat",
+    "topic_id": "cat",
+    "choices": [
+      {
+        "pair_id": "p1",
+        "chosen_id": "p1-a"
+      },
+      {
+        "pair_id": "p2",
+        "chosen_id": "p2-a"
+      },
+      {
+        "pair_id": "p3",
+        "chosen_id": "p3-a"
+      },
+      {
+        "pair_id": "p4",
+        "chosen_id": "p4-a"
+      },
+      {
+        "pair_id": "p5",
+        "chosen_id": "p5-a"
+      }
+    ],
+    "context": {
+      "version": 1,
+      "preferences": {
+        "color": "warm",
+        "lighting": "soft",
+        "composition": "spacious",
+        "texture": "painterly",
+        "mood": "calm"
+      },
+      "overrides": {},
+      "evidence": [
+        {
+          "id": "p1-a-e1",
+          "pair_id": "p1",
+          "pair_version": 1,
+          "chosen_id": "p1-a",
+          "dimensions": [
+            "color"
+          ],
+          "values": {
+            "color": "warm"
+          },
+          "text": "The selected harbor image has warmer colors than the other image.",
+          "context_source": "generic_vlm",
+          "source": {
+            "model": "Qwen/Qwen3.5-4B",
+            "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+            "template_version": "append-aesthetic-v1"
+          },
+          "image_hashes": {
+            "p1-a": "2ff616c02e4c844a87de50c30b093640ef852ac2a6e1447cb7854b504bf84687",
+            "p1-b": "0fe0d31d93216d1a000def4b25c1b4adcc1088ea132d16b41764c75ea8e90806"
+          },
+          "basic_prompt_en": "A small harbor with moored boats.",
+          "template_version": "single-axis-relative-v1",
+          "template_hash": "4cc18c54fe3fb7644ea2024d89ce66f1b10d3286bdc7f4c259d8cc50cccc7fc7",
+          "preprocessing": "RGB; aspect preserved; longest edge 448"
+        },
+        {
+          "id": "p2-a-e1",
+          "pair_id": "p2",
+          "pair_version": 1,
+          "chosen_id": "p2-a",
+          "dimensions": [
+            "lighting"
+          ],
+          "values": {
+            "lighting": "soft"
+          },
+          "text": "The selected flowers have softer, more diffused lighting than the other image.",
+          "context_source": "generic_vlm",
+          "source": {
+            "model": "Qwen/Qwen3.5-4B",
+            "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+            "template_version": "append-aesthetic-v1"
+          },
+          "image_hashes": {
+            "p2-a": "99e5e80e37d5f8cd77c23af5b8ec6dd999bf8c013f070a5378f982815195f73e",
+            "p2-b": "867ab990a86a3bba776592f0144a8c27241309b9ea1d65ff752443a39f4de473"
+          },
+          "basic_prompt_en": "A vase of flowers on a table in a room.",
+          "template_version": "single-axis-relative-v1",
+          "template_hash": "4cc18c54fe3fb7644ea2024d89ce66f1b10d3286bdc7f4c259d8cc50cccc7fc7",
+          "preprocessing": "RGB; aspect preserved; longest edge 448"
+        },
+        {
+          "id": "p3-a-e1",
+          "pair_id": "p3",
+          "pair_version": 1,
+          "chosen_id": "p3-a",
+          "dimensions": [
+            "composition"
+          ],
+          "values": {
+            "composition": "spacious"
+          },
+          "text": "The selected image emphasizes open sea around a distant lighthouse.",
+          "context_source": "generic_vlm",
+          "source": {
+            "model": "Qwen/Qwen3.5-4B",
+            "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+            "template_version": "append-aesthetic-v1"
+          },
+          "image_hashes": {
+            "p3-a": "aed4557d5e08df475ddb2a50da4bd5298818d4c5a1f694f2f5b65bcc78090206",
+            "p3-b": "b870b1e921bd982ed30492140caffb1c6dc326715e85265bcf045454ba504b44"
+          },
+          "basic_prompt_en": "One lighthouse beside the sea.",
+          "template_version": "single-axis-relative-v1",
+          "template_hash": "4cc18c54fe3fb7644ea2024d89ce66f1b10d3286bdc7f4c259d8cc50cccc7fc7",
+          "preprocessing": "RGB; aspect preserved; longest edge 448"
+        },
+        {
+          "id": "p4-a-e1",
+          "pair_id": "p4",
+          "pair_version": 1,
+          "chosen_id": "p4-a",
+          "dimensions": [
+            "texture"
+          ],
+          "values": {
+            "texture": "painterly"
+          },
+          "text": "The selected forest path has softer, more painterly texture than the other image.",
+          "context_source": "generic_vlm",
+          "source": {
+            "model": "Qwen/Qwen3.5-4B",
+            "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+            "template_version": "append-aesthetic-v1"
+          },
+          "image_hashes": {
+            "p4-a": "e94d95b9e63750d198ac50104f88ab12c508e8a0c447790238e5dd3cc32c22a9",
+            "p4-b": "e60d9d218512d62c1ed832040c6bd926987036f1b3bc97e8dee07f387e20f650"
+          },
+          "basic_prompt_en": "A winding path through a forest.",
+          "template_version": "single-axis-relative-v1",
+          "template_hash": "4cc18c54fe3fb7644ea2024d89ce66f1b10d3286bdc7f4c259d8cc50cccc7fc7",
+          "preprocessing": "RGB; aspect preserved; longest edge 448"
+        },
+        {
+          "id": "p5-a-e1",
+          "pair_id": "p5",
+          "pair_version": 1,
+          "chosen_id": "p5-a",
+          "dimensions": [
+            "mood"
+          ],
+          "values": {
+            "mood": "calm"
+          },
+          "text": "The selected cafe scene is quieter, with empty tables, than the other image.",
+          "context_source": "generic_vlm",
+          "source": {
+            "model": "Qwen/Qwen3.5-4B",
+            "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+            "template_version": "append-aesthetic-v1"
+          },
+          "image_hashes": {
+            "p5-a": "0ea4784fcaa5b0a48b133634976427db0e3f4f4e71524386545e6adfcae445b1",
+            "p5-b": "a02fc99b3eeeaa0cc432c57403b974e035967888de894fdcb35dcf8c941e742e"
+          },
+          "basic_prompt_en": "A cafe on a city street.",
+          "template_version": "single-axis-relative-v1",
+          "template_hash": "4cc18c54fe3fb7644ea2024d89ce66f1b10d3286bdc7f4c259d8cc50cccc7fc7",
+          "preprocessing": "RGB; aspect preserved; longest edge 448"
+        }
+      ],
+      "choice_ids": [
+        "p1:p1-a",
+        "p2:p2-a",
+        "p3:p3-a",
+        "p4:p4-a",
+        "p5:p5-a"
+      ],
+      "text": "The selected harbor image has warmer colors than the other image.\nThe selected flowers have softer, more diffused lighting than the other image.\nThe selected image emphasizes open sea around a distant lighthouse.\nThe selected forest path has softer, more painterly texture than the other image.\nThe selected cafe scene is quieter, with empty tables, than the other image.",
+      "hash": "6ac17fb22dffc60d1726bfd8def98575087f5d8927c5ae6bc16c9fa03648e304"
+    },
+    "mode": "sample",
+    "recommendation": null,
+    "images": [
+      {
+        "type": "image",
+        "id": "h1-cat-0",
+        "path": "samples/h1-cat-0.png",
+        "sha256": "fadbc882a5f9be198e734feb13a48f9b1c37f414e8f18cffce282e445ad02e04",
+        "seed": 230923,
+        "prompt": "One cat sitting by a window. warm accent colors, soft lighting, spacious composition, painterly texture, calm atmosphere.",
+        "settings": {
+          "model": "stabilityai/stable-diffusion-xl-base-1.0",
+          "revision": "462165984030d82259a11f4367a4eed129e94a7b",
+          "scheduler": "EulerDiscreteScheduler",
+          "width": 1024,
+          "height": 1024,
+          "steps": 20,
+          "guidance_scale": 7.0,
+          "negative_prompt": "",
+          "precision": "fp16"
+        },
+        "seconds": 3.097,
+        "context_hash": "6ac17fb22dffc60d1726bfd8def98575087f5d8927c5ae6bc16c9fa03648e304"
+      },
+      {
+        "type": "image",
+        "id": "h1-cat-1",
+        "path": "samples/h1-cat-1.png",
+        "sha256": "485f54e8fcef510da875e790fb91d7d0e8d4adb408023c1954576b167123b131",
+        "seed": 230924,
+        "prompt": "One cat sitting by a window. warm accent colors, soft lighting, spacious composition, painterly texture, calm atmosphere.",
+        "settings": {
+          "model": "stabilityai/stable-diffusion-xl-base-1.0",
+          "revision": "462165984030d82259a11f4367a4eed129e94a7b",
+          "scheduler": "EulerDiscreteScheduler",
+          "width": 1024,
+          "height": 1024,
+          "steps": 20,
+          "guidance_scale": 7.0,
+          "negative_prompt": "",
+          "precision": "fp16"
+        },
+        "seconds": 2.861,
+        "context_hash": "6ac17fb22dffc60d1726bfd8def98575087f5d8927c5ae6bc16c9fa03648e304"
+      },
+      {
+        "type": "image",
+        "id": "h1-cat-2",
+        "path": "samples/h1-cat-2.png",
+        "sha256": "5b1f08b8090fd85c13c73bbc90407dc5d775b21ad1c51cfdfa3fc94610cbe86b",
+        "seed": 230925,
+        "prompt": "One cat sitting by a window. warm accent colors, soft lighting, spacious composition, painterly texture, calm atmosphere.",
+        "settings": {
+          "model": "stabilityai/stable-diffusion-xl-base-1.0",
+          "revision": "462165984030d82259a11f4367a4eed129e94a7b",
+          "scheduler": "EulerDiscreteScheduler",
+          "width": 1024,
+          "height": 1024,
+          "steps": 20,
+          "guidance_scale": 7.0,
+          "negative_prompt": "",
+          "precision": "fp16"
+        },
+        "seconds": 2.878,
+        "context_hash": "6ac17fb22dffc60d1726bfd8def98575087f5d8927c5ae6bc16c9fa03648e304"
+      },
+      {
+        "type": "image",
+        "id": "h1-cat-3",
+        "path": "samples/h1-cat-3.png",
+        "sha256": "c93b933163299229982e9fad2a6315235897b9ddbf8f41250570f8daa10be6b8",
+        "seed": 230926,
+        "prompt": "One cat sitting by a window. warm accent colors, soft lighting, spacious composition, painterly texture, calm atmosphere.",
+        "settings": {
+          "model": "stabilityai/stable-diffusion-xl-base-1.0",
+          "revision": "462165984030d82259a11f4367a4eed129e94a7b",
+          "scheduler": "EulerDiscreteScheduler",
+          "width": 1024,
+          "height": 1024,
+          "steps": 20,
+          "guidance_scale": 7.0,
+          "negative_prompt": "",
+          "precision": "fp16"
+        },
+        "seconds": 2.863,
+        "context_hash": "6ac17fb22dffc60d1726bfd8def98575087f5d8927c5ae6bc16c9fa03648e304"
+      }
+    ],
+    "rewrite": {
+      "type": "rewrite",
+      "id": "h1-cat",
+      "prompt": "One cat sitting by a window. warm accent colors, soft lighting, spacious composition, painterly texture, calm atmosphere.",
+      "raw": "warm accent colors, soft lighting, spacious composition, painterly texture, calm atmosphere",
+      "valid": true,
+      "context_hash": "6ac17fb22dffc60d1726bfd8def98575087f5d8927c5ae6bc16c9fa03648e304",
+      "model": {
+        "model": "Qwen/Qwen3.5-4B",
+        "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+        "template_version": "append-aesthetic-v1"
+      },
+      "token_lengths": [
+        27,
+        27
+      ]
+    }
+  },
+  {
+    "id": "h1-tokyo",
+    "topic_id": "tokyo",
+    "choices": [
+      {
+        "pair_id": "p1",
+        "chosen_id": "p1-a"
+      },
+      {
+        "pair_id": "p2",
+        "chosen_id": "p2-a"
+      },
+      {
+        "pair_id": "p3",
+        "chosen_id": "p3-a"
+      },
+      {
+        "pair_id": "p4",
+        "chosen_id": "p4-a"
+      },
+      {
+        "pair_id": "p5",
+        "chosen_id": "p5-a"
+      }
+    ],
+    "context": {
+      "version": 1,
+      "preferences": {
+        "color": "warm",
+        "lighting": "soft",
+        "composition": "spacious",
+        "texture": "painterly",
+        "mood": "calm"
+      },
+      "overrides": {},
+      "evidence": [
+        {
+          "id": "p1-a-e1",
+          "pair_id": "p1",
+          "pair_version": 1,
+          "chosen_id": "p1-a",
+          "dimensions": [
+            "color"
+          ],
+          "values": {
+            "color": "warm"
+          },
+          "text": "The selected harbor image has warmer colors than the other image.",
+          "context_source": "generic_vlm",
+          "source": {
+            "model": "Qwen/Qwen3.5-4B",
+            "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+            "template_version": "append-aesthetic-v1"
+          },
+          "image_hashes": {
+            "p1-a": "2ff616c02e4c844a87de50c30b093640ef852ac2a6e1447cb7854b504bf84687",
+            "p1-b": "0fe0d31d93216d1a000def4b25c1b4adcc1088ea132d16b41764c75ea8e90806"
+          },
+          "basic_prompt_en": "A small harbor with moored boats.",
+          "template_version": "single-axis-relative-v1",
+          "template_hash": "4cc18c54fe3fb7644ea2024d89ce66f1b10d3286bdc7f4c259d8cc50cccc7fc7",
+          "preprocessing": "RGB; aspect preserved; longest edge 448"
+        },
+        {
+          "id": "p2-a-e1",
+          "pair_id": "p2",
+          "pair_version": 1,
+          "chosen_id": "p2-a",
+          "dimensions": [
+            "lighting"
+          ],
+          "values": {
+            "lighting": "soft"
+          },
+          "text": "The selected flowers have softer, more diffused lighting than the other image.",
+          "context_source": "generic_vlm",
+          "source": {
+            "model": "Qwen/Qwen3.5-4B",
+            "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+            "template_version": "append-aesthetic-v1"
+          },
+          "image_hashes": {
+            "p2-a": "99e5e80e37d5f8cd77c23af5b8ec6dd999bf8c013f070a5378f982815195f73e",
+            "p2-b": "867ab990a86a3bba776592f0144a8c27241309b9ea1d65ff752443a39f4de473"
+          },
+          "basic_prompt_en": "A vase of flowers on a table in a room.",
+          "template_version": "single-axis-relative-v1",
+          "template_hash": "4cc18c54fe3fb7644ea2024d89ce66f1b10d3286bdc7f4c259d8cc50cccc7fc7",
+          "preprocessing": "RGB; aspect preserved; longest edge 448"
+        },
+        {
+          "id": "p3-a-e1",
+          "pair_id": "p3",
+          "pair_version": 1,
+          "chosen_id": "p3-a",
+          "dimensions": [
+            "composition"
+          ],
+          "values": {
+            "composition": "spacious"
+          },
+          "text": "The selected image emphasizes open sea around a distant lighthouse.",
+          "context_source": "generic_vlm",
+          "source": {
+            "model": "Qwen/Qwen3.5-4B",
+            "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+            "template_version": "append-aesthetic-v1"
+          },
+          "image_hashes": {
+            "p3-a": "aed4557d5e08df475ddb2a50da4bd5298818d4c5a1f694f2f5b65bcc78090206",
+            "p3-b": "b870b1e921bd982ed30492140caffb1c6dc326715e85265bcf045454ba504b44"
+          },
+          "basic_prompt_en": "One lighthouse beside the sea.",
+          "template_version": "single-axis-relative-v1",
+          "template_hash": "4cc18c54fe3fb7644ea2024d89ce66f1b10d3286bdc7f4c259d8cc50cccc7fc7",
+          "preprocessing": "RGB; aspect preserved; longest edge 448"
+        },
+        {
+          "id": "p4-a-e1",
+          "pair_id": "p4",
+          "pair_version": 1,
+          "chosen_id": "p4-a",
+          "dimensions": [
+            "texture"
+          ],
+          "values": {
+            "texture": "painterly"
+          },
+          "text": "The selected forest path has softer, more painterly texture than the other image.",
+          "context_source": "generic_vlm",
+          "source": {
+            "model": "Qwen/Qwen3.5-4B",
+            "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+            "template_version": "append-aesthetic-v1"
+          },
+          "image_hashes": {
+            "p4-a": "e94d95b9e63750d198ac50104f88ab12c508e8a0c447790238e5dd3cc32c22a9",
+            "p4-b": "e60d9d218512d62c1ed832040c6bd926987036f1b3bc97e8dee07f387e20f650"
+          },
+          "basic_prompt_en": "A winding path through a forest.",
+          "template_version": "single-axis-relative-v1",
+          "template_hash": "4cc18c54fe3fb7644ea2024d89ce66f1b10d3286bdc7f4c259d8cc50cccc7fc7",
+          "preprocessing": "RGB; aspect preserved; longest edge 448"
+        },
+        {
+          "id": "p5-a-e1",
+          "pair_id": "p5",
+          "pair_version": 1,
+          "chosen_id": "p5-a",
+          "dimensions": [
+            "mood"
+          ],
+          "values": {
+            "mood": "calm"
+          },
+          "text": "The selected cafe scene is quieter, with empty tables, than the other image.",
+          "context_source": "generic_vlm",
+          "source": {
+            "model": "Qwen/Qwen3.5-4B",
+            "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+            "template_version": "append-aesthetic-v1"
+          },
+          "image_hashes": {
+            "p5-a": "0ea4784fcaa5b0a48b133634976427db0e3f4f4e71524386545e6adfcae445b1",
+            "p5-b": "a02fc99b3eeeaa0cc432c57403b974e035967888de894fdcb35dcf8c941e742e"
+          },
+          "basic_prompt_en": "A cafe on a city street.",
+          "template_version": "single-axis-relative-v1",
+          "template_hash": "4cc18c54fe3fb7644ea2024d89ce66f1b10d3286bdc7f4c259d8cc50cccc7fc7",
+          "preprocessing": "RGB; aspect preserved; longest edge 448"
+        }
+      ],
+      "choice_ids": [
+        "p1:p1-a",
+        "p2:p2-a",
+        "p3:p3-a",
+        "p4:p4-a",
+        "p5:p5-a"
+      ],
+      "text": "The selected harbor image has warmer colors than the other image.\nThe selected flowers have softer, more diffused lighting than the other image.\nThe selected image emphasizes open sea around a distant lighthouse.\nThe selected forest path has softer, more painterly texture than the other image.\nThe selected cafe scene is quieter, with empty tables, than the other image.",
+      "hash": "6ac17fb22dffc60d1726bfd8def98575087f5d8927c5ae6bc16c9fa03648e304"
+    },
+    "mode": "sample",
+    "recommendation": null,
+    "images": [
+      {
+        "type": "image",
+        "id": "h1-tokyo-0",
+        "path": "samples/h1-tokyo-0.png",
+        "sha256": "937da4fa19eb1c30bf89264f424bcbafa2f4a3452ce247924deaa2354476cef5",
+        "seed": 230923,
+        "prompt": "The Tokyo skyline at night. warm accent colors, soft lighting, spacious composition, painterly texture, calm atmosphere.",
+        "settings": {
+          "model": "stabilityai/stable-diffusion-xl-base-1.0",
+          "revision": "462165984030d82259a11f4367a4eed129e94a7b",
+          "scheduler": "EulerDiscreteScheduler",
+          "width": 1024,
+          "height": 1024,
+          "steps": 20,
+          "guidance_scale": 7.0,
+          "negative_prompt": "",
+          "precision": "fp16"
+        },
+        "seconds": 2.812,
+        "context_hash": "6ac17fb22dffc60d1726bfd8def98575087f5d8927c5ae6bc16c9fa03648e304"
+      },
+      {
+        "type": "image",
+        "id": "h1-tokyo-1",
+        "path": "samples/h1-tokyo-1.png",
+        "sha256": "4aa75ba9a78710a7465c5abbf5bf1b16785d8078f55989f35c973936681f0f9d",
+        "seed": 230924,
+        "prompt": "The Tokyo skyline at night. warm accent colors, soft lighting, spacious composition, painterly texture, calm atmosphere.",
+        "settings": {
+          "model": "stabilityai/stable-diffusion-xl-base-1.0",
+          "revision": "462165984030d82259a11f4367a4eed129e94a7b",
+          "scheduler": "EulerDiscreteScheduler",
+          "width": 1024,
+          "height": 1024,
+          "steps": 20,
+          "guidance_scale": 7.0,
+          "negative_prompt": "",
+          "precision": "fp16"
+        },
+        "seconds": 2.829,
+        "context_hash": "6ac17fb22dffc60d1726bfd8def98575087f5d8927c5ae6bc16c9fa03648e304"
+      },
+      {
+        "type": "image",
+        "id": "h1-tokyo-2",
+        "path": "samples/h1-tokyo-2.png",
+        "sha256": "310500b48fbcc75cecfeef918a62fbf57e55314c21f65872fc2ca85822dcc82b",
+        "seed": 230925,
+        "prompt": "The Tokyo skyline at night. warm accent colors, soft lighting, spacious composition, painterly texture, calm atmosphere.",
+        "settings": {
+          "model": "stabilityai/stable-diffusion-xl-base-1.0",
+          "revision": "462165984030d82259a11f4367a4eed129e94a7b",
+          "scheduler": "EulerDiscreteScheduler",
+          "width": 1024,
+          "height": 1024,
+          "steps": 20,
+          "guidance_scale": 7.0,
+          "negative_prompt": "",
+          "precision": "fp16"
+        },
+        "seconds": 2.824,
+        "context_hash": "6ac17fb22dffc60d1726bfd8def98575087f5d8927c5ae6bc16c9fa03648e304"
+      },
+      {
+        "type": "image",
+        "id": "h1-tokyo-3",
+        "path": "samples/h1-tokyo-3.png",
+        "sha256": "36242d93af118e7cbad3b9c9fe0d2fcd8e27060ef738668103e9b554586a0424",
+        "seed": 230926,
+        "prompt": "The Tokyo skyline at night. warm accent colors, soft lighting, spacious composition, painterly texture, calm atmosphere.",
+        "settings": {
+          "model": "stabilityai/stable-diffusion-xl-base-1.0",
+          "revision": "462165984030d82259a11f4367a4eed129e94a7b",
+          "scheduler": "EulerDiscreteScheduler",
+          "width": 1024,
+          "height": 1024,
+          "steps": 20,
+          "guidance_scale": 7.0,
+          "negative_prompt": "",
+          "precision": "fp16"
+        },
+        "seconds": 2.82,
+        "context_hash": "6ac17fb22dffc60d1726bfd8def98575087f5d8927c5ae6bc16c9fa03648e304"
+      }
+    ],
+    "rewrite": {
+      "type": "rewrite",
+      "id": "h1-tokyo",
+      "prompt": "The Tokyo skyline at night. warm accent colors, soft lighting, spacious composition, painterly texture, calm atmosphere.",
+      "raw": "warm accent colors, soft lighting, spacious composition, painterly texture, calm atmosphere",
+      "valid": true,
+      "context_hash": "6ac17fb22dffc60d1726bfd8def98575087f5d8927c5ae6bc16c9fa03648e304",
+      "model": {
+        "model": "Qwen/Qwen3.5-4B",
+        "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+        "template_version": "append-aesthetic-v1"
+      },
+      "token_lengths": [
+        26,
+        26
+      ]
+    }
+  },
+  {
+    "id": "h2-cat",
+    "topic_id": "cat",
+    "choices": [
+      {
+        "pair_id": "p1",
+        "chosen_id": "p1-b"
+      },
+      {
+        "pair_id": "p2",
+        "chosen_id": "p2-b"
+      },
+      {
+        "pair_id": "p3",
+        "chosen_id": "p3-b"
+      },
+      {
+        "pair_id": "p4",
+        "chosen_id": "p4-b"
+      },
+      {
+        "pair_id": "p5",
+        "chosen_id": "p5-b"
+      }
+    ],
+    "context": {
+      "version": 1,
+      "preferences": {
+        "color": "cool",
+        "lighting": "dramatic",
+        "composition": "close",
+        "texture": "photographic",
+        "mood": "lively"
+      },
+      "overrides": {},
+      "evidence": [
+        {
+          "id": "p1-b-e1",
+          "pair_id": "p1",
+          "pair_version": 1,
+          "chosen_id": "p1-b",
+          "dimensions": [
+            "color"
+          ],
+          "values": {
+            "color": "cool"
+          },
+          "text": "The selected harbor image has cooler greens and blues than the other image.",
+          "context_source": "generic_vlm",
+          "source": {
+            "model": "Qwen/Qwen3.5-4B",
+            "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+            "template_version": "append-aesthetic-v1"
+          },
+          "image_hashes": {
+            "p1-a": "2ff616c02e4c844a87de50c30b093640ef852ac2a6e1447cb7854b504bf84687",
+            "p1-b": "0fe0d31d93216d1a000def4b25c1b4adcc1088ea132d16b41764c75ea8e90806"
+          },
+          "basic_prompt_en": "A small harbor with moored boats.",
+          "template_version": "single-axis-relative-v1",
+          "template_hash": "4cc18c54fe3fb7644ea2024d89ce66f1b10d3286bdc7f4c259d8cc50cccc7fc7",
+          "preprocessing": "RGB; aspect preserved; longest edge 448"
+        },
+        {
+          "id": "p2-b-e1",
+          "pair_id": "p2",
+          "pair_version": 1,
+          "chosen_id": "p2-b",
+          "dimensions": [
+            "lighting"
+          ],
+          "values": {
+            "lighting": "dramatic"
+          },
+          "text": "The selected flowers have stronger shadows and highlights than the other image.",
+          "context_source": "generic_vlm",
+          "source": {
+            "model": "Qwen/Qwen3.5-4B",
+            "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+            "template_version": "append-aesthetic-v1"
+          },
+          "image_hashes": {
+            "p2-a": "99e5e80e37d5f8cd77c23af5b8ec6dd999bf8c013f070a5378f982815195f73e",
+            "p2-b": "867ab990a86a3bba776592f0144a8c27241309b9ea1d65ff752443a39f4de473"
+          },
+          "basic_prompt_en": "A vase of flowers on a table in a room.",
+          "template_version": "single-axis-relative-v1",
+          "template_hash": "4cc18c54fe3fb7644ea2024d89ce66f1b10d3286bdc7f4c259d8cc50cccc7fc7",
+          "preprocessing": "RGB; aspect preserved; longest edge 448"
+        },
+        {
+          "id": "p3-b-e1",
+          "pair_id": "p3",
+          "pair_version": 1,
+          "chosen_id": "p3-b",
+          "dimensions": [
+            "composition"
+          ],
+          "values": {
+            "composition": "close"
+          },
+          "text": "The selected image shows a closer, more detailed view of the lighthouse and rocky shore.",
+          "context_source": "generic_vlm",
+          "source": {
+            "model": "Qwen/Qwen3.5-4B",
+            "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+            "template_version": "append-aesthetic-v1"
+          },
+          "image_hashes": {
+            "p3-a": "aed4557d5e08df475ddb2a50da4bd5298818d4c5a1f694f2f5b65bcc78090206",
+            "p3-b": "b870b1e921bd982ed30492140caffb1c6dc326715e85265bcf045454ba504b44"
+          },
+          "basic_prompt_en": "One lighthouse beside the sea.",
+          "template_version": "single-axis-relative-v1",
+          "template_hash": "4cc18c54fe3fb7644ea2024d89ce66f1b10d3286bdc7f4c259d8cc50cccc7fc7",
+          "preprocessing": "RGB; aspect preserved; longest edge 448"
+        },
+        {
+          "id": "p4-b-e1",
+          "pair_id": "p4",
+          "pair_version": 1,
+          "chosen_id": "p4-b",
+          "dimensions": [
+            "texture"
+          ],
+          "values": {
+            "texture": "photographic"
+          },
+          "text": "The selected forest path has sharper, more defined natural textures than the other image.",
+          "context_source": "generic_vlm",
+          "source": {
+            "model": "Qwen/Qwen3.5-4B",
+            "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+            "template_version": "append-aesthetic-v1"
+          },
+          "image_hashes": {
+            "p4-a": "e94d95b9e63750d198ac50104f88ab12c508e8a0c447790238e5dd3cc32c22a9",
+            "p4-b": "e60d9d218512d62c1ed832040c6bd926987036f1b3bc97e8dee07f387e20f650"
+          },
+          "basic_prompt_en": "A winding path through a forest.",
+          "template_version": "single-axis-relative-v1",
+          "template_hash": "4cc18c54fe3fb7644ea2024d89ce66f1b10d3286bdc7f4c259d8cc50cccc7fc7",
+          "preprocessing": "RGB; aspect preserved; longest edge 448"
+        },
+        {
+          "id": "p5-b-e1",
+          "pair_id": "p5",
+          "pair_version": 1,
+          "chosen_id": "p5-b",
+          "dimensions": [
+            "mood"
+          ],
+          "values": {
+            "mood": "lively"
+          },
+          "text": "The selected cafe scene has a livelier atmosphere with people than the other image.",
+          "context_source": "generic_vlm",
+          "source": {
+            "model": "Qwen/Qwen3.5-4B",
+            "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+            "template_version": "append-aesthetic-v1"
+          },
+          "image_hashes": {
+            "p5-a": "0ea4784fcaa5b0a48b133634976427db0e3f4f4e71524386545e6adfcae445b1",
+            "p5-b": "a02fc99b3eeeaa0cc432c57403b974e035967888de894fdcb35dcf8c941e742e"
+          },
+          "basic_prompt_en": "A cafe on a city street.",
+          "template_version": "single-axis-relative-v1",
+          "template_hash": "4cc18c54fe3fb7644ea2024d89ce66f1b10d3286bdc7f4c259d8cc50cccc7fc7",
+          "preprocessing": "RGB; aspect preserved; longest edge 448"
+        }
+      ],
+      "choice_ids": [
+        "p1:p1-b",
+        "p2:p2-b",
+        "p3:p3-b",
+        "p4:p4-b",
+        "p5:p5-b"
+      ],
+      "text": "The selected harbor image has cooler greens and blues than the other image.\nThe selected flowers have stronger shadows and highlights than the other image.\nThe selected image shows a closer, more detailed view of the lighthouse and rocky shore.\nThe selected forest path has sharper, more defined natural textures than the other image.\nThe selected cafe scene has a livelier atmosphere with people than the other image.",
+      "hash": "2787195fa198913c0a111db99e5786633146dd82fcdb5cf80493d63a45869ec4"
+    },
+    "mode": "sample",
+    "recommendation": null,
+    "images": [
+      {
+        "type": "image",
+        "id": "h2-cat-0",
+        "path": "samples/h2-cat-0.png",
+        "sha256": "68feac093e32c6268dca2434abf83e11dd573f66ebc53cb75b96b743b08a8d1a",
+        "seed": 230923,
+        "prompt": "One cat sitting by a window. cool accent colors, dramatic contrast, close framing, photographic detail, lively atmosphere.",
+        "settings": {
+          "model": "stabilityai/stable-diffusion-xl-base-1.0",
+          "revision": "462165984030d82259a11f4367a4eed129e94a7b",
+          "scheduler": "EulerDiscreteScheduler",
+          "width": 1024,
+          "height": 1024,
+          "steps": 20,
+          "guidance_scale": 7.0,
+          "negative_prompt": "",
+          "precision": "fp16"
+        },
+        "seconds": 2.841,
+        "context_hash": "2787195fa198913c0a111db99e5786633146dd82fcdb5cf80493d63a45869ec4"
+      },
+      {
+        "type": "image",
+        "id": "h2-cat-1",
+        "path": "samples/h2-cat-1.png",
+        "sha256": "477ad695365047f1e106fba594521dd2224a3e6461d9cce0e4f630d5ff252e89",
+        "seed": 230924,
+        "prompt": "One cat sitting by a window. cool accent colors, dramatic contrast, close framing, photographic detail, lively atmosphere.",
+        "settings": {
+          "model": "stabilityai/stable-diffusion-xl-base-1.0",
+          "revision": "462165984030d82259a11f4367a4eed129e94a7b",
+          "scheduler": "EulerDiscreteScheduler",
+          "width": 1024,
+          "height": 1024,
+          "steps": 20,
+          "guidance_scale": 7.0,
+          "negative_prompt": "",
+          "precision": "fp16"
+        },
+        "seconds": 2.864,
+        "context_hash": "2787195fa198913c0a111db99e5786633146dd82fcdb5cf80493d63a45869ec4"
+      },
+      {
+        "type": "image",
+        "id": "h2-cat-2",
+        "path": "samples/h2-cat-2.png",
+        "sha256": "d31f8583c4d6de854ecf5565bb8ff8d34b56d7a18efd368e3d15fea5f55289fd",
+        "seed": 230925,
+        "prompt": "One cat sitting by a window. cool accent colors, dramatic contrast, close framing, photographic detail, lively atmosphere.",
+        "settings": {
+          "model": "stabilityai/stable-diffusion-xl-base-1.0",
+          "revision": "462165984030d82259a11f4367a4eed129e94a7b",
+          "scheduler": "EulerDiscreteScheduler",
+          "width": 1024,
+          "height": 1024,
+          "steps": 20,
+          "guidance_scale": 7.0,
+          "negative_prompt": "",
+          "precision": "fp16"
+        },
+        "seconds": 2.879,
+        "context_hash": "2787195fa198913c0a111db99e5786633146dd82fcdb5cf80493d63a45869ec4"
+      },
+      {
+        "type": "image",
+        "id": "h2-cat-3",
+        "path": "samples/h2-cat-3.png",
+        "sha256": "f69fc8c2dfc71746fdd892d2236086c367921c942ff4858aa658a03f1d6ee93f",
+        "seed": 230926,
+        "prompt": "One cat sitting by a window. cool accent colors, dramatic contrast, close framing, photographic detail, lively atmosphere.",
+        "settings": {
+          "model": "stabilityai/stable-diffusion-xl-base-1.0",
+          "revision": "462165984030d82259a11f4367a4eed129e94a7b",
+          "scheduler": "EulerDiscreteScheduler",
+          "width": 1024,
+          "height": 1024,
+          "steps": 20,
+          "guidance_scale": 7.0,
+          "negative_prompt": "",
+          "precision": "fp16"
+        },
+        "seconds": 2.867,
+        "context_hash": "2787195fa198913c0a111db99e5786633146dd82fcdb5cf80493d63a45869ec4"
+      }
+    ],
+    "rewrite": {
+      "type": "rewrite",
+      "id": "h2-cat",
+      "prompt": "One cat sitting by a window. cool accent colors, dramatic contrast, close framing, photographic detail, lively atmosphere.",
+      "raw": "cool accent colors, dramatic contrast, close framing, photographic detail, lively atmosphere",
+      "valid": true,
+      "context_hash": "2787195fa198913c0a111db99e5786633146dd82fcdb5cf80493d63a45869ec4",
+      "model": {
+        "model": "Qwen/Qwen3.5-4B",
+        "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+        "template_version": "append-aesthetic-v1"
+      },
+      "token_lengths": [
+        25,
+        25
+      ]
+    }
+  },
+  {
+    "id": "h2-tokyo",
+    "topic_id": "tokyo",
+    "choices": [
+      {
+        "pair_id": "p1",
+        "chosen_id": "p1-b"
+      },
+      {
+        "pair_id": "p2",
+        "chosen_id": "p2-b"
+      },
+      {
+        "pair_id": "p3",
+        "chosen_id": "p3-b"
+      },
+      {
+        "pair_id": "p4",
+        "chosen_id": "p4-b"
+      },
+      {
+        "pair_id": "p5",
+        "chosen_id": "p5-b"
+      }
+    ],
+    "context": {
+      "version": 1,
+      "preferences": {
+        "color": "cool",
+        "lighting": "dramatic",
+        "composition": "close",
+        "texture": "photographic",
+        "mood": "lively"
+      },
+      "overrides": {},
+      "evidence": [
+        {
+          "id": "p1-b-e1",
+          "pair_id": "p1",
+          "pair_version": 1,
+          "chosen_id": "p1-b",
+          "dimensions": [
+            "color"
+          ],
+          "values": {
+            "color": "cool"
+          },
+          "text": "The selected harbor image has cooler greens and blues than the other image.",
+          "context_source": "generic_vlm",
+          "source": {
+            "model": "Qwen/Qwen3.5-4B",
+            "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+            "template_version": "append-aesthetic-v1"
+          },
+          "image_hashes": {
+            "p1-a": "2ff616c02e4c844a87de50c30b093640ef852ac2a6e1447cb7854b504bf84687",
+            "p1-b": "0fe0d31d93216d1a000def4b25c1b4adcc1088ea132d16b41764c75ea8e90806"
+          },
+          "basic_prompt_en": "A small harbor with moored boats.",
+          "template_version": "single-axis-relative-v1",
+          "template_hash": "4cc18c54fe3fb7644ea2024d89ce66f1b10d3286bdc7f4c259d8cc50cccc7fc7",
+          "preprocessing": "RGB; aspect preserved; longest edge 448"
+        },
+        {
+          "id": "p2-b-e1",
+          "pair_id": "p2",
+          "pair_version": 1,
+          "chosen_id": "p2-b",
+          "dimensions": [
+            "lighting"
+          ],
+          "values": {
+            "lighting": "dramatic"
+          },
+          "text": "The selected flowers have stronger shadows and highlights than the other image.",
+          "context_source": "generic_vlm",
+          "source": {
+            "model": "Qwen/Qwen3.5-4B",
+            "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+            "template_version": "append-aesthetic-v1"
+          },
+          "image_hashes": {
+            "p2-a": "99e5e80e37d5f8cd77c23af5b8ec6dd999bf8c013f070a5378f982815195f73e",
+            "p2-b": "867ab990a86a3bba776592f0144a8c27241309b9ea1d65ff752443a39f4de473"
+          },
+          "basic_prompt_en": "A vase of flowers on a table in a room.",
+          "template_version": "single-axis-relative-v1",
+          "template_hash": "4cc18c54fe3fb7644ea2024d89ce66f1b10d3286bdc7f4c259d8cc50cccc7fc7",
+          "preprocessing": "RGB; aspect preserved; longest edge 448"
+        },
+        {
+          "id": "p3-b-e1",
+          "pair_id": "p3",
+          "pair_version": 1,
+          "chosen_id": "p3-b",
+          "dimensions": [
+            "composition"
+          ],
+          "values": {
+            "composition": "close"
+          },
+          "text": "The selected image shows a closer, more detailed view of the lighthouse and rocky shore.",
+          "context_source": "generic_vlm",
+          "source": {
+            "model": "Qwen/Qwen3.5-4B",
+            "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+            "template_version": "append-aesthetic-v1"
+          },
+          "image_hashes": {
+            "p3-a": "aed4557d5e08df475ddb2a50da4bd5298818d4c5a1f694f2f5b65bcc78090206",
+            "p3-b": "b870b1e921bd982ed30492140caffb1c6dc326715e85265bcf045454ba504b44"
+          },
+          "basic_prompt_en": "One lighthouse beside the sea.",
+          "template_version": "single-axis-relative-v1",
+          "template_hash": "4cc18c54fe3fb7644ea2024d89ce66f1b10d3286bdc7f4c259d8cc50cccc7fc7",
+          "preprocessing": "RGB; aspect preserved; longest edge 448"
+        },
+        {
+          "id": "p4-b-e1",
+          "pair_id": "p4",
+          "pair_version": 1,
+          "chosen_id": "p4-b",
+          "dimensions": [
+            "texture"
+          ],
+          "values": {
+            "texture": "photographic"
+          },
+          "text": "The selected forest path has sharper, more defined natural textures than the other image.",
+          "context_source": "generic_vlm",
+          "source": {
+            "model": "Qwen/Qwen3.5-4B",
+            "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+            "template_version": "append-aesthetic-v1"
+          },
+          "image_hashes": {
+            "p4-a": "e94d95b9e63750d198ac50104f88ab12c508e8a0c447790238e5dd3cc32c22a9",
+            "p4-b": "e60d9d218512d62c1ed832040c6bd926987036f1b3bc97e8dee07f387e20f650"
+          },
+          "basic_prompt_en": "A winding path through a forest.",
+          "template_version": "single-axis-relative-v1",
+          "template_hash": "4cc18c54fe3fb7644ea2024d89ce66f1b10d3286bdc7f4c259d8cc50cccc7fc7",
+          "preprocessing": "RGB; aspect preserved; longest edge 448"
+        },
+        {
+          "id": "p5-b-e1",
+          "pair_id": "p5",
+          "pair_version": 1,
+          "chosen_id": "p5-b",
+          "dimensions": [
+            "mood"
+          ],
+          "values": {
+            "mood": "lively"
+          },
+          "text": "The selected cafe scene has a livelier atmosphere with people than the other image.",
+          "context_source": "generic_vlm",
+          "source": {
+            "model": "Qwen/Qwen3.5-4B",
+            "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+            "template_version": "append-aesthetic-v1"
+          },
+          "image_hashes": {
+            "p5-a": "0ea4784fcaa5b0a48b133634976427db0e3f4f4e71524386545e6adfcae445b1",
+            "p5-b": "a02fc99b3eeeaa0cc432c57403b974e035967888de894fdcb35dcf8c941e742e"
+          },
+          "basic_prompt_en": "A cafe on a city street.",
+          "template_version": "single-axis-relative-v1",
+          "template_hash": "4cc18c54fe3fb7644ea2024d89ce66f1b10d3286bdc7f4c259d8cc50cccc7fc7",
+          "preprocessing": "RGB; aspect preserved; longest edge 448"
+        }
+      ],
+      "choice_ids": [
+        "p1:p1-b",
+        "p2:p2-b",
+        "p3:p3-b",
+        "p4:p4-b",
+        "p5:p5-b"
+      ],
+      "text": "The selected harbor image has cooler greens and blues than the other image.\nThe selected flowers have stronger shadows and highlights than the other image.\nThe selected image shows a closer, more detailed view of the lighthouse and rocky shore.\nThe selected forest path has sharper, more defined natural textures than the other image.\nThe selected cafe scene has a livelier atmosphere with people than the other image.",
+      "hash": "2787195fa198913c0a111db99e5786633146dd82fcdb5cf80493d63a45869ec4"
+    },
+    "mode": "sample",
+    "recommendation": null,
+    "images": [
+      {
+        "type": "image",
+        "id": "h2-tokyo-0",
+        "path": "samples/h2-tokyo-0.png",
+        "sha256": "77df4ba25492b444f539687a95c6dfa5b1951e8ab19129432104576bd5415588",
+        "seed": 230923,
+        "prompt": "The Tokyo skyline at night. cool accent colors, dramatic contrast, close framing, photographic detail, lively atmosphere.",
+        "settings": {
+          "model": "stabilityai/stable-diffusion-xl-base-1.0",
+          "revision": "462165984030d82259a11f4367a4eed129e94a7b",
+          "scheduler": "EulerDiscreteScheduler",
+          "width": 1024,
+          "height": 1024,
+          "steps": 20,
+          "guidance_scale": 7.0,
+          "negative_prompt": "",
+          "precision": "fp16"
+        },
+        "seconds": 2.802,
+        "context_hash": "2787195fa198913c0a111db99e5786633146dd82fcdb5cf80493d63a45869ec4"
+      },
+      {
+        "type": "image",
+        "id": "h2-tokyo-1",
+        "path": "samples/h2-tokyo-1.png",
+        "sha256": "2d11d1cbc2d411f82a9945875da76488b4b4702165f5ec430ba3d0e1bcd7a6aa",
+        "seed": 230924,
+        "prompt": "The Tokyo skyline at night. cool accent colors, dramatic contrast, close framing, photographic detail, lively atmosphere.",
+        "settings": {
+          "model": "stabilityai/stable-diffusion-xl-base-1.0",
+          "revision": "462165984030d82259a11f4367a4eed129e94a7b",
+          "scheduler": "EulerDiscreteScheduler",
+          "width": 1024,
+          "height": 1024,
+          "steps": 20,
+          "guidance_scale": 7.0,
+          "negative_prompt": "",
+          "precision": "fp16"
+        },
+        "seconds": 2.815,
+        "context_hash": "2787195fa198913c0a111db99e5786633146dd82fcdb5cf80493d63a45869ec4"
+      },
+      {
+        "type": "image",
+        "id": "h2-tokyo-2",
+        "path": "samples/h2-tokyo-2.png",
+        "sha256": "83838c3fef633f5c9cdd40379a49823b388f45a155d76c8474aa5bfa523966d5",
+        "seed": 230925,
+        "prompt": "The Tokyo skyline at night. cool accent colors, dramatic contrast, close framing, photographic detail, lively atmosphere.",
+        "settings": {
+          "model": "stabilityai/stable-diffusion-xl-base-1.0",
+          "revision": "462165984030d82259a11f4367a4eed129e94a7b",
+          "scheduler": "EulerDiscreteScheduler",
+          "width": 1024,
+          "height": 1024,
+          "steps": 20,
+          "guidance_scale": 7.0,
+          "negative_prompt": "",
+          "precision": "fp16"
+        },
+        "seconds": 2.823,
+        "context_hash": "2787195fa198913c0a111db99e5786633146dd82fcdb5cf80493d63a45869ec4"
+      },
+      {
+        "type": "image",
+        "id": "h2-tokyo-3",
+        "path": "samples/h2-tokyo-3.png",
+        "sha256": "948d98a863f2df02f77474a063bb5f008e11e45cdccf5e06edfcd59a7341db3e",
+        "seed": 230926,
+        "prompt": "The Tokyo skyline at night. cool accent colors, dramatic contrast, close framing, photographic detail, lively atmosphere.",
+        "settings": {
+          "model": "stabilityai/stable-diffusion-xl-base-1.0",
+          "revision": "462165984030d82259a11f4367a4eed129e94a7b",
+          "scheduler": "EulerDiscreteScheduler",
+          "width": 1024,
+          "height": 1024,
+          "steps": 20,
+          "guidance_scale": 7.0,
+          "negative_prompt": "",
+          "precision": "fp16"
+        },
+        "seconds": 2.829,
+        "context_hash": "2787195fa198913c0a111db99e5786633146dd82fcdb5cf80493d63a45869ec4"
+      }
+    ],
+    "rewrite": {
+      "type": "rewrite",
+      "id": "h2-tokyo",
+      "prompt": "The Tokyo skyline at night. cool accent colors, dramatic contrast, close framing, photographic detail, lively atmosphere.",
+      "raw": "cool accent colors, dramatic contrast, close framing, photographic detail, lively atmosphere",
+      "valid": true,
+      "context_hash": "2787195fa198913c0a111db99e5786633146dd82fcdb5cf80493d63a45869ec4",
+      "model": {
+        "model": "Qwen/Qwen3.5-4B",
+        "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+        "template_version": "append-aesthetic-v1"
+      },
+      "token_lengths": [
+        24,
+        24
+      ]
+    }
+  },
+  {
+    "id": "h3-cat",
+    "topic_id": "cat",
+    "choices": [
+      {
+        "pair_id": "p1",
+        "chosen_id": "p1-a"
+      },
+      {
+        "pair_id": "p2",
+        "chosen_id": "p2-b"
+      },
+      {
+        "pair_id": "p3",
+        "chosen_id": "p3-a"
+      },
+      {
+        "pair_id": "p4",
+        "chosen_id": "p4-b"
+      },
+      {
+        "pair_id": "p5",
+        "chosen_id": "p5-a"
+      }
+    ],
+    "context": {
+      "version": 1,
+      "preferences": {
+        "color": "warm",
+        "lighting": "dramatic",
+        "composition": "spacious",
+        "texture": "photographic",
+        "mood": "calm"
+      },
+      "overrides": {},
+      "evidence": [
+        {
+          "id": "p1-a-e1",
+          "pair_id": "p1",
+          "pair_version": 1,
+          "chosen_id": "p1-a",
+          "dimensions": [
+            "color"
+          ],
+          "values": {
+            "color": "warm"
+          },
+          "text": "The selected harbor image has warmer colors than the other image.",
+          "context_source": "generic_vlm",
+          "source": {
+            "model": "Qwen/Qwen3.5-4B",
+            "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+            "template_version": "append-aesthetic-v1"
+          },
+          "image_hashes": {
+            "p1-a": "2ff616c02e4c844a87de50c30b093640ef852ac2a6e1447cb7854b504bf84687",
+            "p1-b": "0fe0d31d93216d1a000def4b25c1b4adcc1088ea132d16b41764c75ea8e90806"
+          },
+          "basic_prompt_en": "A small harbor with moored boats.",
+          "template_version": "single-axis-relative-v1",
+          "template_hash": "4cc18c54fe3fb7644ea2024d89ce66f1b10d3286bdc7f4c259d8cc50cccc7fc7",
+          "preprocessing": "RGB; aspect preserved; longest edge 448"
+        },
+        {
+          "id": "p2-b-e1",
+          "pair_id": "p2",
+          "pair_version": 1,
+          "chosen_id": "p2-b",
+          "dimensions": [
+            "lighting"
+          ],
+          "values": {
+            "lighting": "dramatic"
+          },
+          "text": "The selected flowers have stronger shadows and highlights than the other image.",
+          "context_source": "generic_vlm",
+          "source": {
+            "model": "Qwen/Qwen3.5-4B",
+            "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+            "template_version": "append-aesthetic-v1"
+          },
+          "image_hashes": {
+            "p2-a": "99e5e80e37d5f8cd77c23af5b8ec6dd999bf8c013f070a5378f982815195f73e",
+            "p2-b": "867ab990a86a3bba776592f0144a8c27241309b9ea1d65ff752443a39f4de473"
+          },
+          "basic_prompt_en": "A vase of flowers on a table in a room.",
+          "template_version": "single-axis-relative-v1",
+          "template_hash": "4cc18c54fe3fb7644ea2024d89ce66f1b10d3286bdc7f4c259d8cc50cccc7fc7",
+          "preprocessing": "RGB; aspect preserved; longest edge 448"
+        },
+        {
+          "id": "p3-a-e1",
+          "pair_id": "p3",
+          "pair_version": 1,
+          "chosen_id": "p3-a",
+          "dimensions": [
+            "composition"
+          ],
+          "values": {
+            "composition": "spacious"
+          },
+          "text": "The selected image emphasizes open sea around a distant lighthouse.",
+          "context_source": "generic_vlm",
+          "source": {
+            "model": "Qwen/Qwen3.5-4B",
+            "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+            "template_version": "append-aesthetic-v1"
+          },
+          "image_hashes": {
+            "p3-a": "aed4557d5e08df475ddb2a50da4bd5298818d4c5a1f694f2f5b65bcc78090206",
+            "p3-b": "b870b1e921bd982ed30492140caffb1c6dc326715e85265bcf045454ba504b44"
+          },
+          "basic_prompt_en": "One lighthouse beside the sea.",
+          "template_version": "single-axis-relative-v1",
+          "template_hash": "4cc18c54fe3fb7644ea2024d89ce66f1b10d3286bdc7f4c259d8cc50cccc7fc7",
+          "preprocessing": "RGB; aspect preserved; longest edge 448"
+        },
+        {
+          "id": "p4-b-e1",
+          "pair_id": "p4",
+          "pair_version": 1,
+          "chosen_id": "p4-b",
+          "dimensions": [
+            "texture"
+          ],
+          "values": {
+            "texture": "photographic"
+          },
+          "text": "The selected forest path has sharper, more defined natural textures than the other image.",
+          "context_source": "generic_vlm",
+          "source": {
+            "model": "Qwen/Qwen3.5-4B",
+            "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+            "template_version": "append-aesthetic-v1"
+          },
+          "image_hashes": {
+            "p4-a": "e94d95b9e63750d198ac50104f88ab12c508e8a0c447790238e5dd3cc32c22a9",
+            "p4-b": "e60d9d218512d62c1ed832040c6bd926987036f1b3bc97e8dee07f387e20f650"
+          },
+          "basic_prompt_en": "A winding path through a forest.",
+          "template_version": "single-axis-relative-v1",
+          "template_hash": "4cc18c54fe3fb7644ea2024d89ce66f1b10d3286bdc7f4c259d8cc50cccc7fc7",
+          "preprocessing": "RGB; aspect preserved; longest edge 448"
+        },
+        {
+          "id": "p5-a-e1",
+          "pair_id": "p5",
+          "pair_version": 1,
+          "chosen_id": "p5-a",
+          "dimensions": [
+            "mood"
+          ],
+          "values": {
+            "mood": "calm"
+          },
+          "text": "The selected cafe scene is quieter, with empty tables, than the other image.",
+          "context_source": "generic_vlm",
+          "source": {
+            "model": "Qwen/Qwen3.5-4B",
+            "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+            "template_version": "append-aesthetic-v1"
+          },
+          "image_hashes": {
+            "p5-a": "0ea4784fcaa5b0a48b133634976427db0e3f4f4e71524386545e6adfcae445b1",
+            "p5-b": "a02fc99b3eeeaa0cc432c57403b974e035967888de894fdcb35dcf8c941e742e"
+          },
+          "basic_prompt_en": "A cafe on a city street.",
+          "template_version": "single-axis-relative-v1",
+          "template_hash": "4cc18c54fe3fb7644ea2024d89ce66f1b10d3286bdc7f4c259d8cc50cccc7fc7",
+          "preprocessing": "RGB; aspect preserved; longest edge 448"
+        }
+      ],
+      "choice_ids": [
+        "p1:p1-a",
+        "p2:p2-b",
+        "p3:p3-a",
+        "p4:p4-b",
+        "p5:p5-a"
+      ],
+      "text": "The selected harbor image has warmer colors than the other image.\nThe selected flowers have stronger shadows and highlights than the other image.\nThe selected image emphasizes open sea around a distant lighthouse.\nThe selected forest path has sharper, more defined natural textures than the other image.\nThe selected cafe scene is quieter, with empty tables, than the other image.",
+      "hash": "3fe9b95eec532c65c13db1aa6935af35b034457f57bf61231e752df436b8f583"
+    },
+    "mode": "sample",
+    "recommendation": null,
+    "images": [
+      {
+        "type": "image",
+        "id": "h3-cat-0",
+        "path": "samples/h3-cat-0.png",
+        "sha256": "57963ea4903350f244cda05a347ac3c444b39eff0885dc5dd2f10b5a38b21d2c",
+        "seed": 230923,
+        "prompt": "One cat sitting by a window. warm accent colors, dramatic contrast, spacious composition, photographic detail, calm atmosphere.",
+        "settings": {
+          "model": "stabilityai/stable-diffusion-xl-base-1.0",
+          "revision": "462165984030d82259a11f4367a4eed129e94a7b",
+          "scheduler": "EulerDiscreteScheduler",
+          "width": 1024,
+          "height": 1024,
+          "steps": 20,
+          "guidance_scale": 7.0,
+          "negative_prompt": "",
+          "precision": "fp16"
+        },
+        "seconds": 2.868,
+        "context_hash": "3fe9b95eec532c65c13db1aa6935af35b034457f57bf61231e752df436b8f583"
+      },
+      {
+        "type": "image",
+        "id": "h3-cat-1",
+        "path": "samples/h3-cat-1.png",
+        "sha256": "3e5e65e15546c32c662c2a41f7763d9163e799c8b300504a37d090e52f33add3",
+        "seed": 230924,
+        "prompt": "One cat sitting by a window. warm accent colors, dramatic contrast, spacious composition, photographic detail, calm atmosphere.",
+        "settings": {
+          "model": "stabilityai/stable-diffusion-xl-base-1.0",
+          "revision": "462165984030d82259a11f4367a4eed129e94a7b",
+          "scheduler": "EulerDiscreteScheduler",
+          "width": 1024,
+          "height": 1024,
+          "steps": 20,
+          "guidance_scale": 7.0,
+          "negative_prompt": "",
+          "precision": "fp16"
+        },
+        "seconds": 2.868,
+        "context_hash": "3fe9b95eec532c65c13db1aa6935af35b034457f57bf61231e752df436b8f583"
+      },
+      {
+        "type": "image",
+        "id": "h3-cat-2",
+        "path": "samples/h3-cat-2.png",
+        "sha256": "e830941fe3d26232d2b1e575ee3384862af1fa619a1262e2c5400766f32a350a",
+        "seed": 230925,
+        "prompt": "One cat sitting by a window. warm accent colors, dramatic contrast, spacious composition, photographic detail, calm atmosphere.",
+        "settings": {
+          "model": "stabilityai/stable-diffusion-xl-base-1.0",
+          "revision": "462165984030d82259a11f4367a4eed129e94a7b",
+          "scheduler": "EulerDiscreteScheduler",
+          "width": 1024,
+          "height": 1024,
+          "steps": 20,
+          "guidance_scale": 7.0,
+          "negative_prompt": "",
+          "precision": "fp16"
+        },
+        "seconds": 2.887,
+        "context_hash": "3fe9b95eec532c65c13db1aa6935af35b034457f57bf61231e752df436b8f583"
+      },
+      {
+        "type": "image",
+        "id": "h3-cat-3",
+        "path": "samples/h3-cat-3.png",
+        "sha256": "fdd5390b0b6aa59d0f698cf54cc564a9cbc81468e007cf01e568dbb90c325643",
+        "seed": 230926,
+        "prompt": "One cat sitting by a window. warm accent colors, dramatic contrast, spacious composition, photographic detail, calm atmosphere.",
+        "settings": {
+          "model": "stabilityai/stable-diffusion-xl-base-1.0",
+          "revision": "462165984030d82259a11f4367a4eed129e94a7b",
+          "scheduler": "EulerDiscreteScheduler",
+          "width": 1024,
+          "height": 1024,
+          "steps": 20,
+          "guidance_scale": 7.0,
+          "negative_prompt": "",
+          "precision": "fp16"
+        },
+        "seconds": 2.859,
+        "context_hash": "3fe9b95eec532c65c13db1aa6935af35b034457f57bf61231e752df436b8f583"
+      }
+    ],
+    "rewrite": {
+      "type": "rewrite",
+      "id": "h3-cat",
+      "prompt": "One cat sitting by a window. warm accent colors, dramatic contrast, spacious composition, photographic detail, calm atmosphere.",
+      "raw": "warm accent colors, dramatic contrast, spacious composition, photographic detail, calm atmosphere",
+      "valid": true,
+      "context_hash": "3fe9b95eec532c65c13db1aa6935af35b034457f57bf61231e752df436b8f583",
+      "model": {
+        "model": "Qwen/Qwen3.5-4B",
+        "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+        "template_version": "append-aesthetic-v1"
+      },
+      "token_lengths": [
+        25,
+        25
+      ]
+    }
+  },
+  {
+    "id": "h3-tokyo",
+    "topic_id": "tokyo",
+    "choices": [
+      {
+        "pair_id": "p1",
+        "chosen_id": "p1-a"
+      },
+      {
+        "pair_id": "p2",
+        "chosen_id": "p2-b"
+      },
+      {
+        "pair_id": "p3",
+        "chosen_id": "p3-a"
+      },
+      {
+        "pair_id": "p4",
+        "chosen_id": "p4-b"
+      },
+      {
+        "pair_id": "p5",
+        "chosen_id": "p5-a"
+      }
+    ],
+    "context": {
+      "version": 1,
+      "preferences": {
+        "color": "warm",
+        "lighting": "dramatic",
+        "composition": "spacious",
+        "texture": "photographic",
+        "mood": "calm"
+      },
+      "overrides": {},
+      "evidence": [
+        {
+          "id": "p1-a-e1",
+          "pair_id": "p1",
+          "pair_version": 1,
+          "chosen_id": "p1-a",
+          "dimensions": [
+            "color"
+          ],
+          "values": {
+            "color": "warm"
+          },
+          "text": "The selected harbor image has warmer colors than the other image.",
+          "context_source": "generic_vlm",
+          "source": {
+            "model": "Qwen/Qwen3.5-4B",
+            "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+            "template_version": "append-aesthetic-v1"
+          },
+          "image_hashes": {
+            "p1-a": "2ff616c02e4c844a87de50c30b093640ef852ac2a6e1447cb7854b504bf84687",
+            "p1-b": "0fe0d31d93216d1a000def4b25c1b4adcc1088ea132d16b41764c75ea8e90806"
+          },
+          "basic_prompt_en": "A small harbor with moored boats.",
+          "template_version": "single-axis-relative-v1",
+          "template_hash": "4cc18c54fe3fb7644ea2024d89ce66f1b10d3286bdc7f4c259d8cc50cccc7fc7",
+          "preprocessing": "RGB; aspect preserved; longest edge 448"
+        },
+        {
+          "id": "p2-b-e1",
+          "pair_id": "p2",
+          "pair_version": 1,
+          "chosen_id": "p2-b",
+          "dimensions": [
+            "lighting"
+          ],
+          "values": {
+            "lighting": "dramatic"
+          },
+          "text": "The selected flowers have stronger shadows and highlights than the other image.",
+          "context_source": "generic_vlm",
+          "source": {
+            "model": "Qwen/Qwen3.5-4B",
+            "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+            "template_version": "append-aesthetic-v1"
+          },
+          "image_hashes": {
+            "p2-a": "99e5e80e37d5f8cd77c23af5b8ec6dd999bf8c013f070a5378f982815195f73e",
+            "p2-b": "867ab990a86a3bba776592f0144a8c27241309b9ea1d65ff752443a39f4de473"
+          },
+          "basic_prompt_en": "A vase of flowers on a table in a room.",
+          "template_version": "single-axis-relative-v1",
+          "template_hash": "4cc18c54fe3fb7644ea2024d89ce66f1b10d3286bdc7f4c259d8cc50cccc7fc7",
+          "preprocessing": "RGB; aspect preserved; longest edge 448"
+        },
+        {
+          "id": "p3-a-e1",
+          "pair_id": "p3",
+          "pair_version": 1,
+          "chosen_id": "p3-a",
+          "dimensions": [
+            "composition"
+          ],
+          "values": {
+            "composition": "spacious"
+          },
+          "text": "The selected image emphasizes open sea around a distant lighthouse.",
+          "context_source": "generic_vlm",
+          "source": {
+            "model": "Qwen/Qwen3.5-4B",
+            "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+            "template_version": "append-aesthetic-v1"
+          },
+          "image_hashes": {
+            "p3-a": "aed4557d5e08df475ddb2a50da4bd5298818d4c5a1f694f2f5b65bcc78090206",
+            "p3-b": "b870b1e921bd982ed30492140caffb1c6dc326715e85265bcf045454ba504b44"
+          },
+          "basic_prompt_en": "One lighthouse beside the sea.",
+          "template_version": "single-axis-relative-v1",
+          "template_hash": "4cc18c54fe3fb7644ea2024d89ce66f1b10d3286bdc7f4c259d8cc50cccc7fc7",
+          "preprocessing": "RGB; aspect preserved; longest edge 448"
+        },
+        {
+          "id": "p4-b-e1",
+          "pair_id": "p4",
+          "pair_version": 1,
+          "chosen_id": "p4-b",
+          "dimensions": [
+            "texture"
+          ],
+          "values": {
+            "texture": "photographic"
+          },
+          "text": "The selected forest path has sharper, more defined natural textures than the other image.",
+          "context_source": "generic_vlm",
+          "source": {
+            "model": "Qwen/Qwen3.5-4B",
+            "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+            "template_version": "append-aesthetic-v1"
+          },
+          "image_hashes": {
+            "p4-a": "e94d95b9e63750d198ac50104f88ab12c508e8a0c447790238e5dd3cc32c22a9",
+            "p4-b": "e60d9d218512d62c1ed832040c6bd926987036f1b3bc97e8dee07f387e20f650"
+          },
+          "basic_prompt_en": "A winding path through a forest.",
+          "template_version": "single-axis-relative-v1",
+          "template_hash": "4cc18c54fe3fb7644ea2024d89ce66f1b10d3286bdc7f4c259d8cc50cccc7fc7",
+          "preprocessing": "RGB; aspect preserved; longest edge 448"
+        },
+        {
+          "id": "p5-a-e1",
+          "pair_id": "p5",
+          "pair_version": 1,
+          "chosen_id": "p5-a",
+          "dimensions": [
+            "mood"
+          ],
+          "values": {
+            "mood": "calm"
+          },
+          "text": "The selected cafe scene is quieter, with empty tables, than the other image.",
+          "context_source": "generic_vlm",
+          "source": {
+            "model": "Qwen/Qwen3.5-4B",
+            "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+            "template_version": "append-aesthetic-v1"
+          },
+          "image_hashes": {
+            "p5-a": "0ea4784fcaa5b0a48b133634976427db0e3f4f4e71524386545e6adfcae445b1",
+            "p5-b": "a02fc99b3eeeaa0cc432c57403b974e035967888de894fdcb35dcf8c941e742e"
+          },
+          "basic_prompt_en": "A cafe on a city street.",
+          "template_version": "single-axis-relative-v1",
+          "template_hash": "4cc18c54fe3fb7644ea2024d89ce66f1b10d3286bdc7f4c259d8cc50cccc7fc7",
+          "preprocessing": "RGB; aspect preserved; longest edge 448"
+        }
+      ],
+      "choice_ids": [
+        "p1:p1-a",
+        "p2:p2-b",
+        "p3:p3-a",
+        "p4:p4-b",
+        "p5:p5-a"
+      ],
+      "text": "The selected harbor image has warmer colors than the other image.\nThe selected flowers have stronger shadows and highlights than the other image.\nThe selected image emphasizes open sea around a distant lighthouse.\nThe selected forest path has sharper, more defined natural textures than the other image.\nThe selected cafe scene is quieter, with empty tables, than the other image.",
+      "hash": "3fe9b95eec532c65c13db1aa6935af35b034457f57bf61231e752df436b8f583"
+    },
+    "mode": "sample",
+    "recommendation": null,
+    "images": [
+      {
+        "type": "image",
+        "id": "h3-tokyo-0",
+        "path": "samples/h3-tokyo-0.png",
+        "sha256": "118fb860b15f5ccb89f49d407cf87cfe920c3350649f0eb06cd787554ff20321",
+        "seed": 230923,
+        "prompt": "The Tokyo skyline at night. warm accent colors, dramatic contrast, spacious composition, photographic detail, calm atmosphere.",
+        "settings": {
+          "model": "stabilityai/stable-diffusion-xl-base-1.0",
+          "revision": "462165984030d82259a11f4367a4eed129e94a7b",
+          "scheduler": "EulerDiscreteScheduler",
+          "width": 1024,
+          "height": 1024,
+          "steps": 20,
+          "guidance_scale": 7.0,
+          "negative_prompt": "",
+          "precision": "fp16"
+        },
+        "seconds": 2.808,
+        "context_hash": "3fe9b95eec532c65c13db1aa6935af35b034457f57bf61231e752df436b8f583"
+      },
+      {
+        "type": "image",
+        "id": "h3-tokyo-1",
+        "path": "samples/h3-tokyo-1.png",
+        "sha256": "d069e5a76e9aa77be6391a8fc6325257bd3dd947816df3cc9f4ad4d9e999068a",
+        "seed": 230924,
+        "prompt": "The Tokyo skyline at night. warm accent colors, dramatic contrast, spacious composition, photographic detail, calm atmosphere.",
+        "settings": {
+          "model": "stabilityai/stable-diffusion-xl-base-1.0",
+          "revision": "462165984030d82259a11f4367a4eed129e94a7b",
+          "scheduler": "EulerDiscreteScheduler",
+          "width": 1024,
+          "height": 1024,
+          "steps": 20,
+          "guidance_scale": 7.0,
+          "negative_prompt": "",
+          "precision": "fp16"
+        },
+        "seconds": 2.831,
+        "context_hash": "3fe9b95eec532c65c13db1aa6935af35b034457f57bf61231e752df436b8f583"
+      },
+      {
+        "type": "image",
+        "id": "h3-tokyo-2",
+        "path": "samples/h3-tokyo-2.png",
+        "sha256": "2336704f9521805117fbc497fb778cb8b52de47c4458cf474a1478b6b39aa009",
+        "seed": 230925,
+        "prompt": "The Tokyo skyline at night. warm accent colors, dramatic contrast, spacious composition, photographic detail, calm atmosphere.",
+        "settings": {
+          "model": "stabilityai/stable-diffusion-xl-base-1.0",
+          "revision": "462165984030d82259a11f4367a4eed129e94a7b",
+          "scheduler": "EulerDiscreteScheduler",
+          "width": 1024,
+          "height": 1024,
+          "steps": 20,
+          "guidance_scale": 7.0,
+          "negative_prompt": "",
+          "precision": "fp16"
+        },
+        "seconds": 2.822,
+        "context_hash": "3fe9b95eec532c65c13db1aa6935af35b034457f57bf61231e752df436b8f583"
+      },
+      {
+        "type": "image",
+        "id": "h3-tokyo-3",
+        "path": "samples/h3-tokyo-3.png",
+        "sha256": "dbea9170aad8dec16453461f31c84d67f3f3672e1fd50df3edcb8b91463a2e83",
+        "seed": 230926,
+        "prompt": "The Tokyo skyline at night. warm accent colors, dramatic contrast, spacious composition, photographic detail, calm atmosphere.",
+        "settings": {
+          "model": "stabilityai/stable-diffusion-xl-base-1.0",
+          "revision": "462165984030d82259a11f4367a4eed129e94a7b",
+          "scheduler": "EulerDiscreteScheduler",
+          "width": 1024,
+          "height": 1024,
+          "steps": 20,
+          "guidance_scale": 7.0,
+          "negative_prompt": "",
+          "precision": "fp16"
+        },
+        "seconds": 2.817,
+        "context_hash": "3fe9b95eec532c65c13db1aa6935af35b034457f57bf61231e752df436b8f583"
+      }
+    ],
+    "rewrite": {
+      "type": "rewrite",
+      "id": "h3-tokyo",
+      "prompt": "The Tokyo skyline at night. warm accent colors, dramatic contrast, spacious composition, photographic detail, calm atmosphere.",
+      "raw": "warm accent colors, dramatic contrast, spacious composition, photographic detail, calm atmosphere",
+      "valid": true,
+      "context_hash": "3fe9b95eec532c65c13db1aa6935af35b034457f57bf61231e752df436b8f583",
+      "model": {
+        "model": "Qwen/Qwen3.5-4B",
+        "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+        "template_version": "append-aesthetic-v1"
+      },
+      "token_lengths": [
+        24,
+        24
+      ]
+    }
+  }
+]

@@ -1,0 +1,159 @@
+{
+  "version": "exhibit-v1",
+  "llm": {
+    "model": "Qwen/Qwen3.5-4B",
+    "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+    "template_version": "append-aesthetic-v1"
+  },
+  "generation": {
+    "model": "stabilityai/stable-diffusion-xl-base-1.0",
+    "revision": "462165984030d82259a11f4367a4eed129e94a7b",
+    "scheduler": "EulerDiscreteScheduler",
+    "width": 1024,
+    "height": 1024,
+    "steps": 20,
+    "guidance_scale": 7.0,
+    "negative_prompt": "",
+    "precision": "fp16"
+  },
+  "seeds": [
+    230923,
+    230924,
+    230925,
+    230926
+  ],
+  "timeout_seconds": 120,
+  "idle_seconds": 90,
+  "recommendation_enabled": false,
+  "topics": [
+    {
+      "id": "cat",
+      "label": "窓辺の猫",
+      "basic_prompt_en": "One cat sitting by a window.",
+      "invariants": [
+        "One cat sitting by a window."
+      ]
+    },
+    {
+      "id": "tokyo",
+      "label": "東京の夜景",
+      "basic_prompt_en": "The Tokyo skyline at night.",
+      "invariants": [
+        "The Tokyo skyline at night."
+      ]
+    },
+    {
+      "id": "forest",
+      "label": "森の小さな家",
+      "basic_prompt_en": "One small house in a forest.",
+      "invariants": [
+        "One small house in a forest."
+      ]
+    },
+    {
+      "id": "lighthouse",
+      "label": "海辺の灯台",
+      "basic_prompt_en": "One lighthouse beside the sea.",
+      "invariants": [
+        "One lighthouse beside the sea."
+      ]
+    },
+    {
+      "id": "rain",
+      "label": "雨の街角",
+      "basic_prompt_en": "A street corner in the rain.",
+      "invariants": [
+        "A street corner in the rain."
+      ]
+    },
+    {
+      "id": "cafe",
+      "label": "夜のカフェ",
+      "basic_prompt_en": "A cafe interior at night.",
+      "invariants": [
+        "A cafe interior at night."
+      ]
+    }
+  ],
+  "pairs": [
+    {
+      "id": "p1",
+      "label": "港の風景",
+      "basic_prompt_en": "A small harbor with moored boats.",
+      "dimension": "color",
+      "values": [
+        "warm",
+        "cool"
+      ],
+      "image_ids": [
+        "p1-a",
+        "p1-b"
+      ],
+      "version": 1
+    },
+    {
+      "id": "p2",
+      "label": "花のある部屋",
+      "basic_prompt_en": "A vase of flowers on a table in a room.",
+      "dimension": "lighting",
+      "values": [
+        "soft",
+        "dramatic"
+      ],
+      "image_ids": [
+        "p2-a",
+        "p2-b"
+      ],
+      "version": 1
+    },
+    {
+      "id": "p3",
+      "label": "海辺の灯台",
+      "basic_prompt_en": "One lighthouse beside the sea.",
+      "dimension": "composition",
+      "values": [
+        "spacious",
+        "close"
+      ],
+      "image_ids": [
+        "p3-a",
+        "p3-b"
+      ],
+      "version": 1,
+      "prompts": [
+        "One lighthouse beside the sea. Very wide distant view, tiny lighthouse in the distance, expansive sky and open ocean, spacious composition.",
+        "One lighthouse beside the sea. Close view of the lighthouse tower filling most of the frame, close framing, detailed architecture."
+      ]
+    },
+    {
+      "id": "p4",
+      "label": "森の小道",
+      "basic_prompt_en": "A winding path through a forest.",
+      "dimension": "texture",
+      "values": [
+        "painterly",
+        "photographic"
+      ],
+      "image_ids": [
+        "p4-a",
+        "p4-b"
+      ],
+      "version": 1
+    },
+    {
+      "id": "p5",
+      "label": "街のカフェ",
+      "basic_prompt_en": "A cafe on a city street.",
+      "dimension": "mood",
+      "values": [
+        "calm",
+        "lively"
+      ],
+      "image_ids": [
+        "p5-a",
+        "p5-b"
+      ],
+      "version": 1
+    }
+  ]
+}

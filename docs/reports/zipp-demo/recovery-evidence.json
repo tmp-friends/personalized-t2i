@@ -1,0 +1,79 @@
+{
+  "verified_at": "2026-09-20 00:13 JST",
+  "reported_oom": {
+    "root_cause": "unconfirmed",
+    "inference_logs": "No OOM trace found in retained exhibit worker logs.",
+    "kernel_logs": "Not available: dmesg permission denied; journal query returned no matching records."
+  },
+  "initial_replay": {
+    "result": "failed",
+    "detail": "Previous localhost server exited during browser verification; final-selection locator timed out after real four-image generation.",
+    "server_exit_cause": "unknown"
+  },
+  "replay_after_restart": "passed",
+  "browser_seconds": 20.88,
+  "browser_checks": [
+    "five choices",
+    "persona correction",
+    "axis off",
+    "four real SDXL images",
+    "matched seeds",
+    "shared context hash",
+    "manual selection",
+    "reload",
+    "mobile width",
+    "exact cache",
+    "all off",
+    "reset deletion",
+    "five skips",
+    "sample"
+  ],
+  "browser_errors": [],
+  "external_requests": [],
+  "worker_metrics": [
+    {
+      "type": "metrics",
+      "stage": "rewrite",
+      "worker_seconds": 3.577,
+      "peak_vram_mib": 8127.6,
+      "peak_rss_mib": 9003.0
+    },
+    {
+      "type": "metrics",
+      "stage": "generate",
+      "worker_seconds": 14.666,
+      "peak_vram_mib": 10736.3,
+      "peak_rss_mib": 5762.0
+    }
+  ],
+  "gpu_idle_mib": 1,
+  "python_tests_passed": 40,
+  "node_tests_passed": 4,
+  "python_warnings": [
+    "Starlette/httpx deprecation",
+    "anyio BlockingPortal alias deprecation"
+  ],
+  "failure_injection": {
+    "passed": 2,
+    "test": "exhibit/tests/test_worker_recovery.py",
+    "conditions": [
+      "MemoryError from child-only RLIMIT_AS=128 MiB and a rejected 256 MiB allocation",
+      "SIGKILL of the fixture worker after one completed image"
+    ],
+    "checks": [
+      "generic and completed personalized images retained",
+      "manual selection works",
+      "no recommendation fabricated",
+      "failed child reaped",
+      "old artifacts removed and inaccessible after reset",
+      "next session completes four images with the same lease"
+    ],
+    "scope": "Model executable replaced by a small fixture. Real IPC, process lifecycle, flock and service. No host-wide or CUDA OOM induced."
+  },
+  "historical_benchmark": "Existing 20-session benchmark retained; not rerun in this recovery check.",
+  "remaining": [
+    "PIGReward G0 failed; automatic recommendation disabled",
+    "third-party usability check",
+    "two-hour endurance check"
+  ]
+}

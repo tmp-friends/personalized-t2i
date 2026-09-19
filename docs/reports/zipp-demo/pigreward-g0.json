@@ -1,0 +1,1480 @@
+{
+  "probe": "g0",
+  "input_pairs": 20,
+  "forward_parseable": 0,
+  "reverse_consistent": 0,
+  "g0_passed": false,
+  "timings": [
+    {
+      "returncode": 0,
+      "wall_seconds": 54.868
+    },
+    {
+      "returncode": 0,
+      "wall_seconds": 37.685
+    },
+    {
+      "returncode": 0,
+      "wall_seconds": 23.95
+    },
+    {
+      "returncode": 0,
+      "wall_seconds": 25.113
+    },
+    {
+      "returncode": 0,
+      "wall_seconds": 27.813
+    },
+    {
+      "returncode": 0,
+      "wall_seconds": 46.146
+    }
+  ],
+  "errors": [],
+  "records": [
+    {
+      "sample_id": "h1-cat",
+      "type": "judgment",
+      "status": "inconclusive",
+      "winner_id": null,
+      "candidate_ids": [
+        "h1-cat-0",
+        "h1-cat-1"
+      ],
+      "raw": "Score 1: 2\nScore 2: 2\nScore 1: 2\nScore 2: 2\nScore 1: 2\nScore 2: 2\nScore 1: 2\nScore 2: 2\nScore 1: 2\nScore 2: 2\nScore 1: 2\nScore 2: 2\nScore 1: 2\nScore 2: 2\nScore 1: 2\nScore 2: 2\nScore 1: 2\nScore 2: 2\nScore 1: 2\nScore 2: 2\nScore 1: 2\nScore 2: 2\nScore 1: 2\nScore 2: 2\nScore 1: 2\nScore 2: 2\nScore 1: 2\nScore 2: 2\nScore 1: 2\nScore 2: 2\nScore 1: 2\nScore 2: 2\nScore 1: 2\nScore 2: 2\nScore 1: 2\nScore 2: 2\nScore 1: 2\nScore 2: 2\nScore 1: 2\nScore 2: 2\nScore 1: 2\nScore 2: 2\nScore 1: 2\nScore 2: 2\nScore 1: 2\nScore 2: 2\nScore 1: 2\nScore 2: 2\nScore 1: 2\nScore 2: 2\nScore 1: 2\nScore 2: 2\nScore 1: 2\nScore 2: 2\nScore 1: 2\nScore 2: 2\nScore 1: 2\nScore 2: 2\nScore 1: 2\nScore 2: 2\nScore 1: 2\nScore 2: 2\nScore 1: 2\nScore 2: 2\nScore 1: 2\nScore 2: 2\nScore 1: 2\nScore 2: 2\nScore 1: 2\nScore 2: 2\nScore 1: 2\nScore 2: 2\nScore 1: 2\nScore",
+      "parser_version": "card-v1",
+      "dimensions": [],
+      "reason": "",
+      "context_hash": "9afc913f25cc92fa17a6dd2ceaec2c28e2b0f5ca858acf8084c69309d697e81b",
+      "model": {
+        "model": "jeongeunnn/pigreward",
+        "revision": "c3e5a4bd68831b11bd430d240fbe14e85986b219",
+        "license": "apache-2.0",
+        "template_version": "exhibit-card-v1",
+        "parser_version": "card-v1",
+        "max_new_tokens": 512,
+        "max_image_edge": 448,
+        "live_approved": false
+      },
+      "template_hash": "1f0d91a865da25589dd320711f9fd16b59d9eed4cb018a99724c6ef93d9e4fd8"
+    },
+    {
+      "sample_id": "h1-cat",
+      "type": "judgment",
+      "status": "inconclusive",
+      "winner_id": null,
+      "candidate_ids": [
+        "h1-cat-1",
+        "h1-cat-0"
+      ],
+      "raw": "Score 1: 2 (warmer colors: 1, lighting: 1)\nScore 2: 1 (warmer colors: 0, lighting: 1)\nScore 1: 2\nScore 2: 1\nImage 1 is better",
+      "parser_version": "card-v1",
+      "dimensions": [],
+      "reason": "",
+      "context_hash": "9afc913f25cc92fa17a6dd2ceaec2c28e2b0f5ca858acf8084c69309d697e81b",
+      "model": {
+        "model": "jeongeunnn/pigreward",
+        "revision": "c3e5a4bd68831b11bd430d240fbe14e85986b219",
+        "license": "apache-2.0",
+        "template_version": "exhibit-card-v1",
+        "parser_version": "card-v1",
+        "max_new_tokens": 512,
+        "max_image_edge": 448,
+        "live_approved": false
+      },
+      "template_hash": "1f0d91a865da25589dd320711f9fd16b59d9eed4cb018a99724c6ef93d9e4fd8"
+    },
+    {
+      "sample_id": "h1-cat",
+      "type": "judgment",
+      "status": "inconclusive",
+      "winner_id": null,
+      "candidate_ids": [
+        "h1-cat-0",
+        "h1-cat-2"
+      ],
+      "raw": "Score 1: 2\nScore 2: 2\nScore 1: 2\nScore 2: 2\nScore 1: 2\nScore 2: 2\nScore 1: 2\nScore 2: 2\nScore 1: 2\nScore 2: 2\nScore 1: 2\nScore 2: 2\nScore 1: 2\nScore 2: 2\nScore 1: 2\nScore 2: 2\nScore 1: 2\nScore 2: 2\nScore 1: 2\nScore 2: 2\nScore 1: 2\nScore 2: 2\nScore 1: 2\nScore 2: 2\nScore 1: 2\nScore 2: 2\nScore 1: 2\nScore 2: 2\nScore 1: 2\nScore 2: 2\nScore 1: 2\nScore 2: 2\nScore 1: 2\nScore 2: 2\nScore 1: 2\nScore 2: 2\nScore 1: 2\nScore 2: 2\nScore 1: 2\nScore 2: 2\nScore 1: 2\nScore 2: 2\nScore 1: 2\nScore 2: 2\nScore 1: 2\nScore 2: 2\nScore 1: 2\nScore 2: 2\nScore 1: 2\nScore 2: 2\nScore 1: 2\nScore 2: 2\nScore 1: 2\nScore 2: 2\nScore 1: 2\nScore 2: 2\nScore 1: 2\nScore 2: 2\nScore 1: 2\nScore 2: 2\nScore 1: 2\nScore 2: 2\nScore 1: 2\nScore 2: 2\nScore 1: 2\nScore 2: 2\nScore 1: 2\nScore 2: 2\nScore 1: 2\nScore 2: 2\nScore 1: 2\nScore 2: 2\nScore 1: 2\nScore",
+      "parser_version": "card-v1",
+      "dimensions": [],
+      "reason": "",
+      "context_hash": "9afc913f25cc92fa17a6dd2ceaec2c28e2b0f5ca858acf8084c69309d697e81b",
+      "model": {
+        "model": "jeongeunnn/pigreward",
+        "revision": "c3e5a4bd68831b11bd430d240fbe14e85986b219",
+        "license": "apache-2.0",
+        "template_version": "exhibit-card-v1",
+        "parser_version": "card-v1",
+        "max_new_tokens": 512,
+        "max_image_edge": 448,
+        "live_approved": false
+      },
+      "template_hash": "1f0d91a865da25589dd320711f9fd16b59d9eed4cb018a99724c6ef93d9e4fd8"
+    },
+    {
+      "sample_id": "h1-cat",
+      "type": "judgment",
+      "status": "inconclusive",
+      "winner_id": null,
+      "candidate_ids": [
+        "h1-cat-2",
+        "h1-cat-0"
+      ],
+      "raw": "Score 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore",
+      "parser_version": "card-v1",
+      "dimensions": [],
+      "reason": "",
+      "context_hash": "9afc913f25cc92fa17a6dd2ceaec2c28e2b0f5ca858acf8084c69309d697e81b",
+      "model": {
+        "model": "jeongeunnn/pigreward",
+        "revision": "c3e5a4bd68831b11bd430d240fbe14e85986b219",
+        "license": "apache-2.0",
+        "template_version": "exhibit-card-v1",
+        "parser_version": "card-v1",
+        "max_new_tokens": 512,
+        "max_image_edge": 448,
+        "live_approved": false
+      },
+      "template_hash": "1f0d91a865da25589dd320711f9fd16b59d9eed4cb018a99724c6ef93d9e4fd8"
+    },
+    {
+      "sample_id": "h1-cat",
+      "type": "judgment",
+      "status": "inconclusive",
+      "winner_id": null,
+      "candidate_ids": [
+        "h1-cat-0",
+        "h1-cat-3"
+      ],
+      "raw": "Score 1: 2+2=4\nScore 2: 2+2=4\nScore 1: total\nScore 2: total\nImage 1 is better",
+      "parser_version": "card-v1",
+      "dimensions": [],
+      "reason": "",
+      "context_hash": "9afc913f25cc92fa17a6dd2ceaec2c28e2b0f5ca858acf8084c69309d697e81b",
+      "model": {
+        "model": "jeongeunnn/pigreward",
+        "revision": "c3e5a4bd68831b11bd430d240fbe14e85986b219",
+        "license": "apache-2.0",
+        "template_version": "exhibit-card-v1",
+        "parser_version": "card-v1",
+        "max_new_tokens": 512,
+        "max_image_edge": 448,
+        "live_approved": false
+      },
+      "template_hash": "1f0d91a865da25589dd320711f9fd16b59d9eed4cb018a99724c6ef93d9e4fd8"
+    },
+    {
+      "sample_id": "h1-cat",
+      "type": "judgment",
+      "status": "inconclusive",
+      "winner_id": null,
+      "candidate_ids": [
+        "h1-cat-3",
+        "h1-cat-0"
+      ],
+      "raw": "Score 1: 2+2=4\nScore 2: 2+2=4\nScore 1: total\nScore 2: total\nImage 1 is better",
+      "parser_version": "card-v1",
+      "dimensions": [],
+      "reason": "",
+      "context_hash": "9afc913f25cc92fa17a6dd2ceaec2c28e2b0f5ca858acf8084c69309d697e81b",
+      "model": {
+        "model": "jeongeunnn/pigreward",
+        "revision": "c3e5a4bd68831b11bd430d240fbe14e85986b219",
+        "license": "apache-2.0",
+        "template_version": "exhibit-card-v1",
+        "parser_version": "card-v1",
+        "max_new_tokens": 512,
+        "max_image_edge": 448,
+        "live_approved": false
+      },
+      "template_hash": "1f0d91a865da25589dd320711f9fd16b59d9eed4cb018a99724c6ef93d9e4fd8"
+    },
+    {
+      "sample_id": "h1-cat",
+      "type": "judgment",
+      "status": "inconclusive",
+      "winner_id": null,
+      "candidate_ids": [
+        "h1-cat-1",
+        "h1-cat-2"
+      ],
+      "raw": "Score 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore",
+      "parser_version": "card-v1",
+      "dimensions": [],
+      "reason": "",
+      "context_hash": "9afc913f25cc92fa17a6dd2ceaec2c28e2b0f5ca858acf8084c69309d697e81b",
+      "model": {
+        "model": "jeongeunnn/pigreward",
+        "revision": "c3e5a4bd68831b11bd430d240fbe14e85986b219",
+        "license": "apache-2.0",
+        "template_version": "exhibit-card-v1",
+        "parser_version": "card-v1",
+        "max_new_tokens": 512,
+        "max_image_edge": 448,
+        "live_approved": false
+      },
+      "template_hash": "1f0d91a865da25589dd320711f9fd16b59d9eed4cb018a99724c6ef93d9e4fd8"
+    },
+    {
+      "sample_id": "h1-cat",
+      "type": "judgment",
+      "status": "inconclusive",
+      "winner_id": null,
+      "candidate_ids": [
+        "h1-cat-2",
+        "h1-cat-1"
+      ],
+      "raw": "Score 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore",
+      "parser_version": "card-v1",
+      "dimensions": [],
+      "reason": "",
+      "context_hash": "9afc913f25cc92fa17a6dd2ceaec2c28e2b0f5ca858acf8084c69309d697e81b",
+      "model": {
+        "model": "jeongeunnn/pigreward",
+        "revision": "c3e5a4bd68831b11bd430d240fbe14e85986b219",
+        "license": "apache-2.0",
+        "template_version": "exhibit-card-v1",
+        "parser_version": "card-v1",
+        "max_new_tokens": 512,
+        "max_image_edge": 448,
+        "live_approved": false
+      },
+      "template_hash": "1f0d91a865da25589dd320711f9fd16b59d9eed4cb018a99724c6ef93d9e4fd8"
+    },
+    {
+      "sample_id": "h1-cat",
+      "type": "metrics",
+      "stage": "evaluate",
+      "worker_seconds": 53.804,
+      "peak_vram_mib": 15978.4,
+      "peak_rss_mib": 16719.0
+    },
+    {
+      "sample_id": "h1-tokyo",
+      "type": "judgment",
+      "status": "inconclusive",
+      "winner_id": null,
+      "candidate_ids": [
+        "h1-tokyo-0",
+        "h1-tokyo-1"
+      ],
+      "raw": "Score 1: Image 1 has warmer colors due to the orange glow on the tower, which adds a painterly texture. The city lights create a more vibrant atmosphere. (Score 1: 8)\nScore 2: Image 2 has a cooler color palette with a more subdued lighting scheme, resulting in a less painterly texture. The city lights are less vibrant. (Score 2: 6)\nScore 1: Image 1 has a more detailed and busy cityscape with visible textures on buildings and roads, creating a lively atmosphere. (Score 1: 9)\nScore 2: Image 2 has a more uniform lighting and less visible detail in the buildings, giving a more uniform look. (Score 2: 5)\nScore 1: Image 1 has a clearer emphasis on the Tokyo Tower due to its distinct lighting, making it stand out prominently. (Score 1: 8)\nScore 2: Image 2 also emphasizes the Tokyo Tower well, but the lighting is less distinct, making it slightly less prominent. (Score 2: 7)\nScore 1: Image 1 has a more detailed and busy cityscape with visible textures on buildings and roads, creating a lively atmosphere. (Score 1: 9)\nScore 2: Image 2 has a more uniform lighting and less visible detail in the buildings, giving a more uniform look. (Score 2: 5)\nScore 1: Image 1 has a more detailed and busy cityscape with visible textures on buildings and roads, creating a lively atmosphere. (Score 1: 9)\nScore 2: Image 2 has a more uniform lighting and less visible detail in the buildings, giving a more uniform look. (Score 2: 5)\nScore 1: Image 1 has a more detailed and busy cityscape with visible textures on buildings and roads, creating a lively atmosphere. (Score 1: 9)\nScore 2: Image 2 has a more uniform lighting and less visible detail in the buildings, giving a more uniform look. (Score 2: 5)\nScore 1: Image 1 has a more detailed and busy cityscape with visible textures on buildings and roads, creating a lively atmosphere. (Score 1: 9)\nScore 2: Image 2 has a more uniform lighting and less visible detail in the buildings, giving a more uniform look. (Score 2: 5)\nScore 1: Image 1",
+      "parser_version": "card-v1",
+      "dimensions": [],
+      "reason": "",
+      "context_hash": "9afc913f25cc92fa17a6dd2ceaec2c28e2b0f5ca858acf8084c69309d697e81b",
+      "model": {
+        "model": "jeongeunnn/pigreward",
+        "revision": "c3e5a4bd68831b11bd430d240fbe14e85986b219",
+        "license": "apache-2.0",
+        "template_version": "exhibit-card-v1",
+        "parser_version": "card-v1",
+        "max_new_tokens": 512,
+        "max_image_edge": 448,
+        "live_approved": false
+      },
+      "template_hash": "1f0d91a865da25589dd320711f9fd16b59d9eed4cb018a99724c6ef93d9e4fd8"
+    },
+    {
+      "sample_id": "h1-tokyo",
+      "type": "judgment",
+      "status": "inconclusive",
+      "winner_id": null,
+      "candidate_ids": [
+        "h1-tokyo-1",
+        "h1-tokyo-0"
+      ],
+      "raw": "Warmth: Image 1 has a slightly warmer color temperature with more orange hues, while Image 2 has a cooler tone with more blues and greens. (Score 1: 3, Score 2: 2)\nSoftness: Image 1 has a painterly texture with softer edges, while Image 2 has sharper, more defined edges. (Score 1: 4, Score 2: 1)\nFocus: Image 1 has a clear focus on the Tokyo Tower with a slightly blurred foreground, while Image 2 has a more uniform focus throughout the image. (Score 1: 3, Score 2: 4)\nSilence: Both images depict a bustling cityscape, so neither image conveys a sense of quietness or emptiness. (Score 1: 1, Score 2: 1)\nScore 1: 3+4+1+1=9\nScore 2: 2+1+4+1=8\nImage 1 is better",
+      "parser_version": "card-v1",
+      "dimensions": [],
+      "reason": "",
+      "context_hash": "9afc913f25cc92fa17a6dd2ceaec2c28e2b0f5ca858acf8084c69309d697e81b",
+      "model": {
+        "model": "jeongeunnn/pigreward",
+        "revision": "c3e5a4bd68831b11bd430d240fbe14e85986b219",
+        "license": "apache-2.0",
+        "template_version": "exhibit-card-v1",
+        "parser_version": "card-v1",
+        "max_new_tokens": 512,
+        "max_image_edge": 448,
+        "live_approved": false
+      },
+      "template_hash": "1f0d91a865da25589dd320711f9fd16b59d9eed4cb018a99724c6ef93d9e4fd8"
+    },
+    {
+      "sample_id": "h1-tokyo",
+      "type": "judgment",
+      "status": "inconclusive",
+      "winner_id": null,
+      "candidate_ids": [
+        "h1-tokyo-0",
+        "h1-tokyo-2"
+      ],
+      "raw": "Score 1: Image 1 has warmer colors due to the lit Tokyo Tower, which adds a cozy atmosphere. The lighting is more vibrant. (Score 1: 8)\nScore 2: Image 2 has a more uniform and muted color palette, lacking the vibrant lighting seen in Image 1. (Score 2: 5)\nScore 1: Image 1 has a more painterly texture with softer edges, giving a dreamy effect. (Score 1: 7)\nScore 2: Image 2 has sharper edges and more defined lines, lacking the painterly quality. (Score 2: 4)\nScore 1: Image 1 depicts a lively cityscape with visible details in the buildings and lights, creating a sense of activity. (Score 1: 6)\nScore 2: Image 2 also depicts a lively cityscape but with less emphasis on details and activity, making it feel more static. (Score 2: 5)\nScore 1: Image 1 has a clear focus on the Tokyo Tower, which stands out prominently. (Score 1: 7)\nScore 2: Image 2 has a more uniform composition with no single focal point, making it less impactful. (Score 2: 4)\nScore 1: Image 1 has a clear and detailed view of the cityscape, with visible textures and structures. (Score 1: 8)\nScore 2: Image 2 has a clear view but lacks the same level of detail and texture, making it feel less defined. (Score 2: 6)\nScore 1: Image 1 has a more vibrant and lively atmosphere due to the lighting and activity. (Score 1: 7)\nScore 2: Image 2 has a more subdued atmosphere with less visible activity and lighting, making it feel quieter. (Score 2: 5)\nScore 1: Image 1 has a more dynamic composition with varied lighting and activity. (Score 1: 7)\nScore 2: Image 2 has a more static composition with uniform lighting and less visible activity. (Score 2: 5)\nScore 1: Image 1 has a more vibrant and lively atmosphere due to the lighting and activity. (Score 1: 7)\nScore 2: Image 2 has a more subdued atmosphere with less visible activity and lighting. (Score 2: 5)\nScore 1: Image 1 has a more vibrant and",
+      "parser_version": "card-v1",
+      "dimensions": [],
+      "reason": "",
+      "context_hash": "9afc913f25cc92fa17a6dd2ceaec2c28e2b0f5ca858acf8084c69309d697e81b",
+      "model": {
+        "model": "jeongeunnn/pigreward",
+        "revision": "c3e5a4bd68831b11bd430d240fbe14e85986b219",
+        "license": "apache-2.0",
+        "template_version": "exhibit-card-v1",
+        "parser_version": "card-v1",
+        "max_new_tokens": 512,
+        "max_image_edge": 448,
+        "live_approved": false
+      },
+      "template_hash": "1f0d91a865da25589dd320711f9fd16b59d9eed4cb018a99724c6ef93d9e4fd8"
+    },
+    {
+      "sample_id": "h1-tokyo",
+      "type": "judgment",
+      "status": "inconclusive",
+      "winner_id": null,
+      "candidate_ids": [
+        "h1-tokyo-2",
+        "h1-tokyo-0"
+      ],
+      "raw": "Score 1: Image 1 has a slightly warmer color tone, especially noticeable in the sky and lights. The image has a more defined texture, with sharper contrasts between buildings and lights. (Score 1: 7)\nScore 2: Image 2 has a cooler color tone with more subdued lighting, particularly in the sky and around the buildings. The texture appears softer, with less contrast between elements. (Score 2: 5)\nScore 1: 7\nScore 2: 5\nImage 1 is better",
+      "parser_version": "card-v1",
+      "dimensions": [],
+      "reason": "",
+      "context_hash": "9afc913f25cc92fa17a6dd2ceaec2c28e2b0f5ca858acf8084c69309d697e81b",
+      "model": {
+        "model": "jeongeunnn/pigreward",
+        "revision": "c3e5a4bd68831b11bd430d240fbe14e85986b219",
+        "license": "apache-2.0",
+        "template_version": "exhibit-card-v1",
+        "parser_version": "card-v1",
+        "max_new_tokens": 512,
+        "max_image_edge": 448,
+        "live_approved": false
+      },
+      "template_hash": "1f0d91a865da25589dd320711f9fd16b59d9eed4cb018a99724c6ef93d9e4fd8"
+    },
+    {
+      "sample_id": "h1-tokyo",
+      "type": "judgment",
+      "status": "inconclusive",
+      "winner_id": null,
+      "candidate_ids": [
+        "h1-tokyo-0",
+        "h1-tokyo-3"
+      ],
+      "raw": "Score 1: Image 1 has warmer colors, especially around the Tokyo Tower, which gives a more inviting atmosphere. The lighting is softer, creating a painterly effect. (Score 1: 7)\nScore 2: Image 2 has a cooler color palette with a more neutral tone. The lighting is sharper and more defined, lacking the painterly effect. (Score 2: 5)\nScore 1: 7\nScore 2: 5\nImage 1 is better",
+      "parser_version": "card-v1",
+      "dimensions": [],
+      "reason": "",
+      "context_hash": "9afc913f25cc92fa17a6dd2ceaec2c28e2b0f5ca858acf8084c69309d697e81b",
+      "model": {
+        "model": "jeongeunnn/pigreward",
+        "revision": "c3e5a4bd68831b11bd430d240fbe14e85986b219",
+        "license": "apache-2.0",
+        "template_version": "exhibit-card-v1",
+        "parser_version": "card-v1",
+        "max_new_tokens": 512,
+        "max_image_edge": 448,
+        "live_approved": false
+      },
+      "template_hash": "1f0d91a865da25589dd320711f9fd16b59d9eed4cb018a99724c6ef93d9e4fd8"
+    },
+    {
+      "sample_id": "h1-tokyo",
+      "type": "judgment",
+      "status": "inconclusive",
+      "winner_id": null,
+      "candidate_ids": [
+        "h1-tokyo-3",
+        "h1-tokyo-0"
+      ],
+      "raw": "Score 1: Image 1 has a warmer color temperature, giving a more inviting atmosphere. The lighting is softer, with a painterly texture. The image is more detailed in the buildings. (Score 1: 8)\nScore 2: Image 2 has a cooler color temperature, which feels more clinical. The lighting is sharper, with less painterly texture. The buildings are less detailed compared to Image 1. (Score 2: 6)\nScore 1: 8\nScore 2: 6\nImage 1 is better",
+      "parser_version": "card-v1",
+      "dimensions": [],
+      "reason": "",
+      "context_hash": "9afc913f25cc92fa17a6dd2ceaec2c28e2b0f5ca858acf8084c69309d697e81b",
+      "model": {
+        "model": "jeongeunnn/pigreward",
+        "revision": "c3e5a4bd68831b11bd430d240fbe14e85986b219",
+        "license": "apache-2.0",
+        "template_version": "exhibit-card-v1",
+        "parser_version": "card-v1",
+        "max_new_tokens": 512,
+        "max_image_edge": 448,
+        "live_approved": false
+      },
+      "template_hash": "1f0d91a865da25589dd320711f9fd16b59d9eed4cb018a99724c6ef93d9e4fd8"
+    },
+    {
+      "sample_id": "h1-tokyo",
+      "type": "judgment",
+      "status": "inconclusive",
+      "winner_id": null,
+      "candidate_ids": [
+        "h1-tokyo-1",
+        "h1-tokyo-2"
+      ],
+      "raw": "Score 1: 2+2+2+2+2=10\nScore 2: 2+2+2+2+2=10\nScore 1: 10\nScore 2: 10\ntie\nImage 1 is better",
+      "parser_version": "card-v1",
+      "dimensions": [],
+      "reason": "",
+      "context_hash": "9afc913f25cc92fa17a6dd2ceaec2c28e2b0f5ca858acf8084c69309d697e81b",
+      "model": {
+        "model": "jeongeunnn/pigreward",
+        "revision": "c3e5a4bd68831b11bd430d240fbe14e85986b219",
+        "license": "apache-2.0",
+        "template_version": "exhibit-card-v1",
+        "parser_version": "card-v1",
+        "max_new_tokens": 512,
+        "max_image_edge": 448,
+        "live_approved": false
+      },
+      "template_hash": "1f0d91a865da25589dd320711f9fd16b59d9eed4cb018a99724c6ef93d9e4fd8"
+    },
+    {
+      "sample_id": "h1-tokyo",
+      "type": "judgment",
+      "status": "inconclusive",
+      "winner_id": null,
+      "candidate_ids": [
+        "h1-tokyo-2",
+        "h1-tokyo-1"
+      ],
+      "raw": "Score 1: Image 1 has a slightly warmer color tone, especially noticeable in the lights. The textures appear sharper. (Score 1: 7, Score 2: 5)\nScore 2: Image 2 has a cooler color tone with more emphasis on blues and greens. The textures appear softer and more painterly. (Score 2: 6, Score 2: 6)\nScore 1: 7+6=13\nScore 2: 5+6=11\nImage 1 is better",
+      "parser_version": "card-v1",
+      "dimensions": [],
+      "reason": "",
+      "context_hash": "9afc913f25cc92fa17a6dd2ceaec2c28e2b0f5ca858acf8084c69309d697e81b",
+      "model": {
+        "model": "jeongeunnn/pigreward",
+        "revision": "c3e5a4bd68831b11bd430d240fbe14e85986b219",
+        "license": "apache-2.0",
+        "template_version": "exhibit-card-v1",
+        "parser_version": "card-v1",
+        "max_new_tokens": 512,
+        "max_image_edge": 448,
+        "live_approved": false
+      },
+      "template_hash": "1f0d91a865da25589dd320711f9fd16b59d9eed4cb018a99724c6ef93d9e4fd8"
+    },
+    {
+      "sample_id": "h1-tokyo",
+      "type": "metrics",
+      "stage": "evaluate",
+      "worker_seconds": 36.594,
+      "peak_vram_mib": 15978.2,
+      "peak_rss_mib": 16718.9
+    },
+    {
+      "sample_id": "h2-cat",
+      "type": "judgment",
+      "status": "inconclusive",
+      "winner_id": null,
+      "candidate_ids": [
+        "h2-cat-0",
+        "h2-cat-1"
+      ],
+      "raw": "Score 1: Image 1 has a clear focus on the cat with detailed fur texture and a neutral background, which provides a clean view. The lighting is soft, enhancing the details without harsh shadows or highlights. (Score 1: 8)\nScore 2: Image 2 also has a clear focus on the cat with detailed fur texture and a neutral background. The lighting is warm and creates some depth with shadows and highlights, but not as pronounced as in Image 1. (Score 2: 7)\nScore 1: 8\nScore 2: 7\nImage 1 is better",
+      "parser_version": "card-v1",
+      "dimensions": [],
+      "reason": "",
+      "context_hash": "daa60550d2f7e9c46528dde8f08180643b0964829d636133a03020683220f51c",
+      "model": {
+        "model": "jeongeunnn/pigreward",
+        "revision": "c3e5a4bd68831b11bd430d240fbe14e85986b219",
+        "license": "apache-2.0",
+        "template_version": "exhibit-card-v1",
+        "parser_version": "card-v1",
+        "max_new_tokens": 512,
+        "max_image_edge": 448,
+        "live_approved": false
+      },
+      "template_hash": "1f0d91a865da25589dd320711f9fd16b59d9eed4cb018a99724c6ef93d9e4fd8"
+    },
+    {
+      "sample_id": "h2-cat",
+      "type": "judgment",
+      "status": "inconclusive",
+      "winner_id": null,
+      "candidate_ids": [
+        "h2-cat-1",
+        "h2-cat-0"
+      ],
+      "raw": "Score 1: Image 1 has a warmer color tone with more natural lighting, which creates a cozy atmosphere. The details in the cat's fur and the window are clear. (Score 1: 8)\nScore 2: Image 2 has a cooler color tone with less natural lighting, which makes it feel more mysterious. The details in the cat's fur and the window are also clear. (Score 2: 7)\nScore 1: 8\nScore 2: 7\nImage 1 is better",
+      "parser_version": "card-v1",
+      "dimensions": [],
+      "reason": "",
+      "context_hash": "daa60550d2f7e9c46528dde8f08180643b0964829d636133a03020683220f51c",
+      "model": {
+        "model": "jeongeunnn/pigreward",
+        "revision": "c3e5a4bd68831b11bd430d240fbe14e85986b219",
+        "license": "apache-2.0",
+        "template_version": "exhibit-card-v1",
+        "parser_version": "card-v1",
+        "max_new_tokens": 512,
+        "max_image_edge": 448,
+        "live_approved": false
+      },
+      "template_hash": "1f0d91a865da25589dd320711f9fd16b59d9eed4cb018a99724c6ef93d9e4fd8"
+    },
+    {
+      "sample_id": "h2-cat",
+      "type": "judgment",
+      "status": "inconclusive",
+      "winner_id": null,
+      "candidate_ids": [
+        "h2-cat-0",
+        "h2-cat-2"
+      ],
+      "raw": "Score 1: 2 (Score 2: 1)\nScore 2: 1 (Score 2: 2)\nScore 1: 1 (Score 2: 1)\nScore 2: 1 (Score 2: 1)\nScore 1: 1 (Score 2: 1)\nScore 2: 1 (Score 2: 1)\nScore 1: 1 (Score 2: 1)\nScore 2: 1 (Score 2: 1)\nScore 1: 1 (Score 2: 1)\nScore 2: 1 (Score 2: 1)\nScore 1: 1 (Score 2: 1)\nScore 2: 1 (Score 2: 1)\nScore 1: 1 (Score 2: 1)\nScore 2: 1 (Score 2: 1)\nScore 1: 1 (Score 2: 1)\nScore 2: 1 (Score 2: 1)\nScore 1: 1 (Score 2: 1)\nScore 2: 1 (Score 2: 1)\nScore 1: 1 (Score 2: 1)\nScore 2: 1 (Score 2: 1)\nScore 1: 1 (Score 2: 1)\nScore 2: 1 (Score 2: 1)\nScore 1: 1 (Score 2: 1)\nScore 2: 1 (Score 2: 1)\nScore 1: 1 (Score 2: 1)\nScore 2: 1 (Score 2: 1)\nScore 1: 1 (Score 2: 1)\nScore 2: 1 (Score 2: 1)\nScore 1: 1 (Score 2: 1)\nScore 2: 1 (Score 2: 1)\nScore 1: 1 (Score 2: 1)\nScore 2: 1 (Score 2: 1)\nScore 1: 1 (Score 2: 1)\nScore 2: 1 (Score 2: 1)\nScore 1: 1 (Score 2: 1)\nScore 2: 1 (Score 2: 1)\nScore 1: 1 (Score",
+      "parser_version": "card-v1",
+      "dimensions": [],
+      "reason": "",
+      "context_hash": "daa60550d2f7e9c46528dde8f08180643b0964829d636133a03020683220f51c",
+      "model": {
+        "model": "jeongeunnn/pigreward",
+        "revision": "c3e5a4bd68831b11bd430d240fbe14e85986b219",
+        "license": "apache-2.0",
+        "template_version": "exhibit-card-v1",
+        "parser_version": "card-v1",
+        "max_new_tokens": 512,
+        "max_image_edge": 448,
+        "live_approved": false
+      },
+      "template_hash": "1f0d91a865da25589dd320711f9fd16b59d9eed4cb018a99724c6ef93d9e4fd8"
+    },
+    {
+      "sample_id": "h2-cat",
+      "type": "judgment",
+      "status": "inconclusive",
+      "winner_id": null,
+      "candidate_ids": [
+        "h2-cat-2",
+        "h2-cat-0"
+      ],
+      "raw": "Score 1: 2 (cooler greens and blues: 1, closer view: 1)\nScore 2: 1 (cooler greens and blues: 0, closer view: 1)\nScore 1: 3\nScore 2: 2\nImage 1 is better",
+      "parser_version": "card-v1",
+      "dimensions": [],
+      "reason": "",
+      "context_hash": "daa60550d2f7e9c46528dde8f08180643b0964829d636133a03020683220f51c",
+      "model": {
+        "model": "jeongeunnn/pigreward",
+        "revision": "c3e5a4bd68831b11bd430d240fbe14e85986b219",
+        "license": "apache-2.0",
+        "template_version": "exhibit-card-v1",
+        "parser_version": "card-v1",
+        "max_new_tokens": 512,
+        "max_image_edge": 448,
+        "live_approved": false
+      },
+      "template_hash": "1f0d91a865da25589dd320711f9fd16b59d9eed4cb018a99724c6ef93d9e4fd8"
+    },
+    {
+      "sample_id": "h2-cat",
+      "type": "judgment",
+      "status": "inconclusive",
+      "winner_id": null,
+      "candidate_ids": [
+        "h2-cat-0",
+        "h2-cat-3"
+      ],
+      "raw": "Score 1: Image 1 has a clear focus on the cat with a simple background, which provides a clean view. The lighting is soft, creating a calm atmosphere. (Score 1: 7)\nScore 2: Image 2 also has a clear focus on the cat, but the background is more complex with additional elements like a plant, which slightly distracts from the main subject. The lighting is moody, adding to the atmosphere. (Score 2: 6)\nScore 1: 7\nScore 2: 6\nImage 1 is better",
+      "parser_version": "card-v1",
+      "dimensions": [],
+      "reason": "",
+      "context_hash": "daa60550d2f7e9c46528dde8f08180643b0964829d636133a03020683220f51c",
+      "model": {
+        "model": "jeongeunnn/pigreward",
+        "revision": "c3e5a4bd68831b11bd430d240fbe14e85986b219",
+        "license": "apache-2.0",
+        "template_version": "exhibit-card-v1",
+        "parser_version": "card-v1",
+        "max_new_tokens": 512,
+        "max_image_edge": 448,
+        "live_approved": false
+      },
+      "template_hash": "1f0d91a865da25589dd320711f9fd16b59d9eed4cb018a99724c6ef93d9e4fd8"
+    },
+    {
+      "sample_id": "h2-cat",
+      "type": "judgment",
+      "status": "inconclusive",
+      "winner_id": null,
+      "candidate_ids": [
+        "h2-cat-3",
+        "h2-cat-0"
+      ],
+      "raw": "Score 1: 2+2+2+2+2+2=10\nScore 2: 2+2+2+2+2+2=10\nScore 1: total\nScore 2: total\nImage 1 is better",
+      "parser_version": "card-v1",
+      "dimensions": [],
+      "reason": "",
+      "context_hash": "daa60550d2f7e9c46528dde8f08180643b0964829d636133a03020683220f51c",
+      "model": {
+        "model": "jeongeunnn/pigreward",
+        "revision": "c3e5a4bd68831b11bd430d240fbe14e85986b219",
+        "license": "apache-2.0",
+        "template_version": "exhibit-card-v1",
+        "parser_version": "card-v1",
+        "max_new_tokens": 512,
+        "max_image_edge": 448,
+        "live_approved": false
+      },
+      "template_hash": "1f0d91a865da25589dd320711f9fd16b59d9eed4cb018a99724c6ef93d9e4fd8"
+    },
+    {
+      "sample_id": "h2-cat",
+      "type": "metrics",
+      "stage": "evaluate",
+      "worker_seconds": 22.857,
+      "peak_vram_mib": 15979.6,
+      "peak_rss_mib": 16719.4
+    },
+    {
+      "sample_id": "h2-tokyo",
+      "type": "judgment",
+      "status": "inconclusive",
+      "winner_id": null,
+      "candidate_ids": [
+        "h2-tokyo-0",
+        "h2-tokyo-1"
+      ],
+      "raw": "Score 1: Image 1 has a slightly cooler color tone with more blues and greens, which aligns with the preference for cooler tones. The image is also more detailed, showing individual buildings and lights. (Score 1: 8)\nScore 2: Image 2 has a warmer color tone with more reds and oranges, which does not align with the preference for cooler tones. The image is less detailed, showing a more uniform view of the cityscape. (Score 2: 6)\nScore 1: 8\nScore 2: 6\nImage 1 is better",
+      "parser_version": "card-v1",
+      "dimensions": [],
+      "reason": "",
+      "context_hash": "daa60550d2f7e9c46528dde8f08180643b0964829d636133a03020683220f51c",
+      "model": {
+        "model": "jeongeunnn/pigreward",
+        "revision": "c3e5a4bd68831b11bd430d240fbe14e85986b219",
+        "license": "apache-2.0",
+        "template_version": "exhibit-card-v1",
+        "parser_version": "card-v1",
+        "max_new_tokens": 512,
+        "max_image_edge": 448,
+        "live_approved": false
+      },
+      "template_hash": "1f0d91a865da25589dd320711f9fd16b59d9eed4cb018a99724c6ef93d9e4fd8"
+    },
+    {
+      "sample_id": "h2-tokyo",
+      "type": "judgment",
+      "status": "inconclusive",
+      "winner_id": null,
+      "candidate_ids": [
+        "h2-tokyo-1",
+        "h2-tokyo-0"
+      ],
+      "raw": "Score 1: Image 1 has a slightly cooler color tone with more blues and greens, which aligns with the preference for cooler colors. The image appears more detailed with visible textures in the buildings. (Score 1: 8)\nScore 2: Image 2 has a warmer color tone with more reds and yellows, which does not align with the preference for cooler colors. The image is less detailed compared to Image 1. (Score 2: 6)\nScore 1: 8\nScore 2: 6\nImage 1 is better",
+      "parser_version": "card-v1",
+      "dimensions": [],
+      "reason": "",
+      "context_hash": "daa60550d2f7e9c46528dde8f08180643b0964829d636133a03020683220f51c",
+      "model": {
+        "model": "jeongeunnn/pigreward",
+        "revision": "c3e5a4bd68831b11bd430d240fbe14e85986b219",
+        "license": "apache-2.0",
+        "template_version": "exhibit-card-v1",
+        "parser_version": "card-v1",
+        "max_new_tokens": 512,
+        "max_image_edge": 448,
+        "live_approved": false
+      },
+      "template_hash": "1f0d91a865da25589dd320711f9fd16b59d9eed4cb018a99724c6ef93d9e4fd8"
+    },
+    {
+      "sample_id": "h2-tokyo",
+      "type": "judgment",
+      "status": "inconclusive",
+      "winner_id": null,
+      "candidate_ids": [
+        "h2-tokyo-0",
+        "h2-tokyo-2"
+      ],
+      "raw": "Score 1: Image 1 has a slightly more detailed view of the buildings, with visible textures and lighting effects. The night scene is vibrant with clear illumination. (Score 1: 8)\nScore 2: Image 2 also presents a detailed view of the buildings but with less visible texture detail compared to Image 1. The lighting is consistent but less vibrant. (Score 2: 7)\nScore 1: 8\nScore 2: 7\nImage 1 is better",
+      "parser_version": "card-v1",
+      "dimensions": [],
+      "reason": "",
+      "context_hash": "daa60550d2f7e9c46528dde8f08180643b0964829d636133a03020683220f51c",
+      "model": {
+        "model": "jeongeunnn/pigreward",
+        "revision": "c3e5a4bd68831b11bd430d240fbe14e85986b219",
+        "license": "apache-2.0",
+        "template_version": "exhibit-card-v1",
+        "parser_version": "card-v1",
+        "max_new_tokens": 512,
+        "max_image_edge": 448,
+        "live_approved": false
+      },
+      "template_hash": "1f0d91a865da25589dd320711f9fd16b59d9eed4cb018a99724c6ef93d9e4fd8"
+    },
+    {
+      "sample_id": "h2-tokyo",
+      "type": "judgment",
+      "status": "inconclusive",
+      "winner_id": null,
+      "candidate_ids": [
+        "h2-tokyo-2",
+        "h2-tokyo-0"
+      ],
+      "raw": "Score 1: Image 1 has a slightly more defined view of the buildings, with clearer edges and textures, making it appear sharper. The lighting is consistent, highlighting the details of the structures. (Score 1: 8)\nScore 2: Image 2 also has a clear view of the buildings, but the lighting appears slightly softer, which reduces the sharpness compared to Image 1. (Score 2: 7)\nScore 1: Image 1 has a more uniform and controlled lighting, which enhances the details of the buildings. (Score 1: 9)\nScore 2: Image 2 has a similar lighting effect, but it appears slightly less controlled, which affects the visibility of details. (Score 2: 7)\nScore 1: Image 1 shows a more detailed view of the buildings, with visible textures and patterns on the surfaces. (Score 1: 9)\nScore 2: Image 2 also shows detailed buildings, but the textures are less pronounced, making it appear slightly smoother. (Score 2: 7)\nScore 1: Image 1 has a more uniform and controlled lighting, which enhances the details of the buildings. (Score 1: 9)\nScore 2: Image 2 has a similar lighting effect, but it appears slightly less controlled, which affects the visibility of details. (Score 2: 7)\nScore 1: Image 1 has a more uniform and controlled lighting, which enhances the details of the buildings. (Score 1: 9)\nScore 2: Image 2 has a similar lighting effect, but it appears slightly less controlled, which affects the visibility of details. (Score 2: 7)\nScore 1: Image 1 has a more uniform and controlled lighting, which enhances the details of the buildings. (Score 1: 9)\nScore 2: Image 2 has a similar lighting effect, but it appears slightly less controlled, which affects the visibility of details. (Score 2: 7)\nScore 1: Image 1 has a more uniform and controlled lighting, which enhances the details of the buildings. (Score 1: 9)\nScore 2: Image 2 has a similar lighting effect, but it appears slightly less controlled, which affects the visibility of details. (Score 2: 7)\nScore 1: Image 1 has a more uniform and controlled lighting, which enhances the details of the buildings. (Score ",
+      "parser_version": "card-v1",
+      "dimensions": [],
+      "reason": "",
+      "context_hash": "daa60550d2f7e9c46528dde8f08180643b0964829d636133a03020683220f51c",
+      "model": {
+        "model": "jeongeunnn/pigreward",
+        "revision": "c3e5a4bd68831b11bd430d240fbe14e85986b219",
+        "license": "apache-2.0",
+        "template_version": "exhibit-card-v1",
+        "parser_version": "card-v1",
+        "max_new_tokens": 512,
+        "max_image_edge": 448,
+        "live_approved": false
+      },
+      "template_hash": "1f0d91a865da25589dd320711f9fd16b59d9eed4cb018a99724c6ef93d9e4fd8"
+    },
+    {
+      "sample_id": "h2-tokyo",
+      "type": "judgment",
+      "status": "inconclusive",
+      "winner_id": null,
+      "candidate_ids": [
+        "h2-tokyo-0",
+        "h2-tokyo-3"
+      ],
+      "raw": "Score 1: Image 1 has a closer, more detailed view of the buildings, showing more architectural details. (Score 1: 8)\nScore 2: Image 2 has a wider view with less focus on individual buildings, showing more of the cityscape but less detail. (Score 2: 6)\nScore 1: total\nScore 2: total\nImage 1 is better",
+      "parser_version": "card-v1",
+      "dimensions": [],
+      "reason": "",
+      "context_hash": "daa60550d2f7e9c46528dde8f08180643b0964829d636133a03020683220f51c",
+      "model": {
+        "model": "jeongeunnn/pigreward",
+        "revision": "c3e5a4bd68831b11bd430d240fbe14e85986b219",
+        "license": "apache-2.0",
+        "template_version": "exhibit-card-v1",
+        "parser_version": "card-v1",
+        "max_new_tokens": 512,
+        "max_image_edge": 448,
+        "live_approved": false
+      },
+      "template_hash": "1f0d91a865da25589dd320711f9fd16b59d9eed4cb018a99724c6ef93d9e4fd8"
+    },
+    {
+      "sample_id": "h2-tokyo",
+      "type": "judgment",
+      "status": "inconclusive",
+      "winner_id": null,
+      "candidate_ids": [
+        "h2-tokyo-3",
+        "h2-tokyo-0"
+      ],
+      "raw": "Score 1: Image 1 has a more prominent Tokyo Tower, which stands out against the cityscape, providing a closer view. The overall image is slightly darker, which enhances the contrast with the lights. (Score 1: 7)\nScore 2: Image 2 offers a denser view of the city with more visible details in the buildings. The lighting is more balanced, making the scene appear more uniform. (Score 2: 6)\nScore 1: 7\nScore 2: 6\nImage 1 is better",
+      "parser_version": "card-v1",
+      "dimensions": [],
+      "reason": "",
+      "context_hash": "daa60550d2f7e9c46528dde8f08180643b0964829d636133a03020683220f51c",
+      "model": {
+        "model": "jeongeunnn/pigreward",
+        "revision": "c3e5a4bd68831b11bd430d240fbe14e85986b219",
+        "license": "apache-2.0",
+        "template_version": "exhibit-card-v1",
+        "parser_version": "card-v1",
+        "max_new_tokens": 512,
+        "max_image_edge": 448,
+        "live_approved": false
+      },
+      "template_hash": "1f0d91a865da25589dd320711f9fd16b59d9eed4cb018a99724c6ef93d9e4fd8"
+    },
+    {
+      "sample_id": "h2-tokyo",
+      "type": "metrics",
+      "stage": "evaluate",
+      "worker_seconds": 24.031,
+      "peak_vram_mib": 15979.4,
+      "peak_rss_mib": 16718.8
+    },
+    {
+      "sample_id": "h3-cat",
+      "type": "judgment",
+      "status": "inconclusive",
+      "winner_id": null,
+      "candidate_ids": [
+        "h3-cat-0",
+        "h3-cat-1"
+      ],
+      "raw": "Score 1: 2\nScore 2: 1\nImage 1 is better",
+      "parser_version": "card-v1",
+      "dimensions": [],
+      "reason": "",
+      "context_hash": "3715a0d33b38d7e86f2e7fe2972b86e84da19eed9d7485194690090df0dad9f1",
+      "model": {
+        "model": "jeongeunnn/pigreward",
+        "revision": "c3e5a4bd68831b11bd430d240fbe14e85986b219",
+        "license": "apache-2.0",
+        "template_version": "exhibit-card-v1",
+        "parser_version": "card-v1",
+        "max_new_tokens": 512,
+        "max_image_edge": 448,
+        "live_approved": false
+      },
+      "template_hash": "1f0d91a865da25589dd320711f9fd16b59d9eed4cb018a99724c6ef93d9e4fd8"
+    },
+    {
+      "sample_id": "h3-cat",
+      "type": "judgment",
+      "status": "inconclusive",
+      "winner_id": null,
+      "candidate_ids": [
+        "h3-cat-1",
+        "h3-cat-0"
+      ],
+      "raw": "Score 1: 2 (Warm colors: 1, Shadows/Highlights: 1)\nScore 2: 1 (Warm colors: 0, Shadows/Highlights: 0)\nScore 1: 3\nScore 2: 1\nImage 1 is better",
+      "parser_version": "card-v1",
+      "dimensions": [],
+      "reason": "",
+      "context_hash": "3715a0d33b38d7e86f2e7fe2972b86e84da19eed9d7485194690090df0dad9f1",
+      "model": {
+        "model": "jeongeunnn/pigreward",
+        "revision": "c3e5a4bd68831b11bd430d240fbe14e85986b219",
+        "license": "apache-2.0",
+        "template_version": "exhibit-card-v1",
+        "parser_version": "card-v1",
+        "max_new_tokens": 512,
+        "max_image_edge": 448,
+        "live_approved": false
+      },
+      "template_hash": "1f0d91a865da25589dd320711f9fd16b59d9eed4cb018a99724c6ef93d9e4fd8"
+    },
+    {
+      "sample_id": "h3-cat",
+      "type": "judgment",
+      "status": "inconclusive",
+      "winner_id": null,
+      "candidate_ids": [
+        "h3-cat-0",
+        "h3-cat-2"
+      ],
+      "raw": "Score 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore",
+      "parser_version": "card-v1",
+      "dimensions": [],
+      "reason": "",
+      "context_hash": "3715a0d33b38d7e86f2e7fe2972b86e84da19eed9d7485194690090df0dad9f1",
+      "model": {
+        "model": "jeongeunnn/pigreward",
+        "revision": "c3e5a4bd68831b11bd430d240fbe14e85986b219",
+        "license": "apache-2.0",
+        "template_version": "exhibit-card-v1",
+        "parser_version": "card-v1",
+        "max_new_tokens": 512,
+        "max_image_edge": 448,
+        "live_approved": false
+      },
+      "template_hash": "1f0d91a865da25589dd320711f9fd16b59d9eed4cb018a99724c6ef93d9e4fd8"
+    },
+    {
+      "sample_id": "h3-cat",
+      "type": "judgment",
+      "status": "inconclusive",
+      "winner_id": null,
+      "candidate_ids": [
+        "h3-cat-2",
+        "h3-cat-0"
+      ],
+      "raw": "Score 1: 2+2+2+2+2=10\nScore 2: 1+1+1+1+1=5\nScore 1: total\nScore 2: total\nImage 1 is better",
+      "parser_version": "card-v1",
+      "dimensions": [],
+      "reason": "",
+      "context_hash": "3715a0d33b38d7e86f2e7fe2972b86e84da19eed9d7485194690090df0dad9f1",
+      "model": {
+        "model": "jeongeunnn/pigreward",
+        "revision": "c3e5a4bd68831b11bd430d240fbe14e85986b219",
+        "license": "apache-2.0",
+        "template_version": "exhibit-card-v1",
+        "parser_version": "card-v1",
+        "max_new_tokens": 512,
+        "max_image_edge": 448,
+        "live_approved": false
+      },
+      "template_hash": "1f0d91a865da25589dd320711f9fd16b59d9eed4cb018a99724c6ef93d9e4fd8"
+    },
+    {
+      "sample_id": "h3-cat",
+      "type": "judgment",
+      "status": "inconclusive",
+      "winner_id": null,
+      "candidate_ids": [
+        "h3-cat-0",
+        "h3-cat-3"
+      ],
+      "raw": "Score 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore 2: 1\nScore 1: 2\nScore",
+      "parser_version": "card-v1",
+      "dimensions": [],
+      "reason": "",
+      "context_hash": "3715a0d33b38d7e86f2e7fe2972b86e84da19eed9d7485194690090df0dad9f1",
+      "model": {
+        "model": "jeongeunnn/pigreward",
+        "revision": "c3e5a4bd68831b11bd430d240fbe14e85986b219",
+        "license": "apache-2.0",
+        "template_version": "exhibit-card-v1",
+        "parser_version": "card-v1",
+        "max_new_tokens": 512,
+        "max_image_edge": 448,
+        "live_approved": false
+      },
+      "template_hash": "1f0d91a865da25589dd320711f9fd16b59d9eed4cb018a99724c6ef93d9e4fd8"
+    },
+    {
+      "sample_id": "h3-cat",
+      "type": "judgment",
+      "status": "inconclusive",
+      "winner_id": null,
+      "candidate_ids": [
+        "h3-cat-3",
+        "h3-cat-0"
+      ],
+      "raw": "Score 1: 2+2=4\nScore 2: 1+1=2\nScore 1: total\nScore 2: total\nImage 1 is better",
+      "parser_version": "card-v1",
+      "dimensions": [],
+      "reason": "",
+      "context_hash": "3715a0d33b38d7e86f2e7fe2972b86e84da19eed9d7485194690090df0dad9f1",
+      "model": {
+        "model": "jeongeunnn/pigreward",
+        "revision": "c3e5a4bd68831b11bd430d240fbe14e85986b219",
+        "license": "apache-2.0",
+        "template_version": "exhibit-card-v1",
+        "parser_version": "card-v1",
+        "max_new_tokens": 512,
+        "max_image_edge": 448,
+        "live_approved": false
+      },
+      "template_hash": "1f0d91a865da25589dd320711f9fd16b59d9eed4cb018a99724c6ef93d9e4fd8"
+    },
+    {
+      "sample_id": "h3-cat",
+      "type": "metrics",
+      "stage": "evaluate",
+      "worker_seconds": 26.725,
+      "peak_vram_mib": 15978.0,
+      "peak_rss_mib": 16718.3
+    },
+    {
+      "sample_id": "h3-tokyo",
+      "type": "judgment",
+      "status": "inconclusive",
+      "winner_id": null,
+      "candidate_ids": [
+        "h3-tokyo-0",
+        "h3-tokyo-1"
+      ],
+      "raw": "Score 1: Image 1 has a slightly warmer color temperature with more visible highlights and shadows, giving it a more defined look. (Score 1: 7)\nScore 2: Image 2 has a cooler color temperature with less visible highlights and shadows, making it appear flatter. (Score 2: 5)\nScore 1: Image 1 has a clearer emphasis on the Tokyo Tower and surrounding buildings, with sharper textures. (Score 1: 8)\nScore 2: Image 2 has a more uniform texture with less emphasis on individual buildings, making it appear softer. (Score 2: 6)\nScore 1: Image 1 has a more detailed depiction of the cityscape, with visible details in the buildings. (Score 1: 8)\nScore 2: Image 2 has a more uniform appearance with less detail in individual buildings, making it appear less detailed. (Score 2: 6)\nScore 1: Image 1 has a more defined and detailed representation of the cityscape, with visible textures and highlights. (Score 1: 8)\nScore 2: Image 2 has a less defined representation of the cityscape, with less visible textures and highlights, making it appear softer. (Score 2: 6)\nScore 1: Image 1 has a more detailed depiction of the cityscape, with visible textures and highlights. (Score 1: 8)\nScore 2: Image 2 has a less detailed depiction of the cityscape, with less visible textures and highlights, making it appear softer. (Score 2: 6)\nScore 1: Image 1 has a more detailed depiction of the cityscape, with visible textures and highlights. (Score 1: 8)\nScore 2: Image 2 has a less detailed depiction of the cityscape, with less visible textures and highlights, making it appear softer. (Score 2: 6)\nScore 1: Image 1 has a more detailed depiction of the cityscape, with visible textures and highlights. (Score 1: 8)\nScore 2: Image 2 has a less detailed depiction of the cityscape, with less visible textures and highlights, making it appear softer. (Score 2: 6)\nScore 1: Image 1 has a more detailed depiction of the cityscape, with visible textures and highlights. (Score 1: 8)\nScore 2: Image 2 has a less detailed",
+      "parser_version": "card-v1",
+      "dimensions": [],
+      "reason": "",
+      "context_hash": "3715a0d33b38d7e86f2e7fe2972b86e84da19eed9d7485194690090df0dad9f1",
+      "model": {
+        "model": "jeongeunnn/pigreward",
+        "revision": "c3e5a4bd68831b11bd430d240fbe14e85986b219",
+        "license": "apache-2.0",
+        "template_version": "exhibit-card-v1",
+        "parser_version": "card-v1",
+        "max_new_tokens": 512,
+        "max_image_edge": 448,
+        "live_approved": false
+      },
+      "template_hash": "1f0d91a865da25589dd320711f9fd16b59d9eed4cb018a99724c6ef93d9e4fd8"
+    },
+    {
+      "sample_id": "h3-tokyo",
+      "type": "judgment",
+      "status": "inconclusive",
+      "winner_id": null,
+      "candidate_ids": [
+        "h3-tokyo-1",
+        "h3-tokyo-0"
+      ],
+      "raw": "Score 1: Image 1 has a more uniform color palette with cooler tones, which aligns with the night setting. The lighting is subtle and lacks strong highlights or shadows. (Score 1: 3)\nScore 2: Image 2 has a slightly warmer color palette due to the presence of the Tokyo Tower, which adds a warm glow. The lighting is more pronounced, with stronger highlights and shadows. (Score 2: 5)\nScore 1: Image 1 lacks a distinct focal point like a lighthouse or a forest path, making it appear more uniform. (Score 1: 2)\nScore 2: Image 2 has a clear focal point with the Tokyo Tower, which draws attention and adds depth. (Score 2: 4)\nScore 1: Image 1 has a busy scene with many elements, but lacks clear separation, making it feel cluttered. (Score 1: 2)\nScore 2: Image 2 has a clear separation with the Tokyo Tower standing out against the cityscape, making it feel more organized. (Score 2: 4)\nScore 1: Image 1 has a busy scene with many elements, but lacks clear separation, making it feel cluttered. (Score 1: 2)\nScore 2: Image 2 has a clear separation with the Tokyo Tower standing out against the cityscape, making it feel more organized. (Score 2: 4)\nScore 1: Image 1 has a busy scene with many elements, but lacks clear separation, making it feel cluttered. (Score 1: 2)\nScore 2: Image 2 has a clear separation with the Tokyo Tower standing out against the cityscape, making it feel more organized. (Score 2: 4)\nScore 1: Image 1 has a busy scene with many elements, but lacks clear separation, making it feel cluttered. (Score 1: 2)\nScore 2: Image 2 has a clear separation with the Tokyo Tower standing out against the cityscape, making it feel more organized. (Score 2: 4)\nScore 1: Image 1 has a busy scene with many elements, but lacks clear separation, making it feel cluttered. (Score 1: 2)\nScore 2: Image 2 has a clear separation with the Tokyo Tower standing out against the cityscape, making it feel more organized. (Score 2: 4)\nScore 1",
+      "parser_version": "card-v1",
+      "dimensions": [],
+      "reason": "",
+      "context_hash": "3715a0d33b38d7e86f2e7fe2972b86e84da19eed9d7485194690090df0dad9f1",
+      "model": {
+        "model": "jeongeunnn/pigreward",
+        "revision": "c3e5a4bd68831b11bd430d240fbe14e85986b219",
+        "license": "apache-2.0",
+        "template_version": "exhibit-card-v1",
+        "parser_version": "card-v1",
+        "max_new_tokens": 512,
+        "max_image_edge": 448,
+        "live_approved": false
+      },
+      "template_hash": "1f0d91a865da25589dd320711f9fd16b59d9eed4cb018a99724c6ef93d9e4fd8"
+    },
+    {
+      "sample_id": "h3-tokyo",
+      "type": "judgment",
+      "status": "inconclusive",
+      "winner_id": null,
+      "candidate_ids": [
+        "h3-tokyo-0",
+        "h3-tokyo-2"
+      ],
+      "raw": "Score 1: Image 1 has a slightly warmer color temperature, which aligns with the preference for warmer colors. The Tokyo Tower is more prominent and distinct. (Score 1: 7)\nScore 2: Image 2 has a cooler color temperature, which does not align with the preference for warmer colors. The focus is more on the cityscape without a distinct landmark. (Score 2: 5)\nScore 1: Image 1 has more defined textures in the buildings and lights, which aligns with the preference for sharper, more defined textures. (Score 1: 8)\nScore 2: Image 2 has softer textures and less defined details, which does not align with the preference for sharper textures. (Score 2: 4)\nScore 1: Image 1 has a more detailed and defined view of the cityscape, which aligns with the preference for a clearer scene. (Score 1: 8)\nScore 2: Image 2 has a less detailed and defined view of the cityscape, which does not align with the preference for a clearer scene. (Score 2: 5)\nScore 1: Image 1 has a more detailed view of the Tokyo Tower and surrounding buildings, which aligns with the preference for a clearer scene. (Score 1: 8)\nScore 2: Image 2 has a less detailed view of the buildings and lacks a distinct landmark, which does not align with the preference for a clearer scene. (Score 2: 4)\nScore 1: Image 1 has a more detailed view of the cityscape, which aligns with the preference for a clearer scene. (Score 1: 8)\nScore 2: Image 2 has a less detailed view of the cityscape, which does not align with the preference for a clearer scene. (Score 2: 4)\nScore 1: Image 1 has a more detailed view of the cityscape, which aligns with the preference for a clearer scene. (Score 1: 8)\nScore 2: Image 2 has a less detailed view of the cityscape, which does not align with the preference for a clearer scene. (Score 2: 4)\nScore 1: Image 1 has a more detailed view of the cityscape, which aligns with the preference for a clearer scene. (Score 1: 8)\nScore 2: Image 2 has a less detailed view of the city",
+      "parser_version": "card-v1",
+      "dimensions": [],
+      "reason": "",
+      "context_hash": "3715a0d33b38d7e86f2e7fe2972b86e84da19eed9d7485194690090df0dad9f1",
+      "model": {
+        "model": "jeongeunnn/pigreward",
+        "revision": "c3e5a4bd68831b11bd430d240fbe14e85986b219",
+        "license": "apache-2.0",
+        "template_version": "exhibit-card-v1",
+        "parser_version": "card-v1",
+        "max_new_tokens": 512,
+        "max_image_edge": 448,
+        "live_approved": false
+      },
+      "template_hash": "1f0d91a865da25589dd320711f9fd16b59d9eed4cb018a99724c6ef93d9e4fd8"
+    },
+    {
+      "sample_id": "h3-tokyo",
+      "type": "judgment",
+      "status": "inconclusive",
+      "winner_id": null,
+      "candidate_ids": [
+        "h3-tokyo-2",
+        "h3-tokyo-0"
+      ],
+      "raw": "Score 1: Image 1 has a more uniform color palette with cooler tones, while Image 2 has a slight warm hue from the Tokyo Tower. (Score 1: 5, Score 2: 7)\nScore 2: Image 1 lacks strong shadows and highlights, appearing more flat. Image 2 has more defined contrasts and highlights, especially around the Tokyo Tower. (Score 1: 4, Score 2: 8)\nScore 1: Image 1 does not emphasize the open sea or a distant lighthouse. Image 2 does not have a visible lighthouse, but the Tokyo Tower stands out prominently. (Score 1: 3, Score 2: 6)\nScore 2: Image 1 has a smoother texture, while Image 2 has more defined architectural textures, particularly around the Tokyo Tower. (Score 1: 4, Score 2: 8)\nScore 1: Image 1 has a more serene atmosphere with less visible activity. Image 2 also appears calm but has more visible activity due to the lights. (Score 1: 6, Score 2: 7)\nScore 1: 5+4+3+4+6=20\nScore 2: 7+8+6+8+7=36\nScore 2 is better",
+      "parser_version": "card-v1",
+      "dimensions": [],
+      "reason": "",
+      "context_hash": "3715a0d33b38d7e86f2e7fe2972b86e84da19eed9d7485194690090df0dad9f1",
+      "model": {
+        "model": "jeongeunnn/pigreward",
+        "revision": "c3e5a4bd68831b11bd430d240fbe14e85986b219",
+        "license": "apache-2.0",
+        "template_version": "exhibit-card-v1",
+        "parser_version": "card-v1",
+        "max_new_tokens": 512,
+        "max_image_edge": 448,
+        "live_approved": false
+      },
+      "template_hash": "1f0d91a865da25589dd320711f9fd16b59d9eed4cb018a99724c6ef93d9e4fd8"
+    },
+    {
+      "sample_id": "h3-tokyo",
+      "type": "judgment",
+      "status": "inconclusive",
+      "winner_id": null,
+      "candidate_ids": [
+        "h3-tokyo-0",
+        "h3-tokyo-3"
+      ],
+      "raw": "Score 1: Image 1 has a slightly warmer color tone, especially around the Tokyo Tower, which gives it a more inviting feel. The lighting is softer, enhancing the warmth. (Score 1: 7)\nScore 2: Image 2 has a cooler color tone with more contrast between the dark sky and the lit buildings, creating a more dramatic effect. The lighting is sharper and more defined. (Score 2: 8)\nScore 1: 7\nScore 2: 8\nImage 2 is better",
+      "parser_version": "card-v1",
+      "dimensions": [],
+      "reason": "",
+      "context_hash": "3715a0d33b38d7e86f2e7fe2972b86e84da19eed9d7485194690090df0dad9f1",
+      "model": {
+        "model": "jeongeunnn/pigreward",
+        "revision": "c3e5a4bd68831b11bd430d240fbe14e85986b219",
+        "license": "apache-2.0",
+        "template_version": "exhibit-card-v1",
+        "parser_version": "card-v1",
+        "max_new_tokens": 512,
+        "max_image_edge": 448,
+        "live_approved": false
+      },
+      "template_hash": "1f0d91a865da25589dd320711f9fd16b59d9eed4cb018a99724c6ef93d9e4fd8"
+    },
+    {
+      "sample_id": "h3-tokyo",
+      "type": "judgment",
+      "status": "inconclusive",
+      "winner_id": null,
+      "candidate_ids": [
+        "h3-tokyo-3",
+        "h3-tokyo-0"
+      ],
+      "raw": "Score 1: Image 1 has a slightly warmer color temperature, which aligns with the preference for warmer colors. Image 2 has a cooler tone. (Score 1: 3, Score 2: 1)\nScore 2: Image 1 has stronger shadows and highlights, giving a more dynamic look. Image 2 has softer shadows and less contrast. (Score 1: 4, Score 2: 2)\nScore 3: Image 1 emphasizes the open space around the Tokyo Tower, providing a clearer view of the surroundings. Image 2 has more dense urban elements, which might obscure the open sea. (Score 1: 5, Score 2: 3)\nScore 4: Image 1 has sharper, more defined textures, especially in the buildings and lights. Image 2 has softer textures, which makes it appear less defined. (Score 1: 5, Score 2: 2)\nScore 5: Image 1 is quieter, with less visible activity, which aligns with the preference for a quieter scene. Image 2 has more visible activity and light, which makes it appear busier. (Score 1: 4, Score 2: 1)\nScore 1: 3+4+5+5+4=19\nScore 2: 1+2+3+2+1=9\nScore 1 is better",
+      "parser_version": "card-v1",
+      "dimensions": [],
+      "reason": "",
+      "context_hash": "3715a0d33b38d7e86f2e7fe2972b86e84da19eed9d7485194690090df0dad9f1",
+      "model": {
+        "model": "jeongeunnn/pigreward",
+        "revision": "c3e5a4bd68831b11bd430d240fbe14e85986b219",
+        "license": "apache-2.0",
+        "template_version": "exhibit-card-v1",
+        "parser_version": "card-v1",
+        "max_new_tokens": 512,
+        "max_image_edge": 448,
+        "live_approved": false
+      },
+      "template_hash": "1f0d91a865da25589dd320711f9fd16b59d9eed4cb018a99724c6ef93d9e4fd8"
+    },
+    {
+      "sample_id": "h3-tokyo",
+      "type": "metrics",
+      "stage": "evaluate",
+      "worker_seconds": 45.053,
+      "peak_vram_mib": 15977.8,
+      "peak_rss_mib": 16718.3
+    }
+  ],
+  "model": {
+    "model": "jeongeunnn/pigreward",
+    "revision": "c3e5a4bd68831b11bd430d240fbe14e85986b219",
+    "license": "apache-2.0",
+    "template_version": "exhibit-card-v1",
+    "parser_version": "card-v1",
+    "max_new_tokens": 512,
+    "max_image_edge": 448,
+    "live_approved": false
+  },
+  "inputs": [
+    {
+      "sample_id": "h1-cat",
+      "basic_prompt_en": "One cat sitting by a window.",
+      "context_text": "The selected harbor image has warmer colors than the other image.\nThe selected flowers have softer, more diffused lighting than the other image.\nThe selected image emphasizes open sea around a distant lighthouse.\nThe selected forest path has softer, more painterly texture than the other image.\nThe selected cafe scene is quieter, with empty tables, than the other image.",
+      "context_hash": "9afc913f25cc92fa17a6dd2ceaec2c28e2b0f5ca858acf8084c69309d697e81b",
+      "pairs": [
+        [
+          "h1-cat-0",
+          "h1-cat-1"
+        ],
+        [
+          "h1-cat-1",
+          "h1-cat-0"
+        ],
+        [
+          "h1-cat-0",
+          "h1-cat-2"
+        ],
+        [
+          "h1-cat-2",
+          "h1-cat-0"
+        ],
+        [
+          "h1-cat-0",
+          "h1-cat-3"
+        ],
+        [
+          "h1-cat-3",
+          "h1-cat-0"
+        ],
+        [
+          "h1-cat-1",
+          "h1-cat-2"
+        ],
+        [
+          "h1-cat-2",
+          "h1-cat-1"
+        ]
+      ],
+      "candidates": [
+        {
+          "id": "h1-cat-0",
+          "sha256": "fadbc882a5f9be198e734feb13a48f9b1c37f414e8f18cffce282e445ad02e04",
+          "seed": 230923
+        },
+        {
+          "id": "h1-cat-1",
+          "sha256": "485f54e8fcef510da875e790fb91d7d0e8d4adb408023c1954576b167123b131",
+          "seed": 230924
+        },
+        {
+          "id": "h1-cat-2",
+          "sha256": "5b1f08b8090fd85c13c73bbc90407dc5d775b21ad1c51cfdfa3fc94610cbe86b",
+          "seed": 230925
+        },
+        {
+          "id": "h1-cat-3",
+          "sha256": "c93b933163299229982e9fad2a6315235897b9ddbf8f41250570f8daa10be6b8",
+          "seed": 230926
+        }
+      ]
+    },
+    {
+      "sample_id": "h1-tokyo",
+      "basic_prompt_en": "The Tokyo skyline at night.",
+      "context_text": "The selected harbor image has warmer colors than the other image.\nThe selected flowers have softer, more diffused lighting than the other image.\nThe selected image emphasizes open sea around a distant lighthouse.\nThe selected forest path has softer, more painterly texture than the other image.\nThe selected cafe scene is quieter, with empty tables, than the other image.",
+      "context_hash": "9afc913f25cc92fa17a6dd2ceaec2c28e2b0f5ca858acf8084c69309d697e81b",
+      "pairs": [
+        [
+          "h1-tokyo-0",
+          "h1-tokyo-1"
+        ],
+        [
+          "h1-tokyo-1",
+          "h1-tokyo-0"
+        ],
+        [
+          "h1-tokyo-0",
+          "h1-tokyo-2"
+        ],
+        [
+          "h1-tokyo-2",
+          "h1-tokyo-0"
+        ],
+        [
+          "h1-tokyo-0",
+          "h1-tokyo-3"
+        ],
+        [
+          "h1-tokyo-3",
+          "h1-tokyo-0"
+        ],
+        [
+          "h1-tokyo-1",
+          "h1-tokyo-2"
+        ],
+        [
+          "h1-tokyo-2",
+          "h1-tokyo-1"
+        ]
+      ],
+      "candidates": [
+        {
+          "id": "h1-tokyo-0",
+          "sha256": "937da4fa19eb1c30bf89264f424bcbafa2f4a3452ce247924deaa2354476cef5",
+          "seed": 230923
+        },
+        {
+          "id": "h1-tokyo-1",
+          "sha256": "4aa75ba9a78710a7465c5abbf5bf1b16785d8078f55989f35c973936681f0f9d",
+          "seed": 230924
+        },
+        {
+          "id": "h1-tokyo-2",
+          "sha256": "310500b48fbcc75cecfeef918a62fbf57e55314c21f65872fc2ca85822dcc82b",
+          "seed": 230925
+        },
+        {
+          "id": "h1-tokyo-3",
+          "sha256": "36242d93af118e7cbad3b9c9fe0d2fcd8e27060ef738668103e9b554586a0424",
+          "seed": 230926
+        }
+      ]
+    },
+    {
+      "sample_id": "h2-cat",
+      "basic_prompt_en": "One cat sitting by a window.",
+      "context_text": "The selected harbor image has cooler greens and blues than the other image.\nThe selected flowers have stronger shadows and highlights than the other image.\nThe selected image shows a closer, more detailed view of the lighthouse and rocky shore.\nThe selected forest path has sharper, more defined natural textures than the other image.\nThe selected cafe scene has a livelier atmosphere with people than the other image.",
+      "context_hash": "daa60550d2f7e9c46528dde8f08180643b0964829d636133a03020683220f51c",
+      "pairs": [
+        [
+          "h2-cat-0",
+          "h2-cat-1"
+        ],
+        [
+          "h2-cat-1",
+          "h2-cat-0"
+        ],
+        [
+          "h2-cat-0",
+          "h2-cat-2"
+        ],
+        [
+          "h2-cat-2",
+          "h2-cat-0"
+        ],
+        [
+          "h2-cat-0",
+          "h2-cat-3"
+        ],
+        [
+          "h2-cat-3",
+          "h2-cat-0"
+        ]
+      ],
+      "candidates": [
+        {
+          "id": "h2-cat-0",
+          "sha256": "68feac093e32c6268dca2434abf83e11dd573f66ebc53cb75b96b743b08a8d1a",
+          "seed": 230923
+        },
+        {
+          "id": "h2-cat-1",
+          "sha256": "477ad695365047f1e106fba594521dd2224a3e6461d9cce0e4f630d5ff252e89",
+          "seed": 230924
+        },
+        {
+          "id": "h2-cat-2",
+          "sha256": "d31f8583c4d6de854ecf5565bb8ff8d34b56d7a18efd368e3d15fea5f55289fd",
+          "seed": 230925
+        },
+        {
+          "id": "h2-cat-3",
+          "sha256": "f69fc8c2dfc71746fdd892d2236086c367921c942ff4858aa658a03f1d6ee93f",
+          "seed": 230926
+        }
+      ]
+    },
+    {
+      "sample_id": "h2-tokyo",
+      "basic_prompt_en": "The Tokyo skyline at night.",
+      "context_text": "The selected harbor image has cooler greens and blues than the other image.\nThe selected flowers have stronger shadows and highlights than the other image.\nThe selected image shows a closer, more detailed view of the lighthouse and rocky shore.\nThe selected forest path has sharper, more defined natural textures than the other image.\nThe selected cafe scene has a livelier atmosphere with people than the other image.",
+      "context_hash": "daa60550d2f7e9c46528dde8f08180643b0964829d636133a03020683220f51c",
+      "pairs": [
+        [
+          "h2-tokyo-0",
+          "h2-tokyo-1"
+        ],
+        [
+          "h2-tokyo-1",
+          "h2-tokyo-0"
+        ],
+        [
+          "h2-tokyo-0",
+          "h2-tokyo-2"
+        ],
+        [
+          "h2-tokyo-2",
+          "h2-tokyo-0"
+        ],
+        [
+          "h2-tokyo-0",
+          "h2-tokyo-3"
+        ],
+        [
+          "h2-tokyo-3",
+          "h2-tokyo-0"
+        ]
+      ],
+      "candidates": [
+        {
+          "id": "h2-tokyo-0",
+          "sha256": "77df4ba25492b444f539687a95c6dfa5b1951e8ab19129432104576bd5415588",
+          "seed": 230923
+        },
+        {
+          "id": "h2-tokyo-1",
+          "sha256": "2d11d1cbc2d411f82a9945875da76488b4b4702165f5ec430ba3d0e1bcd7a6aa",
+          "seed": 230924
+        },
+        {
+          "id": "h2-tokyo-2",
+          "sha256": "83838c3fef633f5c9cdd40379a49823b388f45a155d76c8474aa5bfa523966d5",
+          "seed": 230925
+        },
+        {
+          "id": "h2-tokyo-3",
+          "sha256": "948d98a863f2df02f77474a063bb5f008e11e45cdccf5e06edfcd59a7341db3e",
+          "seed": 230926
+        }
+      ]
+    },
+    {
+      "sample_id": "h3-cat",
+      "basic_prompt_en": "One cat sitting by a window.",
+      "context_text": "The selected harbor image has warmer colors than the other image.\nThe selected flowers have stronger shadows and highlights than the other image.\nThe selected image emphasizes open sea around a distant lighthouse.\nThe selected forest path has sharper, more defined natural textures than the other image.\nThe selected cafe scene is quieter, with empty tables, than the other image.",
+      "context_hash": "3715a0d33b38d7e86f2e7fe2972b86e84da19eed9d7485194690090df0dad9f1",
+      "pairs": [
+        [
+          "h3-cat-0",
+          "h3-cat-1"
+        ],
+        [
+          "h3-cat-1",
+          "h3-cat-0"
+        ],
+        [
+          "h3-cat-0",
+          "h3-cat-2"
+        ],
+        [
+          "h3-cat-2",
+          "h3-cat-0"
+        ],
+        [
+          "h3-cat-0",
+          "h3-cat-3"
+        ],
+        [
+          "h3-cat-3",
+          "h3-cat-0"
+        ]
+      ],
+      "candidates": [
+        {
+          "id": "h3-cat-0",
+          "sha256": "57963ea4903350f244cda05a347ac3c444b39eff0885dc5dd2f10b5a38b21d2c",
+          "seed": 230923
+        },
+        {
+          "id": "h3-cat-1",
+          "sha256": "3e5e65e15546c32c662c2a41f7763d9163e799c8b300504a37d090e52f33add3",
+          "seed": 230924
+        },
+        {
+          "id": "h3-cat-2",
+          "sha256": "e830941fe3d26232d2b1e575ee3384862af1fa619a1262e2c5400766f32a350a",
+          "seed": 230925
+        },
+        {
+          "id": "h3-cat-3",
+          "sha256": "fdd5390b0b6aa59d0f698cf54cc564a9cbc81468e007cf01e568dbb90c325643",
+          "seed": 230926
+        }
+      ]
+    },
+    {
+      "sample_id": "h3-tokyo",
+      "basic_prompt_en": "The Tokyo skyline at night.",
+      "context_text": "The selected harbor image has warmer colors than the other image.\nThe selected flowers have stronger shadows and highlights than the other image.\nThe selected image emphasizes open sea around a distant lighthouse.\nThe selected forest path has sharper, more defined natural textures than the other image.\nThe selected cafe scene is quieter, with empty tables, than the other image.",
+      "context_hash": "3715a0d33b38d7e86f2e7fe2972b86e84da19eed9d7485194690090df0dad9f1",
+      "pairs": [
+        [
+          "h3-tokyo-0",
+          "h3-tokyo-1"
+        ],
+        [
+          "h3-tokyo-1",
+          "h3-tokyo-0"
+        ],
+        [
+          "h3-tokyo-0",
+          "h3-tokyo-2"
+        ],
+        [
+          "h3-tokyo-2",
+          "h3-tokyo-0"
+        ],
+        [
+          "h3-tokyo-0",
+          "h3-tokyo-3"
+        ],
+        [
+          "h3-tokyo-3",
+          "h3-tokyo-0"
+        ]
+      ],
+      "candidates": [
+        {
+          "id": "h3-tokyo-0",
+          "sha256": "118fb860b15f5ccb89f49d407cf87cfe920c3350649f0eb06cd787554ff20321",
+          "seed": 230923
+        },
+        {
+          "id": "h3-tokyo-1",
+          "sha256": "d069e5a76e9aa77be6391a8fc6325257bd3dd947816df3cc9f4ad4d9e999068a",
+          "seed": 230924
+        },
+        {
+          "id": "h3-tokyo-2",
+          "sha256": "2336704f9521805117fbc497fb778cb8b52de47c4458cf474a1478b6b39aa009",
+          "seed": 230925
+        },
+        {
+          "id": "h3-tokyo-3",
+          "sha256": "dbea9170aad8dec16453461f31c84d67f3f3672e1fd50df3edcb8b91463a2e83",
+          "seed": 230926
+        }
+      ]
+    }
+  ],
+  "final_parser_replay": {
+    "accepted": 0,
+    "note": "Conservative final parser recheck, even granting EOS; no outputs accepted."
+  }
+}

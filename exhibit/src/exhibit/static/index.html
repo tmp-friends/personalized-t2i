@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="theme-color" content="#f4f2eb" />
+    <title>Taste — あなたの「好き」を描く</title>
+    <link rel="stylesheet" href="/static/style.css" />
+    <script type="module" src="/static/app.js"></script>
+  </head>
+  <body>
+    <header>
+      <a class="brand" href="/" aria-label="Taste ホーム"
+        >taste<span class="brand-dot">●</span></a
+      ><span class="exhibit-label">PERSONALIZED IMAGE LAB <i>2026</i></span
+      ><button id="reset" class="quiet" hidden>体験を終了 ↗</button>
+    </header>
+    <main id="app" aria-live="polite"></main>
+    <div id="error" role="alert" hidden></div>
+    <footer>
+      <span>あなたの好みは、あなたが決める。</span
+      ><a href="/fallback">サンプルと手法の説明 ↗</a
+      ><span>LOCAL EXHIBITION · ZIPP-STYLE</span>
+    </footer>
+  </body>
+</html>

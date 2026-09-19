@@ -1,0 +1,104 @@
+{
+  "cat": {
+    "type": "rewrite",
+    "id": "cat",
+    "prompt": "One cat sitting by a window. balanced composition, natural lighting, detailed textures.",
+    "raw": "balanced composition, natural lighting, detailed textures",
+    "valid": true,
+    "context_hash": null,
+    "model": {
+      "model": "Qwen/Qwen3.5-4B",
+      "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+      "template_version": "append-aesthetic-v1"
+    },
+    "token_lengths": [
+      18,
+      18
+    ]
+  },
+  "tokyo": {
+    "type": "rewrite",
+    "id": "tokyo",
+    "prompt": "The Tokyo skyline at night. balanced composition, natural lighting, detailed textures.",
+    "raw": "balanced composition, natural lighting, detailed textures",
+    "valid": true,
+    "context_hash": null,
+    "model": {
+      "model": "Qwen/Qwen3.5-4B",
+      "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+      "template_version": "append-aesthetic-v1"
+    },
+    "token_lengths": [
+      17,
+      17
+    ]
+  },
+  "forest": {
+    "type": "rewrite",
+    "id": "forest",
+    "prompt": "One small house in a forest. balanced composition, natural lighting, detailed textures.",
+    "raw": "balanced composition, natural lighting, detailed textures",
+    "valid": true,
+    "context_hash": null,
+    "model": {
+      "model": "Qwen/Qwen3.5-4B",
+      "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+      "template_version": "append-aesthetic-v1"
+    },
+    "token_lengths": [
+      18,
+      18
+    ]
+  },
+  "lighthouse": {
+    "type": "rewrite",
+    "id": "lighthouse",
+    "prompt": "One lighthouse beside the sea. balanced composition, natural lighting, detailed textures.",
+    "raw": "balanced composition, natural lighting, detailed textures",
+    "valid": true,
+    "context_hash": null,
+    "model": {
+      "model": "Qwen/Qwen3.5-4B",
+      "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+      "template_version": "append-aesthetic-v1"
+    },
+    "token_lengths": [
+      17,
+      17
+    ]
+  },
+  "rain": {
+    "type": "rewrite",
+    "id": "rain",
+    "prompt": "A street corner in the rain. balanced composition, natural lighting, detailed textures.",
+    "raw": "balanced composition, natural lighting, detailed textures",
+    "valid": true,
+    "context_hash": null,
+    "model": {
+      "model": "Qwen/Qwen3.5-4B",
+      "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+      "template_version": "append-aesthetic-v1"
+    },
+    "token_lengths": [
+      18,
+      18
+    ]
+  },
+  "cafe": {
+    "type": "rewrite",
+    "id": "cafe",
+    "prompt": "A cafe interior at night. balanced composition, natural lighting, detailed textures.",
+    "raw": "balanced composition, natural lighting, detailed textures",
+    "valid": true,
+    "context_hash": null,
+    "model": {
+      "model": "Qwen/Qwen3.5-4B",
+      "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+      "template_version": "append-aesthetic-v1"
+    },
+    "token_lengths": [
+      17,
+      17
+    ]
+  }
+}

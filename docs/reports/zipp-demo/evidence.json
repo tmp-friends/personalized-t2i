@@ -1,0 +1,1239 @@
+{
+  "generated_at": "2026-09-20 00:13 JST",
+  "browser": {
+    "browser": "Chromium headless / actual localhost",
+    "url": "http://127.0.0.1:7860",
+    "browser_wall_seconds": 20.88,
+    "checks": [
+      "five choices",
+      "persona correction",
+      "axis off",
+      "four real SDXL images",
+      "matched seeds",
+      "shared context hash",
+      "manual selection",
+      "reload",
+      "mobile width",
+      "exact cache",
+      "all off",
+      "reset deletion",
+      "five skips",
+      "sample"
+    ],
+    "page_errors": [],
+    "external_requests": []
+  },
+  "rehearsal": {
+    "sessions": 20,
+    "successes": 20,
+    "p95_seconds": 20.861,
+    "median_seconds": 20.652,
+    "scope": "ZIPP-style generation only; PIGReward disabled; every stage loaded in a fresh subprocess",
+    "rows": [
+      {
+        "index": 0,
+        "topic": "cat",
+        "seconds": 20.431,
+        "images": 4,
+        "mode": "live",
+        "error": null,
+        "timings": {
+          "rewrite": {
+            "returncode": 0,
+            "wall_seconds": 4.613
+          },
+          "generation": {
+            "returncode": 0,
+            "wall_seconds": 15.743
+          }
+        },
+        "metrics": [
+          {
+            "type": "metrics",
+            "stage": "rewrite",
+            "worker_seconds": 3.522,
+            "peak_vram_mib": 8134.6,
+            "peak_rss_mib": 9002.8
+          },
+          {
+            "type": "metrics",
+            "stage": "generate",
+            "worker_seconds": 14.596,
+            "peak_vram_mib": 10736.3,
+            "peak_rss_mib": 5762.1
+          }
+        ]
+      },
+      {
+        "index": 1,
+        "topic": "tokyo",
+        "seconds": 20.655,
+        "images": 4,
+        "mode": "live",
+        "error": null,
+        "timings": {
+          "rewrite": {
+            "returncode": 0,
+            "wall_seconds": 4.964
+          },
+          "generation": {
+            "returncode": 0,
+            "wall_seconds": 15.59
+          }
+        },
+        "metrics": [
+          {
+            "type": "metrics",
+            "stage": "rewrite",
+            "worker_seconds": 3.859,
+            "peak_vram_mib": 8132.1,
+            "peak_rss_mib": 9003.3
+          },
+          {
+            "type": "metrics",
+            "stage": "generate",
+            "worker_seconds": 14.418,
+            "peak_vram_mib": 10736.3,
+            "peak_rss_mib": 5761.7
+          }
+        ]
+      },
+      {
+        "index": 2,
+        "topic": "forest",
+        "seconds": 20.652,
+        "images": 4,
+        "mode": "live",
+        "error": null,
+        "timings": {
+          "rewrite": {
+            "returncode": 0,
+            "wall_seconds": 4.863
+          },
+          "generation": {
+            "returncode": 0,
+            "wall_seconds": 15.583
+          }
+        },
+        "metrics": [
+          {
+            "type": "metrics",
+            "stage": "rewrite",
+            "worker_seconds": 3.737,
+            "peak_vram_mib": 8134.6,
+            "peak_rss_mib": 9002.6
+          },
+          {
+            "type": "metrics",
+            "stage": "generate",
+            "worker_seconds": 14.43,
+            "peak_vram_mib": 10736.3,
+            "peak_rss_mib": 5761.2
+          }
+        ]
+      },
+      {
+        "index": 3,
+        "topic": "lighthouse",
+        "seconds": 20.857,
+        "images": 4,
+        "mode": "live",
+        "error": null,
+        "timings": {
+          "rewrite": {
+            "returncode": 0,
+            "wall_seconds": 4.963
+          },
+          "generation": {
+            "returncode": 0,
+            "wall_seconds": 15.733
+          }
+        },
+        "metrics": [
+          {
+            "type": "metrics",
+            "stage": "rewrite",
+            "worker_seconds": 3.845,
+            "peak_vram_mib": 8134.3,
+            "peak_rss_mib": 9001.9
+          },
+          {
+            "type": "metrics",
+            "stage": "generate",
+            "worker_seconds": 14.525,
+            "peak_vram_mib": 10736.3,
+            "peak_rss_mib": 5762.0
+          }
+        ]
+      },
+      {
+        "index": 4,
+        "topic": "rain",
+        "seconds": 20.667,
+        "images": 4,
+        "mode": "live",
+        "error": null,
+        "timings": {
+          "rewrite": {
+            "returncode": 0,
+            "wall_seconds": 4.862
+          },
+          "generation": {
+            "returncode": 0,
+            "wall_seconds": 15.687
+          }
+        },
+        "metrics": [
+          {
+            "type": "metrics",
+            "stage": "rewrite",
+            "worker_seconds": 3.737,
+            "peak_vram_mib": 8134.6,
+            "peak_rss_mib": 9002.0
+          },
+          {
+            "type": "metrics",
+            "stage": "generate",
+            "worker_seconds": 14.532,
+            "peak_vram_mib": 10736.3,
+            "peak_rss_mib": 5762.5
+          }
+        ]
+      },
+      {
+        "index": 5,
+        "topic": "cafe",
+        "seconds": 20.633,
+        "images": 4,
+        "mode": "live",
+        "error": null,
+        "timings": {
+          "rewrite": {
+            "returncode": 0,
+            "wall_seconds": 4.765
+          },
+          "generation": {
+            "returncode": 0,
+            "wall_seconds": 15.838
+          }
+        },
+        "metrics": [
+          {
+            "type": "metrics",
+            "stage": "rewrite",
+            "worker_seconds": 3.653,
+            "peak_vram_mib": 8132.1,
+            "peak_rss_mib": 9002.6
+          },
+          {
+            "type": "metrics",
+            "stage": "generate",
+            "worker_seconds": 14.681,
+            "peak_vram_mib": 10736.3,
+            "peak_rss_mib": 5761.9
+          }
+        ]
+      },
+      {
+        "index": 6,
+        "topic": "cat",
+        "seconds": 20.634,
+        "images": 4,
+        "mode": "live",
+        "error": null,
+        "timings": {
+          "rewrite": {
+            "returncode": 0,
+            "wall_seconds": 4.668
+          },
+          "generation": {
+            "returncode": 0,
+            "wall_seconds": 15.782
+          }
+        },
+        "metrics": [
+          {
+            "type": "metrics",
+            "stage": "rewrite",
+            "worker_seconds": 3.559,
+            "peak_vram_mib": 8134.6,
+            "peak_rss_mib": 9003.1
+          },
+          {
+            "type": "metrics",
+            "stage": "generate",
+            "worker_seconds": 14.621,
+            "peak_vram_mib": 10736.3,
+            "peak_rss_mib": 5763.4
+          }
+        ]
+      },
+      {
+        "index": 7,
+        "topic": "tokyo",
+        "seconds": 20.436,
+        "images": 4,
+        "mode": "live",
+        "error": null,
+        "timings": {
+          "rewrite": {
+            "returncode": 0,
+            "wall_seconds": 4.708
+          },
+          "generation": {
+            "returncode": 0,
+            "wall_seconds": 15.585
+          }
+        },
+        "metrics": [
+          {
+            "type": "metrics",
+            "stage": "rewrite",
+            "worker_seconds": 3.615,
+            "peak_vram_mib": 8132.1,
+            "peak_rss_mib": 9001.9
+          },
+          {
+            "type": "metrics",
+            "stage": "generate",
+            "worker_seconds": 14.48,
+            "peak_vram_mib": 10736.3,
+            "peak_rss_mib": 5763.0
+          }
+        ]
+      },
+      {
+        "index": 8,
+        "topic": "forest",
+        "seconds": 20.246,
+        "images": 4,
+        "mode": "live",
+        "error": null,
+        "timings": {
+          "rewrite": {
+            "returncode": 0,
+            "wall_seconds": 4.663
+          },
+          "generation": {
+            "returncode": 0,
+            "wall_seconds": 15.542
+          }
+        },
+        "metrics": [
+          {
+            "type": "metrics",
+            "stage": "rewrite",
+            "worker_seconds": 3.559,
+            "peak_vram_mib": 8134.6,
+            "peak_rss_mib": 9002.9
+          },
+          {
+            "type": "metrics",
+            "stage": "generate",
+            "worker_seconds": 14.375,
+            "peak_vram_mib": 10736.3,
+            "peak_rss_mib": 5762.4
+          }
+        ]
+      },
+      {
+        "index": 9,
+        "topic": "lighthouse",
+        "seconds": 20.669,
+        "images": 4,
+        "mode": "live",
+        "error": null,
+        "timings": {
+          "rewrite": {
+            "returncode": 0,
+            "wall_seconds": 4.915
+          },
+          "generation": {
+            "returncode": 0,
+            "wall_seconds": 15.689
+          }
+        },
+        "metrics": [
+          {
+            "type": "metrics",
+            "stage": "rewrite",
+            "worker_seconds": 3.775,
+            "peak_vram_mib": 8134.3,
+            "peak_rss_mib": 9002.5
+          },
+          {
+            "type": "metrics",
+            "stage": "generate",
+            "worker_seconds": 14.535,
+            "peak_vram_mib": 10736.3,
+            "peak_rss_mib": 5761.5
+          }
+        ]
+      },
+      {
+        "index": 10,
+        "topic": "rain",
+        "seconds": 20.862,
+        "images": 4,
+        "mode": "live",
+        "error": null,
+        "timings": {
+          "rewrite": {
+            "returncode": 0,
+            "wall_seconds": 4.962
+          },
+          "generation": {
+            "returncode": 0,
+            "wall_seconds": 15.735
+          }
+        },
+        "metrics": [
+          {
+            "type": "metrics",
+            "stage": "rewrite",
+            "worker_seconds": 3.795,
+            "peak_vram_mib": 8134.6,
+            "peak_rss_mib": 9002.8
+          },
+          {
+            "type": "metrics",
+            "stage": "generate",
+            "worker_seconds": 14.552,
+            "peak_vram_mib": 10736.3,
+            "peak_rss_mib": 5760.6
+          }
+        ]
+      },
+      {
+        "index": 11,
+        "topic": "cafe",
+        "seconds": 20.621,
+        "images": 4,
+        "mode": "live",
+        "error": null,
+        "timings": {
+          "rewrite": {
+            "returncode": 0,
+            "wall_seconds": 4.715
+          },
+          "generation": {
+            "returncode": 0,
+            "wall_seconds": 15.891
+          }
+        },
+        "metrics": [
+          {
+            "type": "metrics",
+            "stage": "rewrite",
+            "worker_seconds": 3.577,
+            "peak_vram_mib": 8132.1,
+            "peak_rss_mib": 9003.4
+          },
+          {
+            "type": "metrics",
+            "stage": "generate",
+            "worker_seconds": 14.729,
+            "peak_vram_mib": 10736.3,
+            "peak_rss_mib": 5762.6
+          }
+        ]
+      },
+      {
+        "index": 12,
+        "topic": "cat",
+        "seconds": 20.463,
+        "images": 4,
+        "mode": "live",
+        "error": null,
+        "timings": {
+          "rewrite": {
+            "returncode": 0,
+            "wall_seconds": 4.614
+          },
+          "generation": {
+            "returncode": 0,
+            "wall_seconds": 15.79
+          }
+        },
+        "metrics": [
+          {
+            "type": "metrics",
+            "stage": "rewrite",
+            "worker_seconds": 3.531,
+            "peak_vram_mib": 8134.6,
+            "peak_rss_mib": 9002.7
+          },
+          {
+            "type": "metrics",
+            "stage": "generate",
+            "worker_seconds": 14.637,
+            "peak_vram_mib": 10736.3,
+            "peak_rss_mib": 5762.0
+          }
+        ]
+      },
+      {
+        "index": 13,
+        "topic": "tokyo",
+        "seconds": 20.648,
+        "images": 4,
+        "mode": "live",
+        "error": null,
+        "timings": {
+          "rewrite": {
+            "returncode": 0,
+            "wall_seconds": 4.912
+          },
+          "generation": {
+            "returncode": 0,
+            "wall_seconds": 15.641
+          }
+        },
+        "metrics": [
+          {
+            "type": "metrics",
+            "stage": "rewrite",
+            "worker_seconds": 3.798,
+            "peak_vram_mib": 8132.1,
+            "peak_rss_mib": 9002.3
+          },
+          {
+            "type": "metrics",
+            "stage": "generate",
+            "worker_seconds": 14.437,
+            "peak_vram_mib": 10736.3,
+            "peak_rss_mib": 5761.7
+          }
+        ]
+      },
+      {
+        "index": 14,
+        "topic": "forest",
+        "seconds": 20.645,
+        "images": 4,
+        "mode": "live",
+        "error": null,
+        "timings": {
+          "rewrite": {
+            "returncode": 0,
+            "wall_seconds": 4.968
+          },
+          "generation": {
+            "returncode": 0,
+            "wall_seconds": 15.54
+          }
+        },
+        "metrics": [
+          {
+            "type": "metrics",
+            "stage": "rewrite",
+            "worker_seconds": 3.897,
+            "peak_vram_mib": 8134.6,
+            "peak_rss_mib": 9002.8
+          },
+          {
+            "type": "metrics",
+            "stage": "generate",
+            "worker_seconds": 14.38,
+            "peak_vram_mib": 10736.3,
+            "peak_rss_mib": 5762.1
+          }
+        ]
+      },
+      {
+        "index": 15,
+        "topic": "lighthouse",
+        "seconds": 20.861,
+        "images": 4,
+        "mode": "live",
+        "error": null,
+        "timings": {
+          "rewrite": {
+            "returncode": 0,
+            "wall_seconds": 4.967
+          },
+          "generation": {
+            "returncode": 0,
+            "wall_seconds": 15.738
+          }
+        },
+        "metrics": [
+          {
+            "type": "metrics",
+            "stage": "rewrite",
+            "worker_seconds": 3.848,
+            "peak_vram_mib": 8134.3,
+            "peak_rss_mib": 9002.9
+          },
+          {
+            "type": "metrics",
+            "stage": "generate",
+            "worker_seconds": 14.572,
+            "peak_vram_mib": 10736.3,
+            "peak_rss_mib": 5761.5
+          }
+        ]
+      },
+      {
+        "index": 16,
+        "topic": "rain",
+        "seconds": 20.657,
+        "images": 4,
+        "mode": "live",
+        "error": null,
+        "timings": {
+          "rewrite": {
+            "returncode": 0,
+            "wall_seconds": 4.866
+          },
+          "generation": {
+            "returncode": 0,
+            "wall_seconds": 15.691
+          }
+        },
+        "metrics": [
+          {
+            "type": "metrics",
+            "stage": "rewrite",
+            "worker_seconds": 3.73,
+            "peak_vram_mib": 8134.6,
+            "peak_rss_mib": 9003.1
+          },
+          {
+            "type": "metrics",
+            "stage": "generate",
+            "worker_seconds": 14.551,
+            "peak_vram_mib": 10736.3,
+            "peak_rss_mib": 5762.0
+          }
+        ]
+      },
+      {
+        "index": 17,
+        "topic": "cafe",
+        "seconds": 20.852,
+        "images": 4,
+        "mode": "live",
+        "error": null,
+        "timings": {
+          "rewrite": {
+            "returncode": 0,
+            "wall_seconds": 4.767
+          },
+          "generation": {
+            "returncode": 0,
+            "wall_seconds": 15.935
+          }
+        },
+        "metrics": [
+          {
+            "type": "metrics",
+            "stage": "rewrite",
+            "worker_seconds": 3.635,
+            "peak_vram_mib": 8132.1,
+            "peak_rss_mib": 9002.5
+          },
+          {
+            "type": "metrics",
+            "stage": "generate",
+            "worker_seconds": 14.786,
+            "peak_vram_mib": 10736.3,
+            "peak_rss_mib": 5762.4
+          }
+        ]
+      },
+      {
+        "index": 18,
+        "topic": "cat",
+        "seconds": 20.853,
+        "images": 4,
+        "mode": "live",
+        "error": null,
+        "timings": {
+          "rewrite": {
+            "returncode": 0,
+            "wall_seconds": 4.815
+          },
+          "generation": {
+            "returncode": 0,
+            "wall_seconds": 15.846
+          }
+        },
+        "metrics": [
+          {
+            "type": "metrics",
+            "stage": "rewrite",
+            "worker_seconds": 3.704,
+            "peak_vram_mib": 8134.6,
+            "peak_rss_mib": 9002.8
+          },
+          {
+            "type": "metrics",
+            "stage": "generate",
+            "worker_seconds": 14.65,
+            "peak_vram_mib": 10736.3,
+            "peak_rss_mib": 5761.7
+          }
+        ]
+      },
+      {
+        "index": 19,
+        "topic": "tokyo",
+        "seconds": 20.635,
+        "images": 4,
+        "mode": "live",
+        "error": null,
+        "timings": {
+          "rewrite": {
+            "returncode": 0,
+            "wall_seconds": 4.863
+          },
+          "generation": {
+            "returncode": 0,
+            "wall_seconds": 15.633
+          }
+        },
+        "metrics": [
+          {
+            "type": "metrics",
+            "stage": "rewrite",
+            "worker_seconds": 3.757,
+            "peak_vram_mib": 8132.1,
+            "peak_rss_mib": 9002.4
+          },
+          {
+            "type": "metrics",
+            "stage": "generate",
+            "worker_seconds": 14.464,
+            "peak_vram_mib": 10736.3,
+            "peak_rss_mib": 5761.2
+          }
+        ]
+      }
+    ]
+  },
+  "pigreward": {
+    "probe": "g0",
+    "input_pairs": 20,
+    "forward_parseable": 0,
+    "reverse_consistent": 0,
+    "g0_passed": false,
+    "timings": [
+      {
+        "returncode": 0,
+        "wall_seconds": 54.868
+      },
+      {
+        "returncode": 0,
+        "wall_seconds": 37.685
+      },
+      {
+        "returncode": 0,
+        "wall_seconds": 23.95
+      },
+      {
+        "returncode": 0,
+        "wall_seconds": 25.113
+      },
+      {
+        "returncode": 0,
+        "wall_seconds": 27.813
+      },
+      {
+        "returncode": 0,
+        "wall_seconds": 46.146
+      }
+    ],
+    "errors": [],
+    "model": {
+      "model": "jeongeunnn/pigreward",
+      "revision": "c3e5a4bd68831b11bd430d240fbe14e85986b219",
+      "license": "apache-2.0",
+      "template_version": "exhibit-card-v1",
+      "parser_version": "card-v1",
+      "max_new_tokens": 512,
+      "max_image_edge": 448,
+      "live_approved": false
+    },
+    "inputs": [
+      {
+        "sample_id": "h1-cat",
+        "basic_prompt_en": "One cat sitting by a window.",
+        "context_text": "The selected harbor image has warmer colors than the other image.\nThe selected flowers have softer, more diffused lighting than the other image.\nThe selected image emphasizes open sea around a distant lighthouse.\nThe selected forest path has softer, more painterly texture than the other image.\nThe selected cafe scene is quieter, with empty tables, than the other image.",
+        "context_hash": "9afc913f25cc92fa17a6dd2ceaec2c28e2b0f5ca858acf8084c69309d697e81b",
+        "pairs": [
+          [
+            "h1-cat-0",
+            "h1-cat-1"
+          ],
+          [
+            "h1-cat-1",
+            "h1-cat-0"
+          ],
+          [
+            "h1-cat-0",
+            "h1-cat-2"
+          ],
+          [
+            "h1-cat-2",
+            "h1-cat-0"
+          ],
+          [
+            "h1-cat-0",
+            "h1-cat-3"
+          ],
+          [
+            "h1-cat-3",
+            "h1-cat-0"
+          ],
+          [
+            "h1-cat-1",
+            "h1-cat-2"
+          ],
+          [
+            "h1-cat-2",
+            "h1-cat-1"
+          ]
+        ],
+        "candidates": [
+          {
+            "id": "h1-cat-0",
+            "sha256": "fadbc882a5f9be198e734feb13a48f9b1c37f414e8f18cffce282e445ad02e04",
+            "seed": 230923
+          },
+          {
+            "id": "h1-cat-1",
+            "sha256": "485f54e8fcef510da875e790fb91d7d0e8d4adb408023c1954576b167123b131",
+            "seed": 230924
+          },
+          {
+            "id": "h1-cat-2",
+            "sha256": "5b1f08b8090fd85c13c73bbc90407dc5d775b21ad1c51cfdfa3fc94610cbe86b",
+            "seed": 230925
+          },
+          {
+            "id": "h1-cat-3",
+            "sha256": "c93b933163299229982e9fad2a6315235897b9ddbf8f41250570f8daa10be6b8",
+            "seed": 230926
+          }
+        ]
+      },
+      {
+        "sample_id": "h1-tokyo",
+        "basic_prompt_en": "The Tokyo skyline at night.",
+        "context_text": "The selected harbor image has warmer colors than the other image.\nThe selected flowers have softer, more diffused lighting than the other image.\nThe selected image emphasizes open sea around a distant lighthouse.\nThe selected forest path has softer, more painterly texture than the other image.\nThe selected cafe scene is quieter, with empty tables, than the other image.",
+        "context_hash": "9afc913f25cc92fa17a6dd2ceaec2c28e2b0f5ca858acf8084c69309d697e81b",
+        "pairs": [
+          [
+            "h1-tokyo-0",
+            "h1-tokyo-1"
+          ],
+          [
+            "h1-tokyo-1",
+            "h1-tokyo-0"
+          ],
+          [
+            "h1-tokyo-0",
+            "h1-tokyo-2"
+          ],
+          [
+            "h1-tokyo-2",
+            "h1-tokyo-0"
+          ],
+          [
+            "h1-tokyo-0",
+            "h1-tokyo-3"
+          ],
+          [
+            "h1-tokyo-3",
+            "h1-tokyo-0"
+          ],
+          [
+            "h1-tokyo-1",
+            "h1-tokyo-2"
+          ],
+          [
+            "h1-tokyo-2",
+            "h1-tokyo-1"
+          ]
+        ],
+        "candidates": [
+          {
+            "id": "h1-tokyo-0",
+            "sha256": "937da4fa19eb1c30bf89264f424bcbafa2f4a3452ce247924deaa2354476cef5",
+            "seed": 230923
+          },
+          {
+            "id": "h1-tokyo-1",
+            "sha256": "4aa75ba9a78710a7465c5abbf5bf1b16785d8078f55989f35c973936681f0f9d",
+            "seed": 230924
+          },
+          {
+            "id": "h1-tokyo-2",
+            "sha256": "310500b48fbcc75cecfeef918a62fbf57e55314c21f65872fc2ca85822dcc82b",
+            "seed": 230925
+          },
+          {
+            "id": "h1-tokyo-3",
+            "sha256": "36242d93af118e7cbad3b9c9fe0d2fcd8e27060ef738668103e9b554586a0424",
+            "seed": 230926
+          }
+        ]
+      },
+      {
+        "sample_id": "h2-cat",
+        "basic_prompt_en": "One cat sitting by a window.",
+        "context_text": "The selected harbor image has cooler greens and blues than the other image.\nThe selected flowers have stronger shadows and highlights than the other image.\nThe selected image shows a closer, more detailed view of the lighthouse and rocky shore.\nThe selected forest path has sharper, more defined natural textures than the other image.\nThe selected cafe scene has a livelier atmosphere with people than the other image.",
+        "context_hash": "daa60550d2f7e9c46528dde8f08180643b0964829d636133a03020683220f51c",
+        "pairs": [
+          [
+            "h2-cat-0",
+            "h2-cat-1"
+          ],
+          [
+            "h2-cat-1",
+            "h2-cat-0"
+          ],
+          [
+            "h2-cat-0",
+            "h2-cat-2"
+          ],
+          [
+            "h2-cat-2",
+            "h2-cat-0"
+          ],
+          [
+            "h2-cat-0",
+            "h2-cat-3"
+          ],
+          [
+            "h2-cat-3",
+            "h2-cat-0"
+          ]
+        ],
+        "candidates": [
+          {
+            "id": "h2-cat-0",
+            "sha256": "68feac093e32c6268dca2434abf83e11dd573f66ebc53cb75b96b743b08a8d1a",
+            "seed": 230923
+          },
+          {
+            "id": "h2-cat-1",
+            "sha256": "477ad695365047f1e106fba594521dd2224a3e6461d9cce0e4f630d5ff252e89",
+            "seed": 230924
+          },
+          {
+            "id": "h2-cat-2",
+            "sha256": "d31f8583c4d6de854ecf5565bb8ff8d34b56d7a18efd368e3d15fea5f55289fd",
+            "seed": 230925
+          },
+          {
+            "id": "h2-cat-3",
+            "sha256": "f69fc8c2dfc71746fdd892d2236086c367921c942ff4858aa658a03f1d6ee93f",
+            "seed": 230926
+          }
+        ]
+      },
+      {
+        "sample_id": "h2-tokyo",
+        "basic_prompt_en": "The Tokyo skyline at night.",
+        "context_text": "The selected harbor image has cooler greens and blues than the other image.\nThe selected flowers have stronger shadows and highlights than the other image.\nThe selected image shows a closer, more detailed view of the lighthouse and rocky shore.\nThe selected forest path has sharper, more defined natural textures than the other image.\nThe selected cafe scene has a livelier atmosphere with people than the other image.",
+        "context_hash": "daa60550d2f7e9c46528dde8f08180643b0964829d636133a03020683220f51c",
+        "pairs": [
+          [
+            "h2-tokyo-0",
+            "h2-tokyo-1"
+          ],
+          [
+            "h2-tokyo-1",
+            "h2-tokyo-0"
+          ],
+          [
+            "h2-tokyo-0",
+            "h2-tokyo-2"
+          ],
+          [
+            "h2-tokyo-2",
+            "h2-tokyo-0"
+          ],
+          [
+            "h2-tokyo-0",
+            "h2-tokyo-3"
+          ],
+          [
+            "h2-tokyo-3",
+            "h2-tokyo-0"
+          ]
+        ],
+        "candidates": [
+          {
+            "id": "h2-tokyo-0",
+            "sha256": "77df4ba25492b444f539687a95c6dfa5b1951e8ab19129432104576bd5415588",
+            "seed": 230923
+          },
+          {
+            "id": "h2-tokyo-1",
+            "sha256": "2d11d1cbc2d411f82a9945875da76488b4b4702165f5ec430ba3d0e1bcd7a6aa",
+            "seed": 230924
+          },
+          {
+            "id": "h2-tokyo-2",
+            "sha256": "83838c3fef633f5c9cdd40379a49823b388f45a155d76c8474aa5bfa523966d5",
+            "seed": 230925
+          },
+          {
+            "id": "h2-tokyo-3",
+            "sha256": "948d98a863f2df02f77474a063bb5f008e11e45cdccf5e06edfcd59a7341db3e",
+            "seed": 230926
+          }
+        ]
+      },
+      {
+        "sample_id": "h3-cat",
+        "basic_prompt_en": "One cat sitting by a window.",
+        "context_text": "The selected harbor image has warmer colors than the other image.\nThe selected flowers have stronger shadows and highlights than the other image.\nThe selected image emphasizes open sea around a distant lighthouse.\nThe selected forest path has sharper, more defined natural textures than the other image.\nThe selected cafe scene is quieter, with empty tables, than the other image.",
+        "context_hash": "3715a0d33b38d7e86f2e7fe2972b86e84da19eed9d7485194690090df0dad9f1",
+        "pairs": [
+          [
+            "h3-cat-0",
+            "h3-cat-1"
+          ],
+          [
+            "h3-cat-1",
+            "h3-cat-0"
+          ],
+          [
+            "h3-cat-0",
+            "h3-cat-2"
+          ],
+          [
+            "h3-cat-2",
+            "h3-cat-0"
+          ],
+          [
+            "h3-cat-0",
+            "h3-cat-3"
+          ],
+          [
+            "h3-cat-3",
+            "h3-cat-0"
+          ]
+        ],
+        "candidates": [
+          {
+            "id": "h3-cat-0",
+            "sha256": "57963ea4903350f244cda05a347ac3c444b39eff0885dc5dd2f10b5a38b21d2c",
+            "seed": 230923
+          },
+          {
+            "id": "h3-cat-1",
+            "sha256": "3e5e65e15546c32c662c2a41f7763d9163e799c8b300504a37d090e52f33add3",
+            "seed": 230924
+          },
+          {
+            "id": "h3-cat-2",
+            "sha256": "e830941fe3d26232d2b1e575ee3384862af1fa619a1262e2c5400766f32a350a",
+            "seed": 230925
+          },
+          {
+            "id": "h3-cat-3",
+            "sha256": "fdd5390b0b6aa59d0f698cf54cc564a9cbc81468e007cf01e568dbb90c325643",
+            "seed": 230926
+          }
+        ]
+      },
+      {
+        "sample_id": "h3-tokyo",
+        "basic_prompt_en": "The Tokyo skyline at night.",
+        "context_text": "The selected harbor image has warmer colors than the other image.\nThe selected flowers have stronger shadows and highlights than the other image.\nThe selected image emphasizes open sea around a distant lighthouse.\nThe selected forest path has sharper, more defined natural textures than the other image.\nThe selected cafe scene is quieter, with empty tables, than the other image.",
+        "context_hash": "3715a0d33b38d7e86f2e7fe2972b86e84da19eed9d7485194690090df0dad9f1",
+        "pairs": [
+          [
+            "h3-tokyo-0",
+            "h3-tokyo-1"
+          ],
+          [
+            "h3-tokyo-1",
+            "h3-tokyo-0"
+          ],
+          [
+            "h3-tokyo-0",
+            "h3-tokyo-2"
+          ],
+          [
+            "h3-tokyo-2",
+            "h3-tokyo-0"
+          ],
+          [
+            "h3-tokyo-0",
+            "h3-tokyo-3"
+          ],
+          [
+            "h3-tokyo-3",
+            "h3-tokyo-0"
+          ]
+        ],
+        "candidates": [
+          {
+            "id": "h3-tokyo-0",
+            "sha256": "118fb860b15f5ccb89f49d407cf87cfe920c3350649f0eb06cd787554ff20321",
+            "seed": 230923
+          },
+          {
+            "id": "h3-tokyo-1",
+            "sha256": "d069e5a76e9aa77be6391a8fc6325257bd3dd947816df3cc9f4ad4d9e999068a",
+            "seed": 230924
+          },
+          {
+            "id": "h3-tokyo-2",
+            "sha256": "2336704f9521805117fbc497fb778cb8b52de47c4458cf474a1478b6b39aa009",
+            "seed": 230925
+          },
+          {
+            "id": "h3-tokyo-3",
+            "sha256": "dbea9170aad8dec16453461f31c84d67f3f3672e1fd50df3edcb8b91463a2e83",
+            "seed": 230926
+          }
+        ]
+      }
+    ],
+    "final_parser_replay": {
+      "accepted": 0,
+      "note": "Conservative final parser recheck, even granting EOS; no outputs accepted."
+    }
+  },
+  "preflight": {
+    "ready": true,
+    "mode": "zipp-style-manual",
+    "errors": [],
+    "fixed_images": 34,
+    "evidence_directions": 10,
+    "samples": 6,
+    "recommendation_enabled": false,
+    "models": {
+      "ready": true,
+      "errors": [],
+      "models": [
+        {
+          "model": "Qwen/Qwen3.5-4B",
+          "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+          "weight_files": 2
+        },
+        {
+          "model": "stabilityai/stable-diffusion-xl-base-1.0",
+          "revision": "462165984030d82259a11f4367a4eed129e94a7b",
+          "weight_files": 5
+        }
+      ],
+      "gpu_python": "/home/tomoya/stable-diffusion/personalized-t2i/tailored-visions-repro/.venv/bin/python"
+    }
+  },
+  "recovery_verification": {
+    "verified_at": "2026-09-20 00:13 JST",
+    "reported_oom": {
+      "root_cause": "unconfirmed",
+      "inference_logs": "No OOM trace found in retained exhibit worker logs.",
+      "kernel_logs": "Not available: dmesg permission denied; journal query returned no matching records."
+    },
+    "initial_replay": {
+      "result": "failed",
+      "detail": "Previous localhost server exited during browser verification; final-selection locator timed out after real four-image generation.",
+      "server_exit_cause": "unknown"
+    },
+    "replay_after_restart": "passed",
+    "browser_seconds": 20.88,
+    "browser_checks": [
+      "five choices",
+      "persona correction",
+      "axis off",
+      "four real SDXL images",
+      "matched seeds",
+      "shared context hash",
+      "manual selection",
+      "reload",
+      "mobile width",
+      "exact cache",
+      "all off",
+      "reset deletion",
+      "five skips",
+      "sample"
+    ],
+    "browser_errors": [],
+    "external_requests": [],
+    "worker_metrics": [
+      {
+        "type": "metrics",
+        "stage": "rewrite",
+        "worker_seconds": 3.577,
+        "peak_vram_mib": 8127.6,
+        "peak_rss_mib": 9003.0
+      },
+      {
+        "type": "metrics",
+        "stage": "generate",
+        "worker_seconds": 14.666,
+        "peak_vram_mib": 10736.3,
+        "peak_rss_mib": 5762.0
+      }
+    ],
+    "gpu_idle_mib": 1,
+    "python_tests_passed": 40,
+    "node_tests_passed": 4,
+    "python_warnings": [
+      "Starlette/httpx deprecation",
+      "anyio BlockingPortal alias deprecation"
+    ],
+    "failure_injection": {
+      "passed": 2,
+      "test": "exhibit/tests/test_worker_recovery.py",
+      "conditions": [
+        "MemoryError from child-only RLIMIT_AS=128 MiB and a rejected 256 MiB allocation",
+        "SIGKILL of the fixture worker after one completed image"
+      ],
+      "checks": [
+        "generic and completed personalized images retained",
+        "manual selection works",
+        "no recommendation fabricated",
+        "failed child reaped",
+        "old artifacts removed and inaccessible after reset",
+        "next session completes four images with the same lease"
+      ],
+      "scope": "Model executable replaced by a small fixture. Real IPC, process lifecycle, flock and service. No host-wide or CUDA OOM induced."
+    },
+    "historical_benchmark": "Existing 20-session benchmark retained; not rerun in this recovery check.",
+    "remaining": [
+      "PIGReward G0 failed; automatic recommendation disabled",
+      "third-party usability check",
+      "two-hour endurance check"
+    ]
+  },
+  "live_gpu_cancel": {
+    "status": "passed",
+    "completed_images_at_reset": 1,
+    "release_seconds": 0.159,
+    "old_image_status": 404,
+    "next_session_accepted": true,
+    "vram_after": "1 MiB"
+  },
+  "rewrite_sweep": {
+    "cases": 18,
+    "valid": 18,
+    "timing": {
+      "returncode": 0,
+      "wall_seconds": 10.781
+    },
+    "scope": "Original prompt prefix and both SDXL tokenizer limits; not visual quality evaluation"
+  },
+  "tests": {
+    "python_passed": 40,
+    "node_passed": 4,
+    "warnings": "Starlette/httpx and anyio deprecation warnings (2)"
+  },
+  "mode": "ZIPP-style generation + manual selection",
+  "limitations": [
+    "PIGReward G0 not passed",
+    "persona uses checked-evidence summary",
+    "no third-party usability test",
+    "no two-hour soak"
+  ]
+}

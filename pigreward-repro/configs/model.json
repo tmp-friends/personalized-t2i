@@ -1,0 +1,10 @@
+{
+  "model": "jeongeunnn/pigreward",
+  "revision": "c3e5a4bd68831b11bd430d240fbe14e85986b219",
+  "license": "apache-2.0",
+  "template_version": "exhibit-card-v1",
+  "parser_version": "card-v1",
+  "max_new_tokens": 512,
+  "max_image_edge": 448,
+  "live_approved": false
+}

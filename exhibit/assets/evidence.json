@@ -1,0 +1,312 @@
+[
+  {
+    "id": "p1-a-e1",
+    "pair_id": "p1",
+    "pair_version": 1,
+    "chosen_id": "p1-a",
+    "dimensions": [
+      "color"
+    ],
+    "values": {
+      "color": "warm"
+    },
+    "text": "The selected harbor image has warmer colors than the other image.",
+    "text_ja": "もう一方より、暖かな色の港を選びました。",
+    "reviewed": true,
+    "review_method": "agent visual inspection + raw VLM clause review; staff acceptance pending",
+    "context_source": "generic_vlm",
+    "source": {
+      "model": "Qwen/Qwen3.5-4B",
+      "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+      "template_version": "append-aesthetic-v1"
+    },
+    "raw": "Image 1 is preferred for its warmer, more saturated color palette that creates a richer and more inviting atmosphere compared to the cooler, more muted tones of Image 2.\n",
+    "image_hashes": {
+      "p1-a": "2ff616c02e4c844a87de50c30b093640ef852ac2a6e1447cb7854b504bf84687",
+      "p1-b": "0fe0d31d93216d1a000def4b25c1b4adcc1088ea132d16b41764c75ea8e90806"
+    },
+    "basic_prompt_en": "A small harbor with moored boats.",
+    "template_version": "single-axis-relative-v1",
+    "template_hash": "4cc18c54fe3fb7644ea2024d89ce66f1b10d3286bdc7f4c259d8cc50cccc7fc7",
+    "preprocessing": "RGB; aspect preserved; longest edge 448"
+  },
+  {
+    "id": "p1-b-e1",
+    "pair_id": "p1",
+    "pair_version": 1,
+    "chosen_id": "p1-b",
+    "dimensions": [
+      "color"
+    ],
+    "values": {
+      "color": "cool"
+    },
+    "text": "The selected harbor image has cooler greens and blues than the other image.",
+    "text_ja": "もう一方より、涼しげな緑や青の港を選びました。",
+    "reviewed": true,
+    "review_method": "agent visual inspection + raw VLM clause review; staff acceptance pending",
+    "context_source": "generic_vlm",
+    "source": {
+      "model": "Qwen/Qwen3.5-4B",
+      "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+      "template_version": "append-aesthetic-v1"
+    },
+    "raw": "Image 2 presents a cooler, more desaturated color palette with muted greens and blues, which creates a calmer and more atmospheric visual preference compared to the warmer tones in the first image.\n",
+    "image_hashes": {
+      "p1-a": "2ff616c02e4c844a87de50c30b093640ef852ac2a6e1447cb7854b504bf84687",
+      "p1-b": "0fe0d31d93216d1a000def4b25c1b4adcc1088ea132d16b41764c75ea8e90806"
+    },
+    "basic_prompt_en": "A small harbor with moored boats.",
+    "template_version": "single-axis-relative-v1",
+    "template_hash": "4cc18c54fe3fb7644ea2024d89ce66f1b10d3286bdc7f4c259d8cc50cccc7fc7",
+    "preprocessing": "RGB; aspect preserved; longest edge 448"
+  },
+  {
+    "id": "p2-a-e1",
+    "pair_id": "p2",
+    "pair_version": 1,
+    "chosen_id": "p2-a",
+    "dimensions": [
+      "lighting"
+    ],
+    "values": {
+      "lighting": "soft"
+    },
+    "text": "The selected flowers have softer, more diffused lighting than the other image.",
+    "text_ja": "花に柔らかな光が当たるほうを選びました。",
+    "reviewed": true,
+    "review_method": "agent visual inspection + raw VLM clause review; staff acceptance pending",
+    "context_source": "generic_vlm",
+    "source": {
+      "model": "Qwen/Qwen3.5-4B",
+      "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+      "template_version": "append-aesthetic-v1"
+    },
+    "raw": "Image 1 is preferred for its soft, diffused lighting that creates a gentle and serene atmosphere compared to the harsher, more dramatic shadows in Image 2.\n",
+    "image_hashes": {
+      "p2-a": "99e5e80e37d5f8cd77c23af5b8ec6dd999bf8c013f070a5378f982815195f73e",
+      "p2-b": "867ab990a86a3bba776592f0144a8c27241309b9ea1d65ff752443a39f4de473"
+    },
+    "basic_prompt_en": "A vase of flowers on a table in a room.",
+    "template_version": "single-axis-relative-v1",
+    "template_hash": "4cc18c54fe3fb7644ea2024d89ce66f1b10d3286bdc7f4c259d8cc50cccc7fc7",
+    "preprocessing": "RGB; aspect preserved; longest edge 448"
+  },
+  {
+    "id": "p2-b-e1",
+    "pair_id": "p2",
+    "pair_version": 1,
+    "chosen_id": "p2-b",
+    "dimensions": [
+      "lighting"
+    ],
+    "values": {
+      "lighting": "dramatic"
+    },
+    "text": "The selected flowers have stronger shadows and highlights than the other image.",
+    "text_ja": "花の陰影がはっきりしたほうを選びました。",
+    "reviewed": true,
+    "review_method": "agent visual inspection + raw VLM clause review; staff acceptance pending",
+    "context_source": "generic_vlm",
+    "source": {
+      "model": "Qwen/Qwen3.5-4B",
+      "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+      "template_version": "append-aesthetic-v1"
+    },
+    "raw": "Image 2 is preferred for its more dramatic and defined lighting, which creates stronger shadows and highlights that add depth and texture to the flowers and vase.\n",
+    "image_hashes": {
+      "p2-a": "99e5e80e37d5f8cd77c23af5b8ec6dd999bf8c013f070a5378f982815195f73e",
+      "p2-b": "867ab990a86a3bba776592f0144a8c27241309b9ea1d65ff752443a39f4de473"
+    },
+    "basic_prompt_en": "A vase of flowers on a table in a room.",
+    "template_version": "single-axis-relative-v1",
+    "template_hash": "4cc18c54fe3fb7644ea2024d89ce66f1b10d3286bdc7f4c259d8cc50cccc7fc7",
+    "preprocessing": "RGB; aspect preserved; longest edge 448"
+  },
+  {
+    "id": "p3-a-e1",
+    "pair_id": "p3",
+    "pair_version": 1,
+    "chosen_id": "p3-a",
+    "dimensions": [
+      "composition"
+    ],
+    "values": {
+      "composition": "spacious"
+    },
+    "text": "The selected image emphasizes open sea around a distant lighthouse.",
+    "text_ja": "遠くの灯台の周りに、海の余白が広がるほうを選びました。",
+    "reviewed": true,
+    "review_method": "agent visual inspection + raw VLM clause review; staff acceptance pending",
+    "context_source": "generic_vlm",
+    "source": {
+      "model": "Qwen/Qwen3.5-4B",
+      "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+      "template_version": "append-aesthetic-v1"
+    },
+    "raw": "The composition of the first image is preferred for its minimalist aesthetic, which emphasizes the vastness of the sea and the solitary nature of the distant lighthouse.\n",
+    "image_hashes": {
+      "p3-a": "aed4557d5e08df475ddb2a50da4bd5298818d4c5a1f694f2f5b65bcc78090206",
+      "p3-b": "b870b1e921bd982ed30492140caffb1c6dc326715e85265bcf045454ba504b44"
+    },
+    "basic_prompt_en": "One lighthouse beside the sea.",
+    "template_version": "single-axis-relative-v1",
+    "template_hash": "4cc18c54fe3fb7644ea2024d89ce66f1b10d3286bdc7f4c259d8cc50cccc7fc7",
+    "preprocessing": "RGB; aspect preserved; longest edge 448"
+  },
+  {
+    "id": "p3-b-e1",
+    "pair_id": "p3",
+    "pair_version": 1,
+    "chosen_id": "p3-b",
+    "dimensions": [
+      "composition"
+    ],
+    "values": {
+      "composition": "close"
+    },
+    "text": "The selected image shows a closer, more detailed view of the lighthouse and rocky shore.",
+    "text_ja": "灯台と岩場を、より近くから捉えたほうを選びました。",
+    "reviewed": true,
+    "review_method": "agent visual inspection + raw VLM clause review; staff acceptance pending",
+    "context_source": "generic_vlm",
+    "source": {
+      "model": "Qwen/Qwen3.5-4B",
+      "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+      "template_version": "append-aesthetic-v1"
+    },
+    "raw": "Image 2 is preferred for its composition, which places the lighthouse on a rocky shore to create a more grounded and detailed scene compared to the isolated lighthouse in the open water of Image 1.\n",
+    "image_hashes": {
+      "p3-a": "aed4557d5e08df475ddb2a50da4bd5298818d4c5a1f694f2f5b65bcc78090206",
+      "p3-b": "b870b1e921bd982ed30492140caffb1c6dc326715e85265bcf045454ba504b44"
+    },
+    "basic_prompt_en": "One lighthouse beside the sea.",
+    "template_version": "single-axis-relative-v1",
+    "template_hash": "4cc18c54fe3fb7644ea2024d89ce66f1b10d3286bdc7f4c259d8cc50cccc7fc7",
+    "preprocessing": "RGB; aspect preserved; longest edge 448"
+  },
+  {
+    "id": "p4-a-e1",
+    "pair_id": "p4",
+    "pair_version": 1,
+    "chosen_id": "p4-a",
+    "dimensions": [
+      "texture"
+    ],
+    "values": {
+      "texture": "painterly"
+    },
+    "text": "The selected forest path has softer, more painterly texture than the other image.",
+    "text_ja": "森の小道を、絵画のように柔らかく描いたほうを選びました。",
+    "reviewed": true,
+    "review_method": "agent visual inspection + raw VLM clause review; staff acceptance pending",
+    "context_source": "generic_vlm",
+    "source": {
+      "model": "Qwen/Qwen3.5-4B",
+      "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+      "template_version": "append-aesthetic-v1"
+    },
+    "raw": "Image 1 has a softer, more painterly texture that creates a dreamlike atmosphere, which aligns with the user's choice.\n",
+    "image_hashes": {
+      "p4-a": "e94d95b9e63750d198ac50104f88ab12c508e8a0c447790238e5dd3cc32c22a9",
+      "p4-b": "e60d9d218512d62c1ed832040c6bd926987036f1b3bc97e8dee07f387e20f650"
+    },
+    "basic_prompt_en": "A winding path through a forest.",
+    "template_version": "single-axis-relative-v1",
+    "template_hash": "4cc18c54fe3fb7644ea2024d89ce66f1b10d3286bdc7f4c259d8cc50cccc7fc7",
+    "preprocessing": "RGB; aspect preserved; longest edge 448"
+  },
+  {
+    "id": "p4-b-e1",
+    "pair_id": "p4",
+    "pair_version": 1,
+    "chosen_id": "p4-b",
+    "dimensions": [
+      "texture"
+    ],
+    "values": {
+      "texture": "photographic"
+    },
+    "text": "The selected forest path has sharper, more defined natural textures than the other image.",
+    "text_ja": "森の小道の質感が、よりくっきりしたほうを選びました。",
+    "reviewed": true,
+    "review_method": "agent visual inspection + raw VLM clause review; staff acceptance pending",
+    "context_source": "generic_vlm",
+    "source": {
+      "model": "Qwen/Qwen3.5-4B",
+      "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+      "template_version": "append-aesthetic-v1"
+    },
+    "raw": "Image 2 is preferred for its sharper, more defined textures on the cobblestones and ferns compared to the soft, painterly blur of Image 1.\n",
+    "image_hashes": {
+      "p4-a": "e94d95b9e63750d198ac50104f88ab12c508e8a0c447790238e5dd3cc32c22a9",
+      "p4-b": "e60d9d218512d62c1ed832040c6bd926987036f1b3bc97e8dee07f387e20f650"
+    },
+    "basic_prompt_en": "A winding path through a forest.",
+    "template_version": "single-axis-relative-v1",
+    "template_hash": "4cc18c54fe3fb7644ea2024d89ce66f1b10d3286bdc7f4c259d8cc50cccc7fc7",
+    "preprocessing": "RGB; aspect preserved; longest edge 448"
+  },
+  {
+    "id": "p5-a-e1",
+    "pair_id": "p5",
+    "pair_version": 1,
+    "chosen_id": "p5-a",
+    "dimensions": [
+      "mood"
+    ],
+    "values": {
+      "mood": "calm"
+    },
+    "text": "The selected cafe scene is quieter, with empty tables, than the other image.",
+    "text_ja": "席が空いていて、より静かなカフェを選びました。",
+    "reviewed": true,
+    "review_method": "agent visual inspection + raw VLM clause review; staff acceptance pending",
+    "context_source": "generic_vlm",
+    "source": {
+      "model": "Qwen/Qwen3.5-4B",
+      "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+      "template_version": "append-aesthetic-v1"
+    },
+    "raw": "The first image's mood is more serene and minimalist, supported by the choice of a scene with empty tables and soft, natural light.\n",
+    "image_hashes": {
+      "p5-a": "0ea4784fcaa5b0a48b133634976427db0e3f4f4e71524386545e6adfcae445b1",
+      "p5-b": "a02fc99b3eeeaa0cc432c57403b974e035967888de894fdcb35dcf8c941e742e"
+    },
+    "basic_prompt_en": "A cafe on a city street.",
+    "template_version": "single-axis-relative-v1",
+    "template_hash": "4cc18c54fe3fb7644ea2024d89ce66f1b10d3286bdc7f4c259d8cc50cccc7fc7",
+    "preprocessing": "RGB; aspect preserved; longest edge 448"
+  },
+  {
+    "id": "p5-b-e1",
+    "pair_id": "p5",
+    "pair_version": 1,
+    "chosen_id": "p5-b",
+    "dimensions": [
+      "mood"
+    ],
+    "values": {
+      "mood": "lively"
+    },
+    "text": "The selected cafe scene has a livelier atmosphere with people than the other image.",
+    "text_ja": "人がいて、活気のあるカフェを選びました。",
+    "reviewed": true,
+    "review_method": "agent visual inspection + raw VLM clause review; staff acceptance pending",
+    "context_source": "generic_vlm",
+    "source": {
+      "model": "Qwen/Qwen3.5-4B",
+      "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+      "template_version": "append-aesthetic-v1"
+    },
+    "raw": "Image 2 is preferred for its depiction of a lively, bustling atmosphere filled with people, which creates a more dynamic and social mood compared to the quiet, empty street in Image 1.\n",
+    "image_hashes": {
+      "p5-a": "0ea4784fcaa5b0a48b133634976427db0e3f4f4e71524386545e6adfcae445b1",
+      "p5-b": "a02fc99b3eeeaa0cc432c57403b974e035967888de894fdcb35dcf8c941e742e"
+    },
+    "basic_prompt_en": "A cafe on a city street.",
+    "template_version": "single-axis-relative-v1",
+    "template_hash": "4cc18c54fe3fb7644ea2024d89ce66f1b10d3286bdc7f4c259d8cc50cccc7fc7",
+    "preprocessing": "RGB; aspect preserved; longest edge 448"
+  }
+]

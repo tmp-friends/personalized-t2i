@@ -72,7 +72,11 @@ encoder 層    FAN                text encoder の self-attention を差し替�
 9/23の展示は「5回の画像選択 → 好みの言語化と訂正 → 個人化生成 → PIGRewardによる推薦」
 を中心とする設計案へ更新した。通常生成との比較と、AIの解釈を本人が修正できる体験を見せる。
 詳細は [ZIPP-style persona × PIGReward 展示設計](docs/superpowers/specs/2026-09-19-zipp-pigreward-exhibition-demo-design.md)
-を参照。モデル統合と展示アプリは実装前。
+を参照。
+
+[`exhibit/`](exhibit/) にローカル展示デモを実装。`uv run --project exhibit uvicorn exhibit.app:app --host 127.0.0.1 --port 7860` で起動します。
+通常4枚と好みを反映した4枚を同じseedで比較できます。PIGRewardは採用検証中のため、現在は手動選択モードです。
+実機計測・localhost操作確認・未採用機能は [作業結果HTML](docs/reports/zipp-demo/index.html) を参照。
 
 ## Repository 方針
 
