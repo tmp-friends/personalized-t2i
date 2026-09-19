@@ -1,11 +1,14 @@
 :root {
-  --paper: #f4f2eb;
-  --ink: #202c28;
-  --sub: #737a73;
-  --line: #d8ddd3;
-  --green: #2e5946;
-  --pale: #e6ecdf;
-  --orange: #bc623e;
+  color-scheme: dark;
+  --paper: #0b0d0c;
+  --surface: #151917;
+  --mono: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  --ink: #f3f5ed;
+  --sub: #a2aba5;
+  --line: #343c35;
+  --green: #c5f55a;
+  --pale: #1c2816;
+  --orange: #f3bb72;
 }
 * {
   box-sizing: border-box;
@@ -13,9 +16,11 @@
 body {
   margin: 0;
   background: var(--paper);
+  background-image: linear-gradient(#ffffff03 1px, transparent 1px), linear-gradient(90deg, #ffffff03 1px, transparent 1px);
+  background-size: 48px 48px;
   color: var(--ink);
   font-family:
-    "Noto Sans CJK JP", "Hiragino Kaku Gothic ProN", system-ui, sans-serif;
+    "Noto Sans CJK JP", "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Yu Gothic", system-ui, sans-serif;
   font-size: 15px;
 }
 button,
@@ -51,13 +56,15 @@ header {
 .brand {
   text-decoration: none;
   color: var(--ink);
-  font-family: Georgia, serif;
-  font-size: 43px;
-  letter-spacing: -3px;
+  font-family: inherit;
+  font-size: 39px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: -2px;
 }
 .brand-dot {
   font-size: 12px;
-  color: var(--orange);
+  color: var(--green);
   margin-left: 7px;
   vertical-align: top;
   line-height: 38px;
@@ -86,14 +93,14 @@ p {
   margin: 0;
 }
 h1 {
-  font-size: clamp(34px, 3.5vw, 50px);
-  font-weight: 500;
-  line-height: 1.5;
-  letter-spacing: -2px;
+  font-size: clamp(34px, 3.45vw, 50px);
+  font-weight: 900;
+  line-height: 1.45;
+  letter-spacing: -1.8px;
 }
 h2 {
   font-size: 32px;
-  font-weight: 500;
+  font-weight: 800;
   line-height: 1.6;
   letter-spacing: -0.7px;
 }
@@ -111,7 +118,7 @@ p {
 .hero {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 60px;
+  gap: 42px;
   align-items: center;
   padding: 30px 0 24px;
 }
@@ -120,13 +127,14 @@ p {
 }
 .hero-art {
   position: relative;
-  padding: 18px 0 48px 40px;
+  padding: 18px 0 48px 26px;
 }
 .hero-art img {
   width: 100%;
   aspect-ratio: 1;
   object-fit: cover;
-  border-radius: 150px 150px 8px 8px;
+  border-radius: 2px;
+  border: 1px solid var(--line);
 }
 .image-caption {
   font-size: 10px;
@@ -138,11 +146,12 @@ p {
   position: absolute;
   bottom: 45px;
   left: 0;
-  background: #fffdf6;
+  background: var(--surface);
   padding: 18px 25px;
   border: 1px solid var(--line);
-  box-shadow: 0 8px 30px #26362e0c;
-  transform: rotate(-5deg);
+  box-shadow: 6px 6px 0 #0008;
+  transform: none;
+  border-left: 3px solid var(--green);
   font-size: 14px;
 }
 .floating-note small {
@@ -154,11 +163,11 @@ p {
 }
 .primary {
   background: var(--green);
-  color: #fff;
+  color: var(--paper);
   border: 0;
-  border-radius: 5px;
+  border-radius: 2px;
   padding: 18px 28px;
-  font-weight: 500;
+  font-weight: 800;
   min-width: 200px;
   display: inline-flex;
   align-items: center;
@@ -166,12 +175,12 @@ p {
   gap: 38px;
 }
 .primary:hover {
-  background: #204433;
+  background: #d6ff7f;
 }
 .secondary {
   padding: 14px 22px;
   border: 1px solid var(--line);
-  border-radius: 5px;
+  border-radius: 2px;
   background: transparent;
   color: var(--ink);
 }
@@ -202,10 +211,10 @@ p {
   align-items: baseline;
 }
 .journey b {
-  font-family: Georgia, serif;
+  font-family: var(--mono);
   font-size: 25px;
-  color: #8b9685;
-  font-weight: 400;
+  color: var(--green);
+  font-weight: 700;
 }
 .journey span {
   font-size: 14px;
@@ -246,7 +255,7 @@ p {
   margin-top: 10px;
 }
 .counter {
-  font-family: Georgia, serif;
+  font-family: var(--mono);
   font-size: 38px;
   color: var(--green);
   white-space: nowrap;
@@ -263,10 +272,10 @@ p {
 .pair {
   padding: 0;
   border: 1px solid var(--line);
-  border-radius: 8px;
+  border-radius: 2px;
   overflow: hidden;
   text-align: left;
-  background: #fcfbf7;
+  background: var(--surface);
   color: var(--ink);
   transition:
     transform 0.15s,
@@ -274,7 +283,7 @@ p {
 }
 .pair:hover {
   transform: translateY(-4px);
-  box-shadow: 0 8px 25px #26362e16;
+  box-shadow: 0 0 0 1px var(--green);
 }
 .pair img {
   display: block;
@@ -290,9 +299,9 @@ p {
   font-size: 13px;
 }
 .pair-bottom b {
-  font-family: Georgia, serif;
+  font-family: var(--mono);
   font-size: 20px;
-  font-weight: 400;
+  font-weight: 700;
 }
 .center {
   text-align: center;
@@ -318,15 +327,15 @@ p {
 .badge {
   display: inline-block;
   padding: 7px 12px;
-  border-radius: 40px;
+  border-radius: 2px;
   font-size: 10px;
   background: var(--pale);
   color: var(--green);
   letter-spacing: 0.5px;
 }
 .badge.sample {
-  background: #f1decf;
-  color: #864b2f;
+  background: #332819;
+  color: var(--orange);
 }
 .persona-head {
   display: flex;
@@ -360,9 +369,9 @@ p {
 }
 select {
   padding: 13px 12px;
-  background: #fffdf7;
+  background: var(--surface);
   border: 1px solid var(--line);
-  border-radius: 5px;
+  border-radius: 2px;
   color: var(--ink);
   width: 100%;
 }
@@ -407,8 +416,8 @@ summary {
   position: relative;
   padding: 0;
   border: 2px solid transparent;
-  background: #fffdf6;
-  border-radius: 8px;
+  background: var(--surface);
+  border-radius: 2px;
   overflow: hidden;
   text-align: left;
 }
@@ -432,7 +441,7 @@ summary {
   right: 12px;
   top: 12px;
   background: var(--green);
-  color: white;
+  color: var(--paper);
   border-radius: 50%;
   padding: 4px 8px;
 }
@@ -446,13 +455,13 @@ summary {
   font-size: 11px;
   border: 1px solid var(--line);
   padding: 8px 13px;
-  border-radius: 20px;
+  border-radius: 2px;
 }
 .statusbox {
   margin: 20px 0 30px;
   padding: 20px 24px;
   background: var(--pale);
-  border-radius: 6px;
+  border-radius: 2px;
   display: flex;
   gap: 16px;
   align-items: center;
@@ -464,7 +473,7 @@ summary {
 .spinner {
   width: 18px;
   height: 18px;
-  border: 2px solid #bac8b7;
+  border: 2px solid var(--line);
   border-top-color: var(--green);
   border-radius: 50%;
   animation: spin 1s linear infinite;
@@ -483,7 +492,7 @@ summary {
 }
 .comparison-label h3 {
   font-size: 16px;
-  font-weight: 500;
+  font-weight: 800;
   margin: 0;
 }
 .comparison-label span {
@@ -498,9 +507,9 @@ summary {
 .candidate {
   position: relative;
   padding: 0;
-  background: #fffdf7;
+  background: var(--surface);
   border: 2px solid transparent;
-  border-radius: 6px;
+  border-radius: 2px;
   overflow: hidden;
   text-align: left;
   color: var(--ink);
@@ -526,7 +535,7 @@ summary {
   top: 10px;
   left: 10px;
   background: var(--green);
-  color: #fff;
+  color: var(--paper);
   padding: 7px 10px;
   border-radius: 4px;
   font-size: 10px;
@@ -535,7 +544,7 @@ summary {
   position: absolute;
   top: 10px;
   right: 10px;
-  background: #fffdf7;
+  background: var(--surface);
   padding: 6px;
   font-size: 10px;
 }
@@ -543,17 +552,17 @@ summary {
   aspect-ratio: 1;
   display: grid;
   place-items: center;
-  background: #e9eae1;
-  border: 1px dashed #c9d0c3;
-  border-radius: 6px;
-  color: #939c8b;
-  font-family: Georgia, serif;
+  background: var(--surface);
+  border: 1px dashed var(--line);
+  border-radius: 2px;
+  color: var(--sub);
+  font-family: var(--mono);
   font-size: 30px;
 }
 .prompt-details {
   padding: 18px;
   border: 1px solid var(--line);
-  border-radius: 5px;
+  border-radius: 2px;
   margin: 28px 0;
 }
 .prompt-details p {
@@ -583,11 +592,11 @@ summary {
   gap: 10px;
 }
 .error-message {
-  background: #f1dfd6;
-  border: 1px solid #d8b5a1;
-  color: #753e28;
+  background: #321f1b;
+  border: 1px solid #9a6650;
+  color: #ffbf9c;
   padding: 16px;
-  border-radius: 6px;
+  border-radius: 2px;
   margin: 16px 0;
 }
 #error {
@@ -595,12 +604,12 @@ summary {
   bottom: 25px;
   left: 50%;
   transform: translateX(-50%);
-  background: #753e28;
-  color: white;
+  background: #713b29;
+  color: var(--ink);
   padding: 18px 30px;
   max-width: 90%;
   z-index: 100;
-  border-radius: 6px;
+  border-radius: 2px;
 }
 footer {
   border-top: 1px solid var(--line);
@@ -622,6 +631,41 @@ footer > span:last-child {
 }
 .ready-note {
   color: var(--orange);
+}
+/* Exhibition typography and control states; all fonts resolve locally. */
+header { background: #0b0d0cf2; border-top: 3px solid var(--green); }
+.eyebrow, .exhibit-label, .image-caption, .floating-note small, .badge,
+footer > span:last-child { font-family: var(--mono); }
+.eyebrow::before { content: "// "; }
+.hero h1 { border-left: 4px solid var(--green); padding-left: 20px; }
+.hero-art::before {
+  content: "+"; position: absolute; top: 0; left: 10px;
+  font: 22px var(--mono); color: var(--green);
+}
+.hero-art img { display: block; box-shadow: 10px 10px 0 #1c2816; }
+.floating-note { font-weight: 700; }
+.primary { border: 1px solid var(--green); min-height: 56px; }
+.primary span { font: 24px var(--mono); }
+.secondary { background: var(--surface); font-weight: 700; }
+.sample-picker select { min-width: 0; }
+.sample-picker .secondary { flex-shrink: 0; white-space: nowrap; }
+.secondary:hover, .quiet:hover { color: var(--green); border-color: var(--green); }
+.topic { color: var(--ink); border-color: var(--line); }
+.topic:hover, .candidate:hover { border-color: var(--green); }
+.topic span, .pair-bottom, .axis-value, .selection-message { font-weight: 700; }
+.candidate { border-color: var(--line); }
+.topic.selected, .candidate.chosen { box-shadow: 0 0 0 1px var(--green); }
+.journey { border-bottom: 1px solid var(--line); padding-bottom: 24px; }
+.journey > div + div { border-left: 1px solid var(--line); padding-left: 22px; }
+.journey span { font-weight: 800; }
+.journey small { font-weight: 400; }
+.stepbar { padding-bottom: 20px; border-bottom: 1px solid var(--line); }
+.stepbar .active { background: var(--pale); padding: 8px; }
+.statusbox { border: 1px solid #425a2c; }
+select:hover { border-color: #73816b; }
+button:disabled:hover { transform: none; box-shadow: none; }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
 }
 @media (max-width: 800px) {
   header {
@@ -767,4 +811,16 @@ footer > span:last-child {
     width: 45px;
     height: 45px;
   }
+}
+
+@media (max-width: 520px) {
+  .hero h1 { padding-left: 14px; font-size: clamp(25px, 7.4vw, 38px); }
+  .journey > div + div { border-left: 0; padding-left: 0; }
+  .stepbar { flex-wrap: wrap; letter-spacing: 0; }
+  .stepbar .active { padding: 6px 4px; }
+  .comparison-label { flex-wrap: wrap; }
+  .sample-choices { flex-wrap: wrap; }
+  .pair-bottom { gap: 6px; padding: 10px; font-size: 11px; }
+  .persona-row > *, .hero > * { min-width: 0; }
+  .primary { min-width: 0; }
 }
