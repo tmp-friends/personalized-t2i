@@ -37,5 +37,11 @@ premier-repro/data/
 .idea/
 .vscode/
 *~
+# Reproduction workspaces and downloaded artifacts
+**/.work/
+**/data/raw/
+**/artifacts/
+.migration-backup/
+
 # Isolated feature worktrees
 .worktrees/
