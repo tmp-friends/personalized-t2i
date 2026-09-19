@@ -64,7 +64,7 @@
 
 <h3 id="method">1.2 手法</h3>
 <figure>
-  <img src="../official/Premier/assets/fig_method.png" alt="Premier method figure">
+  <img src="../upstream/assets/fig_method.png" alt="Premier method figure">
   <figcaption>公式リポジトリの手法図。テキストトークンを Query、ユーザー埋め込みを Key/Value とする Preference Adapter が、トークンごとの modulation 方向 Δ を出力し、MM-DiT の AdaLN 入力に加算する。</figcaption>
 </figure>
 
@@ -114,28 +114,28 @@
 <h3>2.1 方針</h3>
 <p>公式実装と公開重み (アダプタ + 学習ユーザー 1000 人 + テストユーザー 50 人分) が存在したため、<b>公式コードを一切改変せず</b> (バグ修正 1 行を除く)、
 著者環境のハードコードされたパスを外して CLI から呼ぶ薄いラッパを用意し、RTX 4090 (24 GB) で <b>生成</b> と <b>新規ユーザー学習 (Stage 2)</b> が動くことを確認した。</p>
-<p>公式実装が見つかる前に論文 (TeX ソース) から書いた独自再現 (<code>premier-repro/premier/</code>) はコア部分の動作確認まで行い、参考として残している。</p>
+<p>公式実装が見つかる前に論文 (TeX ソース) から書いた独自再現 (<code>src/premier_repro/</code>) はコア部分の動作確認まで行い、参考として残している。</p>
 
 <h3>2.2 環境構築</h3>
 <table>
 <tr><th style="width:30%">項目</th><th>内容</th></tr>
-<tr><td>公式リポジトリ</td><td><code>official/Premier/</code> にクローン。OminiControl + XVerse ベース。</td></tr>
-<tr><td>公開重み</td><td><code>official/weights/pino10010_Premier/</code>: <code>mod_adapter.safetensors</code> (1.8 GB)、<code>user_embedding.safetensors</code> (1000 × 30720)、<code>users/</code> (テスト 50 人、直接学習)、<code>users_linear/</code> (同、線形結合係数)、<code>adapter_config.yaml</code></td></tr>
-<tr><td>Python 環境</td><td><code>official/.venv</code> (Python 3.12)。公式 <code>requirements.txt</code> の pin 通り (torch 2.6.0 / diffusers 0.33.0 / transformers 4.52.4 / lightning 2.5.2 / peft 0.14.0)。社内 index 行を除去し、不足していた <code>einops</code>, <code>sentencepiece</code>, <code>protobuf</code> と、int8 用の <code>optimum-quanto</code> を追加 (<code>requirements-local.txt</code>)。</td></tr>
+<tr><td>公式リポジトリ</td><td><code>upstream/</code> submodule に固定。OminiControl + XVerse ベース。</td></tr>
+<tr><td>公開重み</td><td><code>artifacts/weights/pino10010_Premier/</code>: <code>mod_adapter.safetensors</code> (1.8 GB)、<code>user_embedding.safetensors</code> (1000 × 30720)、<code>users/</code> (テスト 50 人、直接学習)、<code>users_linear/</code> (同、線形結合係数)、<code>adapter_config.yaml</code></td></tr>
+<tr><td>Python 環境</td><td><code>.venv</code> (Python 3.12)。公式 <code>requirements.txt</code> の pin 通り (torch 2.6.0 / diffusers 0.33.0 / transformers 4.52.4 / lightning 2.5.2 / peft 0.14.0)。社内 index 行を除去し、不足していた <code>einops</code>, <code>sentencepiece</code>, <code>protobuf</code> と、int8 用の <code>optimum-quanto</code> を追加 (<code>pyproject.toml</code> / <code>requirements-official.txt</code>)。</td></tr>
 <tr><td>FLUX の重み</td><td>ローカルには FLUX.1-dev の transformer のみキャッシュされていたため、VAE / CLIP-L / T5-XXL は同一重みの FLUX.1-schnell キャッシュから読み、scheduler は dev の設定値をコードで指定 (追加ダウンロード無し)。</td></tr>
 </table>
 
 <h3>2.3 24 GB GPU で動かすための対策</h3>
 <p>公式コードは <code>FluxPipeline.from_pretrained(...).to("cuda")</code> を bf16 で行う前提 (transformer 24 GB + T5 9.5 GB、著者環境は A800 80 GB)。</p>
 <table>
-<tr><th style="width:36%">問題</th><th>対策 (<code>premier_local.py</code>)</th></tr>
+<tr><th style="width:36%">問題</th><th>対策 (<code>src/premier_repro/official.py</code>)</th></tr>
 <tr><td>transformer 24 GB が載らない</td><td>推論: diffusers の layerwise casting で float8 保存・bf16 計算 (<code>--memory fp8</code>, 12 GB)。学習: optimum-quanto の int8 重み (<code>--memory int8</code>、逆伝播可、nvcc 不要)。</td></tr>
 <tr><td>diffusers の fp8 化は名前に <code>norm</code> を含む層を除外するため、FLUX の AdaLN 射影 (<code>norm1.linear</code> 等、3.2B params) が bf16 に残り +3 GB</td><td>FLUX には除外パターン <code>pos_embed</code> のみを指定して AdaLN 射影も fp8 化。</td></tr>
 <tr><td>T5 は <code>T5LayerNorm</code> と <code>wo</code> が活性を重みの dtype にキャストするため fp8 化すると失敗</td><td>T5 は norm / embedding / <code>wo</code> を bf16 のまま残す (5.8 GB)。</td></tr>
 <tr><td>他プロセスが GPU を使っていて空きが 20 GB 未満</td><td><code>--t5 offload</code> (自動判定) で T5 を CPU RAM に置き accelerate で層ごとにストリーミング。<code>encode_prompt</code> をメモ化して空プロンプトの再エンコードを省く。</td></tr>
-<tr><td>学習は Lightning + bf16 全載せ、gradient checkpointing 無効</td><td><code>train_new_user.py</code>: 公式 <code>training_step</code> をそのまま素の PyTorch ループに移植し、int8 transformer + gradient checkpointing で実行。T5 はプロンプトを先にエンコードして解放。</td></tr>
+<tr><td>学習は Lightning + bf16 全載せ、gradient checkpointing 無効</td><td><code>scripts/train_official_user.py</code>: 公式 <code>training_step</code> をそのまま素の PyTorch ループに移植し、int8 transformer + gradient checkpointing で実行。T5 はプロンプトを先にエンコードして解放。</td></tr>
 <tr><td>公式 <code>transformer_forward_verse</code> の checkpointing 分岐が single block に存在しない引数 <code>use_img_mod</code> を渡して落ちる</td><td><code>patches/0001-fix-single-block-checkpoint-kwarg.patch</code> (1 行削除) を適用。</td></tr>
-<tr><td>公式スクリプトは著者のパス・ユーザー ID がハードコード</td><td><code>run_premier.py</code> / <code>train_new_user.py</code> が同じ関数 (<code>generate_xverse</code>, <code>load_modulation_adapter</code>, <code>transformer_forward_verse</code>, <code>EmbeddingLinearCombination</code>) を CLI 引数で呼ぶ。</td></tr>
+<tr><td>公式スクリプトは著者のパス・ユーザー ID がハードコード</td><td><code>scripts/run_official.py</code> / <code>scripts/train_official_user.py</code> が同じ関数 (<code>generate_xverse</code>, <code>load_modulation_adapter</code>, <code>transformer_forward_verse</code>, <code>EmbeddingLinearCombination</code>) を CLI 引数で呼ぶ。</td></tr>
 </table>
 
 <h3 id="verify">2.4 動作確認結果 (RTX 4090 24 GB)</h3>
@@ -147,18 +147,18 @@
 </table>
 
 <figure>
-  <img src="../official/results/check1_users_grid.jpg" alt="users grid">
+  <img src="../outputs/official/results/check1_users_grid.jpg" alt="users grid">
   <figcaption><b>公開重みでの生成。</b> 上から: 素の FLUX.1-dev / 学習ユーザー #0 / 学習ユーザー #1 / テストユーザー 3685 (直接学習) / 同 (線形結合)。列は「a cat sitting on a windowsill」「a city street at night」、列ごとに同じ seed。
   ユーザーごとに色調・画風が明確に変わり、直接学習と線形結合はほぼ同じ絵になる (論文の主張と整合)。</figcaption>
 </figure>
 
 <div class="grid2">
 <figure>
-  <img src="../official/results/watercolor_trainset.jpg" alt="watercolor train set">
+  <img src="../outputs/official/results/watercolor_trainset.jpg" alt="watercolor train set">
   <figcaption><b>新規ユーザーの「好きな画像」8 枚。</b> FLUX で水彩画風に生成したもの。学習時のキャプションからはスタイル語を除き (例: "a cat sitting on a windowsill")、スタイルは embedding が学習するしかない設定。</figcaption>
 </figure>
 <figure>
-  <img src="../official/results/watercolor_newuser_grid.jpg" alt="new user generation">
+  <img src="../outputs/official/results/watercolor_newuser_grid.jpg" alt="new user generation">
   <figcaption><b>学習した embedding での生成 (300 step)。</b> 上: 素の FLUX.1-dev、下: 新規ユーザー embedding。プロンプトは学習に無い 4 件。写真調から紙の質感・平坦な塗り・イラスト調へ寄る。</figcaption>
 </figure>
 </div>
@@ -166,40 +166,40 @@
 <h2 id="howto">3. 起動方法</h2>
 
 <h3>3.1 セットアップ (構築済み。再現する場合)</h3>
-<pre><code>cd ~/stable-diffusion/personalized-t2i/premier-repro/official
-uv venv .venv --python /usr/bin/python3.12
-uv pip install --python .venv/bin/python -r requirements-local.txt
-python -c "from huggingface_hub import snapshot_download; snapshot_download('pino10010/Premier', local_dir='weights/pino10010_Premier')"
-(cd Premier &amp;&amp; git apply ../patches/0001-fix-single-block-checkpoint-kwarg.patch)   # クローン直後のみ
+<pre><code>cd ~/stable-diffusion/personalized-t2i/premier-repro
+git submodule update --init upstream
+uv sync --locked
+uv run python scripts/prepare_upstream.py
+uv run python -c "from huggingface_hub import snapshot_download; snapshot_download('pino10010/Premier', local_dir='artifacts/weights/pino10010_Premier')"
 </code></pre>
 
 <h3>3.2 画像生成</h3>
-<pre><code>cd ~/stable-diffusion/personalized-t2i/premier-repro/official
+<pre><code>cd ~/stable-diffusion/personalized-t2i/premier-repro
 source .venv/bin/activate
-python run_premier.py \
+uv run python scripts/run_official.py \
   --users none train:0 train:1 test:3685 linear:3685 \
   --prompts "a cat sitting on a windowsill" "a city street at night" \
-  --out outputs/demo --steps 28 --guidance 3.5 --size 512
-# → outputs/demo/grid.jpg (行 = ユーザー, 列 = プロンプト, 列ごとに同じ seed) と個別 PNG, grid.json
+  --out outputs/official/demo --steps 28 --guidance 3.5 --size 512
+# → outputs/official/demo/grid.jpg (行 = ユーザー, 列 = プロンプト, 列ごとに同じ seed) と個別 PNG, grid.json
 </code></pre>
 <table>
 <tr><th style="width:26%"><code>--users</code></th><th>内容</th></tr>
 <tr><td><code>none</code></td><td>素の FLUX.1-dev (比較用)</td></tr>
 <tr><td><code>train:&lt;0-999&gt;</code></td><td>学習ユーザー 1000 人の embedding</td></tr>
-<tr><td><code>test:&lt;id&gt;</code></td><td>公開テストユーザー (直接学習)。id は <code>weights/pino10010_Premier/users/</code> のファイル名 (3685〜4279)</td></tr>
+<tr><td><code>test:&lt;id&gt;</code></td><td>公開テストユーザー (直接学習)。id は <code>artifacts/weights/pino10010_Premier/users/</code> のファイル名 (3685〜4279)</td></tr>
 <tr><td><code>linear:&lt;id&gt;</code></td><td>同テストユーザーの線形結合版</td></tr>
-<tr><td><code>file:&lt;path&gt;</code></td><td><code>train_new_user.py</code> の出力 (<code>user_combination_*.safetensors</code> または <code>user_embedding_*.safetensors</code>)</td></tr>
+<tr><td><code>file:&lt;path&gt;</code></td><td><code>scripts/train_official_user.py</code> の出力 (<code>user_combination_*.safetensors</code> または <code>user_embedding_*.safetensors</code>)</td></tr>
 </table>
 <p>主なオプション: <code>--steps</code> (既定 28) · <code>--guidance</code> (3.5) · <code>--size</code> (512) · <code>--seed</code> · <code>--memory fp8|int8|bf16|offload</code> · <code>--t5 auto|gpu|offload</code>。</p>
 
 <h3>3.3 新規ユーザーの学習 (数枚の好きな画像から)</h3>
 <pre><code># items.json: [{"image": "img1.png", "caption": "a cat sitting on a windowsill"}, ...]
 #   (公式の CSV 形式 positive_image,caption も --csv で可。画像パスは JSON/CSV からの相対、または --data-path)
-python train_new_user.py --name alice --json items.json --mode linear --steps 1000 --out outputs/users
-# → outputs/users/alice/user_combination_alice.safetensors (公式形式), user_embedding_alice.safetensors, meta.json, log.jsonl
+uv run python scripts/train_official_user.py --name alice --json items.json --mode linear --steps 1000 --out outputs/official/users
+# → outputs/official/users/alice/user_combination_alice.safetensors (公式形式), user_embedding_alice.safetensors, meta.json, log.jsonl
 
-python run_premier.py --users none file:outputs/users/alice/user_combination_alice.safetensors \
-  --prompts "a castle on a hill" "a portrait of an old fisherman" --out outputs/alice
+uv run python scripts/run_official.py --users none file:outputs/official/users/alice/user_combination_alice.safetensors \
+  --prompts "a castle on a hill" "a portrait of an old fisherman" --out outputs/official/alice
 </code></pre>
 <ul>
 <li><code>--mode linear</code> (論文の既定): 学習ユーザー 1000 人の embedding の線形結合係数のみ学習。AdamW lr 0.01 (公式設定)。</li>
@@ -209,33 +209,29 @@ python run_premier.py --users none file:outputs/users/alice/user_combination_ali
 </ul>
 
 <h3>3.4 公式スクリプトをそのまま使う場合</h3>
-<p><code>Premier/monitor_pid_*.sh</code> → <code>accelerate launch -m scripts.train_flux.train_*</code> は、著者環境のパス (<code>../pickapic_dxm_coco/...</code>, <code>/home/disk3/...</code>) と
-bf16 全載せ (40〜70 GB) を前提にしており、24 GB では動かない。データ形式 (pkl / CSV) と config の意味は <code>Premier/README.md</code> と <code>Premier/train/config/*.yaml</code> を参照。</p>
+<p><code>upstream/monitor_pid_*.sh</code> → <code>accelerate launch -m scripts.train_flux.train_*</code> は、著者環境のパス (<code>../pickapic_dxm_coco/...</code>, <code>/home/disk3/...</code>) と
+bf16 全載せ (40〜70 GB) を前提にしており、24 GB では動かない。データ形式 (pkl / CSV) と config の意味は <code>upstream/README.md</code> と <code>upstream/train/config/*.yaml</code> を参照。</p>
 
 <h2 id="layout">4. ディレクトリ構成</h2>
 <pre><code>~/stable-diffusion/personalized-t2i/premier-repro/
-├── README.md                    全体の説明
-├── docs/premier_summary.html    このファイル
-├── official/                    ★ 公式実装で動かす (README_ja.md 参照)
-│   ├── Premier/                 公式リポジトリ (パッチ 1 行のみ)
-│   ├── weights/pino10010_Premier/   公開重み
-│   ├── .venv/                   公式 pin 通りの環境
-│   ├── requirements-local.txt
-│   ├── premier_local.py         ローカル重み読み込み / fp8・int8 / 公開 user embedding の読み込み
-│   ├── run_premier.py           生成 CLI
-│   ├── train_new_user.py        新規ユーザー学習 CLI
-│   ├── patches/                 公式コードへの修正
-│   ├── test_data/watercolor/    学習テスト用の水彩画 8 枚 + items.json
-│   ├── results/                 動作確認の結果画像
-│   └── outputs/                 実行ログ・生成物
-├── premier/, scripts/, configs/ 独自再現実装 (参考。論文 TeX からの実装、コア部分のみ GPU で確認)
-└── data/prefbench/              PrefBench (wenyii/PrefBench) の manifest。画像本体は未取得
+├── README.md
+├── upstream/                         公式 Git submodule（直接編集しない）
+├── patches/                          公式実装へ適用する差分
+├── .work/upstream/                   patch 適用済み作業コピー（Git 管理外）
+├── src/premier_repro/                独自再現と公式 integration helper
+├── scripts/                          公式 wrapper と独自再現 pipeline
+├── configs/                          独自再現設定
+├── docs/summary.html                 このファイル
+├── docs/OFFICIAL_SETUP.md            公式実装の詳細手順
+├── data/examples/watercolor/         小さな学習 fixture
+├── artifacts/weights/                公開重み（Git 管理外）
+└── outputs/official/                 結果画像・checkpoint・ログ（Git 管理外）
 </code></pre>
 
 <h2 id="notes">5. 未対応・注意点</h2>
 <ul>
-<li><span class="tag warn">未実施</span> Stage 1 (アダプタ + 1000 ユーザー embedding の学習)。公式スクリプトは 4×A800 + 著者データ形式前提で、公開重みがあるため通常は不要。24 GB で回すには <code>train_new_user.py</code> と同じ int8 + checkpointing 化と PrefBench の整備が必要。</li>
-<li><span class="tag warn">未実施</span> ViPer / CLIP / LPIPS による定量評価 (公式コードに評価スクリプトは含まれない。独自実装 <code>premier/eval/metrics.py</code> はあるが未実行)。</li>
+<li><span class="tag warn">未実施</span> Stage 1 (アダプタ + 1000 ユーザー embedding の学習)。公式スクリプトは 4×A800 + 著者データ形式前提で、公開重みがあるため通常は不要。24 GB で回すには <code>scripts/train_official_user.py</code> と同じ int8 + checkpointing 化と PrefBench の整備が必要。</li>
+<li><span class="tag warn">未実施</span> ViPer / CLIP / LPIPS による定量評価 (公式コードに評価スクリプトは含まれない。独自実装 <code>src/premier_repro/eval/metrics.py</code> はあるが未実行)。</li>
 <li>テストユーザー 50 人 (id 3685〜4279) は著者の内部データの id で、元となる好み画像は公開されていない。</li>
 <li>T5 の系列長は公式の 512 のまま (<code>--max-seq-len</code>)。公開重みは 512px で学習されているため、まず 512px で使うのが無難。</li>
 <li>GPU に別プロセス (例: ローカル LLM サーバ) が載っていると fp8 モードでも空きが足りない。<code>--t5 offload</code> で回避できるが、学習は T5 解放後で 14 GB 程度あれば足りる。</li>

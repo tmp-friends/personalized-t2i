@@ -1,14 +1,14 @@
 """Generate a small, style-consistent "preferred image" set with plain FLUX.1-dev
 (used to sanity-check new-user training: does the learned user embedding pick up the style?).
 
-  python scripts/make_style_set.py --style "watercolor painting, soft pastel colors, paper texture" --name watercolor --out official/test_data
+  python scripts/make_style_set.py --style "watercolor painting, soft pastel colors, paper texture" --name watercolor --out data/examples
 """
 import argparse, json, sys
 from pathlib import Path
-sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 import torch
-from premier.model.loading import TextEncoders, load_transformer, load_vae, free_cuda
-from premier.infer.sampler import generate, to_pil
+from premier_repro.model.loading import TextEncoders, load_transformer, load_vae, free_cuda
+from premier_repro.infer.sampler import generate, to_pil
 
 SUBJECTS = ["a cat sitting on a windowsill", "a lighthouse on a rocky coast", "a bowl of fruit on a wooden table",
             "a woman reading a book in a cafe", "a mountain village in winter", "a vintage bicycle leaning on a wall",
@@ -18,7 +18,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--style", required=True)
     ap.add_argument("--name", required=True)
-    ap.add_argument("--out", default="official/test_data")
+    ap.add_argument("--out", default=str(Path(__file__).resolve().parents[1] / "data/examples"))
     ap.add_argument("--n", type=int, default=8)
     ap.add_argument("--steps", type=int, default=20)
     ap.add_argument("--size", type=int, default=512)

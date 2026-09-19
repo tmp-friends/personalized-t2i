@@ -8,24 +8,33 @@ base model and every user can be compared side by side (outputs <out>/grid.jpg).
            train:<0-999>   : one of the 1000 training-user embeddings
            test:<id>       : released test user, directly trained embedding   (users/user_embedding_<id>.safetensors)
            linear:<id>     : released test user, linear-combination embedding (users_linear/user_combination_<id>.safetensors)
-           file:<path>     : a .safetensors produced by train_new_user.py
-  --memory fp8 (default) | int8 | bf16 | offload      (see premier_local.py)
+           file:<path>     : a .safetensors produced by train_official_user.py
+  --memory fp8 (default) | int8 | bf16 | offload      (see premier_repro.official)
 
 Examples
-  python run_premier.py --users none train:0 train:1 --prompts "a cat sitting on a windowsill" "a city street at night" --out outputs/demo
-  python run_premier.py --users none test:3685 linear:3685 --prompts "a portrait of a woman" --out outputs/user3685
+  python scripts/run_official.py --users none train:0 train:1 --prompts "a cat sitting on a windowsill" "a city street at night" --out outputs/official/demo
+  python scripts/run_official.py --users none test:3685 linear:3685 --prompts "a portrait of a woman" --out outputs/official/user3685
 """
 from __future__ import annotations
 
 import argparse
 import json
+import sys
 import time
 from pathlib import Path
 
+ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / "src"))
+
 import torch
 
-from premier_local import (WEIGHTS, apply_memory_mode, cuda_gb, image_grid, load_adapter_config, load_components,
-                           load_train_bank, load_user, log, make_pipeline, memoize_encode_prompt)
+from premier_repro.official import (WEIGHTS, apply_memory_mode, cuda_gb, image_grid,
+                                    load_adapter_config, load_components, load_train_bank,
+                                    load_user, log, make_pipeline, memoize_encode_prompt,
+                                    require_patched_upstream)
+
+require_patched_upstream()
+
 from scripts.pipeline.flux_adapter import generate_xverse  # official
 from scripts.pipeline.mod_adapters import load_modulation_adapter  # official
 
@@ -34,7 +43,7 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--users", nargs="+", default=["none", "train:0", "train:1"])
     ap.add_argument("--prompts", nargs="+", required=True)
-    ap.add_argument("--out", required=True)
+    ap.add_argument("--out", default=str(ROOT / "outputs/official/generate"))
     ap.add_argument("--seed", type=int, default=0)
     ap.add_argument("--steps", type=int, default=28)
     ap.add_argument("--guidance", type=float, default=3.5)

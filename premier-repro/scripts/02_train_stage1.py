@@ -7,10 +7,10 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-sys.path.insert(0, str(ROOT))
+sys.path.insert(0, str(ROOT / "src"))
 
-from premier.config import load_config  # noqa: E402
-from premier.train.stage1 import train_stage1  # noqa: E402
+from premier_repro.config import load_config  # noqa: E402
+from premier_repro.train.stage1 import train_stage1  # noqa: E402
 
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()

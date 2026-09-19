@@ -8,16 +8,16 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-sys.path.insert(0, str(ROOT))
+sys.path.insert(0, str(ROOT / "src"))
 
 import torch  # noqa: E402
-from premier.config import load_config  # noqa: E402
-from premier.data.cache import FeatureCache  # noqa: E402
-from premier.data.prefbench import load_manifest  # noqa: E402
-from premier.model.loading import load_transformer  # noqa: E402
-from premier.model.premier import PremierModel  # noqa: E402
-from premier.train.common import load_bank  # noqa: E402
-from premier.train.stage2 import train_new_user  # noqa: E402
+from premier_repro.config import load_config  # noqa: E402
+from premier_repro.data.cache import FeatureCache  # noqa: E402
+from premier_repro.data.prefbench import load_manifest  # noqa: E402
+from premier_repro.model.loading import load_transformer  # noqa: E402
+from premier_repro.model.premier import PremierModel  # noqa: E402
+from premier_repro.train.common import load_bank  # noqa: E402
+from premier_repro.train.stage2 import train_new_user  # noqa: E402
 
 
 def main():

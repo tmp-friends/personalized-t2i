@@ -1,33 +1,142 @@
-# premier-repro — Premier (CVPR 2026) をローカルで動かす / 再現する
+# Premier — 公式実装のローカル実行と独自再現
 
-論文: **Premier: Personalized Preference Modulation with Learnable User Embedding in Text-to-Image Generation**
-(Wang et al., CVPR 2026 Highlight, [arXiv:2603.20725](https://arxiv.org/abs/2603.20725))
+## 1. 手法概要
 
-このフォルダには 2 つの独立した部分がある。
+**Premier: Personalized Preference Modulation with Learnable User Embedding in
+Text-to-Image Generation**（Wang et al., CVPR 2026 Highlight,
+[arXiv:2603.20725](https://arxiv.org/abs/2603.20725)）の公式実装と独自再現を扱う。
 
-| ディレクトリ | 内容 | 状態 |
+Premierは、ユーザーごとの30×1024の埋め込みをPreference AdapterでT5テキスト条件へ融合する。
+block-shared／block-distinctの変調をFLUXのAdaLN入力へ加え、Stage 1でadapterと学習ユーザーを、
+Stage 2で新規ユーザーの埋め込みまたは既存埋め込みの線形結合係数を学習する。
+
+## 2. 現在の再現状況
+
+| 実装 | パス | 状態 |
 |---|---|---|
-| [`official/`](official/README_ja.md) | **公式実装** (github.com/120L020904/Premier) + 公開重み (hf.co/pino10010/Premier) を RTX 4090 (24 GB) で動かすためのラッパ | **生成・新規ユーザー学習とも動作確認済み** (`official/results/`)。`official/README_ja.md` 参照 |
-| `premier/`, `scripts/`, `configs/` | 論文 (TeX ソース) からの **独自再現実装** (FLUX.1-dev + 自作 Preference Adapter / Dispersion Loss / 2 段階学習)。公式実装が見つかる前に書いたもの | コア部分 (トークン別変調・学習ステップ) は GPU で動作確認済み。学習データ (PrefBench) の取得が途中 |
+| 公式実装 | `upstream/` + `patches/` + `scripts/run_official.py` | 生成・新規ユーザー学習をRTX 4090で確認済み |
+| 独自再現 | `src/premier_repro/`, `scripts/00_*.py`〜`05_*.py` | コア変調・学習stepをGPU確認済み。PrefBench取得は途中 |
+| 詳細ノート | `docs/OFFICIAL_SETUP.md`, `docs/summary.html` | 公式との差分、メモリ対策、検証値を記録 |
 
-公式コードで十分な用途 (生成・新規ユーザー学習) は `official/` を使う。独自実装はアダプタを一から学習したい場合や、
-論文の式を追いたい場合の参考 (`docs/` に手法ノート)。
+通常の生成と新規ユーザー学習には公式実装のwrapperを使う。独自再現はStage 1を一から学習する場合や、論文の式と実装を追う場合に使う。
 
-## 論文の要点 (実装との対応)
+## 3. Quick start
 
-- **Learnable user embedding**: ユーザーごとに 30×1024 の学習可能テンソル。
-- **Preference Adapter** ×2: T5 テキストトークンを Query、ユーザー埋め込みを Key/Value とする cross-attention 3 層。
-  出力はテキストトークンごとの modulation 方向 Δ。block-shared (全 DiT block 共通) と block-distinct (block ごと) の 2 種。
-  FLUX (MM-DiT) の AdaLN 入力ベクトル y に `y_i^j = y + Δ_shared_i + Δ_distinct_i^j` として加える (テキストトークンのみ)。
-- **Dispersion loss**: 空プロンプトで計算した Δ をユーザー間で引き離す InfoNCE 型損失 (λ=0.1)。
-- **2 段階学習**: (1) アダプタ + 学習ユーザー埋め込みを Flow matching + dispersion で学習 (2) 新規ユーザーは
-  学習ユーザー埋め込みの線形結合係数のみを Flow matching で学習 (少数枚に強い)。
-- 公開重みでは block-distinct アダプタは double block 19 個のみを変調し、その入力テキストは空プロンプト (`uncond: true`)。
+```bash
+git submodule update --init --recursive
+cd premier-repro
+uv sync --locked
+uv run python scripts/prepare_upstream.py
+```
 
-## 独自再現実装の状態 (参考)
+公開重みはGitで管理しない。初回だけ次を実行する。
 
-- `scripts/test_modulation.py` で、トークン別変調が Δ=0 のとき公式 FLUX と一致すること、int8 量子化 transformer + gradient checkpointing で
-  512px・batch 2 の学習 step が 1.2 秒 / ピーク 17.7 GB で回ることを確認済み。
-- 学習データ: `scripts/00_prepare_prefbench.py` で PrefBench (wenyii/PrefBench, diffusiondb split) から 1000+100 ユーザーの manifest を作成済み
-  (`data/prefbench/manifest.json`)。画像本体 (tar 24 GB) は `scripts/00b_download_parts.py` で取得する (未完了、再開可能)。
-- 以降の手順: `01_cache_features.py` → `02_train_stage1.py` → `03_train_new_user.py` → `04_generate.py` → `05_evaluate.py` (`configs/default.yaml`, `configs/smoke.yaml`)。
+```bash
+uv run python -c "from huggingface_hub import snapshot_download; snapshot_download('pino10010/Premier', local_dir='artifacts/weights/pino10010_Premier')"
+```
+
+軽量確認:
+
+```bash
+uv run python scripts/run_official.py --help
+python -m unittest discover -s tests -v
+```
+
+## 4. ディレクトリ構成
+
+```text
+premier-repro/
+├── upstream/                 # 公式Git submodule（直接編集しない）
+├── patches/                  # 公式コードへ適用する互換性修正
+├── .work/upstream/           # patch適用済み作業コピー（Git対象外）
+├── src/premier_repro/        # 独自再現と公式integration helper
+├── scripts/                  # 公式wrapperと独自再現pipeline
+├── configs/                  # 独自再現の設定
+├── docs/                     # setup、サマリー
+├── data/examples/            # 小さな追跡対象fixture
+├── data/raw/                 # 取得データ（Git対象外）
+├── artifacts/                # 公開重み（Git対象外）
+└── outputs/                  # 生成物・checkpoint・ログ（Git対象外）
+```
+
+## 5. 公式実装と固定コミット
+
+- URL: <https://github.com/120L020904/Premier>
+- 固定コミット: `42473476a189b6b0127890a98e92b7edf49c0d59`
+- submodule: `upstream/`
+- patch済み実行ソース: `.work/upstream/`
+
+`scripts/prepare_upstream.py` はsubmoduleのSHAを検証し、`patches/series` を一時コピーへ順番に適用する。submodule自体は常にcleanに保つ。
+
+現在のpatchは、公式のgradient-checkpointing分岐がsingle blockに存在しない `use_img_mod` 引数を渡す1行の不具合修正である。
+
+## 6. 生成・学習・評価手順
+
+公式重みで生成:
+
+```bash
+uv run python scripts/run_official.py \
+  --users none train:0 train:1 test:3685 linear:3685 \
+  --prompts "a cat sitting on a windowsill" "a city street at night" \
+  --out outputs/official/demo --steps 28 --guidance 3.5 --size 512
+```
+
+新規ユーザーの学習:
+
+```bash
+uv run python scripts/train_official_user.py \
+  --name alice --json data/examples/watercolor/items.json \
+  --mode linear --steps 1000 --out outputs/official/users
+```
+
+独自再現pipeline:
+
+```text
+00_prepare_prefbench.py → 00b_download_parts.py → 01_cache_features.py
+→ 02_train_stage1.py → 03_train_new_user.py → 04_generate.py → 05_evaluate.py
+```
+
+既定設定は `configs/default.yaml`、軽量確認は `configs/smoke.yaml` を使う。
+
+## 7. 動作確認結果
+
+| 項目 | RTX 4090での確認結果 |
+|---|---|
+| 公式生成（fp8、512px、20 step） | 5.4秒/枚、GPU peak 19.4GB |
+| 新規ユーザー学習（linear、水彩8枚、300 step） | 0.8秒/step、約4分、GPU peak 14.2GB |
+| 学習結果 | 未学習promptでも紙質感・平坦な塗り・イラスト調への変化を確認 |
+| 独自変調 | Δ=0で公式FLUXと一致。int8 + checkpointingで512px batch 2を確認 |
+
+公開されていないテストユーザー元画像や、4×A800前提の公式Stage 1全学習は未検証。
+
+## 8. 論文・公式実装との差分
+
+- 24GB GPU向けにFLUX/T5のfp8またはint8保存、T5 offloadを追加した。
+- 著者環境の絶対パスを使わず、ローカルCLIから公式関数を呼ぶ。
+- 公式Stage 2のうちwrapperが使う `EmbeddingLinearCombination` と `encode_images` は、不要なLightning／dataset依存を読み込まないよう `src/premier_repro/official.py` に同じロジックを保持する。
+- 公式checkpointingの1行不具合は `patches/0001-fix-single-block-checkpoint-kwarg.patch` で管理する。
+- 独自再現の評価指標は公式配布物に含まれないため、`src/premier_repro/eval/` に実装している。
+
+詳細は [docs/OFFICIAL_SETUP.md](docs/OFFICIAL_SETUP.md) を参照。
+
+## 9. データ、重み、生成物
+
+| 種類 | パス | Git |
+|---|---|---|
+| 水彩fixture | `data/examples/watercolor/` | 追跡する |
+| PrefBenchなどの取得データ | `data/raw/` | 追跡しない |
+| 公開Premier重み | `artifacts/weights/pino10010_Premier/` | 追跡しない |
+| 生成画像、学習結果、ログ | `outputs/` | 追跡しない |
+
+旧checkoutに取得済みの `official/weights/` がある場合は、移行後に `artifacts/weights/` へ一度だけ移すか、上記コマンドで再取得する。
+
+## 10. 引用
+
+```bibtex
+@inproceedings{wang2026premier,
+  title     = {Premier: Personalized Preference Modulation with Learnable User Embedding in Text-to-Image Generation},
+  author    = {Wang et al.},
+  booktitle = {CVPR},
+  year      = {2026}
+}
+```

@@ -11,7 +11,7 @@
 | フォルダ | 論文 | 手法の位置づけ | まとめ |
 |---|---|---|---|
 | [`tailored-visions-repro/`](tailored-visions-repro/) | Tailored Visions (CVPR 2024)<br>[arXiv:2310.08129](https://arxiv.org/abs/2310.08129) | **プロンプト書き換え型**。履歴を検索して LLM に渡し、プロンプトを書き換える。生成モデルは触らない | [`docs/tailored-visions.html`](tailored-visions-repro/docs/tailored-visions.html) |
-| [`premier-repro/`](premier-repro/) | Premier (CVPR 2026 Highlight)<br>[arXiv:2603.20725](https://arxiv.org/abs/2603.20725) | **ユーザ埋め込み注入型**。学習可能な user embedding を Preference Adapter でテキスト条件と融合。新規ユーザは既存埋め込みの線形結合 | [`docs/premier_summary.html`](premier-repro/docs/premier_summary.html) |
+| [`premier-repro/`](premier-repro/) | Premier (CVPR 2026 Highlight)<br>[arXiv:2603.20725](https://arxiv.org/abs/2603.20725) | **ユーザ埋め込み注入型**。学習可能な user embedding を Preference Adapter でテキスト条件と融合。新規ユーザは既存埋め込みの線形結合 | [`docs/summary.html`](premier-repro/docs/summary.html) |
 | [`FAN/`](FAN/) | FAN (CVPR 2026)<br>Kim, Ahn, Seo | **エンコーダ改変型・学習不要**。テキストエンコーダの self-attention を Personalized Attention に差し替え、参照プロンプト群の嗜好を強度 α で混ぜる。拡散モデル本体もエンコーダも追加学習なし | [`FAN_summary.html`](FAN/FAN_summary.html) |
 
 各フォルダの `README*.md` / `official/SETUP.md` に起動手順、`docs/DEVIATIONS.md` 等に
@@ -25,8 +25,7 @@
   特に `tailored-visions-repro/official/run.sh` が起動するローカル LLM サーバは
   約 9GB を掴んだまま常駐するので、**使い終わったら `./run.sh stop`**。
 - このフォルダは 2026-09-05 に `~/stable-diffusion/` 直下の3フォルダをまとめたもの。
-  venv の shebang / activate と各ドキュメントのパスは追従済み
-  (`premier-repro/official/outputs/*.log` は過去の実行記録なので旧パスのまま)。
+  公式実装は各手法の `upstream/` submodule に固定し、ローカル変更はその外側で管理する。
 
 ## 手法の対比（展示のネタとして）
 

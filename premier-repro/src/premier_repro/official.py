@@ -21,21 +21,86 @@ import torch.nn as nn
 import yaml
 from safetensors.torch import load_file
 
-HERE = Path(__file__).resolve().parent
-sys.path.insert(0, str(HERE / "Premier"))
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+PATCHED_UPSTREAM = PROJECT_ROOT / ".work/upstream"
+ARTIFACTS = PROJECT_ROOT / "artifacts/weights/pino10010_Premier"
+
+
+def require_patched_upstream() -> Path:
+    """Expose the prepared official source without dirtying the submodule."""
+    if not (PATCHED_UPSTREAM / "scripts").is_dir():
+        raise RuntimeError("run python scripts/prepare_upstream.py first")
+    path = str(PATCHED_UPSTREAM)
+    if path not in sys.path:
+        sys.path.insert(0, path)
+    return PATCHED_UPSTREAM
 
 from diffusers import AutoencoderKL, FlowMatchEulerDiscreteScheduler, FluxPipeline, FluxTransformer2DModel  # noqa: E402
 from transformers import CLIPTextModel, CLIPTokenizer, T5EncoderModel, T5TokenizerFast  # noqa: E402
 
 FLUX_DEV = "black-forest-labs/FLUX.1-dev"
 FLUX_AUX = "black-forest-labs/FLUX.1-schnell"   # VAE / CLIP-L / T5-XXL: identical weights to dev, fully cached here
-WEIGHTS = HERE / "weights" / "pino10010_Premier"
+WEIGHTS = ARTIFACTS
 # scheduler_config.json of FLUX.1-dev (only the transformer of the dev repo is cached locally)
 DEV_SCHEDULER = dict(base_image_seq_len=256, max_image_seq_len=4096, base_shift=0.5, max_shift=1.15,
                      num_train_timesteps=1000, shift=3.0, use_dynamic_shifting=True)
 TOKEN_NUM = 30
 USER_DIM = 1024
 N_TRAIN_USERS = 1000
+
+
+def encode_images(pipeline: FluxPipeline, images: torch.Tensor):
+    """Encode training images using the official Premier/FLUX data path."""
+    images = pipeline.image_processor.preprocess(images)
+    images = images.to(pipeline.device).to(pipeline.dtype)
+    images = pipeline.vae.encode(images).latent_dist.sample()
+    images = (
+        images - pipeline.vae.config.shift_factor
+    ) * pipeline.vae.config.scaling_factor
+    image_tokens = pipeline._pack_latents(images, *images.shape)
+    image_ids = pipeline._prepare_latent_image_ids(
+        images.shape[0],
+        images.shape[2],
+        images.shape[3],
+        pipeline.device,
+        pipeline.dtype,
+    )
+    if image_tokens.shape[1] != image_ids.shape[0]:
+        image_ids = pipeline._prepare_latent_image_ids(
+            images.shape[0],
+            images.shape[2] // 2,
+            images.shape[3] // 2,
+            pipeline.device,
+            pipeline.dtype,
+        )
+    return image_tokens, image_ids
+
+
+class EmbeddingLinearCombination(nn.Module):
+    """Official stage-2 linear combination without importing its trainer."""
+
+    def __init__(
+        self,
+        embedding_num: int,
+        combination_size: int,
+        use_softmax: bool = True,
+    ) -> None:
+        super().__init__()
+        self.use_softmax = use_softmax
+        self.combination_weights = nn.Parameter(
+            torch.randn(combination_size, embedding_num)
+        )
+        nn.init.xavier_uniform_(self.combination_weights)
+
+    def forward(self, user_embedding: nn.Embedding, input_ids=None):
+        weights = self.get_combination_weights()
+        combined = torch.matmul(weights, user_embedding.weight)
+        return combined if input_ids is None else combined[input_ids]
+
+    def get_combination_weights(self):
+        if self.use_softmax:
+            return torch.softmax(self.combination_weights, dim=-1)
+        return self.combination_weights
 
 
 def log(msg: str):

@@ -11,13 +11,13 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-sys.path.insert(0, str(ROOT))
+sys.path.insert(0, str(ROOT / "src"))
 
 import torch  # noqa: E402
-from premier.config import load_config  # noqa: E402
-from premier.data.cache import FeatureCache, cache_latents, cache_texts  # noqa: E402
-from premier.data.prefbench import load_manifest  # noqa: E402
-from premier.model.loading import TextEncoders, free_cuda, load_vae  # noqa: E402
+from premier_repro.config import load_config  # noqa: E402
+from premier_repro.data.cache import FeatureCache, cache_latents, cache_texts  # noqa: E402
+from premier_repro.data.prefbench import load_manifest  # noqa: E402
+from premier_repro.model.loading import TextEncoders, free_cuda, load_vae  # noqa: E402
 
 
 def main():

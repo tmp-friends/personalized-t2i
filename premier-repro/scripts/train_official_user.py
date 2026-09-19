@@ -8,7 +8,7 @@
 
 The training step is a line-by-line port of `OminiModelUserEmbedding.training_step` in
 scripts/train_flux/train_user_embedding(_linear).py (same t sampling, loss, guidance,
-optimiser defaults), minus Lightning and with the memory handling of premier_local.py.
+optimiser defaults), minus Lightning and with the memory handling of premier_repro.official.
 
 Input images (preferred images of the user + their prompts), one of:
   --csv data.csv [--data-path root]       columns positive_image, caption   (official format)
@@ -16,8 +16,8 @@ Input images (preferred images of the user + their prompts), one of:
   --images a.png b.png --captions "..." "..."
 
 Example
-  python train_new_user.py --name alice --json my_images.json --mode linear --steps 1000 --out outputs/users
-  python run_premier.py --users none file:outputs/users/alice/user_combination_alice.safetensors --prompts "a cat" --out outputs/alice_gen
+  python scripts/train_official_user.py --name alice --json my_images.json --mode linear --steps 1000 --out outputs/official/users
+  python scripts/run_official.py --users none file:outputs/official/users/alice/user_combination_alice.safetensors --prompts "a cat" --out outputs/official/alice_gen
 """
 from __future__ import annotations
 
@@ -25,8 +25,12 @@ import argparse
 import csv
 import json
 import random
+import sys
 import time
 from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / "src"))
 
 import torch
 import torch.nn as nn
@@ -34,12 +38,16 @@ import torchvision.transforms as T
 from PIL import Image
 from safetensors.torch import save_file
 
-from premier_local import (N_TRAIN_USERS, TOKEN_NUM, USER_DIM, WEIGHTS, cuda_gb, load_adapter_config,
-                           load_components, load_train_bank, log, make_pipeline, quantize_int8)
+from premier_repro.official import (N_TRAIN_USERS, TOKEN_NUM, USER_DIM, WEIGHTS,
+                                    EmbeddingLinearCombination, cuda_gb, encode_images,
+                                    load_adapter_config, load_components, load_train_bank,
+                                    log, make_pipeline, quantize_int8,
+                                    require_patched_upstream)
+
+require_patched_upstream()
+
 from scripts.pipeline.flux_adapter import transformer_forward_verse  # official
-from scripts.pipeline.flux_omini import encode_images  # official
 from scripts.pipeline.mod_adapters import load_modulation_adapter  # official
-from scripts.train_flux.train_user_embedding_linear import EmbeddingLinearCombination  # official
 
 
 def read_items(a) -> list[tuple[Path, str]]:
@@ -83,7 +91,7 @@ def main():
     ap.add_argument("--seed", type=int, default=0)
     ap.add_argument("--device", default="cuda")
     ap.add_argument("--weights", default=str(WEIGHTS))
-    ap.add_argument("--out", default="outputs/users")
+    ap.add_argument("--out", default=str(ROOT / "outputs/official/users"))
     a = ap.parse_args()
     weights = Path(a.weights)
     dev, dtype = a.device, torch.bfloat16

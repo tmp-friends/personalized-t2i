@@ -13,8 +13,8 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-sys.path.insert(0, str(ROOT))
-from premier.data.prefbench import build_manifest, manifest_image_list  # noqa: E402
+sys.path.insert(0, str(ROOT / "src"))
+from premier_repro.data.prefbench import build_manifest, manifest_image_list  # noqa: E402
 
 HF = "https://huggingface.co/datasets/wenyii/PrefBench/resolve/main"
 PARTS = {"diffusiondb": 6, "coco": 4}
