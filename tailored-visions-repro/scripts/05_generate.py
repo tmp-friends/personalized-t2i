@@ -1,8 +1,9 @@
 #!/usr/bin/env python
 """Stage 5: generate images and keep only their CLIP embeddings.
 
-For each method on the evaluation subset, one SD v1-5 image per test sample, then
-a CLIP ViT-B/32 embedding. Images are embedded and dropped as they come out --
+For each method on the evaluation subset, generate one image per test sample
+with the configured model (SDXL by default), then compute a CLIP ViT-B/32
+embedding. Images are embedded and dropped as they come out --
 persisting ~8k PNGs would cost several GB for no benefit, since both image
 metrics only ever touch the embeddings. ``--save-images N`` keeps the first N
 per method for qualitative figures.
@@ -12,8 +13,8 @@ what Image-Align compares against now that the dataset's images are gone.
 
     python scripts/05_generate.py --methods table2
 
-Run after ``02_rewrite.py`` has finished: SD v1-5 and the rewriter both want the
-GPU, and this script assumes it has it to itself.
+Run after ``02_rewrite.py`` has finished: the diffusion generator and the
+rewriter both want the GPU, and this script assumes it has it to itself.
 """
 
 from __future__ import annotations
