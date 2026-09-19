@@ -1,0 +1,3 @@
+0001-fix-official-runtime-bugs.patch
+0002-support-current-diffusers-and-sdxl.patch
+0003-add-bounded-experiment-cli.patch

@@ -1,0 +1,270 @@
+diff --git a/SD.py b/SD.py
+index 175055f..f5d4e82 100644
+--- a/SD.py
++++ b/SD.py
+@@ -1,34 +1,118 @@
+-import torch
+-from diffusers import StableDiffusionPipeline
+-from PIL import Image
+-from diffusers import ModelMixin
+-
+-def image_grid(imgs, rows, cols):
+-    assert len(imgs) == rows * cols
+-
+-    w, h = imgs[0].size
+-    grid = Image.new('RGB', size=(cols * w, rows * h))
+-    grid_w, grid_h = grid.size
+-
+-    for i, img in enumerate(imgs):
+-        grid.paste(img, box=(i % cols * w, i // cols * h))
+-    return grid
+-
+-@torch.no_grad()
+-def text2img(pipe,prompt,batch_size=4,save=False,save_path=None,**kwargs):
+-    image = pipe(prompt,num_images_per_prompt=batch_size,**kwargs).images
+-    if save and save_path is not None:
+-        grid=image_grid(image,1,batch_size)
+-        grid.save(save_path)
+-    return image
+-
+-if __name__=="__main__":
+-    model_id = "runwayml/stable-diffusion-v1-5"
+-    device = "cuda" if torch.cuda.is_available() else "cpu"
+-
+-    pipe = StableDiffusionPipeline.from_pretrained(model_id, torch_dtype=torch.float16)
+-    pipe = pipe.to(device)
+-    prompt="an astronaut riding a horse"
+-    text2img(pipe,prompt,save=True,save_path="astronaut_rides_horse.png")
+-
+-    #image.save("astronaut_rides_horse.png")
+\ No newline at end of file
++import os
++
++import torch
++from diffusers import AutoPipelineForText2Image
++from PIL import Image
++
++# [2026 patch] The paper used SD v1-5, whose `runwayml` repo was removed from the
++# Hub in Aug 2024. The default is now SDXL; set TV_SD_MODEL to go back to v1-5
++# ("stable-diffusion-v1-5/stable-diffusion-v1-5") or to any other t2i repo.
++SDXL_MODEL = "stabilityai/stable-diffusion-xl-base-1.0"
++SD15_MODEL = "stable-diffusion-v1-5/stable-diffusion-v1-5"
++DEFAULT_MODEL = os.environ.get("TV_SD_MODEL", SDXL_MODEL)
++
++
++def is_sdxl(model_id):
++    return "xl" in model_id.rsplit("/", 1)[-1].lower()
++
++
++def default_batch(model_id):
++    """[2026 patch] SDXL renders at 1024x1024 against v1-5's 512x512, so a batch
++    costs ~4x the activation memory. The local rewriting LLM keeps ~9GB resident
++    (SETUP.md §3), which leaves ~15GB here -- 4 images of SDXL do not fit."""
++    env = os.environ.get("TV_SD_BATCH")
++    if env:
++        return int(env)
++    return 2 if is_sdxl(model_id) else 4
++
++
++def _enable_vae_slicing(pipe) -> None:
++    """[2026 patch] Slice the VAE decode, whichever diffusers API is present.
++
++    Decoding a whole batch of 1024x1024 latents at once is the peak allocation
++    of an SDXL run. ``pipe.enable_vae_slicing()`` was removed in diffusers 0.40
++    in favour of ``pipe.vae.enable_slicing()``.
++    """
++    vae = getattr(pipe, "vae", None)
++    if vae is not None and hasattr(vae, "enable_slicing"):
++        vae.enable_slicing()
++    elif hasattr(pipe, "enable_vae_slicing"):
++        pipe.enable_vae_slicing()
++
++
++def image_grid(imgs, rows, cols):
++    assert len(imgs) == rows * cols
++
++    w, h = imgs[0].size
++    grid = Image.new('RGB', size=(cols * w, rows * h))
++    grid_w, grid_h = grid.size
++
++    for i, img in enumerate(imgs):
++        grid.paste(img, box=(i % cols * w, i // cols * h))
++    return grid
++
++
++def load_pipeline(model_id=None, device=None, dtype=torch.float16):
++    """[2026 patch] Load any t2i pipeline by repo id, SD v1-5 or SDXL alike.
++
++    Upstream hardcoded ``StableDiffusionPipeline``, which cannot load SDXL.
++    ``AutoPipelineForText2Image`` picks the class from the repo's
++    ``model_index.json`` instead. Two knobs differ per repo and are probed
++    rather than assumed:
++
++    * ``variant="fp16"`` -- halves the download, but not every repo ships it.
++    * ``safety_checker`` -- an SD v1.x argument; the SDXL pipeline has no such
++      parameter and rejects it.
++    """
++    model_id = model_id or DEFAULT_MODEL
++    device = device or ("cuda" if torch.cuda.is_available() else "cpu")
++
++    kwargs = dict(torch_dtype=dtype)
++    if not is_sdxl(model_id):
++        # An SD v1.x argument. The SDXL pipeline has no safety checker at all
++        # and merely warns that the argument was ignored, so don't pass it.
++        kwargs.update(safety_checker=None, requires_safety_checker=False)
++    try:
++        pipe = AutoPipelineForText2Image.from_pretrained(model_id, variant="fp16", **kwargs)
++    except (OSError, ValueError):
++        # Not every repo ships an fp16 variant.
++        pipe = AutoPipelineForText2Image.from_pretrained(model_id, **kwargs)
++
++    # Costs nothing in quality, removes the VAE decode memory spike.
++    _enable_vae_slicing(pipe)
++
++    # Memory policy, in increasing order of cost. The common case on this box is
++    # the rewriting LLM server holding ~9GB, leaving ~15GB -- enough for SDXL
++    # only with attention slicing on.
++    free = torch.cuda.mem_get_info()[0] if device == "cuda" else 0
++    gb = free / 1024 ** 3
++    if device == "cuda" and free < 10 * 1024 ** 3:
++        # Not enough room to hold the weights and run a batch -- stream the
++        # components from CPU instead of failing with OOM. Slower, but works.
++        print(f"[SD] only {gb:.1f}GB free on the GPU; enabling model CPU offload")
++        pipe.enable_model_cpu_offload()
++        # Moving an offloaded pipeline with .to() re-pins every component to the
++        # GPU and defeats the offload, so flag it for callers that do that.
++        pipe._tv_offloaded = True
++        return pipe
++    if device == "cuda" and free < 18 * 1024 ** 3:
++        print(f"[SD] {gb:.1f}GB free on the GPU; enabling attention slicing")
++        pipe.enable_attention_slicing()
++    pipe._tv_offloaded = False
++    return pipe.to(device)
++
++
++@torch.no_grad()
++def text2img(pipe,prompt,batch_size=None,save=False,save_path=None,**kwargs):
++    if batch_size is None:
++        batch_size = default_batch(DEFAULT_MODEL)
++    image = pipe(prompt,num_images_per_prompt=batch_size,**kwargs).images
++    if save and save_path is not None:
++        grid=image_grid(image,1,batch_size)
++        grid.save(save_path)
++    return image
++
++if __name__=="__main__":
++    pipe = load_pipeline()
++    prompt="an astronaut riding a horse"
++    text2img(pipe,prompt,save=True,save_path="astronaut_rides_horse.png")
+diff --git a/demo.py b/demo.py
+index 989eb19..ece8c91 100644
+--- a/demo.py
++++ b/demo.py
+@@ -1,7 +1,6 @@
+ # Code by zzjchen
+ # This code is a demo of our method. To run our method on full PIP dataset, please refer to main.py
+ import os
+-from diffusers import StableDiffusionPipeline  # [2026 patch] used below but never imported
+ from language import clip_embedding_retrieval,bm25_retrieval
+ from apiuse import stable_call_api,MY_OPENAI_KEY,MY_BASE
+ import openai
+@@ -9,7 +8,7 @@ import torch
+ import clip
+ from utils import read_jsonl_data
+ from prompts import get_ICL_example
+-from SD import text2img
++from SD import text2img, load_pipeline
+ import argparse
+ 
+ #create prompt
+@@ -106,8 +105,14 @@ if __name__ == "__main__":
+             print('Original Prompt:',query)
+             print('Rewriten Prompt:',new_prompt)
+             if args.t2i:
+-                model_id = "runwayml/stable-diffusion-v1-5"
+-                pipe = StableDiffusionPipeline.from_pretrained(model_id, torch_dtype=torch.float16)
+-                pipe = pipe.to(device)
++                # [2026 patch] Retrieval is done; CLIP ViT-L is ~1.7GB of VRAM
++                # that SDXL needs more than this does, and the rewriting LLM
++                # server already holds ~9GB of the card.
++                del clip_model
++                if torch.cuda.is_available():
++                    torch.cuda.empty_cache()
++                # [2026 patch] Defaults to SDXL; TV_SD_MODEL overrides. The
++                # loader handles v1-5 and SDXL alike -- see SD.load_pipeline.
++                pipe = load_pipeline(device=device)
+                 text2img(pipe,query,save=True,save_path="ori_prompt.png")
+                 text2img(pipe,new_prompt,save=True,save_path="personalized_prompt.png")
+diff --git a/main.py b/main.py
+index a1d9ff8..f28d48a 100644
+--- a/main.py
++++ b/main.py
+@@ -5,10 +5,9 @@ import os
+ from language import clip_embedding_retrieval,bm25_retrieval
+ from apiuse import MY_OPENAI_KEY,MY_ORG,MY_BASE,stable_call_api  # [2026 patch] MY_BASE was used below but never imported (NameError on every run)
+ import openai
+-from SD import text2img
++from SD import text2img, load_pipeline
+ import torch
+ import clip
+-from diffusers import StableDiffusionPipeline
+ from utils import read_jsonl_data,write_jsonl_data
+ import time
+ import argparse
+@@ -39,7 +38,10 @@ class Full_Pipeline:
+         else:
+             self.clip_model=clip_model
+         self.SD_pipe = SD_pipe
+-        if self.SD_pipe is not None:    # [2026 patch] None.to() crashed without --t2i
++        # [2026 patch] None.to() crashed without --t2i; and load_pipeline has
++        # already placed the pipeline, so re-placing it would only undo a CPU
++        # offload it may have enabled.
++        if self.SD_pipe is not None and not getattr(self.SD_pipe, "_tv_offloaded", False):
+             self.SD_pipe.to(self.device)
+         if MY_ORG:                      # [2026 patch] an empty org header is rejected
+             openai.organization = MY_ORG
+@@ -146,8 +148,9 @@ if __name__=="__main__":
+         device = "cuda" if torch.cuda.is_available() else "cpu"
+         clip_model, _ = clip.load("ViT-L/14", device=device)
+     if args.t2i==True:
+-        model_id = "runwayml/stable-diffusion-v1-5"
+-        pipe = StableDiffusionPipeline.from_pretrained(model_id, torch_dtype=torch.float16)
++        # [2026 patch] Defaults to SDXL; TV_SD_MODEL overrides. The loader
++        # handles v1-5 and SDXL alike -- see SD.load_pipeline.
++        pipe = load_pipeline(device=device)
+     else:
+         pipe=None
+     FP=Full_Pipeline(clip_model,pipe,retrieval=args.retrieval)
+diff --git a/requirements-2026.txt b/requirements-2026.txt
+new file mode 100644
+index 0000000..4f3ec0b
+--- /dev/null
++++ b/requirements-2026.txt
+@@ -0,0 +1,27 @@
++# Versions verified working on Python 3.12 / CUDA 12-13 in September 2026.
++# The original requirements.txt pins 2023 releases (torch 1.13.1, openai 0.27.8
++# with numpy 1.21.5, spacy 3.6.1) that no longer resolve on Python 3.12.
++#
++#   uv venv --python 3.12 && uv pip install -r requirements-2026.txt
++#   uv pip install git+https://github.com/openai/CLIP.git
++#
++# openai is deliberately held at 0.27.x: apiuse.py uses the pre-1.0 API
++# (openai.ChatCompletion.create, openai.api_base) and that version still
++# installs cleanly, so the upstream call path needs no rewrite.
++
++torch>=2.6
++torchvision
++diffusers>=0.31
++transformers>=4.57
++accelerate>=1.0
++safetensors>=0.4
++openai==0.27.8
++ftfy
++regex
++jsonlines>=3.1
++nltk>=3.9
++numpy>=1.26
++six
++func_timeout>=4.3
++spacy>=3.7
++pillow

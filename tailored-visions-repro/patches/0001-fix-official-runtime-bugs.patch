@@ -1,0 +1,273 @@
+diff --git a/apiuse.py b/apiuse.py
+index f876476..89d8749 100644
+--- a/apiuse.py
++++ b/apiuse.py
+@@ -2,13 +2,21 @@
+ # This code includes functions for ChatGPT API. Requires your OpenAI api key for usage.
+ # Login and visit https://platform.openai.com/account/api-keys to see your OpenAI api key
+ import openai
++import os
+ #Replace the following openai key, organization with your openai key or organization
+ #If you have special api_base for api.openai.com, replace My_Base with your correct api_base
+-MY_OPENAI_KEY=""
+-MY_ORG=""
+-MY_BASE='https://api.openai.com/v1/'
++#
++# [2026 patch] Also readable from the environment, so the repo runs without
++# editing source. Point TV_OPENAI_BASE at serve_local_llm.py to run with a
++# local model instead of ChatGPT:
++#     python serve_local_llm.py &
++#     export TV_OPENAI_BASE=http://127.0.0.1:8000/v1 TV_OPENAI_KEY=local
++MY_OPENAI_KEY=os.environ.get('TV_OPENAI_KEY') or os.environ.get('OPENAI_API_KEY') or ""
++MY_ORG=os.environ.get('TV_OPENAI_ORG') or ""
++MY_BASE=os.environ.get('TV_OPENAI_BASE') or 'https://api.openai.com/v1/'
++MY_MODEL=os.environ.get('TV_OPENAI_MODEL') or 'gpt-3.5-turbo'
+ import time
+-def stable_call_api(model_name="gpt-3.5-turbo",messages=[{'role':'user','content':'hello'}],return_dict=False,max_tokens=500,t_sleep=0.2):
++def stable_call_api(model_name=None,messages=[{'role':'user','content':'hello'}],return_dict=False,max_tokens=500,t_sleep=0.2,max_retry=5):
+     '''
+     A simple & stable wrapper for calling ChatGPT API, which keeps retrying after failure.
+     Make sure you're able to connect the internet.
+@@ -23,20 +31,21 @@ def stable_call_api(model_name="gpt-3.5-turbo",messages=[{'role':'user','content
+     Returns:
+         Chatgpt response message
+     '''
+-    flg=True
++    # [2026 patch] Upstream retries forever, so a bad key or an unreachable
++    # endpoint hangs the run silently instead of failing. Bounded now.
++    model_name = model_name or MY_MODEL
+     skip=t_sleep
+-    k=1
+-    while flg:
++    for k in range(1, max_retry+1):
+         try:
+-            message=call_api(model_name, messages, return_dict, max_tokens)
+-            flg = False
++            return call_api(model_name, messages, return_dict, max_tokens)
+         except Exception as e:
+-            print('  ',e,'Retrying', k, 'sleep', skip)
++            print('  ',e,'Retrying', k, 'of', max_retry, 'sleep', skip)
+             time.sleep(skip)
+             skip+=t_sleep
+-            continue
+-    return message
+-def call_api(model_name="gpt-3.5-turbo",messages=[{'role':'user','content':'hello'}],return_dict=False,max_tokens=3500):
++    raise RuntimeError(
++        'API call failed %d times. Check TV_OPENAI_KEY / TV_OPENAI_BASE, or start '
++        'serve_local_llm.py to run without an OpenAI key.' % max_retry)
++def call_api(model_name=None,messages=[{'role':'user','content':'hello'}],return_dict=False,max_tokens=3500):
+     '''
+         A simple wrapper for calling ChatGPT API.
+ 
+@@ -50,7 +59,7 @@ def call_api(model_name="gpt-3.5-turbo",messages=[{'role':'user','content':'hell
+             Chatgpt response message
+     '''
+     completion = openai.ChatCompletion.create(
+-      model=model_name,
++      model=model_name or MY_MODEL,
+       messages=messages,
+       max_tokens = max_tokens
+     )
+diff --git a/demo.py b/demo.py
+index 93b800e..989eb19 100644
+--- a/demo.py
++++ b/demo.py
+@@ -1,6 +1,7 @@
+ # Code by zzjchen
+ # This code is a demo of our method. To run our method on full PIP dataset, please refer to main.py
+ import os
++from diffusers import StableDiffusionPipeline  # [2026 patch] used below but never imported
+ from language import clip_embedding_retrieval,bm25_retrieval
+ from apiuse import stable_call_api,MY_OPENAI_KEY,MY_BASE
+ import openai
+@@ -60,19 +61,37 @@ def check_and_translate(strs):
+     return strs
+ if __name__ == "__main__":
+     parser = argparse.ArgumentParser()
+-    parser.add_argument('--prompt', type=str, default='cat')
+-    parser.add_argument('--t2i', action="store_true",default=True)
++    # [2026 patch] The README documents --input_prompt; the code only accepted
++    # --prompt. Both work now. --t2i was store_true with default=True, so it
++    # could never be turned off; --no-t2i does that.
++    parser.add_argument('--prompt', '--input_prompt', dest='prompt', type=str, default='cat')
++    parser.add_argument('--t2i', action="store_true", default=True)
++    parser.add_argument('--no-t2i', dest='t2i', action="store_false")
++    parser.add_argument('--user_id', type=str, default='87403')
+     args = parser.parse_args()
+     openai.api_key = MY_OPENAI_KEY
+     openai.api_base=MY_BASE
+     data_folder='user_data'
+-    user_id='87403'
++    user_id=args.user_id
+     query=args.prompt
+     device = "cuda" if torch.cuda.is_available() else 'cpu'
+     # clip
+     clip_model, _ = clip.load("ViT-L/14", device=device)
+     clip_model.eval()
++    # [2026 patch] demo_user.jsonl is referenced but not shipped in the repo.
++    # Build it on demand from the PIP dataset (train samples of --user_id).
+     user_path='demo_user.jsonl'
++    if not os.path.isfile(user_path):
++        src=os.path.join(data_folder,user_id+'.jsonl')
++        if os.path.isfile(src):
++            import json
++            with open(src,encoding='utf-8') as f:
++                raw=[json.loads(l) for l in f if l.strip()]
++            history=[l for l in raw[1:-3] if isinstance(l,dict)]
++            with open(user_path,'w',encoding='utf-8') as f:
++                for l in history:
++                    f.write(json.dumps(l,ensure_ascii=False)+'\n')
++            print('Built',user_path,'from',src,'(',len(history),'history prompts )')
+     if not os.path.isfile(user_path):
+         print(user_id,'is not a valid user.')
+     else:
+diff --git a/download.py b/download.py
+index 63049d3..506be54 100644
+--- a/download.py
++++ b/download.py
+@@ -35,7 +35,10 @@ def after_timeout():
+     A simple callback function
+     '''
+     print("Time out!")
+-@set_timeout(5,after_timeout())
++# [2026 patch] after_timeout() was *called* at decoration time, so importing
++# this module printed a bogus 'Time out!' on every run, and the decorator
++# stored None as the callback (TypeError on a real timeout).
++@set_timeout(5,after_timeout)
+ def wget_download(urls,folder):
+     '''
+     Downloading images from user past histories using wget
+diff --git a/language.py b/language.py
+index 4d931b5..db68750 100644
+--- a/language.py
++++ b/language.py
+@@ -188,10 +188,16 @@ def bm25_retrieval(lines,user,query='cat',num=3):
+     sentences, image_urls = checklines(lines)
+     docs=[word_tokenize(doc.lower()) for doc in sentences]
+     bm25=BM25_Model(docs)
+-    scores=bm25.get_documents_score(query)
+-    s_sentences=sorted(sentences,key=lambda x: scores[sentences.index(x)],reverse=True)
+-    s_image_urls = sorted(image_urls, key=lambda x: scores[image_urls.index(x)], reverse=True)
+-    sort_scores=sorted(scores,reverse=True)
++    # [2026 patch] The documents are word-tokenized but the raw query string was
++    # passed straight in, so `for q in query` iterated over *characters* and
++    # BM25 degenerated to single-character matching. Tokenize it the same way.
++    scores=bm25.get_documents_score(word_tokenize(query.lower()))
++    # [2026 patch] Sorting via list.index() picks the wrong score whenever two
++    # prompts are equal, and is O(n^2 log n). Sort the indices instead.
++    order=sorted(range(len(sentences)),key=lambda i:(-scores[i],i))
++    s_sentences=[sentences[i] for i in order]
++    s_image_urls=[image_urls[i] for i in order]
++    sort_scores=[scores[i] for i in order]
+     if num> len(sentences):
+         num=len(sentences)
+     retrievals=[[s_sentences[i],sort_scores[i],s_image_urls[i]] for i in range(num)]
+diff --git a/main.py b/main.py
+index 594c9c9..a1d9ff8 100644
+--- a/main.py
++++ b/main.py
+@@ -3,7 +3,7 @@
+ # This code requires GPU for T2I generation, turning 't2i' flag in '__call__' function to False to skip T2I generation
+ import os
+ from language import clip_embedding_retrieval,bm25_retrieval
+-from apiuse import MY_OPENAI_KEY,MY_ORG,stable_call_api
++from apiuse import MY_OPENAI_KEY,MY_ORG,MY_BASE,stable_call_api  # [2026 patch] MY_BASE was used below but never imported (NameError on every run)
+ import openai
+ from SD import text2img
+ import torch
+@@ -39,14 +39,16 @@ class Full_Pipeline:
+         else:
+             self.clip_model=clip_model
+         self.SD_pipe = SD_pipe
+-        self.SD_pipe.to(self.device)
+-        openai.organization = MY_ORG
++        if self.SD_pipe is not None:    # [2026 patch] None.to() crashed without --t2i
++            self.SD_pipe.to(self.device)
++        if MY_ORG:                      # [2026 patch] an empty org header is rejected
++            openai.organization = MY_ORG
+         openai.api_key = MY_OPENAI_KEY
+         openai.api_base = MY_BASE
+         self.today=time.strftime("%Y-%m-%d-%H-%M-%S", time.localtime(time.time()))
+         self.out_folder=out_folder
+         if not os.path.exists(os.path.join(out_folder,self.today)):
+-            os.mkdir(os.path.join(out_folder,self.today))
++            os.makedirs(os.path.join(out_folder,self.today))  # [2026 patch] mkdir failed when out_folder itself was absent
+ 
+     def __call__(self,lines,user,query='cat',num=3,prompt_template='',t2i=False):
+         '''
+@@ -68,7 +70,10 @@ class Full_Pipeline:
+                 'new_prompt': personalized prompt rewriting result
+                 'image_path': folder where the generated image and other results will be saved
+         '''
+-        if self.retrieval=='full':
++        # [2026 patch] Upstream tests for 'full', but the CLI only accepts
++        # 'ebr' or 'bm25' -- so --retrieval=ebr silently ran BM25 and the
++        # released code could not produce the paper's EBR rows.
++        if self.retrieval in ('ebr','full'):
+             retrieval_result = clip_embedding_retrieval(self.clip_model, lines, user, query, num)
+         else:
+             retrieval_result=bm25_retrieval(lines,user,query,num)
+@@ -135,7 +140,7 @@ if __name__=="__main__":
+ 
+     # Building models
+     if args.retrieval=='bm25':
+-        clip_model,=None
++        clip_model=None                 # [2026 patch] was `clip_model,=None` -> TypeError
+         device = "cuda" if torch.cuda.is_available() else "cpu"
+     else:
+         device = "cuda" if torch.cuda.is_available() else "cpu"
+@@ -146,10 +151,9 @@ if __name__=="__main__":
+     else:
+         pipe=None
+     FP=Full_Pipeline(clip_model,pipe,retrieval=args.retrieval)
+-    if args.rewrite_method=='ICL':
+-        mes_template=get_example(args.num_retrieval,args.ICL_shot)
+-    else:
+-        mes_template=get_example(args.num_retrieval,0)
++    # [2026 patch] The ICL template depends on the query (demonstrations are
++    # ranked by similarity to it), so it is rebuilt per query inside the loop.
++    mes_template=get_example(args.num_retrieval,0)
+ 
+     # Reading all users in PIP Dataset
+     urls=os.listdir('user_data')
+@@ -170,6 +174,8 @@ if __name__=="__main__":
+                 target = queryl['prompt']
+                 print('    Query：', query)
+                 time.sleep(0.5)
++                if args.rewrite_method=='ICL':
++                    mes_template=get_example(args.num_retrieval,args.ICL_shot,query)
+                 result = FP(prompts, user, query, num=args.num_retrieval, prompt_template=mes_template,t2i=args.t2i)
+                 result['retrieval_history'] = [i[:-1] for i in result['retrieval_history']]
+                 root = result['images_path']
+diff --git a/prompts.py b/prompts.py
+index 8322bab..91c52ec 100644
+--- a/prompts.py
++++ b/prompts.py
+@@ -61,6 +61,9 @@ Example_5=[
+ 
+ Examples=[Example_1,Example_2,Example_3,Example_4,Example_5]
+ 
++_RANK_MODEL=[None]  # [2026 patch] cache; upstream reloaded CLIP on every call
++
++
+ @torch.no_grad()
+ def rank_examples(query,examples):
+     '''
+@@ -74,10 +77,14 @@ def rank_examples(query,examples):
+         examples: sorted ICL examples
+     '''
+     device='cuda' if torch.cuda.is_available() else "cpu"
+-    model, _ = clip.load("ViT-B/32", device=device)
+-    query=clip.tokenize(query).to(device)
++    # [2026 patch] main.py calls this once per query; reloading a CLIP model
++    # each time made a full-dataset run take days.
++    if _RANK_MODEL[0] is None:
++        _RANK_MODEL[0], _ = clip.load("ViT-B/32", device=device)
++    model=_RANK_MODEL[0]
++    query=clip.tokenize(query, truncate=True).to(device)
+     texts=[e[-2] for e in examples]
+-    texts=clip.tokenize(texts).to(device)
++    texts=clip.tokenize(texts, truncate=True).to(device)
+     query_f=model.encode_text(query)
+     texts_f=model.encode_text(texts)
+     scores=texts_f @ query_f.T
