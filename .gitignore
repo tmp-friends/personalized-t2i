@@ -41,6 +41,7 @@ premier-repro/data/
 **/.work/
 **/data/raw/
 **/artifacts/
+# Retained until fresh-clone verification and explicit human approval.
 .migration-backup/
 
 # Isolated feature worktrees
