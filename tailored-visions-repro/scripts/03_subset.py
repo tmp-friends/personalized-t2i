@@ -20,15 +20,15 @@ import json
 import sys
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
-from tv.data import sample_user_ids  # noqa: E402
+from tailored_visions_repro.data import sample_user_ids  # noqa: E402
 
 
 def main() -> int:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--data-dir", default="data/user_data")
-    ap.add_argument("--out", default="results/eval_subset.json")
+    ap.add_argument("--data-dir", default="data/raw/user_data")
+    ap.add_argument("--out", default="outputs/eval_subset.json")
     ap.add_argument("--n-users", type=int, default=500)
     ap.add_argument("--seed", type=int, default=0)
     args = ap.parse_args()

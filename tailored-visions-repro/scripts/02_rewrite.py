@@ -21,9 +21,9 @@ from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
-from tv.pipeline import (  # noqa: E402
+from tailored_visions_repro.pipeline import (  # noqa: E402
     GENERAL_PR,
     PERSONALIZED,
     PROMPTIST,
@@ -35,9 +35,9 @@ from tv.pipeline import (  # noqa: E402
     table2_methods,
     topk_ablation_methods,
 )
-from tv.retrieval import BM25Retriever, EBRRetriever  # noqa: E402
-from tv.rewriter import clean_output  # noqa: E402
-from tv import prompt_templates as PT  # noqa: E402
+from tailored_visions_repro.retrieval import BM25Retriever, EBRRetriever  # noqa: E402
+from tailored_visions_repro.rewriter import clean_output  # noqa: E402
+from tailored_visions_repro import prompt_templates as PT  # noqa: E402
 
 
 def load_cache(cache_dir: Path):
@@ -111,14 +111,14 @@ def build_samples(records, index, embs, limit: int, user_limit: int,
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--cache-dir", default="data/cache")
-    ap.add_argument("--out-dir", default="results/rewrites")
+    ap.add_argument("--out-dir", default="outputs/rewrites")
     ap.add_argument("--methods", default="table2")
     ap.add_argument("--limit", type=int, default=0, help="max test samples (0 = all)")
     ap.add_argument("--user-limit", type=int, default=0)
     ap.add_argument(
         "--users-from",
         default="",
-        help="JSON file with a 'user_ids' list (e.g. results/eval_subset.json). "
+        help="JSON file with a 'user_ids' list (e.g. outputs/eval_subset.json). "
         "Use for the ablations so they land on the same users the image metrics score.",
     )
     ap.add_argument(
@@ -166,7 +166,7 @@ def main() -> int:
         args.users_from,
     )
     if args.prompt_type != "sentence":
-        from tv.shorten import Shortener
+        from tailored_visions_repro.shorten import Shortener
 
         print(f"[rewrite] deriving '{args.prompt_type}' queries from the ground-truth prompts ...")
         shortener = Shortener()
@@ -176,7 +176,7 @@ def main() -> int:
         for (_, test, _), text in zip(samples, short):
             test["query"] = text
         # Query embeddings no longer match the queries; EBR must re-encode.
-        from tv.retrieval import EBRRetriever
+        from tailored_visions_repro.retrieval import EBRRetriever
 
         encoder = EBRRetriever(model_name=index["clip_model"])
         new_q = encoder.encode(short)
@@ -202,7 +202,7 @@ def main() -> int:
     llm = None
     promptist = None
     if any(s.uses_llm for s in pending) and args.backend != "echo":
-        from tv.rewriter import build_rewriter
+        from tailored_visions_repro.rewriter import build_rewriter
 
         kwargs = dict(batch_size=args.batch_size, temperature=args.temperature)
         if args.backend == "local":
@@ -253,7 +253,7 @@ def main() -> int:
         if spec.kind == SHORTENED:
             outputs = [r["query"] for r in rows]
         elif spec.kind == PROMPTIST:
-            from tv.baselines import PromptistRewriter
+            from tailored_visions_repro.baselines import PromptistRewriter
 
             if promptist is None:
                 print("[rewrite] loading Promptist ...")

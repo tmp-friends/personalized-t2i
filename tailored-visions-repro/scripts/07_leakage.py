@@ -22,9 +22,9 @@ import sys
 from concurrent.futures import ProcessPoolExecutor
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
-from tv.metrics import token_f1  # noqa: E402
+from tailored_visions_repro.metrics import token_f1  # noqa: E402
 
 
 def _score_user(rec):
@@ -52,12 +52,12 @@ def _score_user(rec):
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--cache-dir", default="data/cache")
-    ap.add_argument("--out", default="results/leakage.json")
+    ap.add_argument("--out", default="outputs/leakage.json")
     ap.add_argument("--threshold", type=float, default=0.8)
     ap.add_argument("--workers", type=int, default=max(1, (os.cpu_count() or 4) - 2))
     ap.add_argument(
         "--rewrites-dir",
-        default="results/rewrites",
+        default="outputs/rewrites",
         help="if present, also measure whether retrieval actually surfaces the leaked prompt",
     )
     args = ap.parse_args()

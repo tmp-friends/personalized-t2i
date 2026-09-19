@@ -34,7 +34,7 @@ step "4/8  evaluation subset"
 $PY scripts/03_subset.py --n-users "$N_EVAL_USERS"
 
 step "5/8  user preference summaries (for PMS)"
-$PY scripts/04_preferences.py --users-from results/eval_subset.json
+$PY scripts/04_preferences.py --users-from outputs/eval_subset.json
 
 step "6/8  generate images + CLIP embeddings"
 $PY scripts/05_generate.py --methods table2 --save-images 8
@@ -44,7 +44,7 @@ if [[ $SKIP_ABLATIONS -eq 0 ]]; then
   # get PMS and Image-Align too rather than a ROUGE-L-only column.
   step "7/8  ablations (Tables 4 & 5)"
   $PY scripts/02_rewrite.py --methods ablation_topk,ablation_icl \
-      --users-from results/eval_subset.json --batch-size 16
+      --users-from outputs/eval_subset.json --batch-size 16
   $PY scripts/05_generate.py --methods all
 fi
 
@@ -52,4 +52,4 @@ step "8/8  metrics + qualitative examples"
 $PY scripts/06_evaluate.py
 $PY scripts/08_examples.py --n 12
 
-printf '\nDone. See results/RESULTS.md, results/EXAMPLES.md and docs/DEVIATIONS.md\n'
+printf '\nDone. See outputs/RESULTS.md, outputs/EXAMPLES.md and docs/DEVIATIONS.md\n'

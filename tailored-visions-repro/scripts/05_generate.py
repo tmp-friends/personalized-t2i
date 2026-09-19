@@ -26,10 +26,10 @@ from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
-from tv.generate import GenConfig, SDGenerator, seed_for  # noqa: E402
-from tv.metrics import CLIPScorer  # noqa: E402
+from tailored_visions_repro.generate import DEFAULT_MODEL, GenConfig, SDGenerator, seed_for  # noqa: E402
+from tailored_visions_repro.metrics import CLIPScorer  # noqa: E402
 
 GT_PROXY = "gt_proxy"
 
@@ -43,15 +43,19 @@ def load_rows(path: Path, user_ids: set[str] | None) -> list[dict]:
 
 def main() -> int:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--rewrites-dir", default="results/rewrites")
-    ap.add_argument("--out-dir", default="results/embeddings")
-    ap.add_argument("--subset", default="results/eval_subset.json")
+    ap.add_argument("--rewrites-dir", default="outputs/rewrites")
+    ap.add_argument("--out-dir", default="outputs/embeddings")
+    ap.add_argument("--subset", default="outputs/eval_subset.json")
     ap.add_argument("--methods", default="table2", help="comma-separated names, or 'table2'/'all'")
     ap.add_argument("--steps", type=int, default=50)
     ap.add_argument("--guidance-scale", type=float, default=7.0)
-    ap.add_argument("--batch-size", type=int, default=16)
+    ap.add_argument("--model", default=None,
+                    help="t2i repo id; default SDXL, or TV_SD_MODEL. Use "
+                         "stable-diffusion-v1-5/stable-diffusion-v1-5 for the paper setting")
+    ap.add_argument("--batch-size", type=int, default=0,
+                    help="0 = per-model default (8 for v1-5 at 512px, 2 for SDXL at 1024px)")
     ap.add_argument("--save-images", type=int, default=0)
-    ap.add_argument("--images-dir", default="results/images")
+    ap.add_argument("--images-dir", default="outputs/images")
     ap.add_argument("--limit", type=int, default=0)
     ap.add_argument("--overwrite", action="store_true")
     args = ap.parse_args()
@@ -66,7 +70,7 @@ def main() -> int:
         print(f"[generate] restricted to {len(user_ids)} users from {args.subset}")
 
     if args.methods in ("table2", "all"):
-        from tv.pipeline import icl_ablation_methods, table2_methods, topk_ablation_methods
+        from tailored_visions_repro.pipeline import icl_ablation_methods, table2_methods, topk_ablation_methods
 
         specs = table2_methods()
         if args.methods == "all":
@@ -95,9 +99,14 @@ def main() -> int:
         print("[generate] all embeddings present; use --overwrite to redo")
         return 0
 
-    cfg = GenConfig(steps=args.steps, guidance_scale=args.guidance_scale, batch_size=args.batch_size)
-    print("[generate] loading SD v1-5 ...")
-    sd = SDGenerator(config=cfg)
+    cfg = GenConfig(steps=args.steps, guidance_scale=args.guidance_scale,
+                    batch_size=args.batch_size or None)
+    model_name = args.model or DEFAULT_MODEL
+    print(f"[generate] loading {model_name} ...")
+    sd = SDGenerator(model_name=model_name, config=cfg)
+    # Resolution and batch size are per-model; take what the generator settled on.
+    cfg = sd.config
+    batch_size = cfg.batch_size
     scorer = CLIPScorer()
 
     truncation: dict[str, float] = {}
@@ -109,8 +118,8 @@ def main() -> int:
         embs = np.zeros((len(prompts), 512), dtype=np.float32)
         t0 = time.time()
         saved = 0
-        for start in range(0, len(prompts), args.batch_size):
-            stop = min(start + args.batch_size, len(prompts))
+        for start in range(0, len(prompts), batch_size):
+            stop = min(start + batch_size, len(prompts))
             images = sd.generate(prompts[start:stop], seeds[start:stop])
             # The safety checker blanks flagged images to solid black, which
             # would silently produce meaningless CLIP embeddings rather than an
@@ -134,7 +143,7 @@ def main() -> int:
                     img.save(img_dir / f"{key.replace('/', '_')}.png")
                     saved += 1
             del images
-            if start % (args.batch_size * 10) == 0 or stop == len(prompts):
+            if start % (batch_size * 10) == 0 or stop == len(prompts):
                 rate = stop / max(time.time() - t0, 1e-9)
                 eta = (len(prompts) - stop) / max(rate, 1e-9)
                 print(
@@ -154,11 +163,11 @@ def main() -> int:
     (out_dir / "gen_meta.json").write_text(
         json.dumps(
             {
-                "model": "stable-diffusion-v1-5",
-                "scheduler": "PNDM",
+                "model": model_name,
+                "scheduler": type(sd.pipe.scheduler).__name__,
                 "steps": args.steps,
                 "guidance_scale": args.guidance_scale,
-                "resolution": [512, 512],
+                "resolution": [cfg.height, cfg.width],
                 "clip_metric_model": "openai/clip-vit-base-patch32",
                 "seeding": "sha256(sample_key), shared across methods",
                 "n_samples": len(base_rows),

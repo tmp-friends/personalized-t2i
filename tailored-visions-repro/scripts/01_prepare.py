@@ -21,10 +21,10 @@ from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
-from tv.data import list_user_ids, load_user, write_jsonl  # noqa: E402
-from tv.retrieval import dedup_history  # noqa: E402
+from tailored_visions_repro.data import list_user_ids, load_user, write_jsonl  # noqa: E402
+from tailored_visions_repro.retrieval import dedup_history  # noqa: E402
 
 
 def _dedup_one(args):
@@ -45,7 +45,7 @@ def _dedup_one(args):
 
 def main() -> int:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--data-dir", default="data/user_data")
+    ap.add_argument("--data-dir", default="data/raw/user_data")
     ap.add_argument("--cache-dir", default="data/cache")
     ap.add_argument("--limit-users", type=int, default=0, help="0 = all users")
     ap.add_argument("--bleu-threshold", type=float, default=0.5)
@@ -89,7 +89,7 @@ def main() -> int:
         return 0
 
     # ---- CLIP text embeddings for EBR -------------------------------------
-    from tv.retrieval import EBRRetriever
+    from tailored_visions_repro.retrieval import EBRRetriever
 
     print(f"[prepare] encoding with {args.clip_model} ...")
     retriever = EBRRetriever(model_name=args.clip_model)
@@ -111,7 +111,7 @@ def main() -> int:
             query_texts.append(t["query"])
     query_embs = retriever.encode(query_texts)
 
-    from tv import prompt_templates as PT
+    from tailored_visions_repro import prompt_templates as PT
 
     demo_embs = retriever.encode([ex[-2] for ex in PT.EXAMPLES])
 
