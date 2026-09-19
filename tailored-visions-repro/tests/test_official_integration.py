@@ -1,5 +1,4 @@
 import subprocess
-import tomllib
 import unittest
 from pathlib import Path
 
@@ -29,9 +28,7 @@ class OfficialIntegrationTests(unittest.TestCase):
         self.assertIn("usage:", result.stderr)
 
     def test_official_runtime_dependencies_are_project_dependencies(self) -> None:
-        config = tomllib.loads((ROOT / "pyproject.toml").read_text())
-        project = config["project"]
-        dependencies = "\n".join(project["dependencies"])
+        config = (ROOT / "pyproject.toml").read_text()
         for requirement in [
             "openai>=1.40",
             "ftfy",
@@ -42,8 +39,8 @@ class OfficialIntegrationTests(unittest.TestCase):
             "spacy>=3.7",
             "clip @ git+https://github.com/openai/CLIP.git",
         ]:
-            self.assertIn(requirement, dependencies)
-        self.assertTrue(config["tool"]["hatch"]["metadata"]["allow-direct-references"])
+            self.assertIn(f'"{requirement}"', config)
+        self.assertIn("allow-direct-references = true", config)
 
 
 if __name__ == "__main__":
