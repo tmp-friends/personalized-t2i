@@ -342,7 +342,7 @@ wheels = [
 ]
 
 [[package]]
-name = "fan-official"
+name = "fan-repro"
 version = "0.1.0"
 source = { virtual = "." }
 dependencies = [

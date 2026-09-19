@@ -1,6 +1,14 @@
 """CPU/GPU smoke test: FAN on the CLIP-L text encoder only (no diffusion model needed)."""
-import sys, torch
-sys.path.insert(0, __import__("os").path.dirname(__import__("os").path.abspath(__file__)))
+import sys
+from pathlib import Path
+
+import torch
+
+ROOT = Path(__file__).resolve().parents[1]
+PATCHED_UPSTREAM = ROOT / ".work/upstream"
+if not (PATCHED_UPSTREAM / "fan").is_dir():
+    raise SystemExit("run `python scripts/prepare_upstream.py` first")
+sys.path.insert(0, str(PATCHED_UPSTREAM))
 from transformers import CLIPModel, CLIPProcessor
 from fan import FAN
 import transformers, diffusers
@@ -8,7 +16,7 @@ print("transformers", transformers.__version__, "diffusers", diffusers.__version
 dev = "cuda" if torch.cuda.is_available() else "cpu"
 model = CLIPModel.from_pretrained("openai/clip-vit-large-patch14").to(dev).eval()
 processor = CLIPProcessor.from_pretrained("openai/clip-vit-large-patch14")
-fan = FAN(model, processor, decoder="weight/L.pth")
+fan = FAN(model, processor, decoder=str(PATCHED_UPSTREAM / "weight/L.pth"))
 tgt = "A photograph of an astronaut riding a horse"
 ref = ["A retro-futuristic space exploration movie poster with bold, vibrant colors"]
 with torch.no_grad():

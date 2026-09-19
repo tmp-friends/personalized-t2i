@@ -1,5 +1,5 @@
 [project]
-name = "fan-official"
+name = "fan-repro"
 version = "0.1.0"
 description = "Environment for the official FAN implementation (Foundation Encoders Are All You Need for Preference-Aware Personalization, CVPR 2026)"
 requires-python = ">=3.10,<3.13"
