@@ -28,7 +28,7 @@ def main():
     ap.add_argument("--min-pos", type=int, default=8)
     ap.add_argument("--min-neg", type=int, default=6)
     ap.add_argument("--seed", type=int, default=0)
-    ap.add_argument("--data-dir", default=str(ROOT / "data" / "prefbench"))
+    ap.add_argument("--data-dir", default=str(ROOT / "data" / "raw" / "prefbench"))
     ap.add_argument("--extract", action="store_true", help="stream tar parts and extract manifest images")
     args = ap.parse_args()
 

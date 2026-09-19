@@ -21,6 +21,7 @@ class RepositoryLayoutTests(unittest.TestCase):
             "upstream",
             "patches/series",
             "scripts",
+            "docs/DEVIATIONS.md",
             "docs/summary.html",
         ]
         for method in METHODS:

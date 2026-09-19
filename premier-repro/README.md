@@ -117,7 +117,8 @@ uv run python scripts/train_official_user.py \
 - 公式checkpointingの1行不具合は `patches/0001-fix-single-block-checkpoint-kwarg.patch` で管理する。
 - 独自再現の評価指標は公式配布物に含まれないため、`src/premier_repro/eval/` に実装している。
 
-詳細は [docs/OFFICIAL_SETUP.md](docs/OFFICIAL_SETUP.md) を参照。
+公式 setup は [docs/OFFICIAL_SETUP.md](docs/OFFICIAL_SETUP.md)、patch 判断と未検証範囲は
+[docs/DEVIATIONS.md](docs/DEVIATIONS.md) を参照。
 
 ## 9. データ、重み、生成物
 

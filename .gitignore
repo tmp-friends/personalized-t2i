@@ -22,7 +22,6 @@
 **/image_result/
 
 # Downloaded datasets, caches, and model weights
-premier-repro/data/
 **/data/cache/
 **/weights/
 **/checkpoints/

@@ -2,7 +2,7 @@
 seed: 0
 device: cuda
 paths:
-  manifest: data/prefbench/manifest.json
+  manifest: data/raw/prefbench/manifest.json
   cache_dir: data/cache
   output_dir: outputs/stage1_default
 data:

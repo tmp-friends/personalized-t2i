@@ -43,3 +43,22 @@ class PremierLayoutTests(unittest.TestCase):
             )
             self.assertEqual(result.returncode, 0, result.stderr)
             self.assertIn("usage:", result.stdout)
+
+    def test_examples_are_trackable_and_downloads_use_raw_data(self) -> None:
+        fixture = subprocess.run(
+            ["git", "check-ignore", "premier-repro/data/examples/new-fixture.png"],
+            cwd=ROOT.parent,
+            stdout=subprocess.PIPE,
+        )
+        raw = subprocess.run(
+            ["git", "check-ignore", "premier-repro/data/raw/prefbench/manifest.json"],
+            cwd=ROOT.parent,
+            stdout=subprocess.PIPE,
+        )
+        self.assertEqual(fixture.returncode, 1)
+        self.assertEqual(raw.returncode, 0)
+        active = [ROOT / "scripts", ROOT / "src", ROOT / "configs"]
+        for base in active:
+            for source in base.rglob("*"):
+                if source.suffix in {".py", ".yaml"}:
+                    self.assertNotIn("data/prefbench", source.read_text(), str(source))

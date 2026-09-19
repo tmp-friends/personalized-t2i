@@ -129,6 +129,8 @@ def prepare(method_root: Path, expected_sha: str) -> Path:
         shutil.rmtree(previous, ignore_errors=True)
     except Exception:
         shutil.rmtree(next_dir, ignore_errors=True)
+        if not current.exists() and previous.exists():
+            os.replace(previous, current)
         raise
     return current
 

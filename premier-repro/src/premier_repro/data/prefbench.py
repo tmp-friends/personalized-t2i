@@ -7,10 +7,10 @@ Every user has 2 records that share (most of) the reference images, so we
 merge them into one user entry with de-duplicated preferred / dispreferred
 (image, prompt) pairs.
 
-Manifest layout (data/prefbench/manifest.json):
+Manifest layout (data/raw/prefbench/manifest.json):
   {
     "source": "wenyii/PrefBench:diffusiondb",
-    "image_root": "data/prefbench/images",
+    "image_root": "data/raw/prefbench/images",
     "train_users": [uid, ...], "test_users": [uid, ...],
     "users": { uid: {"split": "train"|"test",
                      "pos": [{"image": "diffusiondb/x.png", "prompt": "..."}],
@@ -68,7 +68,7 @@ def build_manifest(
     min_neg: int = 6,
     seed: int = 0,
     pkl_path: Path | None = None,
-    image_root: str = "data/prefbench/images",
+    image_root: str = "data/raw/prefbench/images",
 ) -> dict:
     records = json.load(open(json_path))
     users = merge_users(records)

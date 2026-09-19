@@ -1,10 +1,16 @@
 from __future__ import annotations
 
+import os
 import subprocess
+import sys
 import tempfile
 import unittest
 import warnings
 from pathlib import Path
+from unittest import mock
+
+ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT))
 
 from tools.upstream import PreparationError, prepare
 
@@ -86,3 +92,24 @@ class PrepareUpstreamTests(unittest.TestCase):
             warnings.simplefilter("error", DeprecationWarning)
             output = prepare(self.method, sha)
         self.assertEqual((output / "value.txt").read_text(), "upstream\n")
+
+    def test_swap_failure_restores_previous_materialization(self) -> None:
+        sha = self.make_upstream()
+        current = prepare(self.method, sha)
+        (current / "sentinel.txt").write_text("keep\n")
+        self.write_patch(
+            "diff --git a/value.txt b/value.txt\n"
+            "--- a/value.txt\n+++ b/value.txt\n"
+            "@@ -1 +1 @@\n-upstream\n+patched\n"
+        )
+        real_replace = os.replace
+
+        def fail_install(source, destination):
+            if Path(source).name.startswith("upstream-next-"):
+                raise OSError("simulated install rename failure")
+            return real_replace(source, destination)
+
+        with mock.patch("tools.upstream.os.replace", side_effect=fail_install):
+            with self.assertRaisesRegex(OSError, "simulated"):
+                prepare(self.method, sha)
+        self.assertEqual((current / "sentinel.txt").read_text(), "keep\n")

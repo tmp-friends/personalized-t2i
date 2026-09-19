@@ -1,16 +1,16 @@
 #!/usr/bin/env python
 """A minimal OpenAI-compatible chat server, so this repo runs without an API key.
 
-The paper's rewriter is ChatGPT, reached through ``apiuse.py``. Rather than
-rewrite that call path, this serves a local model at the same endpoint:
+The paper's rewriter is ChatGPT, reached through ``apiuse.py``. This server
+provides the same OpenAI-compatible endpoint with a local model:
 
     python serve_local_llm.py                 # http://127.0.0.1:8000/v1
     export TV_OPENAI_BASE=http://127.0.0.1:8000/v1
     export TV_OPENAI_KEY=local
     python demo.py --input_prompt='a cat'
 
-``apiuse.py`` is then byte-identical to upstream in everything that matters --
-it still calls ``openai.ChatCompletion.create`` and still talks HTTP. Point
+The compatibility patch updates ``apiuse.py`` to the current ``OpenAI`` client,
+but the request still uses the standard chat-completions HTTP contract. Point
 ``TV_OPENAI_BASE`` at the real API instead and nothing else changes.
 
 Only ``POST /v1/chat/completions`` is implemented, which is all this repo uses.

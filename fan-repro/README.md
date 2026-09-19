@@ -98,6 +98,8 @@ SD1.5 の重みと当時の生成画像は 2026-09-19 にディスク整理で�
 - FLUX.1-dev は公式の `pipeline.to("cuda")` では 24 GB に収まらず、offload または量子化が別途必要。
 - SD3.5、SDXL、unCLIP、CLIP 検索、LLaVA 経路は未検証。
 
+patch 判断と未検証範囲は [docs/DEVIATIONS.md](docs/DEVIATIONS.md) にまとめる。
+
 ## 9. データ、重み、生成物
 
 | 種類 | パス | Git |
