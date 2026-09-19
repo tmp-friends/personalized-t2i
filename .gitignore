@@ -1,0 +1,39 @@
+# Python environments and caches
+**/.venv/
+**/venv/
+**/__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.ipynb_checkpoints/
+
+# Local configuration and credentials
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Logs and generated outputs
+*.log
+**/outputs/
+**/results/
+**/image_result/
+
+# Downloaded datasets, caches, and model weights
+premier-repro/data/
+**/data/cache/
+**/weights/
+**/checkpoints/
+*.safetensors
+*.ckpt
+*.pt
+*.pth
+*.onnx
+
+# Editor and OS metadata
+.DS_Store
+.idea/
+.vscode/
+*~

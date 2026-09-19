@@ -1,0 +1,74 @@
+# Premier reproduction — default (single RTX 4090, 24 GB)
+seed: 0
+device: cuda
+paths:
+  manifest: data/prefbench/manifest.json
+  cache_dir: data/cache
+  output_dir: outputs/stage1_default
+data:
+  resolution: 512          # paper resolution not stated; 512 keeps FLUX training feasible on 24 GB
+  max_len: 256             # T5 sequence length (FLUX default 512; PrefBench prompts are <= 61 tokens)
+  n_train_users: 300       # paper: 1000 (public PrefBench has ~8-10 preferred images / user)
+  per_user_limit: null
+  n_test_users: 50
+model:
+  transformer_id: black-forest-labs/FLUX.1-dev
+  aux_id: black-forest-labs/FLUX.1-schnell    # VAE / CLIP-L / T5-XXL (identical to dev's)
+  quant: quanto_fp8                            # float8 weights for the frozen DiT blocks
+  gradient_checkpointing: true
+premier:
+  user_tokens: 30
+  user_dim: 1024
+  adapter_dim: 1024
+  adapter_heads: 16
+  adapter_blocks: 3
+  use_shared: true
+  use_distinct: true
+  distinct_blocks: all      # 19 double + 38 single = 57 per-block modulation directions
+  adapter_text: prompt      # "empty" = ablation "w/o PPM"
+  zero_init: true
+  user_init_std: 1.0
+train:
+  batch_size: 2
+  grad_accum: 4             # effective batch 8
+  steps: 3000
+  optimizer: prodigy
+  lr: 1.0
+  weight_decay: 0.01
+  grad_clip: 1.0
+  timestep_scheme: logit_normal
+  timestep_shift: dynamic
+  guidance: 1.0             # guidance embedding value used while training FLUX.1-dev
+  lambda_shared: 0.1
+  lambda_distinct: 0.1
+  disp_users: 16            # users per dispersion term (batch users + random training users)
+  disp_tokens: 16           # empty-prompt token positions used for the dispersion loss
+  disp_tau: 1.0
+  log_every: 10
+  save_every: 500
+  sample_every: 500
+  sample_steps: 20
+  sample_users: 4
+  sample_prompts:
+    - "a cat sitting on a windowsill"
+    - "a portrait of a woman"
+    - "a city street at night"
+    - "a mountain landscape"
+  num_workers: 4
+  resume: null
+stage2:
+  mode: linear              # linear (paper default) | direct
+  k_shot: 8
+  steps: 300                # paper: 5000 steps, batch 2 on an A800
+  batch_size: 2
+  optimizer: prodigy
+  lr: 1.0
+  weight_decay: 0.0
+  coef_init: uniform
+  log_every: 10
+eval:
+  steps: 28
+  guidance: 3.5
+  n_users: 20
+  max_eval_prompts: 4       # held-out preferred (prompt, image) pairs per user
+  seed: 1234

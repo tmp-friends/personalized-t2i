@@ -1,0 +1,710 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tailored Visions 実装ノート</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap">
+<style>
+:root{
+  --paper:#f7f7f5; --surface:#ffffff; --surface-2:#f0f1ee; --surface-3:#e8eae6;
+  --ink:#191b1a; --ink-2:#4a504e; --ink-3:#7c8481;
+  --rule:#dfe1dd; --rule-strong:#c6cac5;
+  --accent:#0f6b63; --accent-ink:#0b504a; --accent-soft:#e0efec;
+  --crit:#a63a26; --crit-soft:#f8e7e2;
+  --warn:#8a6512; --warn-soft:#f7edd9;
+  --ok:#2f6b34; --ok-soft:#e5f0e4;
+  --shadow:0 1px 2px rgba(25,27,26,.05), 0 8px 24px -16px rgba(25,27,26,.28);
+  --jp:"Hiragino Kaku Gothic ProN","Hiragino Sans","Noto Sans JP","Yu Gothic",Meiryo,sans-serif;
+  --sans:"Archivo",var(--jp);
+  --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#121514; --surface:#1a1e1d; --surface-2:#212625; --surface-3:#272d2b;
+    --ink:#e8ebe9; --ink-2:#a7b0ad; --ink-3:#7a8481;
+    --rule:#2c3230; --rule-strong:#3b4341;
+    --accent:#4fbfae; --accent-ink:#77d3c4; --accent-soft:#15302c;
+    --crit:#e08a72; --crit-soft:#2f1d18;
+    --warn:#d8ab55; --warn-soft:#2d2415;
+    --ok:#7fbe80; --ok-soft:#1c2c1d;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px -16px rgba(0,0,0,.7);
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#121514; --surface:#1a1e1d; --surface-2:#212625; --surface-3:#272d2b;
+  --ink:#e8ebe9; --ink-2:#a7b0ad; --ink-3:#7a8481;
+  --rule:#2c3230; --rule-strong:#3b4341;
+  --accent:#4fbfae; --accent-ink:#77d3c4; --accent-soft:#15302c;
+  --crit:#e08a72; --crit-soft:#2f1d18;
+  --warn:#d8ab55; --warn-soft:#2d2415;
+  --ok:#7fbe80; --ok-soft:#1c2c1d;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px -16px rgba(0,0,0,.7);
+}
+
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0; background:var(--paper); color:var(--ink);
+  font-family:var(--sans); font-size:16px; line-height:1.75;
+  font-feature-settings:"palt" 1;
+}
+::selection{background:var(--accent-soft); color:var(--accent-ink)}
+a{color:var(--accent-ink); text-underline-offset:.18em; text-decoration-thickness:1px}
+a:hover{color:var(--accent)}
+:focus-visible{outline:2px solid var(--accent); outline-offset:3px; border-radius:2px}
+
+/* ---------- shell ---------- */
+.wrap{max-width:1180px; margin:0 auto; padding:0 28px}
+.layout{display:grid; grid-template-columns:minmax(0,1fr); gap:56px; padding:56px 0 96px}
+@media (min-width:1040px){
+  .layout{grid-template-columns:206px minmax(0,1fr); gap:64px}
+}
+
+/* ---------- masthead ---------- */
+.mast{border-bottom:1px solid var(--rule); background:var(--surface)}
+.mast-in{padding:40px 0 34px; display:flex; flex-direction:column; gap:22px}
+.eyebrow{
+  font-family:var(--mono); font-size:11.5px; font-weight:500; letter-spacing:.13em;
+  text-transform:uppercase; color:var(--ink-3); display:flex; flex-wrap:wrap; gap:10px 16px;
+}
+.eyebrow b{color:var(--accent-ink); font-weight:500}
+h1{
+  margin:0; font-size:clamp(30px,4.4vw,46px); line-height:1.18; font-weight:700;
+  letter-spacing:-.018em; text-wrap:balance;
+}
+h1 .sub{display:block; font-size:clamp(15px,1.7vw,18px); font-weight:500; color:var(--ink-2); letter-spacing:0; margin-top:12px; line-height:1.6}
+.mast-meta{
+  display:flex; flex-wrap:wrap; gap:8px 10px; font-family:var(--mono); font-size:12px;
+}
+.tag{
+  border:1px solid var(--rule-strong); border-radius:999px; padding:3px 11px;
+  color:var(--ink-2); background:var(--paper); white-space:nowrap;
+}
+.tag.on{border-color:var(--accent); color:var(--accent-ink); background:var(--accent-soft)}
+
+/* ---------- rail ---------- */
+.rail{display:none}
+@media (min-width:1040px){
+  .rail{display:block; position:sticky; top:28px; align-self:start; max-height:calc(100vh - 56px); overflow-y:auto}
+}
+.rail h2{
+  font-family:var(--mono); font-size:11px; letter-spacing:.13em; text-transform:uppercase;
+  color:var(--ink-3); margin:0 0 12px; font-weight:500;
+}
+.rail ol{list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:1px; counter-reset:r}
+.rail a{
+  display:flex; gap:9px; padding:5px 0; font-size:13.5px; line-height:1.45;
+  color:var(--ink-2); text-decoration:none; border-left:2px solid transparent; padding-left:12px;
+}
+.rail a::before{
+  counter-increment:r; content:counter(r,decimal-leading-zero);
+  font-family:var(--mono); font-size:10.5px; color:var(--ink-3); padding-top:3px;
+}
+.rail a:hover{color:var(--ink); border-left-color:var(--rule-strong)}
+
+/* ---------- prose ---------- */
+main{min-width:0}
+section{scroll-margin-top:24px}
+section + section{margin-top:64px}
+h2.sec{
+  margin:0 0 20px; font-size:24px; font-weight:700; letter-spacing:-.012em; line-height:1.35;
+  padding-bottom:12px; border-bottom:2px solid var(--ink); text-wrap:balance;
+}
+h2.sec .n{font-family:var(--mono); font-size:13px; font-weight:500; color:var(--accent-ink); margin-right:12px; letter-spacing:.04em}
+h3{margin:36px 0 12px; font-size:17px; font-weight:600; letter-spacing:-.005em; line-height:1.5; text-wrap:balance}
+h4{margin:24px 0 8px; font-size:14.5px; font-weight:600; color:var(--ink-2)}
+p{margin:0 0 16px; max-width:70ch}
+ul,ol{margin:0 0 16px; padding-left:1.3em; max-width:70ch}
+li{margin-bottom:7px}
+li::marker{color:var(--ink-3)}
+strong{font-weight:600}
+code{
+  font-family:var(--mono); font-size:.855em; background:var(--surface-2);
+  border:1px solid var(--rule); border-radius:4px; padding:.1em .38em; white-space:nowrap;
+}
+a code{color:inherit}
+.lead{font-size:17px; color:var(--ink-2); max-width:66ch}
+
+/* ---------- code blocks ---------- */
+pre{
+  margin:0 0 18px; background:var(--surface); border:1px solid var(--rule);
+  border-radius:8px; padding:16px 18px; overflow-x:auto; box-shadow:var(--shadow);
+}
+pre code{
+  background:none; border:0; padding:0; white-space:pre; font-size:13px; line-height:1.68;
+  color:var(--ink); display:block;
+}
+pre .c{color:var(--ink-3)}
+pre .p{color:var(--accent-ink); font-weight:500}
+.codehead{
+  font-family:var(--mono); font-size:11px; letter-spacing:.1em; text-transform:uppercase;
+  color:var(--ink-3); margin:0 0 7px;
+}
+
+/* ---------- tables ---------- */
+.tscroll{overflow-x:auto; margin:0 0 18px; border:1px solid var(--rule); border-radius:8px; background:var(--surface)}
+table{border-collapse:collapse; width:100%; font-size:13.5px; line-height:1.6}
+th,td{text-align:left; padding:10px 14px; border-bottom:1px solid var(--rule); vertical-align:top}
+thead th{
+  font-family:var(--mono); font-size:11px; letter-spacing:.08em; text-transform:uppercase;
+  color:var(--ink-3); font-weight:500; background:var(--surface-2); white-space:nowrap;
+  border-bottom:1px solid var(--rule-strong);
+}
+tbody tr:last-child td{border-bottom:0}
+td.num,th.num{text-align:right; font-family:var(--mono); font-variant-numeric:tabular-nums; white-space:nowrap}
+td.mono{font-family:var(--mono); font-size:12.5px; white-space:nowrap}
+tbody tr.best td{background:var(--accent-soft)}
+.tnote{font-size:12.5px; color:var(--ink-3); margin:-8px 0 18px; max-width:70ch}
+
+/* ---------- chips ---------- */
+.chip{
+  display:inline-block; font-family:var(--mono); font-size:10.5px; font-weight:500;
+  letter-spacing:.05em; padding:2px 8px; border-radius:3px; white-space:nowrap;
+}
+.chip.crit{background:var(--crit-soft); color:var(--crit)}
+.chip.wrong{background:var(--warn-soft); color:var(--warn)}
+.chip.dep{background:var(--surface-3); color:var(--ink-2)}
+.chip.use{background:var(--accent-soft); color:var(--accent-ink)}
+.chip.ok{background:var(--ok-soft); color:var(--ok)}
+
+/* ---------- callout ---------- */
+.note{
+  border-left:3px solid var(--accent); background:var(--surface); border-radius:0 8px 8px 0;
+  padding:16px 20px; margin:0 0 20px; box-shadow:var(--shadow);
+}
+.note.warn{border-left-color:var(--warn)}
+.note.crit{border-left-color:var(--crit)}
+.note > :last-child{margin-bottom:0}
+.note h4{margin-top:0}
+
+/* ---------- pipeline ---------- */
+.flow{display:grid; gap:12px; margin:0 0 8px}
+@media (min-width:820px){.flow{grid-template-columns:repeat(3,1fr); gap:14px}}
+.stage{
+  background:var(--surface); border:1px solid var(--rule); border-radius:8px;
+  padding:14px 16px; display:flex; flex-direction:column; gap:9px; box-shadow:var(--shadow);
+}
+.stage-h{display:flex; align-items:baseline; gap:9px; border-bottom:1px solid var(--rule); padding-bottom:8px}
+.stage-h .k{font-family:var(--mono); font-size:10.5px; color:var(--accent-ink); letter-spacing:.08em}
+.stage-h .t{font-size:14px; font-weight:600}
+.stage .what{font-size:12.5px; color:var(--ink-2); line-height:1.6; margin:0}
+.stage .ex{
+  font-family:var(--mono); font-size:11.5px; line-height:1.6; color:var(--ink);
+  background:var(--surface-2); border:1px solid var(--rule); border-radius:5px; padding:9px 11px;
+  white-space:pre-wrap; word-break:break-word; margin-top:auto;
+  font-variant-numeric:tabular-nums;
+}
+.stage .ex em{color:var(--ink-3); font-style:normal}
+
+/* ---------- bars ---------- */
+.bars{display:flex; flex-direction:column; gap:14px; margin:4px 0 10px; max-width:640px}
+.bar-row{display:grid; grid-template-columns:1fr; gap:5px}
+.bar-lab{display:flex; justify-content:space-between; align-items:baseline; gap:14px; font-size:13px}
+.bar-lab .v{font-family:var(--mono); font-variant-numeric:tabular-nums; font-weight:500; color:var(--accent-ink); white-space:nowrap}
+.bar-track{height:9px; background:var(--surface-2); border:1px solid var(--rule); border-radius:999px; overflow:hidden}
+.bar-fill{height:100%; background:var(--accent); border-radius:999px}
+.bar-fill.mute{background:var(--ink-3)}
+.axis{display:flex; justify-content:space-between; font-family:var(--mono); font-size:10.5px; color:var(--ink-3); border-top:1px solid var(--rule); padding-top:5px; max-width:640px}
+
+/* ---------- key/value ---------- */
+.kv{display:grid; gap:0; border:1px solid var(--rule); border-radius:8px; overflow:hidden; background:var(--surface); margin:0 0 18px}
+.kv div{display:grid; grid-template-columns:1fr; gap:2px; padding:11px 15px; border-bottom:1px solid var(--rule)}
+@media (min-width:640px){.kv div{grid-template-columns:216px minmax(0,1fr); gap:16px; align-items:baseline}}
+.kv div:last-child{border-bottom:0}
+.kv dt{font-size:13px; color:var(--ink-2); font-weight:500}
+.kv dd{margin:0; font-size:13.5px; font-family:var(--mono); word-break:break-word}
+
+/* ---------- footer ---------- */
+footer{border-top:1px solid var(--rule); background:var(--surface)}
+.foot-in{padding:28px 0 40px; font-size:13px; color:var(--ink-3); display:flex; flex-wrap:wrap; gap:8px 28px}
+.foot-in a{color:var(--ink-2)}
+
+@media (prefers-reduced-motion:reduce){*{animation:none !important; transition:none !important}}
+@media print{
+  .rail,.mast-meta{display:none}
+  body{background:#fff; font-size:11pt}
+  pre,.tscroll,.stage,.note{box-shadow:none}
+  section{break-inside:avoid-page}
+}
+</style>
+</head>
+<body>
+
+<header class="mast">
+  <div class="wrap mast-in">
+    <div class="eyebrow">
+      <span>CVPR 2024 · <b>arXiv:2310.08129</b></span>
+      <span>zzjchen / Tailored-Visions</span>
+      <span>2026-09-05</span>
+    </div>
+    <h1>Tailored Visions 実装ノート
+      <span class="sub">ユーザの過去プロンプト履歴から嗜好を推定し、入力プロンプトを書き換えてから画像生成する手法。<br>論文の中身、公式実装に当てたパッチ 19 件、このマシンでの起動方法。</span>
+    </h1>
+    <div class="mast-meta">
+      <span class="tag on">公式実装 動作確認済み</span>
+      <span class="tag">RTX 4090 / CUDA 13</span>
+      <span class="tag">Python 3.12 · uv</span>
+      <span class="tag">PIP dataset 3,116 users</span>
+      <span class="tag">SD v1-5</span>
+    </div>
+  </div>
+</header>
+
+<div class="wrap layout">
+
+  <nav class="rail" aria-label="目次">
+    <h2>目次</h2>
+    <ol>
+      <li><a href="#paper">論文の中身</a></li>
+      <li><a href="#numbers">論文の評価結果</a></li>
+      <li><a href="#work">今回やったこと</a></li>
+      <li><a href="#patches">当てたパッチ 19 件</a></li>
+      <li><a href="#run">起動方法</a></li>
+      <li><a href="#verify">動作確認した範囲</a></li>
+      <li><a href="#repro">評価パイプライン</a></li>
+      <li><a href="#findings">分かったこと</a></li>
+      <li><a href="#files">ファイルの場所</a></li>
+    </ol>
+  </nav>
+
+  <main>
+
+  <!-- ================= 1 ================= -->
+  <section id="paper">
+    <h2 class="sec"><span class="n">01</span>論文の中身</h2>
+
+    <p class="lead">同じ「a cat」でも、猫の写真ばかり作ってきた人とアニメ塗りばかり作ってきた人では欲しい絵が違う。Tailored Visions は<strong>生成モデルを一切触らず</strong>、ユーザの過去プロンプト履歴を検索して LLM に渡し、プロンプトを書き換えることでこれを解く。</p>
+
+    <p>著者は Chen Zijie ほか (Westlake University)。自前の text-to-image サービスから収集した <strong>PIP (Personalized Image-Prompt) データセット</strong>（3,115 ユーザ / 300,237 プロンプト）を同時に公開している。</p>
+
+    <h3>パイプライン</h3>
+    <p>3 段。下段は実際にこのマシンで動かした出力（ユーザ <code>100440</code>、BM25 検索）。</p>
+
+    <div class="flow">
+      <div class="stage">
+        <div class="stage-h"><span class="k">STAGE 1</span><span class="t">Retriever</span></div>
+        <p class="what">現在のクエリに近い履歴プロンプトを top-k 件取る。<strong>EBR</strong>（CLIP ViT-L/14 のテキスト埋め込みで cosine 類似度）か <strong>BM25</strong>。論文の既定は k=3。</p>
+        <div class="ex"><em>query:</em>
+Women's jacket with rich color scheme and simple style</div>
+      </div>
+      <div class="stage">
+        <div class="stage-h"><span class="k">STAGE 2</span><span class="t">Rewriter</span></div>
+        <p class="what">検索した履歴を「このユーザの好み」の証拠として ChatGPT に渡し、書き換えさせる。デモ例を 1 件付ける <strong>1-shot ICL</strong> が最良。</p>
+        <div class="ex"><em>retrieved (BM25):</em>
+<em>12.62</em>  Women's clothes with a nice
+       color scheme … artstation
+<em> 6.71</em>  A woman wears a white jacket
+       … loose pants … artstation
+<em> 5.66</em>  jacket for women … artstation</div>
+      </div>
+      <div class="stage">
+        <div class="stage-h"><span class="k">STAGE 3</span><span class="t">T2I</span></div>
+        <p class="what">書き換え後のプロンプトを Stable Diffusion v1-5 に投げる。PNDM スケジューラ / 50 steps / CFG 7.0。</p>
+        <div class="ex"><em>rewritten:</em>
+A woman wears a women's jacket with a rich color scheme and simple style. The jacket features a nice color palette trending in artstation, paired with a simple inner layer and loose pants. …</div>
+      </div>
+    </div>
+    <p class="tnote">履歴に <code>trending in artstation</code> が頻出する → 書き換え後にもそれが入る。これが「嗜好の反映」の実体。</p>
+
+    <h3>書き換え指示文（論文 Table 1・逐語）</h3>
+    <p>手法の中核はこの 2 文だけ。<code>official/prompts.py</code> の <code>Example_template</code> にそのまま入っている。</p>
+    <pre><code>Prompt in text-to-image generation describes the detailed attributes of
+the object it plans to draw. User's preference in text-to-image generation
+is shown in history prompts.
+Given 3 history prompts, your task is to rewrite the current prompt so that
+it matches the user's preference. The rewritten prompt should retain primary
+objects in the original prompt and conform to the user's preference. Please
+avoid being too diffused and restrict your output within 70 words.</code></pre>
+
+    <h3>PIP データセット</h3>
+    <div class="tscroll">
+      <table>
+        <thead><tr><th>項目</th><th class="num">論文</th><th class="num">配布 zip の実測</th></tr></thead>
+        <tbody>
+          <tr><td>ユーザ数</td><td class="num">3,115</td><td class="num">3,116</td></tr>
+          <tr><td>train サンプル</td><td class="num">294,007</td><td class="num">294,023</td></tr>
+          <tr><td>test サンプル</td><td class="num">6,230</td><td class="num">6,232</td></tr>
+          <tr><td>合計</td><td class="num">300,237</td><td class="num">300,255</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="tnote">1 ユーザ分（train 16 件 / test 2 件）多い。配布ファイルをそのまま使っている。ユーザ 1 人あたり最低 18 枚生成しており、各ユーザから 2 件を test に抜く分割。test のクエリは元プロンプトを ChatGPT で短縮したもの。</p>
+
+    <h3>評価指標</h3>
+    <div class="kv">
+      <div><dt>PMS (Preference Matching Score)</dt><dd>2.5 · max(cos(E(I'<sub>u</sub>), E(P<sub>u</sub>)), 0)</dd></div>
+      <div><dt></dt><dd style="font-family:var(--sans);font-size:13px;color:var(--ink-2)">生成画像と「ユーザ嗜好 P<sub>u</sub>」（履歴を ChatGPT で 5 フレーズに要約したもの）の CLIPScore。</dd></div>
+      <div><dt>Image-Align</dt><dd>cos(E(I'<sub>u</sub>), E(I<sub>gt</sub>))</dd></div>
+      <div><dt></dt><dd style="font-family:var(--sans);font-size:13px;color:var(--ink-2)">生成画像と、ユーザが実際に保存した画像の CLIP 画像間類似度。</dd></div>
+      <div><dt>ROUGE-L (β=5)</dt><dd>rewritten vs. 元の完全プロンプト</dd></div>
+      <div><dt></dt><dd style="font-family:var(--sans);font-size:13px;color:var(--ink-2)">β=5 で recall 寄り。書き換えが元プロンプトをどれだけ復元できたか。</dd></div>
+    </div>
+    <p>画像系 2 指標は CLIP ViT-B/32、検索側の EBR は ViT-L/14 と、使い分けている。</p>
+  </section>
+
+  <!-- ================= 2 ================= -->
+  <section id="numbers">
+    <h2 class="sec"><span class="n">02</span>論文の評価結果</h2>
+
+    <p>Table 2。EBR + 1-shot ICL が総合最良で、著者はこれを既定としている。</p>
+    <div class="tscroll">
+      <table>
+        <thead><tr><th>Method</th><th>Retriever</th><th class="num">PMS ↑</th><th class="num">Image-Align ↑</th><th class="num">ROUGE-L ↑</th></tr></thead>
+        <tbody>
+          <tr><td>Shortened Prompt（書き換えなし）</td><td class="mono">–</td><td class="num">0.5567</td><td class="num">0.6272</td><td class="num">0.3268</td></tr>
+          <tr><td>Promptist</td><td class="mono">–</td><td class="num">0.5858</td><td class="num">0.6481</td><td class="num">0.2947</td></tr>
+          <tr><td>General PR（履歴なし書き換え）</td><td class="mono">–</td><td class="num">0.5996</td><td class="num">0.5912</td><td class="num">0.2082</td></tr>
+          <tr><td>Personalized PR</td><td class="mono">BM25</td><td class="num">0.6125</td><td class="num">0.6581</td><td class="num">0.3942</td></tr>
+          <tr><td>Personalized PR</td><td class="mono">EBR</td><td class="num">0.6083</td><td class="num">0.6485</td><td class="num">0.4137</td></tr>
+          <tr><td>Personalized PR + ICL</td><td class="mono">BM25</td><td class="num">0.6253</td><td class="num">0.6456</td><td class="num">0.4417</td></tr>
+          <tr class="best"><td><strong>Personalized PR + ICL</strong></td><td class="mono">EBR</td><td class="num"><strong>0.6179</strong></td><td class="num"><strong>0.6796</strong></td><td class="num"><strong>0.4686</strong></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="tnote">General PR は ROUGE-L が 0.2082 まで落ちる。履歴を見ずに勝手に盛るため、元プロンプトから乖離する。</p>
+
+    <h3>アブレーション</h3>
+    <ul>
+      <li><strong>検索件数 k</strong>（Table 4, EBR + 1-shot）: k=3 が ROUGE-L 0.4686 で最良。k を増やすと冗長な履歴が混ざり、入力も長くなって悪化。</li>
+      <li><strong>ICL のデモ数</strong>（Table 5）: 1-shot が最良。3, 5 と増やしても改善しない。</li>
+      <li><strong>入力の短さ</strong>（Table 3）: Noun / Noun Phrase / Short Sentence の 3 段階すべてでベースラインを上回る。名詞だけの入力でも ROUGE-L 0.1770 → 0.2804。</li>
+    </ul>
+
+    <h3>オンライン評価</h3>
+    <p>自社サービス上でのシングルブラインド。247 ユーザが 905 枚生成（元プロンプト 433 / 書き換え後 472）、ユーザの「保存」操作を指標にして <strong>Save 率 +17.1%</strong>。オフライン指標より説得力があるのはこちら。</p>
+  </section>
+
+  <!-- ================= 3 ================= -->
+  <section id="work">
+    <h2 class="sec"><span class="n">03</span>今回やったこと</h2>
+
+    <div class="note crit">
+      <h4>公式コードは配布状態では 1 行も動かない</h4>
+      <p style="margin-bottom:0"><code>main.py</code> が <code>MY_BASE</code> を import しておらず、<strong>あらゆる実行が起動直後に <code>NameError</code> で落ちる</strong>。それ以外にも実行を止めるバグが 6 件、結果を静かに間違えるバグが 4 件あった。</p>
+    </div>
+
+    <p>公式リポジトリ（<code>zzjchen/Tailored-Visions</code> @ <code>d0f4454</code>）をそのまま clone し、2026 年の環境で動くところまで持っていった。上流との差分は全て git に残してあり、各所に <code>[2026 patch]</code> コメントを付けてある。</p>
+
+    <pre><code><span class="c"># 上流からの差分</span>
+git -C official diff --stat d0f4454 HEAD
+
+ SD.py                 |   2 +-
+ apiuse.py             |  37 ++++++----
+ demo.py               |  32 +++++++--
+ download.py           |   5 +-
+ language.py           |  14 ++--
+ main.py               |  45 +++++++++----
+ prompts.py            |  13 +++-
+ SETUP.md              | 140 +++++++++++++++++++++++++
+ requirements-2026.txt |  27 ++++++
+ run.sh                |  62 ++++++++++++
+ serve_local_llm.py    | 182 +++++++++++++++++++++++++++++++++
+ 12 files changed, 522 insertions(+), 42 deletions(-)</code></pre>
+
+    <h3>ChatGPT なしで動かせるようにした</h3>
+    <p>上流は書き換えを ChatGPT に投げる設計で、API キーがないと何も確認できない。同じ <code>/v1/chat/completions</code> を喋る<strong>ローカルサーバ</strong>（<code>serve_local_llm.py</code>, Qwen3.5-4B）を足して、向き先を差し替えるだけで動くようにした。<code>apiuse.py</code> の呼び出し経路は上流のまま。</p>
+    <ul>
+      <li>リクエストは 50ms 単位でまとめてバッチ推論する。<code>main.py</code> は 1 件ずつ投げてくるので、これがないと 6,232 サンプルが現実的な時間で終わらない。</li>
+      <li>Qwen3.5 は既定で <code>&lt;think&gt;</code> ブロックを出す。書き換え結果に混入すると全指標が静かに壊れるので <code>enable_thinking=False</code> を指定。</li>
+    </ul>
+    <div class="note warn">
+      <p style="margin-bottom:0"><strong>論文の数値を再現したいならローカル LLM は使わないこと。</strong>書き換えモデルは手法そのものなので、モデルを替えれば数値は変わる。OpenAI のキーがあるなら環境変数を差し替えるだけでそちらに向く（<a href="#run">§05</a>）。</p>
+    </div>
+  </section>
+
+  <!-- ================= 4 ================= -->
+  <section id="patches">
+    <h2 class="sec"><span class="n">04</span>当てたパッチ 19 件</h2>
+
+    <p>すべて上流の実バグ。分類は 4 つ。</p>
+    <p style="display:flex;flex-wrap:wrap;gap:8px 12px;font-size:13px;max-width:none">
+      <span><span class="chip crit">CRASH</span> 落ちる（7）</span>
+      <span><span class="chip wrong">WRONG</span> 結果が誤る（4）</span>
+      <span><span class="chip dep">DEP</span> 依存が消滅（2）</span>
+      <span><span class="chip use">USE</span> 使い勝手（6）</span>
+    </p>
+
+    <div class="tscroll">
+      <table>
+        <thead><tr><th>種別</th><th>ファイル</th><th>内容</th></tr></thead>
+        <tbody>
+          <tr><td><span class="chip crit">CRASH</span></td><td class="mono">main.py</td><td><code>MY_BASE</code> を import せず使用 → <strong>全実行が <code>NameError</code></strong></td></tr>
+          <tr><td><span class="chip crit">CRASH</span></td><td class="mono">main.py</td><td><code>clip_model,=None</code> → <code>--retrieval=bm25</code> で <code>TypeError</code></td></tr>
+          <tr><td><span class="chip crit">CRASH</span></td><td class="mono">main.py</td><td><code>--t2i</code> なしのとき <code>None.to(device)</code> で <code>AttributeError</code></td></tr>
+          <tr><td><span class="chip crit">CRASH</span></td><td class="mono">main.py</td><td><code>os.mkdir</code> が <code>image_result/</code> 未作成時に失敗</td></tr>
+          <tr><td><span class="chip crit">CRASH</span></td><td class="mono">demo.py</td><td><code>StableDiffusionPipeline</code> を未 import のまま使用</td></tr>
+          <tr><td><span class="chip crit">CRASH</span></td><td class="mono">demo.py</td><td>リポジトリに存在しない <code>demo_user.jsonl</code> を参照 → データセットから自動生成するように</td></tr>
+          <tr><td><span class="chip crit">CRASH</span></td><td class="mono">download.py</td><td><code>@set_timeout(5, after_timeout())</code> — デコレート時にコールバックを<strong>呼んで</strong>おり、import しただけで <code>Time out!</code> を出力。callback には <code>None</code> が入るため実タイムアウト時に <code>TypeError</code></td></tr>
+
+          <tr><td><span class="chip wrong">WRONG</span></td><td class="mono">main.py</td><td><code>if self.retrieval=='full'</code> — CLI は <code>'ebr'</code>/<code>'bm25'</code> しか受け付けない。つまり <strong><code>--retrieval=ebr</code> は黙って BM25 で動いていた</strong>（＝公開コードでは論文の EBR 行を再現できない）</td></tr>
+          <tr><td><span class="chip wrong">WRONG</span></td><td class="mono">language.py</td><td>BM25 に<strong>生のクエリ文字列</strong>を渡しており <code>for q in query</code> が<strong>1 文字ずつ</strong>回っていた（文字単位マッチに退化）</td></tr>
+          <tr><td><span class="chip wrong">WRONG</span></td><td class="mono">language.py</td><td><code>sorted(…, key=lambda x: scores[sentences.index(x)])</code> — 同一プロンプトがあるとスコアを取り違える。かつ O(n² log n)</td></tr>
+          <tr><td><span class="chip wrong">WRONG</span></td><td class="mono">main.py</td><td>ICL テンプレートがクエリ非依存に構築されていた。デモ例はクエリとの類似度降順に並べる仕様（論文 4 節）なのでクエリ毎に再構築</td></tr>
+
+          <tr><td><span class="chip dep">DEP</span></td><td class="mono">main.py<br>demo.py<br>SD.py</td><td><code>runwayml/stable-diffusion-v1-5</code> は 2024-08 に Hub から削除。同一重みの再ホスト先 <code>stable-diffusion-v1-5/stable-diffusion-v1-5</code> に変更（<code>TV_SD_MODEL</code> で上書き可）</td></tr>
+          <tr><td><span class="chip dep">DEP</span></td><td class="mono">requirements.txt</td><td>2023 年のピン（torch 1.13.1 / numpy 1.21.5 / spacy 3.6.1）が Python 3.12 で解決不能 → <code>requirements-2026.txt</code> を追加</td></tr>
+
+          <tr><td><span class="chip use">USE</span></td><td class="mono">apiuse.py</td><td>失敗時に<strong>無限リトライ</strong>。キーが不正だと無言でハングする → 5 回で打ち切り、原因を出す</td></tr>
+          <tr><td><span class="chip use">USE</span></td><td class="mono">apiuse.py</td><td>キー / エンドポイント / モデルを環境変数から読めるように（ソース編集不要）</td></tr>
+          <tr><td><span class="chip use">USE</span></td><td class="mono">prompts.py</td><td><code>rank_examples</code> がクエリ毎に CLIP を再ロード → 1 回だけロードしてキャッシュ</td></tr>
+          <tr><td><span class="chip use">USE</span></td><td class="mono">main.py</td><td><code>--data_folder</code> / <code>--limit_users</code> を追加。上流は必ず全 3,116 ユーザを走査し、途中で止める手段がなかった</td></tr>
+          <tr><td><span class="chip use">USE</span></td><td class="mono">demo.py</td><td>README は <code>--input_prompt</code> だがコードは <code>--prompt</code> のみ受付 → 両対応</td></tr>
+          <tr><td><span class="chip use">USE</span></td><td class="mono">demo.py</td><td><code>--t2i</code> が <code>store_true</code> かつ <code>default=True</code> で<strong>オフにできない</strong> → <code>--no-t2i</code> を追加</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h4>あえて直していないもの</h4>
+    <ul>
+      <li><code>language.py:117</code> の <code>list(set(sentences))</code> が <code>checklines</code> の後段で順序を壊し、プロンプトと <code>image_urls</code> の対応がズレる。画像 URL が既に死んでいるので実害なし。</li>
+      <li><code>prompts.py</code> の ZS テンプレートが指示文と履歴ブロックを改行なしで連結している。挙動が変わるため上流のまま。</li>
+    </ul>
+  </section>
+
+  <!-- ================= 5 ================= -->
+  <section id="run">
+    <h2 class="sec"><span class="n">05</span>起動方法</h2>
+
+    <p><code>run.sh</code> がローカル LLM サーバの起動込みで面倒を見る。ターミナル 1 つで完結する。</p>
+
+    <p class="codehead">基本</p>
+    <pre><code>cd ~/stable-diffusion/personalized-t2i/tailored-visions-repro/official
+
+<span class="c"># 書き換え + 画像2枚（ori_prompt.png / personalized_prompt.png）</span>
+<span class="p">./run.sh demo 'a cat'</span>
+
+<span class="c"># 書き換えのみ・数秒（SD をロードしない）</span>
+<span class="p">./run.sh demo 'a cat' --no-t2i</span>
+
+<span class="c"># PIP データセットで実験。まず 5 ユーザで様子を見る</span>
+<span class="p">./run.sh main --limit_users=5</span>
+<span class="p">./run.sh main --limit_users=5 --t2i</span>
+<span class="c">#   -> image_result/&lt;日時&gt;/&lt;user&gt;-&lt;query&gt;-&lt;n&gt;/ に ori.png, generated.png, result.txt</span>
+
+<span class="c"># 全 3,116 ユーザ（--limit_users を省略）。--t2i 付きだと数日かかる</span>
+<span class="p">./run.sh main</span>
+
+<span class="c"># ローカル LLM サーバを止める（VRAM 約 9GB を解放）</span>
+<span class="p">./run.sh stop</span></code></pre>
+
+    <div class="note warn">
+      <p style="margin-bottom:0"><strong><code>run.sh</code> が起動する LLM サーバは nohup でバックグラウンドに残る。</strong>他の用途で GPU を使う前に <code>./run.sh stop</code> すること。認証はなく <code>127.0.0.1</code> のみに bind しているが、同じマシンの他ユーザからは叩ける。</p>
+    </div>
+
+    <p class="codehead">素の公式コードを直接叩く場合</p>
+    <pre><code>PY=../.venv/bin/python
+
+<span class="c"># ターミナル1</span>
+$PY serve_local_llm.py
+
+<span class="c"># ターミナル2</span>
+export TV_OPENAI_BASE=http://127.0.0.1:8000/v1
+export TV_OPENAI_KEY=local
+$PY demo.py --input_prompt='a cat'
+$PY main.py --retrieval=ebr --num_retrieval=3 --rewrite_method=ICL --ICL_shot=1 --t2i</code></pre>
+
+    <p class="codehead">本物の ChatGPT を使う場合（コード変更不要）</p>
+    <pre><code>export TV_OPENAI_KEY=sk-...          <span class="c"># OPENAI_API_KEY でも可</span>
+export TV_OPENAI_MODEL=gpt-4o-mini   <span class="c"># 省略時 gpt-3.5-turbo</span>
+unset TV_OPENAI_BASE                 <span class="c"># 公式エンドポイントに戻す</span>
+
+$PY demo.py --input_prompt='a cat'</code></pre>
+
+    <h3><code>main.py</code> の主な引数</h3>
+    <div class="tscroll">
+      <table>
+        <thead><tr><th>引数</th><th>値</th><th>意味</th></tr></thead>
+        <tbody>
+          <tr><td class="mono">--retrieval</td><td class="mono">ebr / bm25</td><td>検索方式。<code>ebr</code> は CLIP ViT-L/14 埋め込み</td></tr>
+          <tr><td class="mono">--num_retrieval</td><td class="mono">1 / 3 / 5 / 7</td><td>検索件数。既定 3（論文最良）</td></tr>
+          <tr><td class="mono">--rewrite_method</td><td class="mono">naive / ICL</td><td>デモ例なし / あり</td></tr>
+          <tr><td class="mono">--ICL_shot</td><td class="mono">1 / 3 / 5</td><td>デモ例の件数。既定 1（論文最良）</td></tr>
+          <tr><td class="mono">--t2i</td><td class="mono">flag</td><td>画像生成する。なしなら書き換えのみ</td></tr>
+          <tr><td class="mono">--limit_users</td><td class="mono">int</td><td class="mono"><span class="chip use">追加</span> 0 = 全ユーザ</td></tr>
+          <tr><td class="mono">--data_folder</td><td class="mono">path</td><td class="mono"><span class="chip use">追加</span> 既定 <code>user_data</code></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>準備済みのもの</h3>
+    <div class="kv">
+      <div><dt>PIP データセット</dt><dd>official/user_data → ../data/user_data</dd></div>
+      <div><dt>CLIP ViT-L/14, ViT-B/32</dt><dd>~/.cache/clip/</dd></div>
+      <div><dt>Stable Diffusion v1-5</dt><dd>~/.cache/huggingface/hub/ (7.0G)</dd></div>
+      <div><dt>Python 環境</dt><dd>../.venv （uv sync 済み・親と共有）</dd></div>
+      <div><dt>demo_user.jsonl</dt><dd>demo.py 初回実行時に自動生成</dd></div>
+    </div>
+    <p class="tnote">VRAM: LLM サーバ 約 9GB + <code>demo.py</code> 側の CLIP・SD で約 5GB。24GB あれば同時に動く。</p>
+  </section>
+
+  <!-- ================= 6 ================= -->
+  <section id="verify">
+    <h2 class="sec"><span class="n">06</span>動作確認した範囲</h2>
+
+    <p><code>{ebr, bm25}</code> × <code>{naive, ICL}</code> × <code>{--t2i あり / なし}</code> を実行。<strong>全実行で <code>error.jsonl</code> が 0 バイト</strong>、画像も正常生成を確認した。</p>
+
+    <div class="tscroll">
+      <table>
+        <thead><tr><th>実行</th><th>設定</th><th>結果</th></tr></thead>
+        <tbody>
+          <tr><td class="mono">demo.py</td><td>EBR + 1-shot ICL + t2i</td><td><span class="chip ok">OK</span> 書き換え + 画像2枚</td></tr>
+          <tr><td class="mono">demo.py</td><td>--no-t2i</td><td><span class="chip ok">OK</span> 数秒で書き換えのみ</td></tr>
+          <tr><td class="mono">main.py</td><td>EBR + ICL 1-shot, 3 users</td><td><span class="chip ok">OK</span> error.jsonl 0 byte</td></tr>
+          <tr><td class="mono">main.py</td><td>BM25 + naive, 1 user, --t2i</td><td><span class="chip ok">OK</span> ori.png / generated.png</td></tr>
+          <tr><td class="mono">main.py</td><td>EBR + naive, 1 user</td><td><span class="chip ok">OK</span></td></tr>
+          <tr><td class="mono">main.py</td><td>BM25 + ICL 1-shot, 1 user</td><td><span class="chip ok">OK</span></td></tr>
+          <tr><td class="mono">main.py</td><td>EBR + ICL 1-shot, 2 users, --t2i</td><td><span class="chip ok">OK</span> 4 枚生成</td></tr>
+          <tr><td class="mono">run.sh</td><td>コールドスタート / 別ディレクトリから</td><td><span class="chip ok">OK</span> サーバ自動起動</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="codehead">実際の出力例 — demo.py 'a cat'（ユーザ 87403, 89 件の履歴）</p>
+    <pre><code>Original Prompt: a cat
+Rewriten Prompt: A stunning cat with expressive eyes, sleek fur, and
+elegant posture, captured in a trending ArtStation style masterpiece.
+The image features high-quality realism, dramatic lighting, and intricate
+details, evoking a sense of wonder and beauty. Perfect for digital art
+enthusiasts seeking a captivating feline portrait.</code></pre>
+  </section>
+
+  <!-- ================= 7 ================= -->
+  <section id="repro">
+    <h2 class="sec"><span class="n">07</span>評価パイプライン（追加実装）</h2>
+
+    <p>公式リポジトリは<strong>書き換えと画像生成まで</strong>で、論文の評価指標を回すスクリプトが入っていない。加えて次の 2 つが欠けている。</p>
+    <ul>
+      <li><strong>データセットの画像 URL が死んでいる。</strong><code>result_url</code> の <code>cdn1.printidea.art</code> は 2024 年から到達不能（上流 README も認めている）。Image-Align はそのままでは計算できない。</li>
+      <li><strong>ユーザ嗜好 <code>P<sub>u</sub></code> が同梱されていない。</strong>PMS に必要な「履歴を 5 フレーズに要約したもの」がない。</li>
+    </ul>
+
+    <p>そこを埋めた実装が <code>tv/</code> + <code>scripts/</code>。Image-Align は「正解プロンプトから同一シードで生成した画像」との比較に代替してあり（上流 README が示唆する方法）、<strong>論文の指標とは別物</strong>として <code>image_align_proxy</code> の名前で報告する。</p>
+
+    <pre><code>cd ~/stable-diffusion/personalized-t2i/tailored-visions-repro
+<span class="p">./run_all.sh</span>                    <span class="c"># 一式（RTX 4090 で 3〜4時間）</span>
+<span class="p">./run_all.sh --skip-ablations</span>   <span class="c"># Table 2 と画像指標のみ（約1.5時間）</span></code></pre>
+    <p class="tnote">各ステージは再開可能。既に出力があるものはスキップするので、中断しても続きから走る。</p>
+
+    <div class="tscroll">
+      <table>
+        <thead><tr><th class="num">#</th><th>スクリプト</th><th>出力</th><th>状態</th></tr></thead>
+        <tbody>
+          <tr><td class="num">0</td><td class="mono">00_download_data.py</td><td>data/user_data/*.jsonl</td><td><span class="chip ok">完了</span></td></tr>
+          <tr><td class="num">1</td><td class="mono">01_prepare.py</td><td>履歴の重複除去 + CLIP 埋め込み</td><td><span class="chip ok">完了</span> 294,023 → 76,521</td></tr>
+          <tr><td class="num">2</td><td class="mono">02_rewrite.py</td><td>results/rewrites/&lt;method&gt;.jsonl</td><td><span class="chip use">3 / 7 手法</span></td></tr>
+          <tr><td class="num">3</td><td class="mono">03_subset.py</td><td>画像指標用の固定ユーザ集合（500）</td><td><span class="chip ok">完了</span></td></tr>
+          <tr><td class="num">4</td><td class="mono">04_preferences.py</td><td>PMS 用の嗜好要約 P<sub>u</sub></td><td><span class="chip dep">未実行</span></td></tr>
+          <tr><td class="num">5</td><td class="mono">05_generate.py</td><td>生成画像の CLIP 埋め込み</td><td><span class="chip dep">未実行</span></td></tr>
+          <tr><td class="num">6</td><td class="mono">06_evaluate.py</td><td>results/RESULTS.md, metrics.json</td><td><span class="chip ok">完了</span>（ROUGE-L のみ）</td></tr>
+          <tr><td class="num">7</td><td class="mono">07_leakage.py</td><td>results/leakage.json</td><td><span class="chip ok">完了</span></td></tr>
+          <tr><td class="num">8</td><td class="mono">08_examples.py</td><td>results/EXAMPLES.md</td><td><span class="chip dep">未実行</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>現時点の ROUGE-L（全 6,232 サンプル）</h3>
+    <div class="tscroll">
+      <table>
+        <thead><tr><th>Method</th><th class="num">ROUGE-L</th><th class="num">リーク除外後</th><th class="num">1-seg</th><th class="num">語数</th><th class="num">論文</th></tr></thead>
+        <tbody>
+          <tr><td>Shortened Prompt</td><td class="num">0.3964</td><td class="num">0.3395</td><td class="num">0.3961</td><td class="num">4.0</td><td class="num">0.3268</td></tr>
+          <tr><td>Promptist</td><td class="num">0.2954</td><td class="num">0.2799</td><td class="num">0.2945</td><td class="num">14.2</td><td class="num">0.2947</td></tr>
+          <tr><td>General PR</td><td class="num">0.2447</td><td class="num">0.2509</td><td class="num">0.2284</td><td class="num">52.5</td><td class="num">0.2082</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="tnote">Personalized PR の 4 手法は未実行。<code>./run_all.sh</code> で続きから走る。書き換えモデルが論文と違う（Qwen3.5-4B vs gpt-3.5-turbo）ので絶対値は一致しない — 詳細は <code>docs/DEVIATIONS.md</code>。</p>
+  </section>
+
+  <!-- ================= 8 ================= -->
+  <section id="findings">
+    <h2 class="sec"><span class="n">08</span>分かったこと</h2>
+
+    <h3>1. テストセットの約 1/3 が学習履歴にリークしている</h3>
+    <p>ROUGE-L は「元プロンプトをどれだけ復元できたか」を測る。ところが正解プロンプトがそのまま同一ユーザの履歴に入っているなら、検索がそれを引いてくるだけで点が取れてしまう。全 6,232 テストサンプルに対して：</p>
+
+    <div class="bars">
+      <div class="bar-row">
+        <div class="bar-lab"><span>履歴に token-F1 ≥ 0.8 のプロンプトが存在</span><span class="v">49.1% · 3,062</span></div>
+        <div class="bar-track"><div class="bar-fill" style="width:49.1%"></div></div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-lab"><span>正解プロンプトが生の履歴に完全一致</span><span class="v">35.6% · 2,217</span></div>
+        <div class="bar-track"><div class="bar-fill" style="width:35.6%"></div></div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-lab"><span>同上（重複除去後＝実際に検索される履歴）</span><span class="v">31.3% · 1,948</span></div>
+        <div class="bar-track"><div class="bar-fill" style="width:31.3%"></div></div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-lab"><span>クエリ自体が正解プロンプトと同一</span><span class="v">18.2% · 1,135</span></div>
+        <div class="bar-track"><div class="bar-fill mute" style="width:18.2%"></div></div>
+      </div>
+    </div>
+    <div class="axis"><span>0%</span><span>25%</span><span>50%</span></div>
+
+    <p style="margin-top:18px">最後の 18.2% はデータ生成の副作用。<code>data_process.py</code> は 6 語以下のプロンプトを短縮しないので、短いプロンプトはクエリ＝正解になり、<strong>何もしないベースラインが満点を取る</strong>。</p>
+    <p>結果として <strong>ROUGE-L は履歴を参照する手法を構造的に過大評価する</strong>。<code>06_evaluate.py</code> はリーク除外後の列を必ず併記するようにした。これは公開データセット側の性質で、再現実装の問題ではない。</p>
+
+    <h3>2. モデルを使わないベースライン行が論文と一致しない</h3>
+    <div class="note crit">
+      <p><strong>Shortened Prompt: 0.3964（実測） vs 0.3268（論文）</strong></p>
+      <p style="margin-bottom:0">この行は入力プロンプトをそのまま使うだけで、LLM も画像生成も介在しない。<strong>データと指標設定だけで決まるので、本来は完全一致するはず</strong>。一致しないということは、論文の ROUGE-L の前処理が公開物からは復元できないことを意味する。</p>
+    </div>
+    <p>前処理の候補（小文字化、<code>preprocess_line</code> 適用、β の違い）を総当たりしたが、0.3268 を再現する組み合わせは見つからなかった。したがって<strong>絶対値の比較はできない</strong>。ベースラインからの差分で比較する必要があり、<code>06_evaluate.py</code> は Δ 列を出すようにしてある。</p>
+
+    <h3>3. ROUGE-L の実装が長い書き換えに有利</h3>
+    <p>公式の <code>rougeL</code> は文字列を <code>"."</code> で分割してから summary-level LCS を取る。正解プロンプトはカンマ区切りの断片が多く、書き換え結果は普通の文章なので、この非対称性が効く。実測：</p>
+    <ul>
+      <li>4 語のベースライン（<code>shortened_prompt</code>）: <strong>+0.0002</strong></li>
+      <li>53 語・96% が複数文の書き換え（<code>general_pr</code>）: <strong>+0.0163</strong></li>
+    </ul>
+    <p>手法と相関するバイアスなので、<code>RESULTS.md</code> に 1 セグメント版（<code>1-seg</code> 列）も併記している。既定は論文の数値を生んだ実装のまま。</p>
+  </section>
+
+  <!-- ================= 9 ================= -->
+  <section id="files">
+    <h2 class="sec"><span class="n">09</span>ファイルの場所</h2>
+
+    <pre><code>~/stable-diffusion/personalized-t2i/tailored-visions-repro/
+├── <span class="p">official/</span>              <span class="c">公式実装 + 2026年パッチ（動作確認済み）</span>
+│   ├── run.sh            <span class="c">← まずこれ</span>
+│   ├── SETUP.md          <span class="c">セットアップ手順・パッチ一覧</span>
+│   ├── serve_local_llm.py <span class="c">OpenAI 互換ローカルサーバ</span>
+│   ├── demo.py main.py …  <span class="c">上流のコード（[2026 patch] コメント付き）</span>
+│   └── user_data@        <span class="c">→ ../data/user_data</span>
+├── tv/ scripts/          <span class="c">評価パイプライン（追加実装）</span>
+├── data/user_data/       <span class="c">PIP データセット 3,116 ユーザ</span>
+├── results/              <span class="c">rewrites/ metrics.json leakage.json</span>
+├── docs/
+│   ├── DEVIATIONS.md     <span class="c">論文・公式との差分と理由</span>
+│   └── tailored-visions.html  <span class="c">この文書</span>
+├── run_all.sh
+└── .venv/                <span class="c">両方が共有する Python 環境</span></code></pre>
+
+    <h3>読むもの</h3>
+    <div class="kv">
+      <div><dt>公式実装の使い方</dt><dd>official/SETUP.md</dd></div>
+      <div><dt>上流との差分</dt><dd>git -C official diff d0f4454 HEAD</dd></div>
+      <div><dt>論文との差分と理由</dt><dd>docs/DEVIATIONS.md</dd></div>
+      <div><dt>評価結果</dt><dd>results/RESULTS.md</dd></div>
+      <div><dt>リーク検査の詳細</dt><dd>results/leakage.json</dd></div>
+    </div>
+  </section>
+
+  </main>
+</div>
+
+<footer>
+  <div class="wrap foot-in">
+    <span>Chen, Zhang, Weng, Pan, Lan. <em>Tailored Visions: Enhancing Text-to-Image Generation with Personalized Prompt Rewriting.</em> CVPR 2024.</span>
+    <a href="https://arxiv.org/abs/2310.08129">arXiv:2310.08129</a>
+    <a href="https://github.com/zzjchen/Tailored-Visions">github.com/zzjchen/Tailored-Visions</a>
+  </div>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,12 @@
+diff --git a/scripts/pipeline/flux_adapter.py b/scripts/pipeline/flux_adapter.py
+index ecf5ecd..8daa07c 100644
+--- a/scripts/pipeline/flux_adapter.py
++++ b/scripts/pipeline/flux_adapter.py
+@@ -813,7 +813,6 @@ def transformer_forward_verse(
+                 delta_emb=delta_emb_single,
+                 delta_emb_cblock=delta_emb_cblock,
+                 use_text_mod=use_text_mod,
+-                use_img_mod=use_img_mod,
+                 image_rotary_emb=image_rotary_emb,
+                 last_attn_map=last_attn_map,
+                 latent_height=latent_height,

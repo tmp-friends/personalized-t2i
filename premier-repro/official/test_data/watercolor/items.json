@@ -1,0 +1,42 @@
+[
+ {
+  "image": "00.png",
+  "caption": "a cat sitting on a windowsill",
+  "generation_prompt": "a cat sitting on a windowsill, watercolor painting, soft pastel colors, visible paper texture, loose brush strokes"
+ },
+ {
+  "image": "01.png",
+  "caption": "a lighthouse on a rocky coast",
+  "generation_prompt": "a lighthouse on a rocky coast, watercolor painting, soft pastel colors, visible paper texture, loose brush strokes"
+ },
+ {
+  "image": "02.png",
+  "caption": "a bowl of fruit on a wooden table",
+  "generation_prompt": "a bowl of fruit on a wooden table, watercolor painting, soft pastel colors, visible paper texture, loose brush strokes"
+ },
+ {
+  "image": "03.png",
+  "caption": "a woman reading a book in a cafe",
+  "generation_prompt": "a woman reading a book in a cafe, watercolor painting, soft pastel colors, visible paper texture, loose brush strokes"
+ },
+ {
+  "image": "04.png",
+  "caption": "a mountain village in winter",
+  "generation_prompt": "a mountain village in winter, watercolor painting, soft pastel colors, visible paper texture, loose brush strokes"
+ },
+ {
+  "image": "05.png",
+  "caption": "a vintage bicycle leaning on a wall",
+  "generation_prompt": "a vintage bicycle leaning on a wall, watercolor painting, soft pastel colors, visible paper texture, loose brush strokes"
+ },
+ {
+  "image": "06.png",
+  "caption": "a fox in a forest",
+  "generation_prompt": "a fox in a forest, watercolor painting, soft pastel colors, visible paper texture, loose brush strokes"
+ },
+ {
+  "image": "07.png",
+  "caption": "a sailboat at sunset",
+  "generation_prompt": "a sailboat at sunset, watercolor painting, soft pastel colors, visible paper texture, loose brush strokes"
+ }
+]

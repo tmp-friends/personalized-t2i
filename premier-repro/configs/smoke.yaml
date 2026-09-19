@@ -1,0 +1,25 @@
+_base_: default.yaml
+paths:
+  output_dir: outputs/stage1_smoke
+data:
+  n_train_users: 8
+  n_test_users: 2
+train:
+  batch_size: 2
+  grad_accum: 1
+  steps: 30
+  log_every: 1
+  save_every: 30
+  sample_every: 30
+  sample_steps: 12
+  sample_users: 2
+  sample_prompts: ["a cat sitting on a windowsill", "a city street at night"]
+  num_workers: 2
+  disp_users: 8
+stage2:
+  steps: 20
+  k_shot: 4
+eval:
+  steps: 12
+  n_users: 2
+  max_eval_prompts: 2
