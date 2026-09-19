@@ -33,3 +33,6 @@ build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/tailored_visions_repro"]
+
+[tool.hatch.metadata]
+allow-direct-references = true

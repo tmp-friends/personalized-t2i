@@ -29,7 +29,8 @@ class OfficialIntegrationTests(unittest.TestCase):
         self.assertIn("usage:", result.stderr)
 
     def test_official_runtime_dependencies_are_project_dependencies(self) -> None:
-        project = tomllib.loads((ROOT / "pyproject.toml").read_text())["project"]
+        config = tomllib.loads((ROOT / "pyproject.toml").read_text())
+        project = config["project"]
         dependencies = "\n".join(project["dependencies"])
         for requirement in [
             "openai>=1.40",
@@ -42,6 +43,7 @@ class OfficialIntegrationTests(unittest.TestCase):
             "clip @ git+https://github.com/openai/CLIP.git",
         ]:
             self.assertIn(requirement, dependencies)
+        self.assertTrue(config["tool"]["hatch"]["metadata"]["allow-direct-references"])
 
 
 if __name__ == "__main__":
