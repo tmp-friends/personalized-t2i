@@ -69,9 +69,10 @@ encoder 層    FAN                text encoder の self-attention を差し替�
                                   参照 prompt の嗜好を混ぜ、追加学習は不要
 ```
 
-展示の差別化候補は「嗜好の言語化と可視化」「嫌いの活用」「default 生成との比較提示」
-「AI の解釈をユーザーが修正できること」。設計の詳細は
-[`2026-09-19-personalized-t2i-exhibition-demo-design.md`](docs/superpowers/specs/2026-09-19-personalized-t2i-exhibition-demo-design.md) を参照。
+9/23の展示は「5回の画像選択 → 好みの言語化と訂正 → 個人化生成 → PIGRewardによる推薦」
+を中心とする設計案へ更新した。通常生成との比較と、AIの解釈を本人が修正できる体験を見せる。
+詳細は [ZIPP-style persona × PIGReward 展示設計](docs/superpowers/specs/2026-09-19-zipp-pigreward-exhibition-demo-design.md)
+を参照。モデル統合と展示アプリは実装前。
 
 ## Repository 方針
 
