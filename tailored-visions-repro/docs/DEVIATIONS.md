@@ -17,7 +17,7 @@ The clean `upstream/` submodule is pinned to
 | Patch | Affected files | Reason |
 |---|---|---|
 | `0001-fix-official-runtime-bugs.patch` | `apiuse.py`, `demo.py`, `download.py`, `language.py`, `main.py`, `prompts.py` | bounded API retry; valid CLI/retrieval branches; BM25 tokenization and stable ordering; per-query ICL; safe paths; cached CLIP ranking |
-| `0002-support-current-diffusers-and-sdxl.patch` | `SD.py`, `demo.py`, `main.py`, `requirements-2026.txt` | current diffusers loader, SDXL / SD v1.5 support, fp16 fallback, VAE slicing, 24 GB memory policy, current Python dependencies |
+| `0002-support-current-diffusers-and-sdxl.patch` | `SD.py`, `apiuse.py`, `demo.py`, `main.py`, `requirements-2026.txt` | current diffusers and OpenAI clients, SDXL / SD v1.5 support, fp16 fallback, VAE slicing, 24 GB memory policy, current Python dependencies |
 | `0003-add-bounded-experiment-cli.patch` | `main.py` | `--data_folder` and `--limit_users` for bounded, relocatable runs |
 
 Validation:

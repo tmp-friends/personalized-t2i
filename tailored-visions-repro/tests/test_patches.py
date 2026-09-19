@@ -32,6 +32,9 @@ class TailoredPatchTests(unittest.TestCase):
                 patch = ROOT / "patches" / name
                 subprocess.run(["git", "-C", tmp, "apply", "--check", str(patch)], check=True)
                 subprocess.run(["git", "-C", tmp, "apply", str(patch)], check=True)
+            apiuse = (Path(tmp) / "apiuse.py").read_text()
+            self.assertIn("from openai import OpenAI", apiuse)
+            self.assertNotIn("openai.ChatCompletion.create", apiuse)
 
 
 if __name__ == "__main__":

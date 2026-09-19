@@ -1,4 +1,5 @@
 import subprocess
+import tomllib
 import unittest
 from pathlib import Path
 
@@ -26,6 +27,21 @@ class OfficialIntegrationTests(unittest.TestCase):
         )
         self.assertEqual(result.returncode, 2)
         self.assertIn("usage:", result.stderr)
+
+    def test_official_runtime_dependencies_are_project_dependencies(self) -> None:
+        project = tomllib.loads((ROOT / "pyproject.toml").read_text())["project"]
+        dependencies = "\n".join(project["dependencies"])
+        for requirement in [
+            "openai>=1.40",
+            "ftfy",
+            "regex",
+            "jsonlines>=3.1",
+            "six",
+            "func-timeout>=4.3",
+            "spacy>=3.7",
+            "clip @ git+https://github.com/openai/CLIP.git",
+        ]:
+            self.assertIn(requirement, dependencies)
 
 
 if __name__ == "__main__":
