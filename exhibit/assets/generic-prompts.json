@@ -2,103 +2,103 @@
   "cat": {
     "type": "rewrite",
     "id": "cat",
-    "prompt": "One cat sitting by a window. balanced composition, natural lighting, detailed textures.",
+    "prompt": "1girl, solo, brown hair, green eyes, sweater, holding cat, window, upper body, detailed eyes, beautiful detailed illustration, delicate shading, masterpiece, best quality. balanced composition, natural lighting, detailed textures.",
     "raw": "balanced composition, natural lighting, detailed textures",
     "valid": true,
     "context_hash": null,
     "model": {
       "model": "Qwen/Qwen3.5-4B",
       "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
-      "template_version": "append-aesthetic-v1"
+      "template_version": "append-aesthetic-character-v3"
     },
     "token_lengths": [
-      18,
-      18
+      47,
+      47
     ]
   },
   "tokyo": {
     "type": "rewrite",
     "id": "tokyo",
-    "prompt": "The Tokyo skyline at night. balanced composition, natural lighting, detailed textures.",
+    "prompt": "1boy, solo, male focus, short black hair, jacket, Tokyo skyline, night, portrait, detailed eyes, beautiful detailed illustration, delicate shading, masterpiece, best quality. balanced composition, natural lighting, detailed textures.",
     "raw": "balanced composition, natural lighting, detailed textures",
     "valid": true,
     "context_hash": null,
     "model": {
       "model": "Qwen/Qwen3.5-4B",
       "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
-      "template_version": "append-aesthetic-v1"
+      "template_version": "append-aesthetic-character-v3"
     },
     "token_lengths": [
-      17,
-      17
+      47,
+      47
     ]
   },
   "forest": {
     "type": "rewrite",
     "id": "forest",
-    "prompt": "One small house in a forest. balanced composition, natural lighting, detailed textures.",
+    "prompt": "1girl, solo, silver hair, witch hat, cloak, forest, upper body, detailed eyes, beautiful detailed illustration, delicate shading, masterpiece, best quality. balanced composition, natural lighting, detailed textures.",
     "raw": "balanced composition, natural lighting, detailed textures",
     "valid": true,
     "context_hash": null,
     "model": {
       "model": "Qwen/Qwen3.5-4B",
       "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
-      "template_version": "append-aesthetic-v1"
+      "template_version": "append-aesthetic-character-v3"
     },
     "token_lengths": [
-      18,
-      18
+      44,
+      44
     ]
   },
   "lighthouse": {
     "type": "rewrite",
     "id": "lighthouse",
-    "prompt": "One lighthouse beside the sea. balanced composition, natural lighting, detailed textures.",
+    "prompt": "1boy, solo, male focus, short blond hair, sailor hat, striped shirt, lighthouse, ocean, upper body, detailed eyes, beautiful detailed illustration, delicate shading, masterpiece, best quality. balanced composition, natural lighting, detailed textures.",
     "raw": "balanced composition, natural lighting, detailed textures",
     "valid": true,
     "context_hash": null,
     "model": {
       "model": "Qwen/Qwen3.5-4B",
       "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
-      "template_version": "append-aesthetic-v1"
+      "template_version": "append-aesthetic-character-v3"
     },
     "token_lengths": [
-      17,
-      17
+      51,
+      51
     ]
   },
   "rain": {
     "type": "rewrite",
     "id": "rain",
-    "prompt": "A street corner in the rain. balanced composition, natural lighting, detailed textures.",
+    "prompt": "1girl, solo, blue hair, raincoat, rain, city street, upper body, detailed eyes, beautiful detailed illustration, delicate shading, masterpiece, best quality. balanced composition, natural lighting, detailed textures.",
     "raw": "balanced composition, natural lighting, detailed textures",
     "valid": true,
     "context_hash": null,
     "model": {
       "model": "Qwen/Qwen3.5-4B",
       "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
-      "template_version": "append-aesthetic-v1"
+      "template_version": "append-aesthetic-character-v3"
     },
     "token_lengths": [
-      18,
-      18
+      45,
+      45
     ]
   },
   "cafe": {
     "type": "rewrite",
     "id": "cafe",
-    "prompt": "A cafe interior at night. balanced composition, natural lighting, detailed textures.",
+    "prompt": "1girl, solo, auburn hair, white shirt, apron, cafe, upper body, detailed eyes, beautiful detailed illustration, delicate shading, masterpiece, best quality. balanced composition, natural lighting, detailed textures.",
     "raw": "balanced composition, natural lighting, detailed textures",
     "valid": true,
     "context_hash": null,
     "model": {
       "model": "Qwen/Qwen3.5-4B",
       "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
-      "template_version": "append-aesthetic-v1"
+      "template_version": "append-aesthetic-character-v3"
     },
     "token_lengths": [
-      17,
-      17
+      44,
+      44
     ]
   }
 }

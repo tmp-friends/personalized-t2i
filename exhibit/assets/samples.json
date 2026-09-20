@@ -38,7 +38,7 @@
         {
           "id": "p1-a-e1",
           "pair_id": "p1",
-          "pair_version": 1,
+          "pair_version": 3,
           "chosen_id": "p1-a",
           "dimensions": [
             "color"
@@ -46,18 +46,18 @@
           "values": {
             "color": "warm"
           },
-          "text": "The selected harbor image has warmer colors than the other image.",
+          "text": "The selected character illustration uses warmer orange and golden tones in the clothes and background.",
           "context_source": "generic_vlm",
           "source": {
             "model": "Qwen/Qwen3.5-4B",
             "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
-            "template_version": "append-aesthetic-v1"
+            "template_version": "append-aesthetic-character-v3"
           },
           "image_hashes": {
-            "p1-a": "2ff616c02e4c844a87de50c30b093640ef852ac2a6e1447cb7854b504bf84687",
-            "p1-b": "0fe0d31d93216d1a000def4b25c1b4adcc1088ea132d16b41764c75ea8e90806"
+            "p1-a": "1448fb0052f2a7472cd2e92e30de33965c90e7350c95d99f9c6ee963fe4fee08",
+            "p1-b": "d2f57d62adedecaa20a0fd81ed540fdcd5e476f9a377493673d5a5bb286174aa"
           },
-          "basic_prompt_en": "A small harbor with moored boats.",
+          "basic_prompt_en": "1girl, solo, brown hair, beret, coat, town square, upper body, detailed eyes, illustration, masterpiece, best quality.",
           "template_version": "single-axis-relative-v1",
           "template_hash": "4cc18c54fe3fb7644ea2024d89ce66f1b10d3286bdc7f4c259d8cc50cccc7fc7",
           "preprocessing": "RGB; aspect preserved; longest edge 448"
@@ -65,7 +65,7 @@
         {
           "id": "p2-a-e1",
           "pair_id": "p2",
-          "pair_version": 1,
+          "pair_version": 3,
           "chosen_id": "p2-a",
           "dimensions": [
             "lighting"
@@ -73,18 +73,18 @@
           "values": {
             "lighting": "soft"
           },
-          "text": "The selected flowers have softer, more diffused lighting than the other image.",
+          "text": "The selected library portrait has softer, more diffused light on the character than the other image.",
           "context_source": "generic_vlm",
           "source": {
             "model": "Qwen/Qwen3.5-4B",
             "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
-            "template_version": "append-aesthetic-v1"
+            "template_version": "append-aesthetic-character-v3"
           },
           "image_hashes": {
-            "p2-a": "99e5e80e37d5f8cd77c23af5b8ec6dd999bf8c013f070a5378f982815195f73e",
-            "p2-b": "867ab990a86a3bba776592f0144a8c27241309b9ea1d65ff752443a39f4de473"
+            "p2-a": "ce1dbddcdbe0bd784ea3eec0a28d3f518d6a35d19eeae375a534b30421c9c088",
+            "p2-b": "e604e8bcb68aa46988b271914ca703f2a1451a7f53c11d419f4649c4a87e9c58"
           },
-          "basic_prompt_en": "A vase of flowers on a table in a room.",
+          "basic_prompt_en": "1boy, solo, black hair, vest, white shirt, library, upper body, detailed eyes, illustration, masterpiece, best quality.",
           "template_version": "single-axis-relative-v1",
           "template_hash": "4cc18c54fe3fb7644ea2024d89ce66f1b10d3286bdc7f4c259d8cc50cccc7fc7",
           "preprocessing": "RGB; aspect preserved; longest edge 448"
@@ -92,7 +92,7 @@
         {
           "id": "p3-a-e1",
           "pair_id": "p3",
-          "pair_version": 1,
+          "pair_version": 3,
           "chosen_id": "p3-a",
           "dimensions": [
             "composition"
@@ -100,18 +100,18 @@
           "values": {
             "composition": "spacious"
           },
-          "text": "The selected image emphasizes open sea around a distant lighthouse.",
+          "text": "The selected illustration shows more of the traveler and the surrounding grassland and sky.",
           "context_source": "generic_vlm",
           "source": {
             "model": "Qwen/Qwen3.5-4B",
             "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
-            "template_version": "append-aesthetic-v1"
+            "template_version": "append-aesthetic-character-v3"
           },
           "image_hashes": {
-            "p3-a": "aed4557d5e08df475ddb2a50da4bd5298818d4c5a1f694f2f5b65bcc78090206",
-            "p3-b": "b870b1e921bd982ed30492140caffb1c6dc326715e85265bcf045454ba504b44"
+            "p3-a": "7579e9836b382143f177ecbda216654d93abc1835a45336bf4749ec982fcccbc",
+            "p3-b": "d8a0eb9a9193ca7ec6b567ad45745740074f8ea41cf1650786f6612c30e0d31d"
           },
-          "basic_prompt_en": "One lighthouse beside the sea.",
+          "basic_prompt_en": "1girl, solo, silver hair, cloak, grassland, detailed eyes, illustration, masterpiece, best quality.",
           "template_version": "single-axis-relative-v1",
           "template_hash": "4cc18c54fe3fb7644ea2024d89ce66f1b10d3286bdc7f4c259d8cc50cccc7fc7",
           "preprocessing": "RGB; aspect preserved; longest edge 448"
@@ -119,7 +119,7 @@
         {
           "id": "p4-a-e1",
           "pair_id": "p4",
-          "pair_version": 1,
+          "pair_version": 3,
           "chosen_id": "p4-a",
           "dimensions": [
             "texture"
@@ -127,18 +127,18 @@
           "values": {
             "texture": "painterly"
           },
-          "text": "The selected forest path has softer, more painterly texture than the other image.",
+          "text": "The selected witch illustration has softer, blended shading and watercolor-like flowers compared with the outlined alternative.",
           "context_source": "generic_vlm",
           "source": {
             "model": "Qwen/Qwen3.5-4B",
             "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
-            "template_version": "append-aesthetic-v1"
+            "template_version": "append-aesthetic-character-v3"
           },
           "image_hashes": {
-            "p4-a": "e94d95b9e63750d198ac50104f88ab12c508e8a0c447790238e5dd3cc32c22a9",
-            "p4-b": "e60d9d218512d62c1ed832040c6bd926987036f1b3bc97e8dee07f387e20f650"
+            "p4-a": "35919ad5cec7f6a773ce8016388a880b78924c62bbcd4e921a7d2f6c732bb9d7",
+            "p4-b": "1fc5568fd77be9788370b84a9840246ae759b98bb159b027a932eea1bc2d04c3"
           },
-          "basic_prompt_en": "A winding path through a forest.",
+          "basic_prompt_en": "1girl, solo, blonde hair, witch hat, cloak, flower garden, upper body, detailed eyes, illustration, masterpiece, best quality.",
           "template_version": "single-axis-relative-v1",
           "template_hash": "4cc18c54fe3fb7644ea2024d89ce66f1b10d3286bdc7f4c259d8cc50cccc7fc7",
           "preprocessing": "RGB; aspect preserved; longest edge 448"
@@ -146,7 +146,7 @@
         {
           "id": "p5-a-e1",
           "pair_id": "p5",
-          "pair_version": 1,
+          "pair_version": 3,
           "chosen_id": "p5-a",
           "dimensions": [
             "mood"
@@ -154,18 +154,18 @@
           "values": {
             "mood": "calm"
           },
-          "text": "The selected cafe scene is quieter, with empty tables, than the other image.",
+          "text": "The selected cafe character has a gentle, closed-mouth expression and a calmer atmosphere than the laughing alternative.",
           "context_source": "generic_vlm",
           "source": {
             "model": "Qwen/Qwen3.5-4B",
             "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
-            "template_version": "append-aesthetic-v1"
+            "template_version": "append-aesthetic-character-v3"
           },
           "image_hashes": {
-            "p5-a": "0ea4784fcaa5b0a48b133634976427db0e3f4f4e71524386545e6adfcae445b1",
-            "p5-b": "a02fc99b3eeeaa0cc432c57403b974e035967888de894fdcb35dcf8c941e742e"
+            "p5-a": "708443c3422182dac4b17fb36739388b7ec77ca6f8551676ac3a3f86b16438ca",
+            "p5-b": "ce9c25f53f08733491a645475e0ded67aafa8298129eddfb3ed3c6892a1b375c"
           },
-          "basic_prompt_en": "A cafe on a city street.",
+          "basic_prompt_en": "1boy, solo, brown hair, apron, white shirt, cafe, upper body, detailed eyes, illustration, masterpiece, best quality.",
           "template_version": "single-axis-relative-v1",
           "template_hash": "4cc18c54fe3fb7644ea2024d89ce66f1b10d3286bdc7f4c259d8cc50cccc7fc7",
           "preprocessing": "RGB; aspect preserved; longest edge 448"
@@ -178,8 +178,8 @@
         "p4:p4-a",
         "p5:p5-a"
       ],
-      "text": "The selected harbor image has warmer colors than the other image.\nThe selected flowers have softer, more diffused lighting than the other image.\nThe selected image emphasizes open sea around a distant lighthouse.\nThe selected forest path has softer, more painterly texture than the other image.\nThe selected cafe scene is quieter, with empty tables, than the other image.",
-      "hash": "6ac17fb22dffc60d1726bfd8def98575087f5d8927c5ae6bc16c9fa03648e304"
+      "text": "The selected character illustration uses warmer orange and golden tones in the clothes and background.\nThe selected library portrait has softer, more diffused light on the character than the other image.\nThe selected illustration shows more of the traveler and the surrounding grassland and sky.\nThe selected witch illustration has softer, blended shading and watercolor-like flowers compared with the outlined alternative.\nThe selected cafe character has a gentle, closed-mouth expression and a calmer atmosphere than the laughing alternative.",
+      "hash": "397e75e05fd0cc495b68c9c2d4cd9e353712c3cba19d0eea73a0bd2eb54e5781"
     },
     "mode": "sample",
     "recommendation": null,
@@ -188,102 +188,122 @@
         "type": "image",
         "id": "h1-cat-0",
         "path": "samples/h1-cat-0.png",
-        "sha256": "fadbc882a5f9be198e734feb13a48f9b1c37f414e8f18cffce282e445ad02e04",
+        "sha256": "6dacae72ec7c79f386dcd99471d23b1748a58805581f3c907b1ca6b437c31cf8",
         "seed": 230923,
-        "prompt": "One cat sitting by a window. warm accent colors, soft lighting, spacious composition, painterly texture, calm atmosphere.",
+        "prompt": "1girl, solo, brown hair, green eyes, sweater, holding cat, window, upper body, detailed eyes, beautiful detailed illustration, delicate shading, masterpiece, best quality. warm accent colors, soft lighting, spacious composition, painterly texture, calm atmosphere.",
         "settings": {
-          "model": "stabilityai/stable-diffusion-xl-base-1.0",
-          "revision": "462165984030d82259a11f4367a4eed129e94a7b",
-          "scheduler": "EulerDiscreteScheduler",
+          "model": "OnomaAIResearch/Illustrious-XL-v2.0",
+          "revision": "69459c1fe6f46db41ab31e6114f05acc0e06bcaa",
+          "scheduler": "EulerAncestralDiscreteScheduler",
           "width": 1024,
           "height": 1024,
-          "steps": 20,
-          "guidance_scale": 7.0,
-          "negative_prompt": "",
-          "precision": "fp16"
+          "steps": 28,
+          "guidance_scale": 6.5,
+          "negative_prompt": "worst quality, bad quality, lowres, blurry, bad anatomy, bad hands, extra digits, fewer digits, multiple views, comic, text, watermark, signature, photo, photorealistic, 3d, monochrome, greyscale, sketch, unfinished, nsfw, nude, multiple people, chibi, 2girls, 2boys",
+          "precision": "fp16",
+          "pipeline_config": {
+            "model": "OnomaAIResearch/Illustrious-xl-early-release-v0",
+            "revision": "dca0dac303e6dc4b0c31d8001bc685b89b5d0204"
+          },
+          "checkpoint": "Illustrious-XL-v2.0.safetensors"
         },
-        "seconds": 3.097,
-        "context_hash": "6ac17fb22dffc60d1726bfd8def98575087f5d8927c5ae6bc16c9fa03648e304"
+        "seconds": 3.952,
+        "context_hash": "397e75e05fd0cc495b68c9c2d4cd9e353712c3cba19d0eea73a0bd2eb54e5781"
       },
       {
         "type": "image",
         "id": "h1-cat-1",
         "path": "samples/h1-cat-1.png",
-        "sha256": "485f54e8fcef510da875e790fb91d7d0e8d4adb408023c1954576b167123b131",
+        "sha256": "fb34669016c574eb14832f4c81880cd5fc27699ae35a968f87cca42ae9087197",
         "seed": 230924,
-        "prompt": "One cat sitting by a window. warm accent colors, soft lighting, spacious composition, painterly texture, calm atmosphere.",
+        "prompt": "1girl, solo, brown hair, green eyes, sweater, holding cat, window, upper body, detailed eyes, beautiful detailed illustration, delicate shading, masterpiece, best quality. warm accent colors, soft lighting, spacious composition, painterly texture, calm atmosphere.",
         "settings": {
-          "model": "stabilityai/stable-diffusion-xl-base-1.0",
-          "revision": "462165984030d82259a11f4367a4eed129e94a7b",
-          "scheduler": "EulerDiscreteScheduler",
+          "model": "OnomaAIResearch/Illustrious-XL-v2.0",
+          "revision": "69459c1fe6f46db41ab31e6114f05acc0e06bcaa",
+          "scheduler": "EulerAncestralDiscreteScheduler",
           "width": 1024,
           "height": 1024,
-          "steps": 20,
-          "guidance_scale": 7.0,
-          "negative_prompt": "",
-          "precision": "fp16"
+          "steps": 28,
+          "guidance_scale": 6.5,
+          "negative_prompt": "worst quality, bad quality, lowres, blurry, bad anatomy, bad hands, extra digits, fewer digits, multiple views, comic, text, watermark, signature, photo, photorealistic, 3d, monochrome, greyscale, sketch, unfinished, nsfw, nude, multiple people, chibi, 2girls, 2boys",
+          "precision": "fp16",
+          "pipeline_config": {
+            "model": "OnomaAIResearch/Illustrious-xl-early-release-v0",
+            "revision": "dca0dac303e6dc4b0c31d8001bc685b89b5d0204"
+          },
+          "checkpoint": "Illustrious-XL-v2.0.safetensors"
         },
-        "seconds": 2.861,
-        "context_hash": "6ac17fb22dffc60d1726bfd8def98575087f5d8927c5ae6bc16c9fa03648e304"
+        "seconds": 3.785,
+        "context_hash": "397e75e05fd0cc495b68c9c2d4cd9e353712c3cba19d0eea73a0bd2eb54e5781"
       },
       {
         "type": "image",
         "id": "h1-cat-2",
         "path": "samples/h1-cat-2.png",
-        "sha256": "5b1f08b8090fd85c13c73bbc90407dc5d775b21ad1c51cfdfa3fc94610cbe86b",
+        "sha256": "39ae8a63464008f10ab5f2f457f12de161b12976f60f22fdee50f0f79ea852e1",
         "seed": 230925,
-        "prompt": "One cat sitting by a window. warm accent colors, soft lighting, spacious composition, painterly texture, calm atmosphere.",
+        "prompt": "1girl, solo, brown hair, green eyes, sweater, holding cat, window, upper body, detailed eyes, beautiful detailed illustration, delicate shading, masterpiece, best quality. warm accent colors, soft lighting, spacious composition, painterly texture, calm atmosphere.",
         "settings": {
-          "model": "stabilityai/stable-diffusion-xl-base-1.0",
-          "revision": "462165984030d82259a11f4367a4eed129e94a7b",
-          "scheduler": "EulerDiscreteScheduler",
+          "model": "OnomaAIResearch/Illustrious-XL-v2.0",
+          "revision": "69459c1fe6f46db41ab31e6114f05acc0e06bcaa",
+          "scheduler": "EulerAncestralDiscreteScheduler",
           "width": 1024,
           "height": 1024,
-          "steps": 20,
-          "guidance_scale": 7.0,
-          "negative_prompt": "",
-          "precision": "fp16"
+          "steps": 28,
+          "guidance_scale": 6.5,
+          "negative_prompt": "worst quality, bad quality, lowres, blurry, bad anatomy, bad hands, extra digits, fewer digits, multiple views, comic, text, watermark, signature, photo, photorealistic, 3d, monochrome, greyscale, sketch, unfinished, nsfw, nude, multiple people, chibi, 2girls, 2boys",
+          "precision": "fp16",
+          "pipeline_config": {
+            "model": "OnomaAIResearch/Illustrious-xl-early-release-v0",
+            "revision": "dca0dac303e6dc4b0c31d8001bc685b89b5d0204"
+          },
+          "checkpoint": "Illustrious-XL-v2.0.safetensors"
         },
-        "seconds": 2.878,
-        "context_hash": "6ac17fb22dffc60d1726bfd8def98575087f5d8927c5ae6bc16c9fa03648e304"
+        "seconds": 3.781,
+        "context_hash": "397e75e05fd0cc495b68c9c2d4cd9e353712c3cba19d0eea73a0bd2eb54e5781"
       },
       {
         "type": "image",
         "id": "h1-cat-3",
         "path": "samples/h1-cat-3.png",
-        "sha256": "c93b933163299229982e9fad2a6315235897b9ddbf8f41250570f8daa10be6b8",
+        "sha256": "2af742ed6db7c4ba56b4fa9bf459c27e2b3756a501c0b4b371032c3ff2f42744",
         "seed": 230926,
-        "prompt": "One cat sitting by a window. warm accent colors, soft lighting, spacious composition, painterly texture, calm atmosphere.",
+        "prompt": "1girl, solo, brown hair, green eyes, sweater, holding cat, window, upper body, detailed eyes, beautiful detailed illustration, delicate shading, masterpiece, best quality. warm accent colors, soft lighting, spacious composition, painterly texture, calm atmosphere.",
         "settings": {
-          "model": "stabilityai/stable-diffusion-xl-base-1.0",
-          "revision": "462165984030d82259a11f4367a4eed129e94a7b",
-          "scheduler": "EulerDiscreteScheduler",
+          "model": "OnomaAIResearch/Illustrious-XL-v2.0",
+          "revision": "69459c1fe6f46db41ab31e6114f05acc0e06bcaa",
+          "scheduler": "EulerAncestralDiscreteScheduler",
           "width": 1024,
           "height": 1024,
-          "steps": 20,
-          "guidance_scale": 7.0,
-          "negative_prompt": "",
-          "precision": "fp16"
+          "steps": 28,
+          "guidance_scale": 6.5,
+          "negative_prompt": "worst quality, bad quality, lowres, blurry, bad anatomy, bad hands, extra digits, fewer digits, multiple views, comic, text, watermark, signature, photo, photorealistic, 3d, monochrome, greyscale, sketch, unfinished, nsfw, nude, multiple people, chibi, 2girls, 2boys",
+          "precision": "fp16",
+          "pipeline_config": {
+            "model": "OnomaAIResearch/Illustrious-xl-early-release-v0",
+            "revision": "dca0dac303e6dc4b0c31d8001bc685b89b5d0204"
+          },
+          "checkpoint": "Illustrious-XL-v2.0.safetensors"
         },
-        "seconds": 2.863,
-        "context_hash": "6ac17fb22dffc60d1726bfd8def98575087f5d8927c5ae6bc16c9fa03648e304"
+        "seconds": 3.787,
+        "context_hash": "397e75e05fd0cc495b68c9c2d4cd9e353712c3cba19d0eea73a0bd2eb54e5781"
       }
     ],
     "rewrite": {
       "type": "rewrite",
       "id": "h1-cat",
-      "prompt": "One cat sitting by a window. warm accent colors, soft lighting, spacious composition, painterly texture, calm atmosphere.",
+      "prompt": "1girl, solo, brown hair, green eyes, sweater, holding cat, window, upper body, detailed eyes, beautiful detailed illustration, delicate shading, masterpiece, best quality. warm accent colors, soft lighting, spacious composition, painterly texture, calm atmosphere.",
       "raw": "warm accent colors, soft lighting, spacious composition, painterly texture, calm atmosphere",
       "valid": true,
-      "context_hash": "6ac17fb22dffc60d1726bfd8def98575087f5d8927c5ae6bc16c9fa03648e304",
+      "context_hash": "397e75e05fd0cc495b68c9c2d4cd9e353712c3cba19d0eea73a0bd2eb54e5781",
       "model": {
         "model": "Qwen/Qwen3.5-4B",
         "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
-        "template_version": "append-aesthetic-v1"
+        "template_version": "append-aesthetic-character-v3"
       },
       "token_lengths": [
-        27,
-        27
+        56,
+        56
       ]
     }
   },
@@ -326,7 +346,7 @@
         {
           "id": "p1-a-e1",
           "pair_id": "p1",
-          "pair_version": 1,
+          "pair_version": 3,
           "chosen_id": "p1-a",
           "dimensions": [
             "color"
@@ -334,18 +354,18 @@
           "values": {
             "color": "warm"
           },
-          "text": "The selected harbor image has warmer colors than the other image.",
+          "text": "The selected character illustration uses warmer orange and golden tones in the clothes and background.",
           "context_source": "generic_vlm",
           "source": {
             "model": "Qwen/Qwen3.5-4B",
             "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
-            "template_version": "append-aesthetic-v1"
+            "template_version": "append-aesthetic-character-v3"
           },
           "image_hashes": {
-            "p1-a": "2ff616c02e4c844a87de50c30b093640ef852ac2a6e1447cb7854b504bf84687",
-            "p1-b": "0fe0d31d93216d1a000def4b25c1b4adcc1088ea132d16b41764c75ea8e90806"
+            "p1-a": "1448fb0052f2a7472cd2e92e30de33965c90e7350c95d99f9c6ee963fe4fee08",
+            "p1-b": "d2f57d62adedecaa20a0fd81ed540fdcd5e476f9a377493673d5a5bb286174aa"
           },
-          "basic_prompt_en": "A small harbor with moored boats.",
+          "basic_prompt_en": "1girl, solo, brown hair, beret, coat, town square, upper body, detailed eyes, illustration, masterpiece, best quality.",
           "template_version": "single-axis-relative-v1",
           "template_hash": "4cc18c54fe3fb7644ea2024d89ce66f1b10d3286bdc7f4c259d8cc50cccc7fc7",
           "preprocessing": "RGB; aspect preserved; longest edge 448"
@@ -353,7 +373,7 @@
         {
           "id": "p2-a-e1",
           "pair_id": "p2",
-          "pair_version": 1,
+          "pair_version": 3,
           "chosen_id": "p2-a",
           "dimensions": [
             "lighting"
@@ -361,18 +381,18 @@
           "values": {
             "lighting": "soft"
           },
-          "text": "The selected flowers have softer, more diffused lighting than the other image.",
+          "text": "The selected library portrait has softer, more diffused light on the character than the other image.",
           "context_source": "generic_vlm",
           "source": {
             "model": "Qwen/Qwen3.5-4B",
             "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
-            "template_version": "append-aesthetic-v1"
+            "template_version": "append-aesthetic-character-v3"
           },
           "image_hashes": {
-            "p2-a": "99e5e80e37d5f8cd77c23af5b8ec6dd999bf8c013f070a5378f982815195f73e",
-            "p2-b": "867ab990a86a3bba776592f0144a8c27241309b9ea1d65ff752443a39f4de473"
+            "p2-a": "ce1dbddcdbe0bd784ea3eec0a28d3f518d6a35d19eeae375a534b30421c9c088",
+            "p2-b": "e604e8bcb68aa46988b271914ca703f2a1451a7f53c11d419f4649c4a87e9c58"
           },
-          "basic_prompt_en": "A vase of flowers on a table in a room.",
+          "basic_prompt_en": "1boy, solo, black hair, vest, white shirt, library, upper body, detailed eyes, illustration, masterpiece, best quality.",
           "template_version": "single-axis-relative-v1",
           "template_hash": "4cc18c54fe3fb7644ea2024d89ce66f1b10d3286bdc7f4c259d8cc50cccc7fc7",
           "preprocessing": "RGB; aspect preserved; longest edge 448"
@@ -380,7 +400,7 @@
         {
           "id": "p3-a-e1",
           "pair_id": "p3",
-          "pair_version": 1,
+          "pair_version": 3,
           "chosen_id": "p3-a",
           "dimensions": [
             "composition"
@@ -388,18 +408,18 @@
           "values": {
             "composition": "spacious"
           },
-          "text": "The selected image emphasizes open sea around a distant lighthouse.",
+          "text": "The selected illustration shows more of the traveler and the surrounding grassland and sky.",
           "context_source": "generic_vlm",
           "source": {
             "model": "Qwen/Qwen3.5-4B",
             "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
-            "template_version": "append-aesthetic-v1"
+            "template_version": "append-aesthetic-character-v3"
           },
           "image_hashes": {
-            "p3-a": "aed4557d5e08df475ddb2a50da4bd5298818d4c5a1f694f2f5b65bcc78090206",
-            "p3-b": "b870b1e921bd982ed30492140caffb1c6dc326715e85265bcf045454ba504b44"
+            "p3-a": "7579e9836b382143f177ecbda216654d93abc1835a45336bf4749ec982fcccbc",
+            "p3-b": "d8a0eb9a9193ca7ec6b567ad45745740074f8ea41cf1650786f6612c30e0d31d"
           },
-          "basic_prompt_en": "One lighthouse beside the sea.",
+          "basic_prompt_en": "1girl, solo, silver hair, cloak, grassland, detailed eyes, illustration, masterpiece, best quality.",
           "template_version": "single-axis-relative-v1",
           "template_hash": "4cc18c54fe3fb7644ea2024d89ce66f1b10d3286bdc7f4c259d8cc50cccc7fc7",
           "preprocessing": "RGB; aspect preserved; longest edge 448"
@@ -407,7 +427,7 @@
         {
           "id": "p4-a-e1",
           "pair_id": "p4",
-          "pair_version": 1,
+          "pair_version": 3,
           "chosen_id": "p4-a",
           "dimensions": [
             "texture"
@@ -415,18 +435,18 @@
           "values": {
             "texture": "painterly"
           },
-          "text": "The selected forest path has softer, more painterly texture than the other image.",
+          "text": "The selected witch illustration has softer, blended shading and watercolor-like flowers compared with the outlined alternative.",
           "context_source": "generic_vlm",
           "source": {
             "model": "Qwen/Qwen3.5-4B",
             "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
-            "template_version": "append-aesthetic-v1"
+            "template_version": "append-aesthetic-character-v3"
           },
           "image_hashes": {
-            "p4-a": "e94d95b9e63750d198ac50104f88ab12c508e8a0c447790238e5dd3cc32c22a9",
-            "p4-b": "e60d9d218512d62c1ed832040c6bd926987036f1b3bc97e8dee07f387e20f650"
+            "p4-a": "35919ad5cec7f6a773ce8016388a880b78924c62bbcd4e921a7d2f6c732bb9d7",
+            "p4-b": "1fc5568fd77be9788370b84a9840246ae759b98bb159b027a932eea1bc2d04c3"
           },
-          "basic_prompt_en": "A winding path through a forest.",
+          "basic_prompt_en": "1girl, solo, blonde hair, witch hat, cloak, flower garden, upper body, detailed eyes, illustration, masterpiece, best quality.",
           "template_version": "single-axis-relative-v1",
           "template_hash": "4cc18c54fe3fb7644ea2024d89ce66f1b10d3286bdc7f4c259d8cc50cccc7fc7",
           "preprocessing": "RGB; aspect preserved; longest edge 448"
@@ -434,7 +454,7 @@
         {
           "id": "p5-a-e1",
           "pair_id": "p5",
-          "pair_version": 1,
+          "pair_version": 3,
           "chosen_id": "p5-a",
           "dimensions": [
             "mood"
@@ -442,18 +462,18 @@
           "values": {
             "mood": "calm"
           },
-          "text": "The selected cafe scene is quieter, with empty tables, than the other image.",
+          "text": "The selected cafe character has a gentle, closed-mouth expression and a calmer atmosphere than the laughing alternative.",
           "context_source": "generic_vlm",
           "source": {
             "model": "Qwen/Qwen3.5-4B",
             "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
-            "template_version": "append-aesthetic-v1"
+            "template_version": "append-aesthetic-character-v3"
           },
           "image_hashes": {
-            "p5-a": "0ea4784fcaa5b0a48b133634976427db0e3f4f4e71524386545e6adfcae445b1",
-            "p5-b": "a02fc99b3eeeaa0cc432c57403b974e035967888de894fdcb35dcf8c941e742e"
+            "p5-a": "708443c3422182dac4b17fb36739388b7ec77ca6f8551676ac3a3f86b16438ca",
+            "p5-b": "ce9c25f53f08733491a645475e0ded67aafa8298129eddfb3ed3c6892a1b375c"
           },
-          "basic_prompt_en": "A cafe on a city street.",
+          "basic_prompt_en": "1boy, solo, brown hair, apron, white shirt, cafe, upper body, detailed eyes, illustration, masterpiece, best quality.",
           "template_version": "single-axis-relative-v1",
           "template_hash": "4cc18c54fe3fb7644ea2024d89ce66f1b10d3286bdc7f4c259d8cc50cccc7fc7",
           "preprocessing": "RGB; aspect preserved; longest edge 448"
@@ -466,8 +486,8 @@
         "p4:p4-a",
         "p5:p5-a"
       ],
-      "text": "The selected harbor image has warmer colors than the other image.\nThe selected flowers have softer, more diffused lighting than the other image.\nThe selected image emphasizes open sea around a distant lighthouse.\nThe selected forest path has softer, more painterly texture than the other image.\nThe selected cafe scene is quieter, with empty tables, than the other image.",
-      "hash": "6ac17fb22dffc60d1726bfd8def98575087f5d8927c5ae6bc16c9fa03648e304"
+      "text": "The selected character illustration uses warmer orange and golden tones in the clothes and background.\nThe selected library portrait has softer, more diffused light on the character than the other image.\nThe selected illustration shows more of the traveler and the surrounding grassland and sky.\nThe selected witch illustration has softer, blended shading and watercolor-like flowers compared with the outlined alternative.\nThe selected cafe character has a gentle, closed-mouth expression and a calmer atmosphere than the laughing alternative.",
+      "hash": "397e75e05fd0cc495b68c9c2d4cd9e353712c3cba19d0eea73a0bd2eb54e5781"
     },
     "mode": "sample",
     "recommendation": null,
@@ -476,102 +496,122 @@
         "type": "image",
         "id": "h1-tokyo-0",
         "path": "samples/h1-tokyo-0.png",
-        "sha256": "937da4fa19eb1c30bf89264f424bcbafa2f4a3452ce247924deaa2354476cef5",
+        "sha256": "325ad2db22951ca71d0659edae498cd2646e040767f4fd8d74f13a36ad1f15b8",
         "seed": 230923,
-        "prompt": "The Tokyo skyline at night. warm accent colors, soft lighting, spacious composition, painterly texture, calm atmosphere.",
+        "prompt": "1boy, solo, male focus, short black hair, jacket, Tokyo skyline, night, portrait, detailed eyes, beautiful detailed illustration, delicate shading, masterpiece, best quality. warm accent colors, soft lighting, spacious composition, painterly texture, calm atmosphere.",
         "settings": {
-          "model": "stabilityai/stable-diffusion-xl-base-1.0",
-          "revision": "462165984030d82259a11f4367a4eed129e94a7b",
-          "scheduler": "EulerDiscreteScheduler",
+          "model": "OnomaAIResearch/Illustrious-XL-v2.0",
+          "revision": "69459c1fe6f46db41ab31e6114f05acc0e06bcaa",
+          "scheduler": "EulerAncestralDiscreteScheduler",
           "width": 1024,
           "height": 1024,
-          "steps": 20,
-          "guidance_scale": 7.0,
-          "negative_prompt": "",
-          "precision": "fp16"
+          "steps": 28,
+          "guidance_scale": 6.5,
+          "negative_prompt": "worst quality, bad quality, lowres, blurry, bad anatomy, bad hands, extra digits, fewer digits, multiple views, comic, text, watermark, signature, photo, photorealistic, 3d, monochrome, greyscale, sketch, unfinished, nsfw, nude, multiple people, chibi, 2girls, 2boys",
+          "precision": "fp16",
+          "pipeline_config": {
+            "model": "OnomaAIResearch/Illustrious-xl-early-release-v0",
+            "revision": "dca0dac303e6dc4b0c31d8001bc685b89b5d0204"
+          },
+          "checkpoint": "Illustrious-XL-v2.0.safetensors"
         },
-        "seconds": 2.812,
-        "context_hash": "6ac17fb22dffc60d1726bfd8def98575087f5d8927c5ae6bc16c9fa03648e304"
+        "seconds": 3.759,
+        "context_hash": "397e75e05fd0cc495b68c9c2d4cd9e353712c3cba19d0eea73a0bd2eb54e5781"
       },
       {
         "type": "image",
         "id": "h1-tokyo-1",
         "path": "samples/h1-tokyo-1.png",
-        "sha256": "4aa75ba9a78710a7465c5abbf5bf1b16785d8078f55989f35c973936681f0f9d",
+        "sha256": "c64bb00736b90d60e0dd8d654e5d6d0420b778b30a133910f49ceefdb950a1a7",
         "seed": 230924,
-        "prompt": "The Tokyo skyline at night. warm accent colors, soft lighting, spacious composition, painterly texture, calm atmosphere.",
+        "prompt": "1boy, solo, male focus, short black hair, jacket, Tokyo skyline, night, portrait, detailed eyes, beautiful detailed illustration, delicate shading, masterpiece, best quality. warm accent colors, soft lighting, spacious composition, painterly texture, calm atmosphere.",
         "settings": {
-          "model": "stabilityai/stable-diffusion-xl-base-1.0",
-          "revision": "462165984030d82259a11f4367a4eed129e94a7b",
-          "scheduler": "EulerDiscreteScheduler",
+          "model": "OnomaAIResearch/Illustrious-XL-v2.0",
+          "revision": "69459c1fe6f46db41ab31e6114f05acc0e06bcaa",
+          "scheduler": "EulerAncestralDiscreteScheduler",
           "width": 1024,
           "height": 1024,
-          "steps": 20,
-          "guidance_scale": 7.0,
-          "negative_prompt": "",
-          "precision": "fp16"
+          "steps": 28,
+          "guidance_scale": 6.5,
+          "negative_prompt": "worst quality, bad quality, lowres, blurry, bad anatomy, bad hands, extra digits, fewer digits, multiple views, comic, text, watermark, signature, photo, photorealistic, 3d, monochrome, greyscale, sketch, unfinished, nsfw, nude, multiple people, chibi, 2girls, 2boys",
+          "precision": "fp16",
+          "pipeline_config": {
+            "model": "OnomaAIResearch/Illustrious-xl-early-release-v0",
+            "revision": "dca0dac303e6dc4b0c31d8001bc685b89b5d0204"
+          },
+          "checkpoint": "Illustrious-XL-v2.0.safetensors"
         },
-        "seconds": 2.829,
-        "context_hash": "6ac17fb22dffc60d1726bfd8def98575087f5d8927c5ae6bc16c9fa03648e304"
+        "seconds": 3.78,
+        "context_hash": "397e75e05fd0cc495b68c9c2d4cd9e353712c3cba19d0eea73a0bd2eb54e5781"
       },
       {
         "type": "image",
         "id": "h1-tokyo-2",
         "path": "samples/h1-tokyo-2.png",
-        "sha256": "310500b48fbcc75cecfeef918a62fbf57e55314c21f65872fc2ca85822dcc82b",
+        "sha256": "78d6fd929fb8ce577391b1ee4271acf9c8d7f1fdc95a24d2ea6b577feca53963",
         "seed": 230925,
-        "prompt": "The Tokyo skyline at night. warm accent colors, soft lighting, spacious composition, painterly texture, calm atmosphere.",
+        "prompt": "1boy, solo, male focus, short black hair, jacket, Tokyo skyline, night, portrait, detailed eyes, beautiful detailed illustration, delicate shading, masterpiece, best quality. warm accent colors, soft lighting, spacious composition, painterly texture, calm atmosphere.",
         "settings": {
-          "model": "stabilityai/stable-diffusion-xl-base-1.0",
-          "revision": "462165984030d82259a11f4367a4eed129e94a7b",
-          "scheduler": "EulerDiscreteScheduler",
+          "model": "OnomaAIResearch/Illustrious-XL-v2.0",
+          "revision": "69459c1fe6f46db41ab31e6114f05acc0e06bcaa",
+          "scheduler": "EulerAncestralDiscreteScheduler",
           "width": 1024,
           "height": 1024,
-          "steps": 20,
-          "guidance_scale": 7.0,
-          "negative_prompt": "",
-          "precision": "fp16"
+          "steps": 28,
+          "guidance_scale": 6.5,
+          "negative_prompt": "worst quality, bad quality, lowres, blurry, bad anatomy, bad hands, extra digits, fewer digits, multiple views, comic, text, watermark, signature, photo, photorealistic, 3d, monochrome, greyscale, sketch, unfinished, nsfw, nude, multiple people, chibi, 2girls, 2boys",
+          "precision": "fp16",
+          "pipeline_config": {
+            "model": "OnomaAIResearch/Illustrious-xl-early-release-v0",
+            "revision": "dca0dac303e6dc4b0c31d8001bc685b89b5d0204"
+          },
+          "checkpoint": "Illustrious-XL-v2.0.safetensors"
         },
-        "seconds": 2.824,
-        "context_hash": "6ac17fb22dffc60d1726bfd8def98575087f5d8927c5ae6bc16c9fa03648e304"
+        "seconds": 3.788,
+        "context_hash": "397e75e05fd0cc495b68c9c2d4cd9e353712c3cba19d0eea73a0bd2eb54e5781"
       },
       {
         "type": "image",
         "id": "h1-tokyo-3",
         "path": "samples/h1-tokyo-3.png",
-        "sha256": "36242d93af118e7cbad3b9c9fe0d2fcd8e27060ef738668103e9b554586a0424",
+        "sha256": "e57ef0f183c04c14115149c5fe5a453fded2160df0abfa5143f23529c16b4d30",
         "seed": 230926,
-        "prompt": "The Tokyo skyline at night. warm accent colors, soft lighting, spacious composition, painterly texture, calm atmosphere.",
+        "prompt": "1boy, solo, male focus, short black hair, jacket, Tokyo skyline, night, portrait, detailed eyes, beautiful detailed illustration, delicate shading, masterpiece, best quality. warm accent colors, soft lighting, spacious composition, painterly texture, calm atmosphere.",
         "settings": {
-          "model": "stabilityai/stable-diffusion-xl-base-1.0",
-          "revision": "462165984030d82259a11f4367a4eed129e94a7b",
-          "scheduler": "EulerDiscreteScheduler",
+          "model": "OnomaAIResearch/Illustrious-XL-v2.0",
+          "revision": "69459c1fe6f46db41ab31e6114f05acc0e06bcaa",
+          "scheduler": "EulerAncestralDiscreteScheduler",
           "width": 1024,
           "height": 1024,
-          "steps": 20,
-          "guidance_scale": 7.0,
-          "negative_prompt": "",
-          "precision": "fp16"
+          "steps": 28,
+          "guidance_scale": 6.5,
+          "negative_prompt": "worst quality, bad quality, lowres, blurry, bad anatomy, bad hands, extra digits, fewer digits, multiple views, comic, text, watermark, signature, photo, photorealistic, 3d, monochrome, greyscale, sketch, unfinished, nsfw, nude, multiple people, chibi, 2girls, 2boys",
+          "precision": "fp16",
+          "pipeline_config": {
+            "model": "OnomaAIResearch/Illustrious-xl-early-release-v0",
+            "revision": "dca0dac303e6dc4b0c31d8001bc685b89b5d0204"
+          },
+          "checkpoint": "Illustrious-XL-v2.0.safetensors"
         },
-        "seconds": 2.82,
-        "context_hash": "6ac17fb22dffc60d1726bfd8def98575087f5d8927c5ae6bc16c9fa03648e304"
+        "seconds": 3.789,
+        "context_hash": "397e75e05fd0cc495b68c9c2d4cd9e353712c3cba19d0eea73a0bd2eb54e5781"
       }
     ],
     "rewrite": {
       "type": "rewrite",
       "id": "h1-tokyo",
-      "prompt": "The Tokyo skyline at night. warm accent colors, soft lighting, spacious composition, painterly texture, calm atmosphere.",
+      "prompt": "1boy, solo, male focus, short black hair, jacket, Tokyo skyline, night, portrait, detailed eyes, beautiful detailed illustration, delicate shading, masterpiece, best quality. warm accent colors, soft lighting, spacious composition, painterly texture, calm atmosphere.",
       "raw": "warm accent colors, soft lighting, spacious composition, painterly texture, calm atmosphere",
       "valid": true,
-      "context_hash": "6ac17fb22dffc60d1726bfd8def98575087f5d8927c5ae6bc16c9fa03648e304",
+      "context_hash": "397e75e05fd0cc495b68c9c2d4cd9e353712c3cba19d0eea73a0bd2eb54e5781",
       "model": {
         "model": "Qwen/Qwen3.5-4B",
         "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
-        "template_version": "append-aesthetic-v1"
+        "template_version": "append-aesthetic-character-v3"
       },
       "token_lengths": [
-        26,
-        26
+        56,
+        56
       ]
     }
   },
@@ -606,7 +646,7 @@
         "color": "cool",
         "lighting": "dramatic",
         "composition": "close",
-        "texture": "photographic",
+        "texture": "cel_shaded",
         "mood": "lively"
       },
       "overrides": {},
@@ -614,7 +654,7 @@
         {
           "id": "p1-b-e1",
           "pair_id": "p1",
-          "pair_version": 1,
+          "pair_version": 3,
           "chosen_id": "p1-b",
           "dimensions": [
             "color"
@@ -622,18 +662,18 @@
           "values": {
             "color": "cool"
           },
-          "text": "The selected harbor image has cooler greens and blues than the other image.",
+          "text": "The selected character illustration uses more cool teal in the hat, clothes, and town background than the warmer alternative.",
           "context_source": "generic_vlm",
           "source": {
             "model": "Qwen/Qwen3.5-4B",
             "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
-            "template_version": "append-aesthetic-v1"
+            "template_version": "append-aesthetic-character-v3"
           },
           "image_hashes": {
-            "p1-a": "2ff616c02e4c844a87de50c30b093640ef852ac2a6e1447cb7854b504bf84687",
-            "p1-b": "0fe0d31d93216d1a000def4b25c1b4adcc1088ea132d16b41764c75ea8e90806"
+            "p1-a": "1448fb0052f2a7472cd2e92e30de33965c90e7350c95d99f9c6ee963fe4fee08",
+            "p1-b": "d2f57d62adedecaa20a0fd81ed540fdcd5e476f9a377493673d5a5bb286174aa"
           },
-          "basic_prompt_en": "A small harbor with moored boats.",
+          "basic_prompt_en": "1girl, solo, brown hair, beret, coat, town square, upper body, detailed eyes, illustration, masterpiece, best quality.",
           "template_version": "single-axis-relative-v1",
           "template_hash": "4cc18c54fe3fb7644ea2024d89ce66f1b10d3286bdc7f4c259d8cc50cccc7fc7",
           "preprocessing": "RGB; aspect preserved; longest edge 448"
@@ -641,7 +681,7 @@
         {
           "id": "p2-b-e1",
           "pair_id": "p2",
-          "pair_version": 1,
+          "pair_version": 3,
           "chosen_id": "p2-b",
           "dimensions": [
             "lighting"
@@ -649,18 +689,18 @@
           "values": {
             "lighting": "dramatic"
           },
-          "text": "The selected flowers have stronger shadows and highlights than the other image.",
+          "text": "The selected library portrait has stronger light and shadow contrast around the character and bookshelves.",
           "context_source": "generic_vlm",
           "source": {
             "model": "Qwen/Qwen3.5-4B",
             "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
-            "template_version": "append-aesthetic-v1"
+            "template_version": "append-aesthetic-character-v3"
           },
           "image_hashes": {
-            "p2-a": "99e5e80e37d5f8cd77c23af5b8ec6dd999bf8c013f070a5378f982815195f73e",
-            "p2-b": "867ab990a86a3bba776592f0144a8c27241309b9ea1d65ff752443a39f4de473"
+            "p2-a": "ce1dbddcdbe0bd784ea3eec0a28d3f518d6a35d19eeae375a534b30421c9c088",
+            "p2-b": "e604e8bcb68aa46988b271914ca703f2a1451a7f53c11d419f4649c4a87e9c58"
           },
-          "basic_prompt_en": "A vase of flowers on a table in a room.",
+          "basic_prompt_en": "1boy, solo, black hair, vest, white shirt, library, upper body, detailed eyes, illustration, masterpiece, best quality.",
           "template_version": "single-axis-relative-v1",
           "template_hash": "4cc18c54fe3fb7644ea2024d89ce66f1b10d3286bdc7f4c259d8cc50cccc7fc7",
           "preprocessing": "RGB; aspect preserved; longest edge 448"
@@ -668,7 +708,7 @@
         {
           "id": "p3-b-e1",
           "pair_id": "p3",
-          "pair_version": 1,
+          "pair_version": 3,
           "chosen_id": "p3-b",
           "dimensions": [
             "composition"
@@ -676,18 +716,18 @@
           "values": {
             "composition": "close"
           },
-          "text": "The selected image shows a closer, more detailed view of the lighthouse and rocky shore.",
+          "text": "The selected illustration frames the traveler more closely, with the face filling more of the image.",
           "context_source": "generic_vlm",
           "source": {
             "model": "Qwen/Qwen3.5-4B",
             "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
-            "template_version": "append-aesthetic-v1"
+            "template_version": "append-aesthetic-character-v3"
           },
           "image_hashes": {
-            "p3-a": "aed4557d5e08df475ddb2a50da4bd5298818d4c5a1f694f2f5b65bcc78090206",
-            "p3-b": "b870b1e921bd982ed30492140caffb1c6dc326715e85265bcf045454ba504b44"
+            "p3-a": "7579e9836b382143f177ecbda216654d93abc1835a45336bf4749ec982fcccbc",
+            "p3-b": "d8a0eb9a9193ca7ec6b567ad45745740074f8ea41cf1650786f6612c30e0d31d"
           },
-          "basic_prompt_en": "One lighthouse beside the sea.",
+          "basic_prompt_en": "1girl, solo, silver hair, cloak, grassland, detailed eyes, illustration, masterpiece, best quality.",
           "template_version": "single-axis-relative-v1",
           "template_hash": "4cc18c54fe3fb7644ea2024d89ce66f1b10d3286bdc7f4c259d8cc50cccc7fc7",
           "preprocessing": "RGB; aspect preserved; longest edge 448"
@@ -695,26 +735,26 @@
         {
           "id": "p4-b-e1",
           "pair_id": "p4",
-          "pair_version": 1,
+          "pair_version": 3,
           "chosen_id": "p4-b",
           "dimensions": [
             "texture"
           ],
           "values": {
-            "texture": "photographic"
+            "texture": "cel_shaded"
           },
-          "text": "The selected forest path has sharper, more defined natural textures than the other image.",
+          "text": "The selected witch illustration has clearer outlines and more distinct areas of color than the softer alternative.",
           "context_source": "generic_vlm",
           "source": {
             "model": "Qwen/Qwen3.5-4B",
             "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
-            "template_version": "append-aesthetic-v1"
+            "template_version": "append-aesthetic-character-v3"
           },
           "image_hashes": {
-            "p4-a": "e94d95b9e63750d198ac50104f88ab12c508e8a0c447790238e5dd3cc32c22a9",
-            "p4-b": "e60d9d218512d62c1ed832040c6bd926987036f1b3bc97e8dee07f387e20f650"
+            "p4-a": "35919ad5cec7f6a773ce8016388a880b78924c62bbcd4e921a7d2f6c732bb9d7",
+            "p4-b": "1fc5568fd77be9788370b84a9840246ae759b98bb159b027a932eea1bc2d04c3"
           },
-          "basic_prompt_en": "A winding path through a forest.",
+          "basic_prompt_en": "1girl, solo, blonde hair, witch hat, cloak, flower garden, upper body, detailed eyes, illustration, masterpiece, best quality.",
           "template_version": "single-axis-relative-v1",
           "template_hash": "4cc18c54fe3fb7644ea2024d89ce66f1b10d3286bdc7f4c259d8cc50cccc7fc7",
           "preprocessing": "RGB; aspect preserved; longest edge 448"
@@ -722,7 +762,7 @@
         {
           "id": "p5-b-e1",
           "pair_id": "p5",
-          "pair_version": 1,
+          "pair_version": 3,
           "chosen_id": "p5-b",
           "dimensions": [
             "mood"
@@ -730,18 +770,18 @@
           "values": {
             "mood": "lively"
           },
-          "text": "The selected cafe scene has a livelier atmosphere with people than the other image.",
+          "text": "The selected cafe character has a laughing, open-mouth expression and a more cheerful atmosphere.",
           "context_source": "generic_vlm",
           "source": {
             "model": "Qwen/Qwen3.5-4B",
             "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
-            "template_version": "append-aesthetic-v1"
+            "template_version": "append-aesthetic-character-v3"
           },
           "image_hashes": {
-            "p5-a": "0ea4784fcaa5b0a48b133634976427db0e3f4f4e71524386545e6adfcae445b1",
-            "p5-b": "a02fc99b3eeeaa0cc432c57403b974e035967888de894fdcb35dcf8c941e742e"
+            "p5-a": "708443c3422182dac4b17fb36739388b7ec77ca6f8551676ac3a3f86b16438ca",
+            "p5-b": "ce9c25f53f08733491a645475e0ded67aafa8298129eddfb3ed3c6892a1b375c"
           },
-          "basic_prompt_en": "A cafe on a city street.",
+          "basic_prompt_en": "1boy, solo, brown hair, apron, white shirt, cafe, upper body, detailed eyes, illustration, masterpiece, best quality.",
           "template_version": "single-axis-relative-v1",
           "template_hash": "4cc18c54fe3fb7644ea2024d89ce66f1b10d3286bdc7f4c259d8cc50cccc7fc7",
           "preprocessing": "RGB; aspect preserved; longest edge 448"
@@ -754,8 +794,8 @@
         "p4:p4-b",
         "p5:p5-b"
       ],
-      "text": "The selected harbor image has cooler greens and blues than the other image.\nThe selected flowers have stronger shadows and highlights than the other image.\nThe selected image shows a closer, more detailed view of the lighthouse and rocky shore.\nThe selected forest path has sharper, more defined natural textures than the other image.\nThe selected cafe scene has a livelier atmosphere with people than the other image.",
-      "hash": "2787195fa198913c0a111db99e5786633146dd82fcdb5cf80493d63a45869ec4"
+      "text": "The selected character illustration uses more cool teal in the hat, clothes, and town background than the warmer alternative.\nThe selected library portrait has stronger light and shadow contrast around the character and bookshelves.\nThe selected illustration frames the traveler more closely, with the face filling more of the image.\nThe selected witch illustration has clearer outlines and more distinct areas of color than the softer alternative.\nThe selected cafe character has a laughing, open-mouth expression and a more cheerful atmosphere.",
+      "hash": "5c7604cd1713035d73997e907805547212cfbfab65a2ee08c252502cbe304fc0"
     },
     "mode": "sample",
     "recommendation": null,
@@ -764,102 +804,122 @@
         "type": "image",
         "id": "h2-cat-0",
         "path": "samples/h2-cat-0.png",
-        "sha256": "68feac093e32c6268dca2434abf83e11dd573f66ebc53cb75b96b743b08a8d1a",
+        "sha256": "3e86bf29f57adc3d22c35f8ce1dc084d30f4bedab66e7c076a3984a78b71a898",
         "seed": 230923,
-        "prompt": "One cat sitting by a window. cool accent colors, dramatic contrast, close framing, photographic detail, lively atmosphere.",
+        "prompt": "1girl, solo, brown hair, green eyes, sweater, holding cat, window, upper body, detailed eyes, beautiful detailed illustration, delicate shading, masterpiece, best quality. cool accent colors, dramatic contrast, close framing, clean lineart with cel shading, lively atmosphere.",
         "settings": {
-          "model": "stabilityai/stable-diffusion-xl-base-1.0",
-          "revision": "462165984030d82259a11f4367a4eed129e94a7b",
-          "scheduler": "EulerDiscreteScheduler",
+          "model": "OnomaAIResearch/Illustrious-XL-v2.0",
+          "revision": "69459c1fe6f46db41ab31e6114f05acc0e06bcaa",
+          "scheduler": "EulerAncestralDiscreteScheduler",
           "width": 1024,
           "height": 1024,
-          "steps": 20,
-          "guidance_scale": 7.0,
-          "negative_prompt": "",
-          "precision": "fp16"
+          "steps": 28,
+          "guidance_scale": 6.5,
+          "negative_prompt": "worst quality, bad quality, lowres, blurry, bad anatomy, bad hands, extra digits, fewer digits, multiple views, comic, text, watermark, signature, photo, photorealistic, 3d, monochrome, greyscale, sketch, unfinished, nsfw, nude, multiple people, chibi, 2girls, 2boys",
+          "precision": "fp16",
+          "pipeline_config": {
+            "model": "OnomaAIResearch/Illustrious-xl-early-release-v0",
+            "revision": "dca0dac303e6dc4b0c31d8001bc685b89b5d0204"
+          },
+          "checkpoint": "Illustrious-XL-v2.0.safetensors"
         },
-        "seconds": 2.841,
-        "context_hash": "2787195fa198913c0a111db99e5786633146dd82fcdb5cf80493d63a45869ec4"
+        "seconds": 3.803,
+        "context_hash": "5c7604cd1713035d73997e907805547212cfbfab65a2ee08c252502cbe304fc0"
       },
       {
         "type": "image",
         "id": "h2-cat-1",
         "path": "samples/h2-cat-1.png",
-        "sha256": "477ad695365047f1e106fba594521dd2224a3e6461d9cce0e4f630d5ff252e89",
+        "sha256": "64b4379f5b3901a97bba8b4cba357e6a0cf4c407a3d11a31af5cb09198faf66c",
         "seed": 230924,
-        "prompt": "One cat sitting by a window. cool accent colors, dramatic contrast, close framing, photographic detail, lively atmosphere.",
+        "prompt": "1girl, solo, brown hair, green eyes, sweater, holding cat, window, upper body, detailed eyes, beautiful detailed illustration, delicate shading, masterpiece, best quality. cool accent colors, dramatic contrast, close framing, clean lineart with cel shading, lively atmosphere.",
         "settings": {
-          "model": "stabilityai/stable-diffusion-xl-base-1.0",
-          "revision": "462165984030d82259a11f4367a4eed129e94a7b",
-          "scheduler": "EulerDiscreteScheduler",
+          "model": "OnomaAIResearch/Illustrious-XL-v2.0",
+          "revision": "69459c1fe6f46db41ab31e6114f05acc0e06bcaa",
+          "scheduler": "EulerAncestralDiscreteScheduler",
           "width": 1024,
           "height": 1024,
-          "steps": 20,
-          "guidance_scale": 7.0,
-          "negative_prompt": "",
-          "precision": "fp16"
+          "steps": 28,
+          "guidance_scale": 6.5,
+          "negative_prompt": "worst quality, bad quality, lowres, blurry, bad anatomy, bad hands, extra digits, fewer digits, multiple views, comic, text, watermark, signature, photo, photorealistic, 3d, monochrome, greyscale, sketch, unfinished, nsfw, nude, multiple people, chibi, 2girls, 2boys",
+          "precision": "fp16",
+          "pipeline_config": {
+            "model": "OnomaAIResearch/Illustrious-xl-early-release-v0",
+            "revision": "dca0dac303e6dc4b0c31d8001bc685b89b5d0204"
+          },
+          "checkpoint": "Illustrious-XL-v2.0.safetensors"
         },
-        "seconds": 2.864,
-        "context_hash": "2787195fa198913c0a111db99e5786633146dd82fcdb5cf80493d63a45869ec4"
+        "seconds": 3.773,
+        "context_hash": "5c7604cd1713035d73997e907805547212cfbfab65a2ee08c252502cbe304fc0"
       },
       {
         "type": "image",
         "id": "h2-cat-2",
         "path": "samples/h2-cat-2.png",
-        "sha256": "d31f8583c4d6de854ecf5565bb8ff8d34b56d7a18efd368e3d15fea5f55289fd",
+        "sha256": "0b106698a48bc08f256fa26ab4cc8c134b9afb6749b0e10bfa55539cb76a3de7",
         "seed": 230925,
-        "prompt": "One cat sitting by a window. cool accent colors, dramatic contrast, close framing, photographic detail, lively atmosphere.",
+        "prompt": "1girl, solo, brown hair, green eyes, sweater, holding cat, window, upper body, detailed eyes, beautiful detailed illustration, delicate shading, masterpiece, best quality. cool accent colors, dramatic contrast, close framing, clean lineart with cel shading, lively atmosphere.",
         "settings": {
-          "model": "stabilityai/stable-diffusion-xl-base-1.0",
-          "revision": "462165984030d82259a11f4367a4eed129e94a7b",
-          "scheduler": "EulerDiscreteScheduler",
+          "model": "OnomaAIResearch/Illustrious-XL-v2.0",
+          "revision": "69459c1fe6f46db41ab31e6114f05acc0e06bcaa",
+          "scheduler": "EulerAncestralDiscreteScheduler",
           "width": 1024,
           "height": 1024,
-          "steps": 20,
-          "guidance_scale": 7.0,
-          "negative_prompt": "",
-          "precision": "fp16"
+          "steps": 28,
+          "guidance_scale": 6.5,
+          "negative_prompt": "worst quality, bad quality, lowres, blurry, bad anatomy, bad hands, extra digits, fewer digits, multiple views, comic, text, watermark, signature, photo, photorealistic, 3d, monochrome, greyscale, sketch, unfinished, nsfw, nude, multiple people, chibi, 2girls, 2boys",
+          "precision": "fp16",
+          "pipeline_config": {
+            "model": "OnomaAIResearch/Illustrious-xl-early-release-v0",
+            "revision": "dca0dac303e6dc4b0c31d8001bc685b89b5d0204"
+          },
+          "checkpoint": "Illustrious-XL-v2.0.safetensors"
         },
-        "seconds": 2.879,
-        "context_hash": "2787195fa198913c0a111db99e5786633146dd82fcdb5cf80493d63a45869ec4"
+        "seconds": 3.765,
+        "context_hash": "5c7604cd1713035d73997e907805547212cfbfab65a2ee08c252502cbe304fc0"
       },
       {
         "type": "image",
         "id": "h2-cat-3",
         "path": "samples/h2-cat-3.png",
-        "sha256": "f69fc8c2dfc71746fdd892d2236086c367921c942ff4858aa658a03f1d6ee93f",
+        "sha256": "cc268e993f84bf7cd46a1316d700f87ee67f542917efbb1a11e0f5dd3cd23d0c",
         "seed": 230926,
-        "prompt": "One cat sitting by a window. cool accent colors, dramatic contrast, close framing, photographic detail, lively atmosphere.",
+        "prompt": "1girl, solo, brown hair, green eyes, sweater, holding cat, window, upper body, detailed eyes, beautiful detailed illustration, delicate shading, masterpiece, best quality. cool accent colors, dramatic contrast, close framing, clean lineart with cel shading, lively atmosphere.",
         "settings": {
-          "model": "stabilityai/stable-diffusion-xl-base-1.0",
-          "revision": "462165984030d82259a11f4367a4eed129e94a7b",
-          "scheduler": "EulerDiscreteScheduler",
+          "model": "OnomaAIResearch/Illustrious-XL-v2.0",
+          "revision": "69459c1fe6f46db41ab31e6114f05acc0e06bcaa",
+          "scheduler": "EulerAncestralDiscreteScheduler",
           "width": 1024,
           "height": 1024,
-          "steps": 20,
-          "guidance_scale": 7.0,
-          "negative_prompt": "",
-          "precision": "fp16"
+          "steps": 28,
+          "guidance_scale": 6.5,
+          "negative_prompt": "worst quality, bad quality, lowres, blurry, bad anatomy, bad hands, extra digits, fewer digits, multiple views, comic, text, watermark, signature, photo, photorealistic, 3d, monochrome, greyscale, sketch, unfinished, nsfw, nude, multiple people, chibi, 2girls, 2boys",
+          "precision": "fp16",
+          "pipeline_config": {
+            "model": "OnomaAIResearch/Illustrious-xl-early-release-v0",
+            "revision": "dca0dac303e6dc4b0c31d8001bc685b89b5d0204"
+          },
+          "checkpoint": "Illustrious-XL-v2.0.safetensors"
         },
-        "seconds": 2.867,
-        "context_hash": "2787195fa198913c0a111db99e5786633146dd82fcdb5cf80493d63a45869ec4"
+        "seconds": 3.775,
+        "context_hash": "5c7604cd1713035d73997e907805547212cfbfab65a2ee08c252502cbe304fc0"
       }
     ],
     "rewrite": {
       "type": "rewrite",
       "id": "h2-cat",
-      "prompt": "One cat sitting by a window. cool accent colors, dramatic contrast, close framing, photographic detail, lively atmosphere.",
-      "raw": "cool accent colors, dramatic contrast, close framing, photographic detail, lively atmosphere",
+      "prompt": "1girl, solo, brown hair, green eyes, sweater, holding cat, window, upper body, detailed eyes, beautiful detailed illustration, delicate shading, masterpiece, best quality. cool accent colors, dramatic contrast, close framing, clean lineart with cel shading, lively atmosphere.",
+      "raw": "cool accent colors, dramatic contrast, close framing, clean lineart with cel shading, lively atmosphere",
       "valid": true,
-      "context_hash": "2787195fa198913c0a111db99e5786633146dd82fcdb5cf80493d63a45869ec4",
+      "context_hash": "5c7604cd1713035d73997e907805547212cfbfab65a2ee08c252502cbe304fc0",
       "model": {
         "model": "Qwen/Qwen3.5-4B",
         "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
-        "template_version": "append-aesthetic-v1"
+        "template_version": "append-aesthetic-character-v3"
       },
       "token_lengths": [
-        25,
-        25
+        58,
+        58
       ]
     }
   },
@@ -894,7 +954,7 @@
         "color": "cool",
         "lighting": "dramatic",
         "composition": "close",
-        "texture": "photographic",
+        "texture": "cel_shaded",
         "mood": "lively"
       },
       "overrides": {},
@@ -902,7 +962,7 @@
         {
           "id": "p1-b-e1",
           "pair_id": "p1",
-          "pair_version": 1,
+          "pair_version": 3,
           "chosen_id": "p1-b",
           "dimensions": [
             "color"
@@ -910,18 +970,18 @@
           "values": {
             "color": "cool"
           },
-          "text": "The selected harbor image has cooler greens and blues than the other image.",
+          "text": "The selected character illustration uses more cool teal in the hat, clothes, and town background than the warmer alternative.",
           "context_source": "generic_vlm",
           "source": {
             "model": "Qwen/Qwen3.5-4B",
             "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
-            "template_version": "append-aesthetic-v1"
+            "template_version": "append-aesthetic-character-v3"
           },
           "image_hashes": {
-            "p1-a": "2ff616c02e4c844a87de50c30b093640ef852ac2a6e1447cb7854b504bf84687",
-            "p1-b": "0fe0d31d93216d1a000def4b25c1b4adcc1088ea132d16b41764c75ea8e90806"
+            "p1-a": "1448fb0052f2a7472cd2e92e30de33965c90e7350c95d99f9c6ee963fe4fee08",
+            "p1-b": "d2f57d62adedecaa20a0fd81ed540fdcd5e476f9a377493673d5a5bb286174aa"
           },
-          "basic_prompt_en": "A small harbor with moored boats.",
+          "basic_prompt_en": "1girl, solo, brown hair, beret, coat, town square, upper body, detailed eyes, illustration, masterpiece, best quality.",
           "template_version": "single-axis-relative-v1",
           "template_hash": "4cc18c54fe3fb7644ea2024d89ce66f1b10d3286bdc7f4c259d8cc50cccc7fc7",
           "preprocessing": "RGB; aspect preserved; longest edge 448"
@@ -929,7 +989,7 @@
         {
           "id": "p2-b-e1",
           "pair_id": "p2",
-          "pair_version": 1,
+          "pair_version": 3,
           "chosen_id": "p2-b",
           "dimensions": [
             "lighting"
@@ -937,18 +997,18 @@
           "values": {
             "lighting": "dramatic"
           },
-          "text": "The selected flowers have stronger shadows and highlights than the other image.",
+          "text": "The selected library portrait has stronger light and shadow contrast around the character and bookshelves.",
           "context_source": "generic_vlm",
           "source": {
             "model": "Qwen/Qwen3.5-4B",
             "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
-            "template_version": "append-aesthetic-v1"
+            "template_version": "append-aesthetic-character-v3"
           },
           "image_hashes": {
-            "p2-a": "99e5e80e37d5f8cd77c23af5b8ec6dd999bf8c013f070a5378f982815195f73e",
-            "p2-b": "867ab990a86a3bba776592f0144a8c27241309b9ea1d65ff752443a39f4de473"
+            "p2-a": "ce1dbddcdbe0bd784ea3eec0a28d3f518d6a35d19eeae375a534b30421c9c088",
+            "p2-b": "e604e8bcb68aa46988b271914ca703f2a1451a7f53c11d419f4649c4a87e9c58"
           },
-          "basic_prompt_en": "A vase of flowers on a table in a room.",
+          "basic_prompt_en": "1boy, solo, black hair, vest, white shirt, library, upper body, detailed eyes, illustration, masterpiece, best quality.",
           "template_version": "single-axis-relative-v1",
           "template_hash": "4cc18c54fe3fb7644ea2024d89ce66f1b10d3286bdc7f4c259d8cc50cccc7fc7",
           "preprocessing": "RGB; aspect preserved; longest edge 448"
@@ -956,7 +1016,7 @@
         {
           "id": "p3-b-e1",
           "pair_id": "p3",
-          "pair_version": 1,
+          "pair_version": 3,
           "chosen_id": "p3-b",
           "dimensions": [
             "composition"
@@ -964,18 +1024,18 @@
           "values": {
             "composition": "close"
           },
-          "text": "The selected image shows a closer, more detailed view of the lighthouse and rocky shore.",
+          "text": "The selected illustration frames the traveler more closely, with the face filling more of the image.",
           "context_source": "generic_vlm",
           "source": {
             "model": "Qwen/Qwen3.5-4B",
             "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
-            "template_version": "append-aesthetic-v1"
+            "template_version": "append-aesthetic-character-v3"
           },
           "image_hashes": {
-            "p3-a": "aed4557d5e08df475ddb2a50da4bd5298818d4c5a1f694f2f5b65bcc78090206",
-            "p3-b": "b870b1e921bd982ed30492140caffb1c6dc326715e85265bcf045454ba504b44"
+            "p3-a": "7579e9836b382143f177ecbda216654d93abc1835a45336bf4749ec982fcccbc",
+            "p3-b": "d8a0eb9a9193ca7ec6b567ad45745740074f8ea41cf1650786f6612c30e0d31d"
           },
-          "basic_prompt_en": "One lighthouse beside the sea.",
+          "basic_prompt_en": "1girl, solo, silver hair, cloak, grassland, detailed eyes, illustration, masterpiece, best quality.",
           "template_version": "single-axis-relative-v1",
           "template_hash": "4cc18c54fe3fb7644ea2024d89ce66f1b10d3286bdc7f4c259d8cc50cccc7fc7",
           "preprocessing": "RGB; aspect preserved; longest edge 448"
@@ -983,26 +1043,26 @@
         {
           "id": "p4-b-e1",
           "pair_id": "p4",
-          "pair_version": 1,
+          "pair_version": 3,
           "chosen_id": "p4-b",
           "dimensions": [
             "texture"
           ],
           "values": {
-            "texture": "photographic"
+            "texture": "cel_shaded"
           },
-          "text": "The selected forest path has sharper, more defined natural textures than the other image.",
+          "text": "The selected witch illustration has clearer outlines and more distinct areas of color than the softer alternative.",
           "context_source": "generic_vlm",
           "source": {
             "model": "Qwen/Qwen3.5-4B",
             "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
-            "template_version": "append-aesthetic-v1"
+            "template_version": "append-aesthetic-character-v3"
           },
           "image_hashes": {
-            "p4-a": "e94d95b9e63750d198ac50104f88ab12c508e8a0c447790238e5dd3cc32c22a9",
-            "p4-b": "e60d9d218512d62c1ed832040c6bd926987036f1b3bc97e8dee07f387e20f650"
+            "p4-a": "35919ad5cec7f6a773ce8016388a880b78924c62bbcd4e921a7d2f6c732bb9d7",
+            "p4-b": "1fc5568fd77be9788370b84a9840246ae759b98bb159b027a932eea1bc2d04c3"
           },
-          "basic_prompt_en": "A winding path through a forest.",
+          "basic_prompt_en": "1girl, solo, blonde hair, witch hat, cloak, flower garden, upper body, detailed eyes, illustration, masterpiece, best quality.",
           "template_version": "single-axis-relative-v1",
           "template_hash": "4cc18c54fe3fb7644ea2024d89ce66f1b10d3286bdc7f4c259d8cc50cccc7fc7",
           "preprocessing": "RGB; aspect preserved; longest edge 448"
@@ -1010,7 +1070,7 @@
         {
           "id": "p5-b-e1",
           "pair_id": "p5",
-          "pair_version": 1,
+          "pair_version": 3,
           "chosen_id": "p5-b",
           "dimensions": [
             "mood"
@@ -1018,18 +1078,18 @@
           "values": {
             "mood": "lively"
           },
-          "text": "The selected cafe scene has a livelier atmosphere with people than the other image.",
+          "text": "The selected cafe character has a laughing, open-mouth expression and a more cheerful atmosphere.",
           "context_source": "generic_vlm",
           "source": {
             "model": "Qwen/Qwen3.5-4B",
             "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
-            "template_version": "append-aesthetic-v1"
+            "template_version": "append-aesthetic-character-v3"
           },
           "image_hashes": {
-            "p5-a": "0ea4784fcaa5b0a48b133634976427db0e3f4f4e71524386545e6adfcae445b1",
-            "p5-b": "a02fc99b3eeeaa0cc432c57403b974e035967888de894fdcb35dcf8c941e742e"
+            "p5-a": "708443c3422182dac4b17fb36739388b7ec77ca6f8551676ac3a3f86b16438ca",
+            "p5-b": "ce9c25f53f08733491a645475e0ded67aafa8298129eddfb3ed3c6892a1b375c"
           },
-          "basic_prompt_en": "A cafe on a city street.",
+          "basic_prompt_en": "1boy, solo, brown hair, apron, white shirt, cafe, upper body, detailed eyes, illustration, masterpiece, best quality.",
           "template_version": "single-axis-relative-v1",
           "template_hash": "4cc18c54fe3fb7644ea2024d89ce66f1b10d3286bdc7f4c259d8cc50cccc7fc7",
           "preprocessing": "RGB; aspect preserved; longest edge 448"
@@ -1042,8 +1102,8 @@
         "p4:p4-b",
         "p5:p5-b"
       ],
-      "text": "The selected harbor image has cooler greens and blues than the other image.\nThe selected flowers have stronger shadows and highlights than the other image.\nThe selected image shows a closer, more detailed view of the lighthouse and rocky shore.\nThe selected forest path has sharper, more defined natural textures than the other image.\nThe selected cafe scene has a livelier atmosphere with people than the other image.",
-      "hash": "2787195fa198913c0a111db99e5786633146dd82fcdb5cf80493d63a45869ec4"
+      "text": "The selected character illustration uses more cool teal in the hat, clothes, and town background than the warmer alternative.\nThe selected library portrait has stronger light and shadow contrast around the character and bookshelves.\nThe selected illustration frames the traveler more closely, with the face filling more of the image.\nThe selected witch illustration has clearer outlines and more distinct areas of color than the softer alternative.\nThe selected cafe character has a laughing, open-mouth expression and a more cheerful atmosphere.",
+      "hash": "5c7604cd1713035d73997e907805547212cfbfab65a2ee08c252502cbe304fc0"
     },
     "mode": "sample",
     "recommendation": null,
@@ -1052,102 +1112,122 @@
         "type": "image",
         "id": "h2-tokyo-0",
         "path": "samples/h2-tokyo-0.png",
-        "sha256": "77df4ba25492b444f539687a95c6dfa5b1951e8ab19129432104576bd5415588",
+        "sha256": "a8f76a2b5639ff60722579de9b3e07f46caefc8b18999a97e3464caa6c7978d8",
         "seed": 230923,
-        "prompt": "The Tokyo skyline at night. cool accent colors, dramatic contrast, close framing, photographic detail, lively atmosphere.",
+        "prompt": "1boy, solo, male focus, short black hair, jacket, Tokyo skyline, night, portrait, detailed eyes, beautiful detailed illustration, delicate shading, masterpiece, best quality. cool accent colors, dramatic contrast, close framing, clean lineart with cel shading, lively atmosphere.",
         "settings": {
-          "model": "stabilityai/stable-diffusion-xl-base-1.0",
-          "revision": "462165984030d82259a11f4367a4eed129e94a7b",
-          "scheduler": "EulerDiscreteScheduler",
+          "model": "OnomaAIResearch/Illustrious-XL-v2.0",
+          "revision": "69459c1fe6f46db41ab31e6114f05acc0e06bcaa",
+          "scheduler": "EulerAncestralDiscreteScheduler",
           "width": 1024,
           "height": 1024,
-          "steps": 20,
-          "guidance_scale": 7.0,
-          "negative_prompt": "",
-          "precision": "fp16"
+          "steps": 28,
+          "guidance_scale": 6.5,
+          "negative_prompt": "worst quality, bad quality, lowres, blurry, bad anatomy, bad hands, extra digits, fewer digits, multiple views, comic, text, watermark, signature, photo, photorealistic, 3d, monochrome, greyscale, sketch, unfinished, nsfw, nude, multiple people, chibi, 2girls, 2boys",
+          "precision": "fp16",
+          "pipeline_config": {
+            "model": "OnomaAIResearch/Illustrious-xl-early-release-v0",
+            "revision": "dca0dac303e6dc4b0c31d8001bc685b89b5d0204"
+          },
+          "checkpoint": "Illustrious-XL-v2.0.safetensors"
         },
-        "seconds": 2.802,
-        "context_hash": "2787195fa198913c0a111db99e5786633146dd82fcdb5cf80493d63a45869ec4"
+        "seconds": 3.756,
+        "context_hash": "5c7604cd1713035d73997e907805547212cfbfab65a2ee08c252502cbe304fc0"
       },
       {
         "type": "image",
         "id": "h2-tokyo-1",
         "path": "samples/h2-tokyo-1.png",
-        "sha256": "2d11d1cbc2d411f82a9945875da76488b4b4702165f5ec430ba3d0e1bcd7a6aa",
+        "sha256": "4aae9ea7f5c7113cb86a34b4ecb4068b1b7788ff7ec5ebbae88f9343a9e1d7e8",
         "seed": 230924,
-        "prompt": "The Tokyo skyline at night. cool accent colors, dramatic contrast, close framing, photographic detail, lively atmosphere.",
+        "prompt": "1boy, solo, male focus, short black hair, jacket, Tokyo skyline, night, portrait, detailed eyes, beautiful detailed illustration, delicate shading, masterpiece, best quality. cool accent colors, dramatic contrast, close framing, clean lineart with cel shading, lively atmosphere.",
         "settings": {
-          "model": "stabilityai/stable-diffusion-xl-base-1.0",
-          "revision": "462165984030d82259a11f4367a4eed129e94a7b",
-          "scheduler": "EulerDiscreteScheduler",
+          "model": "OnomaAIResearch/Illustrious-XL-v2.0",
+          "revision": "69459c1fe6f46db41ab31e6114f05acc0e06bcaa",
+          "scheduler": "EulerAncestralDiscreteScheduler",
           "width": 1024,
           "height": 1024,
-          "steps": 20,
-          "guidance_scale": 7.0,
-          "negative_prompt": "",
-          "precision": "fp16"
+          "steps": 28,
+          "guidance_scale": 6.5,
+          "negative_prompt": "worst quality, bad quality, lowres, blurry, bad anatomy, bad hands, extra digits, fewer digits, multiple views, comic, text, watermark, signature, photo, photorealistic, 3d, monochrome, greyscale, sketch, unfinished, nsfw, nude, multiple people, chibi, 2girls, 2boys",
+          "precision": "fp16",
+          "pipeline_config": {
+            "model": "OnomaAIResearch/Illustrious-xl-early-release-v0",
+            "revision": "dca0dac303e6dc4b0c31d8001bc685b89b5d0204"
+          },
+          "checkpoint": "Illustrious-XL-v2.0.safetensors"
         },
-        "seconds": 2.815,
-        "context_hash": "2787195fa198913c0a111db99e5786633146dd82fcdb5cf80493d63a45869ec4"
+        "seconds": 3.766,
+        "context_hash": "5c7604cd1713035d73997e907805547212cfbfab65a2ee08c252502cbe304fc0"
       },
       {
         "type": "image",
         "id": "h2-tokyo-2",
         "path": "samples/h2-tokyo-2.png",
-        "sha256": "83838c3fef633f5c9cdd40379a49823b388f45a155d76c8474aa5bfa523966d5",
+        "sha256": "40826ce5a3c3ae8a5f8a42dc1c7ba58101c931fb43c69dc950d5ab148cf8a2ae",
         "seed": 230925,
-        "prompt": "The Tokyo skyline at night. cool accent colors, dramatic contrast, close framing, photographic detail, lively atmosphere.",
+        "prompt": "1boy, solo, male focus, short black hair, jacket, Tokyo skyline, night, portrait, detailed eyes, beautiful detailed illustration, delicate shading, masterpiece, best quality. cool accent colors, dramatic contrast, close framing, clean lineart with cel shading, lively atmosphere.",
         "settings": {
-          "model": "stabilityai/stable-diffusion-xl-base-1.0",
-          "revision": "462165984030d82259a11f4367a4eed129e94a7b",
-          "scheduler": "EulerDiscreteScheduler",
+          "model": "OnomaAIResearch/Illustrious-XL-v2.0",
+          "revision": "69459c1fe6f46db41ab31e6114f05acc0e06bcaa",
+          "scheduler": "EulerAncestralDiscreteScheduler",
           "width": 1024,
           "height": 1024,
-          "steps": 20,
-          "guidance_scale": 7.0,
-          "negative_prompt": "",
-          "precision": "fp16"
+          "steps": 28,
+          "guidance_scale": 6.5,
+          "negative_prompt": "worst quality, bad quality, lowres, blurry, bad anatomy, bad hands, extra digits, fewer digits, multiple views, comic, text, watermark, signature, photo, photorealistic, 3d, monochrome, greyscale, sketch, unfinished, nsfw, nude, multiple people, chibi, 2girls, 2boys",
+          "precision": "fp16",
+          "pipeline_config": {
+            "model": "OnomaAIResearch/Illustrious-xl-early-release-v0",
+            "revision": "dca0dac303e6dc4b0c31d8001bc685b89b5d0204"
+          },
+          "checkpoint": "Illustrious-XL-v2.0.safetensors"
         },
-        "seconds": 2.823,
-        "context_hash": "2787195fa198913c0a111db99e5786633146dd82fcdb5cf80493d63a45869ec4"
+        "seconds": 3.772,
+        "context_hash": "5c7604cd1713035d73997e907805547212cfbfab65a2ee08c252502cbe304fc0"
       },
       {
         "type": "image",
         "id": "h2-tokyo-3",
         "path": "samples/h2-tokyo-3.png",
-        "sha256": "948d98a863f2df02f77474a063bb5f008e11e45cdccf5e06edfcd59a7341db3e",
+        "sha256": "db279ee7dceedcfce0b69bce60fc17f7561eff8863a3a3607b69fa874e0b7a86",
         "seed": 230926,
-        "prompt": "The Tokyo skyline at night. cool accent colors, dramatic contrast, close framing, photographic detail, lively atmosphere.",
+        "prompt": "1boy, solo, male focus, short black hair, jacket, Tokyo skyline, night, portrait, detailed eyes, beautiful detailed illustration, delicate shading, masterpiece, best quality. cool accent colors, dramatic contrast, close framing, clean lineart with cel shading, lively atmosphere.",
         "settings": {
-          "model": "stabilityai/stable-diffusion-xl-base-1.0",
-          "revision": "462165984030d82259a11f4367a4eed129e94a7b",
-          "scheduler": "EulerDiscreteScheduler",
+          "model": "OnomaAIResearch/Illustrious-XL-v2.0",
+          "revision": "69459c1fe6f46db41ab31e6114f05acc0e06bcaa",
+          "scheduler": "EulerAncestralDiscreteScheduler",
           "width": 1024,
           "height": 1024,
-          "steps": 20,
-          "guidance_scale": 7.0,
-          "negative_prompt": "",
-          "precision": "fp16"
+          "steps": 28,
+          "guidance_scale": 6.5,
+          "negative_prompt": "worst quality, bad quality, lowres, blurry, bad anatomy, bad hands, extra digits, fewer digits, multiple views, comic, text, watermark, signature, photo, photorealistic, 3d, monochrome, greyscale, sketch, unfinished, nsfw, nude, multiple people, chibi, 2girls, 2boys",
+          "precision": "fp16",
+          "pipeline_config": {
+            "model": "OnomaAIResearch/Illustrious-xl-early-release-v0",
+            "revision": "dca0dac303e6dc4b0c31d8001bc685b89b5d0204"
+          },
+          "checkpoint": "Illustrious-XL-v2.0.safetensors"
         },
-        "seconds": 2.829,
-        "context_hash": "2787195fa198913c0a111db99e5786633146dd82fcdb5cf80493d63a45869ec4"
+        "seconds": 3.783,
+        "context_hash": "5c7604cd1713035d73997e907805547212cfbfab65a2ee08c252502cbe304fc0"
       }
     ],
     "rewrite": {
       "type": "rewrite",
       "id": "h2-tokyo",
-      "prompt": "The Tokyo skyline at night. cool accent colors, dramatic contrast, close framing, photographic detail, lively atmosphere.",
-      "raw": "cool accent colors, dramatic contrast, close framing, photographic detail, lively atmosphere",
+      "prompt": "1boy, solo, male focus, short black hair, jacket, Tokyo skyline, night, portrait, detailed eyes, beautiful detailed illustration, delicate shading, masterpiece, best quality. cool accent colors, dramatic contrast, close framing, clean lineart with cel shading, lively atmosphere.",
+      "raw": "cool accent colors, dramatic contrast, close framing, clean lineart with cel shading, lively atmosphere",
       "valid": true,
-      "context_hash": "2787195fa198913c0a111db99e5786633146dd82fcdb5cf80493d63a45869ec4",
+      "context_hash": "5c7604cd1713035d73997e907805547212cfbfab65a2ee08c252502cbe304fc0",
       "model": {
         "model": "Qwen/Qwen3.5-4B",
         "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
-        "template_version": "append-aesthetic-v1"
+        "template_version": "append-aesthetic-character-v3"
       },
       "token_lengths": [
-        24,
-        24
+        58,
+        58
       ]
     }
   },
@@ -1182,7 +1262,7 @@
         "color": "warm",
         "lighting": "dramatic",
         "composition": "spacious",
-        "texture": "photographic",
+        "texture": "cel_shaded",
         "mood": "calm"
       },
       "overrides": {},
@@ -1190,7 +1270,7 @@
         {
           "id": "p1-a-e1",
           "pair_id": "p1",
-          "pair_version": 1,
+          "pair_version": 3,
           "chosen_id": "p1-a",
           "dimensions": [
             "color"
@@ -1198,18 +1278,18 @@
           "values": {
             "color": "warm"
           },
-          "text": "The selected harbor image has warmer colors than the other image.",
+          "text": "The selected character illustration uses warmer orange and golden tones in the clothes and background.",
           "context_source": "generic_vlm",
           "source": {
             "model": "Qwen/Qwen3.5-4B",
             "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
-            "template_version": "append-aesthetic-v1"
+            "template_version": "append-aesthetic-character-v3"
           },
           "image_hashes": {
-            "p1-a": "2ff616c02e4c844a87de50c30b093640ef852ac2a6e1447cb7854b504bf84687",
-            "p1-b": "0fe0d31d93216d1a000def4b25c1b4adcc1088ea132d16b41764c75ea8e90806"
+            "p1-a": "1448fb0052f2a7472cd2e92e30de33965c90e7350c95d99f9c6ee963fe4fee08",
+            "p1-b": "d2f57d62adedecaa20a0fd81ed540fdcd5e476f9a377493673d5a5bb286174aa"
           },
-          "basic_prompt_en": "A small harbor with moored boats.",
+          "basic_prompt_en": "1girl, solo, brown hair, beret, coat, town square, upper body, detailed eyes, illustration, masterpiece, best quality.",
           "template_version": "single-axis-relative-v1",
           "template_hash": "4cc18c54fe3fb7644ea2024d89ce66f1b10d3286bdc7f4c259d8cc50cccc7fc7",
           "preprocessing": "RGB; aspect preserved; longest edge 448"
@@ -1217,7 +1297,7 @@
         {
           "id": "p2-b-e1",
           "pair_id": "p2",
-          "pair_version": 1,
+          "pair_version": 3,
           "chosen_id": "p2-b",
           "dimensions": [
             "lighting"
@@ -1225,18 +1305,18 @@
           "values": {
             "lighting": "dramatic"
           },
-          "text": "The selected flowers have stronger shadows and highlights than the other image.",
+          "text": "The selected library portrait has stronger light and shadow contrast around the character and bookshelves.",
           "context_source": "generic_vlm",
           "source": {
             "model": "Qwen/Qwen3.5-4B",
             "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
-            "template_version": "append-aesthetic-v1"
+            "template_version": "append-aesthetic-character-v3"
           },
           "image_hashes": {
-            "p2-a": "99e5e80e37d5f8cd77c23af5b8ec6dd999bf8c013f070a5378f982815195f73e",
-            "p2-b": "867ab990a86a3bba776592f0144a8c27241309b9ea1d65ff752443a39f4de473"
+            "p2-a": "ce1dbddcdbe0bd784ea3eec0a28d3f518d6a35d19eeae375a534b30421c9c088",
+            "p2-b": "e604e8bcb68aa46988b271914ca703f2a1451a7f53c11d419f4649c4a87e9c58"
           },
-          "basic_prompt_en": "A vase of flowers on a table in a room.",
+          "basic_prompt_en": "1boy, solo, black hair, vest, white shirt, library, upper body, detailed eyes, illustration, masterpiece, best quality.",
           "template_version": "single-axis-relative-v1",
           "template_hash": "4cc18c54fe3fb7644ea2024d89ce66f1b10d3286bdc7f4c259d8cc50cccc7fc7",
           "preprocessing": "RGB; aspect preserved; longest edge 448"
@@ -1244,7 +1324,7 @@
         {
           "id": "p3-a-e1",
           "pair_id": "p3",
-          "pair_version": 1,
+          "pair_version": 3,
           "chosen_id": "p3-a",
           "dimensions": [
             "composition"
@@ -1252,18 +1332,18 @@
           "values": {
             "composition": "spacious"
           },
-          "text": "The selected image emphasizes open sea around a distant lighthouse.",
+          "text": "The selected illustration shows more of the traveler and the surrounding grassland and sky.",
           "context_source": "generic_vlm",
           "source": {
             "model": "Qwen/Qwen3.5-4B",
             "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
-            "template_version": "append-aesthetic-v1"
+            "template_version": "append-aesthetic-character-v3"
           },
           "image_hashes": {
-            "p3-a": "aed4557d5e08df475ddb2a50da4bd5298818d4c5a1f694f2f5b65bcc78090206",
-            "p3-b": "b870b1e921bd982ed30492140caffb1c6dc326715e85265bcf045454ba504b44"
+            "p3-a": "7579e9836b382143f177ecbda216654d93abc1835a45336bf4749ec982fcccbc",
+            "p3-b": "d8a0eb9a9193ca7ec6b567ad45745740074f8ea41cf1650786f6612c30e0d31d"
           },
-          "basic_prompt_en": "One lighthouse beside the sea.",
+          "basic_prompt_en": "1girl, solo, silver hair, cloak, grassland, detailed eyes, illustration, masterpiece, best quality.",
           "template_version": "single-axis-relative-v1",
           "template_hash": "4cc18c54fe3fb7644ea2024d89ce66f1b10d3286bdc7f4c259d8cc50cccc7fc7",
           "preprocessing": "RGB; aspect preserved; longest edge 448"
@@ -1271,26 +1351,26 @@
         {
           "id": "p4-b-e1",
           "pair_id": "p4",
-          "pair_version": 1,
+          "pair_version": 3,
           "chosen_id": "p4-b",
           "dimensions": [
             "texture"
           ],
           "values": {
-            "texture": "photographic"
+            "texture": "cel_shaded"
           },
-          "text": "The selected forest path has sharper, more defined natural textures than the other image.",
+          "text": "The selected witch illustration has clearer outlines and more distinct areas of color than the softer alternative.",
           "context_source": "generic_vlm",
           "source": {
             "model": "Qwen/Qwen3.5-4B",
             "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
-            "template_version": "append-aesthetic-v1"
+            "template_version": "append-aesthetic-character-v3"
           },
           "image_hashes": {
-            "p4-a": "e94d95b9e63750d198ac50104f88ab12c508e8a0c447790238e5dd3cc32c22a9",
-            "p4-b": "e60d9d218512d62c1ed832040c6bd926987036f1b3bc97e8dee07f387e20f650"
+            "p4-a": "35919ad5cec7f6a773ce8016388a880b78924c62bbcd4e921a7d2f6c732bb9d7",
+            "p4-b": "1fc5568fd77be9788370b84a9840246ae759b98bb159b027a932eea1bc2d04c3"
           },
-          "basic_prompt_en": "A winding path through a forest.",
+          "basic_prompt_en": "1girl, solo, blonde hair, witch hat, cloak, flower garden, upper body, detailed eyes, illustration, masterpiece, best quality.",
           "template_version": "single-axis-relative-v1",
           "template_hash": "4cc18c54fe3fb7644ea2024d89ce66f1b10d3286bdc7f4c259d8cc50cccc7fc7",
           "preprocessing": "RGB; aspect preserved; longest edge 448"
@@ -1298,7 +1378,7 @@
         {
           "id": "p5-a-e1",
           "pair_id": "p5",
-          "pair_version": 1,
+          "pair_version": 3,
           "chosen_id": "p5-a",
           "dimensions": [
             "mood"
@@ -1306,18 +1386,18 @@
           "values": {
             "mood": "calm"
           },
-          "text": "The selected cafe scene is quieter, with empty tables, than the other image.",
+          "text": "The selected cafe character has a gentle, closed-mouth expression and a calmer atmosphere than the laughing alternative.",
           "context_source": "generic_vlm",
           "source": {
             "model": "Qwen/Qwen3.5-4B",
             "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
-            "template_version": "append-aesthetic-v1"
+            "template_version": "append-aesthetic-character-v3"
           },
           "image_hashes": {
-            "p5-a": "0ea4784fcaa5b0a48b133634976427db0e3f4f4e71524386545e6adfcae445b1",
-            "p5-b": "a02fc99b3eeeaa0cc432c57403b974e035967888de894fdcb35dcf8c941e742e"
+            "p5-a": "708443c3422182dac4b17fb36739388b7ec77ca6f8551676ac3a3f86b16438ca",
+            "p5-b": "ce9c25f53f08733491a645475e0ded67aafa8298129eddfb3ed3c6892a1b375c"
           },
-          "basic_prompt_en": "A cafe on a city street.",
+          "basic_prompt_en": "1boy, solo, brown hair, apron, white shirt, cafe, upper body, detailed eyes, illustration, masterpiece, best quality.",
           "template_version": "single-axis-relative-v1",
           "template_hash": "4cc18c54fe3fb7644ea2024d89ce66f1b10d3286bdc7f4c259d8cc50cccc7fc7",
           "preprocessing": "RGB; aspect preserved; longest edge 448"
@@ -1330,8 +1410,8 @@
         "p4:p4-b",
         "p5:p5-a"
       ],
-      "text": "The selected harbor image has warmer colors than the other image.\nThe selected flowers have stronger shadows and highlights than the other image.\nThe selected image emphasizes open sea around a distant lighthouse.\nThe selected forest path has sharper, more defined natural textures than the other image.\nThe selected cafe scene is quieter, with empty tables, than the other image.",
-      "hash": "3fe9b95eec532c65c13db1aa6935af35b034457f57bf61231e752df436b8f583"
+      "text": "The selected character illustration uses warmer orange and golden tones in the clothes and background.\nThe selected library portrait has stronger light and shadow contrast around the character and bookshelves.\nThe selected illustration shows more of the traveler and the surrounding grassland and sky.\nThe selected witch illustration has clearer outlines and more distinct areas of color than the softer alternative.\nThe selected cafe character has a gentle, closed-mouth expression and a calmer atmosphere than the laughing alternative.",
+      "hash": "caa49c3505a4394bd1528fdd701e5074708f442fb84a9b75d805da2f958e5753"
     },
     "mode": "sample",
     "recommendation": null,
@@ -1340,102 +1420,122 @@
         "type": "image",
         "id": "h3-cat-0",
         "path": "samples/h3-cat-0.png",
-        "sha256": "57963ea4903350f244cda05a347ac3c444b39eff0885dc5dd2f10b5a38b21d2c",
+        "sha256": "523dac72d25052b6976939f7386b7a79c99b84cb917061ed2f6cd70f70dea4be",
         "seed": 230923,
-        "prompt": "One cat sitting by a window. warm accent colors, dramatic contrast, spacious composition, photographic detail, calm atmosphere.",
+        "prompt": "1girl, solo, brown hair, green eyes, sweater, holding cat, window, upper body, detailed eyes, beautiful detailed illustration, delicate shading, masterpiece, best quality. warm accent colors, dramatic contrast, spacious composition, clean lineart with cel shading, calm atmosphere.",
         "settings": {
-          "model": "stabilityai/stable-diffusion-xl-base-1.0",
-          "revision": "462165984030d82259a11f4367a4eed129e94a7b",
-          "scheduler": "EulerDiscreteScheduler",
+          "model": "OnomaAIResearch/Illustrious-XL-v2.0",
+          "revision": "69459c1fe6f46db41ab31e6114f05acc0e06bcaa",
+          "scheduler": "EulerAncestralDiscreteScheduler",
           "width": 1024,
           "height": 1024,
-          "steps": 20,
-          "guidance_scale": 7.0,
-          "negative_prompt": "",
-          "precision": "fp16"
+          "steps": 28,
+          "guidance_scale": 6.5,
+          "negative_prompt": "worst quality, bad quality, lowres, blurry, bad anatomy, bad hands, extra digits, fewer digits, multiple views, comic, text, watermark, signature, photo, photorealistic, 3d, monochrome, greyscale, sketch, unfinished, nsfw, nude, multiple people, chibi, 2girls, 2boys",
+          "precision": "fp16",
+          "pipeline_config": {
+            "model": "OnomaAIResearch/Illustrious-xl-early-release-v0",
+            "revision": "dca0dac303e6dc4b0c31d8001bc685b89b5d0204"
+          },
+          "checkpoint": "Illustrious-XL-v2.0.safetensors"
         },
-        "seconds": 2.868,
-        "context_hash": "3fe9b95eec532c65c13db1aa6935af35b034457f57bf61231e752df436b8f583"
+        "seconds": 3.822,
+        "context_hash": "caa49c3505a4394bd1528fdd701e5074708f442fb84a9b75d805da2f958e5753"
       },
       {
         "type": "image",
         "id": "h3-cat-1",
         "path": "samples/h3-cat-1.png",
-        "sha256": "3e5e65e15546c32c662c2a41f7763d9163e799c8b300504a37d090e52f33add3",
+        "sha256": "3879c1012f534bf9fd8a6e203ac9339a1ff2485919df815b73b3b4ce5a767844",
         "seed": 230924,
-        "prompt": "One cat sitting by a window. warm accent colors, dramatic contrast, spacious composition, photographic detail, calm atmosphere.",
+        "prompt": "1girl, solo, brown hair, green eyes, sweater, holding cat, window, upper body, detailed eyes, beautiful detailed illustration, delicate shading, masterpiece, best quality. warm accent colors, dramatic contrast, spacious composition, clean lineart with cel shading, calm atmosphere.",
         "settings": {
-          "model": "stabilityai/stable-diffusion-xl-base-1.0",
-          "revision": "462165984030d82259a11f4367a4eed129e94a7b",
-          "scheduler": "EulerDiscreteScheduler",
+          "model": "OnomaAIResearch/Illustrious-XL-v2.0",
+          "revision": "69459c1fe6f46db41ab31e6114f05acc0e06bcaa",
+          "scheduler": "EulerAncestralDiscreteScheduler",
           "width": 1024,
           "height": 1024,
-          "steps": 20,
-          "guidance_scale": 7.0,
-          "negative_prompt": "",
-          "precision": "fp16"
+          "steps": 28,
+          "guidance_scale": 6.5,
+          "negative_prompt": "worst quality, bad quality, lowres, blurry, bad anatomy, bad hands, extra digits, fewer digits, multiple views, comic, text, watermark, signature, photo, photorealistic, 3d, monochrome, greyscale, sketch, unfinished, nsfw, nude, multiple people, chibi, 2girls, 2boys",
+          "precision": "fp16",
+          "pipeline_config": {
+            "model": "OnomaAIResearch/Illustrious-xl-early-release-v0",
+            "revision": "dca0dac303e6dc4b0c31d8001bc685b89b5d0204"
+          },
+          "checkpoint": "Illustrious-XL-v2.0.safetensors"
         },
-        "seconds": 2.868,
-        "context_hash": "3fe9b95eec532c65c13db1aa6935af35b034457f57bf61231e752df436b8f583"
+        "seconds": 3.794,
+        "context_hash": "caa49c3505a4394bd1528fdd701e5074708f442fb84a9b75d805da2f958e5753"
       },
       {
         "type": "image",
         "id": "h3-cat-2",
         "path": "samples/h3-cat-2.png",
-        "sha256": "e830941fe3d26232d2b1e575ee3384862af1fa619a1262e2c5400766f32a350a",
+        "sha256": "845f1c69cf7e062130bc70b090a137bae686c1bad6efad707800c8ba9cfe2c48",
         "seed": 230925,
-        "prompt": "One cat sitting by a window. warm accent colors, dramatic contrast, spacious composition, photographic detail, calm atmosphere.",
+        "prompt": "1girl, solo, brown hair, green eyes, sweater, holding cat, window, upper body, detailed eyes, beautiful detailed illustration, delicate shading, masterpiece, best quality. warm accent colors, dramatic contrast, spacious composition, clean lineart with cel shading, calm atmosphere.",
         "settings": {
-          "model": "stabilityai/stable-diffusion-xl-base-1.0",
-          "revision": "462165984030d82259a11f4367a4eed129e94a7b",
-          "scheduler": "EulerDiscreteScheduler",
+          "model": "OnomaAIResearch/Illustrious-XL-v2.0",
+          "revision": "69459c1fe6f46db41ab31e6114f05acc0e06bcaa",
+          "scheduler": "EulerAncestralDiscreteScheduler",
           "width": 1024,
           "height": 1024,
-          "steps": 20,
-          "guidance_scale": 7.0,
-          "negative_prompt": "",
-          "precision": "fp16"
+          "steps": 28,
+          "guidance_scale": 6.5,
+          "negative_prompt": "worst quality, bad quality, lowres, blurry, bad anatomy, bad hands, extra digits, fewer digits, multiple views, comic, text, watermark, signature, photo, photorealistic, 3d, monochrome, greyscale, sketch, unfinished, nsfw, nude, multiple people, chibi, 2girls, 2boys",
+          "precision": "fp16",
+          "pipeline_config": {
+            "model": "OnomaAIResearch/Illustrious-xl-early-release-v0",
+            "revision": "dca0dac303e6dc4b0c31d8001bc685b89b5d0204"
+          },
+          "checkpoint": "Illustrious-XL-v2.0.safetensors"
         },
-        "seconds": 2.887,
-        "context_hash": "3fe9b95eec532c65c13db1aa6935af35b034457f57bf61231e752df436b8f583"
+        "seconds": 3.775,
+        "context_hash": "caa49c3505a4394bd1528fdd701e5074708f442fb84a9b75d805da2f958e5753"
       },
       {
         "type": "image",
         "id": "h3-cat-3",
         "path": "samples/h3-cat-3.png",
-        "sha256": "fdd5390b0b6aa59d0f698cf54cc564a9cbc81468e007cf01e568dbb90c325643",
+        "sha256": "524b3f53541ff772dd6c07c07a70532aa79f1924cded0dfab430b466e0ca71c8",
         "seed": 230926,
-        "prompt": "One cat sitting by a window. warm accent colors, dramatic contrast, spacious composition, photographic detail, calm atmosphere.",
+        "prompt": "1girl, solo, brown hair, green eyes, sweater, holding cat, window, upper body, detailed eyes, beautiful detailed illustration, delicate shading, masterpiece, best quality. warm accent colors, dramatic contrast, spacious composition, clean lineart with cel shading, calm atmosphere.",
         "settings": {
-          "model": "stabilityai/stable-diffusion-xl-base-1.0",
-          "revision": "462165984030d82259a11f4367a4eed129e94a7b",
-          "scheduler": "EulerDiscreteScheduler",
+          "model": "OnomaAIResearch/Illustrious-XL-v2.0",
+          "revision": "69459c1fe6f46db41ab31e6114f05acc0e06bcaa",
+          "scheduler": "EulerAncestralDiscreteScheduler",
           "width": 1024,
           "height": 1024,
-          "steps": 20,
-          "guidance_scale": 7.0,
-          "negative_prompt": "",
-          "precision": "fp16"
+          "steps": 28,
+          "guidance_scale": 6.5,
+          "negative_prompt": "worst quality, bad quality, lowres, blurry, bad anatomy, bad hands, extra digits, fewer digits, multiple views, comic, text, watermark, signature, photo, photorealistic, 3d, monochrome, greyscale, sketch, unfinished, nsfw, nude, multiple people, chibi, 2girls, 2boys",
+          "precision": "fp16",
+          "pipeline_config": {
+            "model": "OnomaAIResearch/Illustrious-xl-early-release-v0",
+            "revision": "dca0dac303e6dc4b0c31d8001bc685b89b5d0204"
+          },
+          "checkpoint": "Illustrious-XL-v2.0.safetensors"
         },
-        "seconds": 2.859,
-        "context_hash": "3fe9b95eec532c65c13db1aa6935af35b034457f57bf61231e752df436b8f583"
+        "seconds": 3.796,
+        "context_hash": "caa49c3505a4394bd1528fdd701e5074708f442fb84a9b75d805da2f958e5753"
       }
     ],
     "rewrite": {
       "type": "rewrite",
       "id": "h3-cat",
-      "prompt": "One cat sitting by a window. warm accent colors, dramatic contrast, spacious composition, photographic detail, calm atmosphere.",
-      "raw": "warm accent colors, dramatic contrast, spacious composition, photographic detail, calm atmosphere",
+      "prompt": "1girl, solo, brown hair, green eyes, sweater, holding cat, window, upper body, detailed eyes, beautiful detailed illustration, delicate shading, masterpiece, best quality. warm accent colors, dramatic contrast, spacious composition, clean lineart with cel shading, calm atmosphere.",
+      "raw": "warm accent colors, dramatic contrast, spacious composition, clean lineart with cel shading, calm atmosphere",
       "valid": true,
-      "context_hash": "3fe9b95eec532c65c13db1aa6935af35b034457f57bf61231e752df436b8f583",
+      "context_hash": "caa49c3505a4394bd1528fdd701e5074708f442fb84a9b75d805da2f958e5753",
       "model": {
         "model": "Qwen/Qwen3.5-4B",
         "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
-        "template_version": "append-aesthetic-v1"
+        "template_version": "append-aesthetic-character-v3"
       },
       "token_lengths": [
-        25,
-        25
+        58,
+        58
       ]
     }
   },
@@ -1470,7 +1570,7 @@
         "color": "warm",
         "lighting": "dramatic",
         "composition": "spacious",
-        "texture": "photographic",
+        "texture": "cel_shaded",
         "mood": "calm"
       },
       "overrides": {},
@@ -1478,7 +1578,7 @@
         {
           "id": "p1-a-e1",
           "pair_id": "p1",
-          "pair_version": 1,
+          "pair_version": 3,
           "chosen_id": "p1-a",
           "dimensions": [
             "color"
@@ -1486,18 +1586,18 @@
           "values": {
             "color": "warm"
           },
-          "text": "The selected harbor image has warmer colors than the other image.",
+          "text": "The selected character illustration uses warmer orange and golden tones in the clothes and background.",
           "context_source": "generic_vlm",
           "source": {
             "model": "Qwen/Qwen3.5-4B",
             "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
-            "template_version": "append-aesthetic-v1"
+            "template_version": "append-aesthetic-character-v3"
           },
           "image_hashes": {
-            "p1-a": "2ff616c02e4c844a87de50c30b093640ef852ac2a6e1447cb7854b504bf84687",
-            "p1-b": "0fe0d31d93216d1a000def4b25c1b4adcc1088ea132d16b41764c75ea8e90806"
+            "p1-a": "1448fb0052f2a7472cd2e92e30de33965c90e7350c95d99f9c6ee963fe4fee08",
+            "p1-b": "d2f57d62adedecaa20a0fd81ed540fdcd5e476f9a377493673d5a5bb286174aa"
           },
-          "basic_prompt_en": "A small harbor with moored boats.",
+          "basic_prompt_en": "1girl, solo, brown hair, beret, coat, town square, upper body, detailed eyes, illustration, masterpiece, best quality.",
           "template_version": "single-axis-relative-v1",
           "template_hash": "4cc18c54fe3fb7644ea2024d89ce66f1b10d3286bdc7f4c259d8cc50cccc7fc7",
           "preprocessing": "RGB; aspect preserved; longest edge 448"
@@ -1505,7 +1605,7 @@
         {
           "id": "p2-b-e1",
           "pair_id": "p2",
-          "pair_version": 1,
+          "pair_version": 3,
           "chosen_id": "p2-b",
           "dimensions": [
             "lighting"
@@ -1513,18 +1613,18 @@
           "values": {
             "lighting": "dramatic"
           },
-          "text": "The selected flowers have stronger shadows and highlights than the other image.",
+          "text": "The selected library portrait has stronger light and shadow contrast around the character and bookshelves.",
           "context_source": "generic_vlm",
           "source": {
             "model": "Qwen/Qwen3.5-4B",
             "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
-            "template_version": "append-aesthetic-v1"
+            "template_version": "append-aesthetic-character-v3"
           },
           "image_hashes": {
-            "p2-a": "99e5e80e37d5f8cd77c23af5b8ec6dd999bf8c013f070a5378f982815195f73e",
-            "p2-b": "867ab990a86a3bba776592f0144a8c27241309b9ea1d65ff752443a39f4de473"
+            "p2-a": "ce1dbddcdbe0bd784ea3eec0a28d3f518d6a35d19eeae375a534b30421c9c088",
+            "p2-b": "e604e8bcb68aa46988b271914ca703f2a1451a7f53c11d419f4649c4a87e9c58"
           },
-          "basic_prompt_en": "A vase of flowers on a table in a room.",
+          "basic_prompt_en": "1boy, solo, black hair, vest, white shirt, library, upper body, detailed eyes, illustration, masterpiece, best quality.",
           "template_version": "single-axis-relative-v1",
           "template_hash": "4cc18c54fe3fb7644ea2024d89ce66f1b10d3286bdc7f4c259d8cc50cccc7fc7",
           "preprocessing": "RGB; aspect preserved; longest edge 448"
@@ -1532,7 +1632,7 @@
         {
           "id": "p3-a-e1",
           "pair_id": "p3",
-          "pair_version": 1,
+          "pair_version": 3,
           "chosen_id": "p3-a",
           "dimensions": [
             "composition"
@@ -1540,18 +1640,18 @@
           "values": {
             "composition": "spacious"
           },
-          "text": "The selected image emphasizes open sea around a distant lighthouse.",
+          "text": "The selected illustration shows more of the traveler and the surrounding grassland and sky.",
           "context_source": "generic_vlm",
           "source": {
             "model": "Qwen/Qwen3.5-4B",
             "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
-            "template_version": "append-aesthetic-v1"
+            "template_version": "append-aesthetic-character-v3"
           },
           "image_hashes": {
-            "p3-a": "aed4557d5e08df475ddb2a50da4bd5298818d4c5a1f694f2f5b65bcc78090206",
-            "p3-b": "b870b1e921bd982ed30492140caffb1c6dc326715e85265bcf045454ba504b44"
+            "p3-a": "7579e9836b382143f177ecbda216654d93abc1835a45336bf4749ec982fcccbc",
+            "p3-b": "d8a0eb9a9193ca7ec6b567ad45745740074f8ea41cf1650786f6612c30e0d31d"
           },
-          "basic_prompt_en": "One lighthouse beside the sea.",
+          "basic_prompt_en": "1girl, solo, silver hair, cloak, grassland, detailed eyes, illustration, masterpiece, best quality.",
           "template_version": "single-axis-relative-v1",
           "template_hash": "4cc18c54fe3fb7644ea2024d89ce66f1b10d3286bdc7f4c259d8cc50cccc7fc7",
           "preprocessing": "RGB; aspect preserved; longest edge 448"
@@ -1559,26 +1659,26 @@
         {
           "id": "p4-b-e1",
           "pair_id": "p4",
-          "pair_version": 1,
+          "pair_version": 3,
           "chosen_id": "p4-b",
           "dimensions": [
             "texture"
           ],
           "values": {
-            "texture": "photographic"
+            "texture": "cel_shaded"
           },
-          "text": "The selected forest path has sharper, more defined natural textures than the other image.",
+          "text": "The selected witch illustration has clearer outlines and more distinct areas of color than the softer alternative.",
           "context_source": "generic_vlm",
           "source": {
             "model": "Qwen/Qwen3.5-4B",
             "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
-            "template_version": "append-aesthetic-v1"
+            "template_version": "append-aesthetic-character-v3"
           },
           "image_hashes": {
-            "p4-a": "e94d95b9e63750d198ac50104f88ab12c508e8a0c447790238e5dd3cc32c22a9",
-            "p4-b": "e60d9d218512d62c1ed832040c6bd926987036f1b3bc97e8dee07f387e20f650"
+            "p4-a": "35919ad5cec7f6a773ce8016388a880b78924c62bbcd4e921a7d2f6c732bb9d7",
+            "p4-b": "1fc5568fd77be9788370b84a9840246ae759b98bb159b027a932eea1bc2d04c3"
           },
-          "basic_prompt_en": "A winding path through a forest.",
+          "basic_prompt_en": "1girl, solo, blonde hair, witch hat, cloak, flower garden, upper body, detailed eyes, illustration, masterpiece, best quality.",
           "template_version": "single-axis-relative-v1",
           "template_hash": "4cc18c54fe3fb7644ea2024d89ce66f1b10d3286bdc7f4c259d8cc50cccc7fc7",
           "preprocessing": "RGB; aspect preserved; longest edge 448"
@@ -1586,7 +1686,7 @@
         {
           "id": "p5-a-e1",
           "pair_id": "p5",
-          "pair_version": 1,
+          "pair_version": 3,
           "chosen_id": "p5-a",
           "dimensions": [
             "mood"
@@ -1594,18 +1694,18 @@
           "values": {
             "mood": "calm"
           },
-          "text": "The selected cafe scene is quieter, with empty tables, than the other image.",
+          "text": "The selected cafe character has a gentle, closed-mouth expression and a calmer atmosphere than the laughing alternative.",
           "context_source": "generic_vlm",
           "source": {
             "model": "Qwen/Qwen3.5-4B",
             "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
-            "template_version": "append-aesthetic-v1"
+            "template_version": "append-aesthetic-character-v3"
           },
           "image_hashes": {
-            "p5-a": "0ea4784fcaa5b0a48b133634976427db0e3f4f4e71524386545e6adfcae445b1",
-            "p5-b": "a02fc99b3eeeaa0cc432c57403b974e035967888de894fdcb35dcf8c941e742e"
+            "p5-a": "708443c3422182dac4b17fb36739388b7ec77ca6f8551676ac3a3f86b16438ca",
+            "p5-b": "ce9c25f53f08733491a645475e0ded67aafa8298129eddfb3ed3c6892a1b375c"
           },
-          "basic_prompt_en": "A cafe on a city street.",
+          "basic_prompt_en": "1boy, solo, brown hair, apron, white shirt, cafe, upper body, detailed eyes, illustration, masterpiece, best quality.",
           "template_version": "single-axis-relative-v1",
           "template_hash": "4cc18c54fe3fb7644ea2024d89ce66f1b10d3286bdc7f4c259d8cc50cccc7fc7",
           "preprocessing": "RGB; aspect preserved; longest edge 448"
@@ -1618,8 +1718,8 @@
         "p4:p4-b",
         "p5:p5-a"
       ],
-      "text": "The selected harbor image has warmer colors than the other image.\nThe selected flowers have stronger shadows and highlights than the other image.\nThe selected image emphasizes open sea around a distant lighthouse.\nThe selected forest path has sharper, more defined natural textures than the other image.\nThe selected cafe scene is quieter, with empty tables, than the other image.",
-      "hash": "3fe9b95eec532c65c13db1aa6935af35b034457f57bf61231e752df436b8f583"
+      "text": "The selected character illustration uses warmer orange and golden tones in the clothes and background.\nThe selected library portrait has stronger light and shadow contrast around the character and bookshelves.\nThe selected illustration shows more of the traveler and the surrounding grassland and sky.\nThe selected witch illustration has clearer outlines and more distinct areas of color than the softer alternative.\nThe selected cafe character has a gentle, closed-mouth expression and a calmer atmosphere than the laughing alternative.",
+      "hash": "caa49c3505a4394bd1528fdd701e5074708f442fb84a9b75d805da2f958e5753"
     },
     "mode": "sample",
     "recommendation": null,
@@ -1628,102 +1728,122 @@
         "type": "image",
         "id": "h3-tokyo-0",
         "path": "samples/h3-tokyo-0.png",
-        "sha256": "118fb860b15f5ccb89f49d407cf87cfe920c3350649f0eb06cd787554ff20321",
+        "sha256": "5fef634b7ea20e94dbfd913b430c3a45c5e530412b87c6d336c31ee0ae5c45c9",
         "seed": 230923,
-        "prompt": "The Tokyo skyline at night. warm accent colors, dramatic contrast, spacious composition, photographic detail, calm atmosphere.",
+        "prompt": "1boy, solo, male focus, short black hair, jacket, Tokyo skyline, night, portrait, detailed eyes, beautiful detailed illustration, delicate shading, masterpiece, best quality. warm accent colors, dramatic contrast, spacious composition, clean lineart with cel shading, calm atmosphere.",
         "settings": {
-          "model": "stabilityai/stable-diffusion-xl-base-1.0",
-          "revision": "462165984030d82259a11f4367a4eed129e94a7b",
-          "scheduler": "EulerDiscreteScheduler",
+          "model": "OnomaAIResearch/Illustrious-XL-v2.0",
+          "revision": "69459c1fe6f46db41ab31e6114f05acc0e06bcaa",
+          "scheduler": "EulerAncestralDiscreteScheduler",
           "width": 1024,
           "height": 1024,
-          "steps": 20,
-          "guidance_scale": 7.0,
-          "negative_prompt": "",
-          "precision": "fp16"
+          "steps": 28,
+          "guidance_scale": 6.5,
+          "negative_prompt": "worst quality, bad quality, lowres, blurry, bad anatomy, bad hands, extra digits, fewer digits, multiple views, comic, text, watermark, signature, photo, photorealistic, 3d, monochrome, greyscale, sketch, unfinished, nsfw, nude, multiple people, chibi, 2girls, 2boys",
+          "precision": "fp16",
+          "pipeline_config": {
+            "model": "OnomaAIResearch/Illustrious-xl-early-release-v0",
+            "revision": "dca0dac303e6dc4b0c31d8001bc685b89b5d0204"
+          },
+          "checkpoint": "Illustrious-XL-v2.0.safetensors"
         },
-        "seconds": 2.808,
-        "context_hash": "3fe9b95eec532c65c13db1aa6935af35b034457f57bf61231e752df436b8f583"
+        "seconds": 3.789,
+        "context_hash": "caa49c3505a4394bd1528fdd701e5074708f442fb84a9b75d805da2f958e5753"
       },
       {
         "type": "image",
         "id": "h3-tokyo-1",
         "path": "samples/h3-tokyo-1.png",
-        "sha256": "d069e5a76e9aa77be6391a8fc6325257bd3dd947816df3cc9f4ad4d9e999068a",
+        "sha256": "388116fa45ab9d2c50fce751924db8bb9f2fcd188a22922cc04543a4b5053e2c",
         "seed": 230924,
-        "prompt": "The Tokyo skyline at night. warm accent colors, dramatic contrast, spacious composition, photographic detail, calm atmosphere.",
+        "prompt": "1boy, solo, male focus, short black hair, jacket, Tokyo skyline, night, portrait, detailed eyes, beautiful detailed illustration, delicate shading, masterpiece, best quality. warm accent colors, dramatic contrast, spacious composition, clean lineart with cel shading, calm atmosphere.",
         "settings": {
-          "model": "stabilityai/stable-diffusion-xl-base-1.0",
-          "revision": "462165984030d82259a11f4367a4eed129e94a7b",
-          "scheduler": "EulerDiscreteScheduler",
+          "model": "OnomaAIResearch/Illustrious-XL-v2.0",
+          "revision": "69459c1fe6f46db41ab31e6114f05acc0e06bcaa",
+          "scheduler": "EulerAncestralDiscreteScheduler",
           "width": 1024,
           "height": 1024,
-          "steps": 20,
-          "guidance_scale": 7.0,
-          "negative_prompt": "",
-          "precision": "fp16"
+          "steps": 28,
+          "guidance_scale": 6.5,
+          "negative_prompt": "worst quality, bad quality, lowres, blurry, bad anatomy, bad hands, extra digits, fewer digits, multiple views, comic, text, watermark, signature, photo, photorealistic, 3d, monochrome, greyscale, sketch, unfinished, nsfw, nude, multiple people, chibi, 2girls, 2boys",
+          "precision": "fp16",
+          "pipeline_config": {
+            "model": "OnomaAIResearch/Illustrious-xl-early-release-v0",
+            "revision": "dca0dac303e6dc4b0c31d8001bc685b89b5d0204"
+          },
+          "checkpoint": "Illustrious-XL-v2.0.safetensors"
         },
-        "seconds": 2.831,
-        "context_hash": "3fe9b95eec532c65c13db1aa6935af35b034457f57bf61231e752df436b8f583"
+        "seconds": 3.793,
+        "context_hash": "caa49c3505a4394bd1528fdd701e5074708f442fb84a9b75d805da2f958e5753"
       },
       {
         "type": "image",
         "id": "h3-tokyo-2",
         "path": "samples/h3-tokyo-2.png",
-        "sha256": "2336704f9521805117fbc497fb778cb8b52de47c4458cf474a1478b6b39aa009",
+        "sha256": "d559660d552cc60dd295ff998eeb5b6f65d636b71075bcc74a7743dcecbe0903",
         "seed": 230925,
-        "prompt": "The Tokyo skyline at night. warm accent colors, dramatic contrast, spacious composition, photographic detail, calm atmosphere.",
+        "prompt": "1boy, solo, male focus, short black hair, jacket, Tokyo skyline, night, portrait, detailed eyes, beautiful detailed illustration, delicate shading, masterpiece, best quality. warm accent colors, dramatic contrast, spacious composition, clean lineart with cel shading, calm atmosphere.",
         "settings": {
-          "model": "stabilityai/stable-diffusion-xl-base-1.0",
-          "revision": "462165984030d82259a11f4367a4eed129e94a7b",
-          "scheduler": "EulerDiscreteScheduler",
+          "model": "OnomaAIResearch/Illustrious-XL-v2.0",
+          "revision": "69459c1fe6f46db41ab31e6114f05acc0e06bcaa",
+          "scheduler": "EulerAncestralDiscreteScheduler",
           "width": 1024,
           "height": 1024,
-          "steps": 20,
-          "guidance_scale": 7.0,
-          "negative_prompt": "",
-          "precision": "fp16"
+          "steps": 28,
+          "guidance_scale": 6.5,
+          "negative_prompt": "worst quality, bad quality, lowres, blurry, bad anatomy, bad hands, extra digits, fewer digits, multiple views, comic, text, watermark, signature, photo, photorealistic, 3d, monochrome, greyscale, sketch, unfinished, nsfw, nude, multiple people, chibi, 2girls, 2boys",
+          "precision": "fp16",
+          "pipeline_config": {
+            "model": "OnomaAIResearch/Illustrious-xl-early-release-v0",
+            "revision": "dca0dac303e6dc4b0c31d8001bc685b89b5d0204"
+          },
+          "checkpoint": "Illustrious-XL-v2.0.safetensors"
         },
-        "seconds": 2.822,
-        "context_hash": "3fe9b95eec532c65c13db1aa6935af35b034457f57bf61231e752df436b8f583"
+        "seconds": 3.827,
+        "context_hash": "caa49c3505a4394bd1528fdd701e5074708f442fb84a9b75d805da2f958e5753"
       },
       {
         "type": "image",
         "id": "h3-tokyo-3",
         "path": "samples/h3-tokyo-3.png",
-        "sha256": "dbea9170aad8dec16453461f31c84d67f3f3672e1fd50df3edcb8b91463a2e83",
+        "sha256": "5b21fba22ba067142ed01d855a777fff04b960f0df80c235f9af998c341a5788",
         "seed": 230926,
-        "prompt": "The Tokyo skyline at night. warm accent colors, dramatic contrast, spacious composition, photographic detail, calm atmosphere.",
+        "prompt": "1boy, solo, male focus, short black hair, jacket, Tokyo skyline, night, portrait, detailed eyes, beautiful detailed illustration, delicate shading, masterpiece, best quality. warm accent colors, dramatic contrast, spacious composition, clean lineart with cel shading, calm atmosphere.",
         "settings": {
-          "model": "stabilityai/stable-diffusion-xl-base-1.0",
-          "revision": "462165984030d82259a11f4367a4eed129e94a7b",
-          "scheduler": "EulerDiscreteScheduler",
+          "model": "OnomaAIResearch/Illustrious-XL-v2.0",
+          "revision": "69459c1fe6f46db41ab31e6114f05acc0e06bcaa",
+          "scheduler": "EulerAncestralDiscreteScheduler",
           "width": 1024,
           "height": 1024,
-          "steps": 20,
-          "guidance_scale": 7.0,
-          "negative_prompt": "",
-          "precision": "fp16"
+          "steps": 28,
+          "guidance_scale": 6.5,
+          "negative_prompt": "worst quality, bad quality, lowres, blurry, bad anatomy, bad hands, extra digits, fewer digits, multiple views, comic, text, watermark, signature, photo, photorealistic, 3d, monochrome, greyscale, sketch, unfinished, nsfw, nude, multiple people, chibi, 2girls, 2boys",
+          "precision": "fp16",
+          "pipeline_config": {
+            "model": "OnomaAIResearch/Illustrious-xl-early-release-v0",
+            "revision": "dca0dac303e6dc4b0c31d8001bc685b89b5d0204"
+          },
+          "checkpoint": "Illustrious-XL-v2.0.safetensors"
         },
-        "seconds": 2.817,
-        "context_hash": "3fe9b95eec532c65c13db1aa6935af35b034457f57bf61231e752df436b8f583"
+        "seconds": 3.787,
+        "context_hash": "caa49c3505a4394bd1528fdd701e5074708f442fb84a9b75d805da2f958e5753"
       }
     ],
     "rewrite": {
       "type": "rewrite",
       "id": "h3-tokyo",
-      "prompt": "The Tokyo skyline at night. warm accent colors, dramatic contrast, spacious composition, photographic detail, calm atmosphere.",
-      "raw": "warm accent colors, dramatic contrast, spacious composition, photographic detail, calm atmosphere",
+      "prompt": "1boy, solo, male focus, short black hair, jacket, Tokyo skyline, night, portrait, detailed eyes, beautiful detailed illustration, delicate shading, masterpiece, best quality. warm accent colors, dramatic contrast, spacious composition, clean lineart with cel shading, calm atmosphere.",
+      "raw": "warm accent colors, dramatic contrast, spacious composition, clean lineart with cel shading, calm atmosphere",
       "valid": true,
-      "context_hash": "3fe9b95eec532c65c13db1aa6935af35b034457f57bf61231e752df436b8f583",
+      "context_hash": "caa49c3505a4394bd1528fdd701e5074708f442fb84a9b75d805da2f958e5753",
       "model": {
         "model": "Qwen/Qwen3.5-4B",
         "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
-        "template_version": "append-aesthetic-v1"
+        "template_version": "append-aesthetic-character-v3"
       },
       "token_lengths": [
-        24,
-        24
+        58,
+        58
       ]
     }
   }
