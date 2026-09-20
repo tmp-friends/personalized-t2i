@@ -1,9 +1,9 @@
 {
-  "version": "exhibit-illustrious-v2-character-v3",
+  "version": "exhibit-illustrious-v2-character-v4",
   "llm": {
     "model": "Qwen/Qwen3.5-4B",
     "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
-    "template_version": "append-aesthetic-character-v3"
+    "template_version": "append-aesthetic-character-v4"
   },
   "generation": {
     "model": "OnomaAIResearch/Illustrious-XL-v2.0",
@@ -12,14 +12,15 @@
     "width": 1024,
     "height": 1024,
     "steps": 28,
-    "guidance_scale": 6.5,
-    "negative_prompt": "worst quality, bad quality, lowres, blurry, bad anatomy, bad hands, extra digits, fewer digits, multiple views, comic, text, watermark, signature, photo, photorealistic, 3d, monochrome, greyscale, sketch, unfinished, nsfw, nude, multiple people, chibi, 2girls, 2boys",
+    "guidance_scale": 5.0,
+    "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
     "precision": "fp16",
     "pipeline_config": {
       "model": "OnomaAIResearch/Illustrious-xl-early-release-v0",
       "revision": "dca0dac303e6dc4b0c31d8001bc685b89b5d0204"
     },
-    "checkpoint": "Illustrious-XL-v2.0.safetensors"
+    "checkpoint": "Illustrious-XL-v2.0.safetensors",
+    "positive_prompt_tail": "absurdres, highres"
   },
   "seeds": [
     230923,
@@ -34,49 +35,49 @@
     {
       "id": "cat",
       "label": "窓辺で猫と過ごす少女",
-      "basic_prompt_en": "1girl, solo, brown hair, green eyes, sweater, holding cat, window, upper body, detailed eyes, beautiful detailed illustration, delicate shading, masterpiece, best quality.",
+      "basic_prompt_en": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1girl, solo, brown hair, green eyes, sweater, holding cat, window, upper body, detailed eyes, detailed illustration",
       "invariants": [
-        "1girl, solo, brown hair, green eyes, sweater, holding cat, window, upper body, detailed eyes, beautiful detailed illustration, delicate shading, masterpiece, best quality."
+        "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1girl, solo, brown hair, green eyes, sweater, holding cat, window, upper body, detailed eyes, detailed illustration"
       ]
     },
     {
       "id": "tokyo",
       "label": "東京の夜景と青年",
-      "basic_prompt_en": "1boy, solo, male focus, short black hair, jacket, Tokyo skyline, night, portrait, detailed eyes, beautiful detailed illustration, delicate shading, masterpiece, best quality.",
+      "basic_prompt_en": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1boy, solo, male focus, short black hair, jacket, Tokyo skyline, night, portrait, detailed eyes, detailed illustration",
       "invariants": [
-        "1boy, solo, male focus, short black hair, jacket, Tokyo skyline, night, portrait, detailed eyes, beautiful detailed illustration, delicate shading, masterpiece, best quality."
+        "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1boy, solo, male focus, short black hair, jacket, Tokyo skyline, night, portrait, detailed eyes, detailed illustration"
       ]
     },
     {
       "id": "forest",
       "label": "森を旅する魔法使い",
-      "basic_prompt_en": "1girl, solo, silver hair, witch hat, cloak, forest, upper body, detailed eyes, beautiful detailed illustration, delicate shading, masterpiece, best quality.",
+      "basic_prompt_en": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1girl, solo, silver hair, witch hat, cloak, forest, upper body, detailed eyes, detailed illustration",
       "invariants": [
-        "1girl, solo, silver hair, witch hat, cloak, forest, upper body, detailed eyes, beautiful detailed illustration, delicate shading, masterpiece, best quality."
+        "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1girl, solo, silver hair, witch hat, cloak, forest, upper body, detailed eyes, detailed illustration"
       ]
     },
     {
       "id": "lighthouse",
       "label": "海辺の灯台と船乗り",
-      "basic_prompt_en": "1boy, solo, male focus, short blond hair, sailor hat, striped shirt, lighthouse, ocean, upper body, detailed eyes, beautiful detailed illustration, delicate shading, masterpiece, best quality.",
+      "basic_prompt_en": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1boy, solo, male focus, short blond hair, sailor hat, striped shirt, lighthouse, ocean, upper body, detailed eyes, detailed illustration",
       "invariants": [
-        "1boy, solo, male focus, short blond hair, sailor hat, striped shirt, lighthouse, ocean, upper body, detailed eyes, beautiful detailed illustration, delicate shading, masterpiece, best quality."
+        "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1boy, solo, male focus, short blond hair, sailor hat, striped shirt, lighthouse, ocean, upper body, detailed eyes, detailed illustration"
       ]
     },
     {
       "id": "rain",
       "label": "雨の街角の少女",
-      "basic_prompt_en": "1girl, solo, blue hair, raincoat, rain, city street, upper body, detailed eyes, beautiful detailed illustration, delicate shading, masterpiece, best quality.",
+      "basic_prompt_en": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1girl, solo, blue hair, raincoat, rain, city street, upper body, detailed eyes, detailed illustration",
       "invariants": [
-        "1girl, solo, blue hair, raincoat, rain, city street, upper body, detailed eyes, beautiful detailed illustration, delicate shading, masterpiece, best quality."
+        "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1girl, solo, blue hair, raincoat, rain, city street, upper body, detailed eyes, detailed illustration"
       ]
     },
     {
       "id": "cafe",
       "label": "カフェで迎える店員",
-      "basic_prompt_en": "1girl, solo, auburn hair, white shirt, apron, cafe, upper body, detailed eyes, beautiful detailed illustration, delicate shading, masterpiece, best quality.",
+      "basic_prompt_en": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1girl, solo, auburn hair, white shirt, apron, cafe, upper body, detailed eyes, detailed illustration",
       "invariants": [
-        "1girl, solo, auburn hair, white shirt, apron, cafe, upper body, detailed eyes, beautiful detailed illustration, delicate shading, masterpiece, best quality."
+        "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1girl, solo, auburn hair, white shirt, apron, cafe, upper body, detailed eyes, detailed illustration"
       ]
     }
   ],
@@ -84,7 +85,7 @@
     {
       "id": "p1",
       "label": "街角の少女",
-      "basic_prompt_en": "1girl, solo, brown hair, beret, coat, town square, upper body, detailed eyes, illustration, masterpiece, best quality.",
+      "basic_prompt_en": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1girl, solo, brown hair, beret, coat, town square, upper body, detailed eyes, detailed illustration",
       "dimension": "color",
       "values": [
         "warm",
@@ -94,16 +95,16 @@
         "p1-a",
         "p1-b"
       ],
-      "version": 3,
+      "version": 4,
       "prompts": [
-        "1girl, solo, brown hair, beret, coat, town square, upper body, detailed eyes, illustration, masterpiece, best quality. warm color palette, amber and orange tones.",
-        "1girl, solo, brown hair, beret, coat, town square, upper body, detailed eyes, illustration, masterpiece, best quality. cool color palette, blue and teal tones."
+        "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1girl, solo, brown hair, beret, coat, town square, upper body, detailed eyes, detailed illustration, warm color palette, amber and orange tones, soft lighting, absurdres, highres.",
+        "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1girl, solo, brown hair, beret, coat, town square, upper body, detailed eyes, detailed illustration, cool color palette, blue and teal tones, soft lighting, absurdres, highres."
       ]
     },
     {
       "id": "p2",
       "label": "図書館の青年",
-      "basic_prompt_en": "1boy, solo, black hair, vest, white shirt, library, upper body, detailed eyes, illustration, masterpiece, best quality.",
+      "basic_prompt_en": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1boy, solo, male focus, black hair, vest, white shirt, library, upper body, detailed eyes, detailed illustration",
       "dimension": "lighting",
       "values": [
         "soft",
@@ -113,16 +114,16 @@
         "p2-a",
         "p2-b"
       ],
-      "version": 3,
+      "version": 4,
       "prompts": [
-        "1boy, solo, black hair, vest, white shirt, library, upper body, detailed eyes, illustration, masterpiece, best quality. soft diffused light, gentle shadows.",
-        "1boy, solo, black hair, vest, white shirt, library, upper body, detailed eyes, illustration, masterpiece, best quality. dramatic lighting, strong shadows, rim light."
+        "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1boy, solo, male focus, black hair, vest, white shirt, library, upper body, detailed eyes, detailed illustration, soft diffused light, gentle shadows, absurdres, highres.",
+        "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1boy, solo, male focus, black hair, vest, white shirt, library, upper body, detailed eyes, detailed illustration, dramatic lighting, strong shadows, rim light, absurdres, highres."
       ]
     },
     {
       "id": "p3",
       "label": "草原の旅人",
-      "basic_prompt_en": "1girl, solo, silver hair, cloak, grassland, detailed eyes, illustration, masterpiece, best quality.",
+      "basic_prompt_en": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1girl, solo, silver hair, cloak, grassland, detailed eyes, detailed illustration",
       "dimension": "composition",
       "values": [
         "spacious",
@@ -132,16 +133,16 @@
         "p3-a",
         "p3-b"
       ],
-      "version": 3,
+      "version": 4,
       "prompts": [
-        "1girl, solo, silver hair, cloak, grassland, detailed eyes, illustration, masterpiece, best quality. cowboy shot, off-center composition, expansive sky, negative space.",
-        "1girl, solo, silver hair, cloak, grassland, detailed eyes, illustration, masterpiece, best quality. upper body, portrait, face focus."
+        "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1girl, solo, silver hair, cloak, grassland, detailed eyes, detailed illustration, cowboy shot, off-center composition, expansive sky, negative space, soft lighting, absurdres, highres.",
+        "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1girl, solo, silver hair, cloak, grassland, detailed eyes, detailed illustration, upper body, portrait, face focus, soft lighting, absurdres, highres."
       ]
     },
     {
       "id": "p4",
       "label": "花園の魔法使い",
-      "basic_prompt_en": "1girl, solo, blonde hair, witch hat, cloak, flower garden, upper body, detailed eyes, illustration, masterpiece, best quality.",
+      "basic_prompt_en": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1girl, solo, blonde hair, witch hat, cloak, flower garden, upper body, detailed eyes, detailed illustration",
       "dimension": "texture",
       "values": [
         "painterly",
@@ -151,16 +152,16 @@
         "p4-a",
         "p4-b"
       ],
-      "version": 3,
+      "version": 4,
       "prompts": [
-        "1girl, solo, blonde hair, witch hat, cloak, flower garden, upper body, detailed eyes, illustration, masterpiece, best quality. watercolor painting, soft brushwork, painterly texture.",
-        "1girl, solo, blonde hair, witch hat, cloak, flower garden, upper body, detailed eyes, illustration, masterpiece, best quality. cel shading, clean lineart, anime coloring."
+        "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1girl, solo, blonde hair, witch hat, cloak, flower garden, upper body, detailed eyes, detailed illustration, watercolor painting, soft brushwork, painterly texture, soft lighting, absurdres, highres.",
+        "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1girl, solo, blonde hair, witch hat, cloak, flower garden, upper body, detailed eyes, detailed illustration, cel shading, clean lineart, anime coloring, soft lighting, absurdres, highres."
       ]
     },
     {
       "id": "p5",
       "label": "カフェの店員",
-      "basic_prompt_en": "1boy, solo, brown hair, apron, white shirt, cafe, upper body, detailed eyes, illustration, masterpiece, best quality.",
+      "basic_prompt_en": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1boy, solo, male focus, brown hair, apron, white shirt, cafe, upper body, detailed eyes, detailed illustration",
       "dimension": "mood",
       "values": [
         "calm",
@@ -170,10 +171,10 @@
         "p5-a",
         "p5-b"
       ],
-      "version": 3,
+      "version": 4,
       "prompts": [
-        "1boy, solo, brown hair, apron, white shirt, cafe, upper body, detailed eyes, illustration, masterpiece, best quality. closed mouth, gentle expression, peaceful, calm atmosphere.",
-        "1boy, solo, brown hair, apron, white shirt, cafe, upper body, detailed eyes, illustration, masterpiece, best quality. open mouth, laughing, cheerful expression, lively atmosphere."
+        "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1boy, solo, male focus, brown hair, apron, white shirt, cafe, upper body, detailed eyes, detailed illustration, closed mouth, gentle expression, peaceful, calm atmosphere, soft lighting, absurdres, highres.",
+        "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1boy, solo, male focus, brown hair, apron, white shirt, cafe, upper body, detailed eyes, detailed illustration, open mouth, laughing, cheerful expression, lively atmosphere, soft lighting, absurdres, highres."
       ]
     }
   ]

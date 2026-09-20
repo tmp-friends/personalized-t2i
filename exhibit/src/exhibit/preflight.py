@@ -131,6 +131,18 @@ def check_models():
     }
 
 
+def write_preflight(path, *, include_models=False):
+    """Evaluate and persist the same fresh preflight result returned to callers."""
+    result = check_assets()
+    if include_models:
+        result["models"] = check_models()
+        result["ready"] = result["ready"] and result["models"]["ready"]
+    path = Path(path)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n")
+    return result
+
+
 def sample_errors(sample, root=ASSETS):
     root = Path(root)
     errors = []

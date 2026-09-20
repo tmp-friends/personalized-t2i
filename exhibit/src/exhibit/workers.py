@@ -7,7 +7,7 @@ import time
 from pathlib import Path
 
 from .config import CONFIG
-from .domain import AXES, file_hash, validate_prompt
+from .domain import AXES, compose_prompt, file_hash, validate_prompt
 
 
 def emit(kind, **data):
@@ -105,7 +105,7 @@ def rewrite(request):
                 ),
             )
             pieces = [s.strip().rstrip(".") for s in raw.split(",")]
-            prompt = item["topic"]["basic_prompt_en"] + " " + ", ".join(pieces) + "."
+            prompt = compose_prompt(item["topic"], pieces, settings)
             valid = sorted(pieces) == sorted(phrases) and validate_prompt(
                 prompt, item["topic"], tokenizers
             )

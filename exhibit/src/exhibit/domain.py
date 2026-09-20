@@ -150,6 +150,12 @@ def effective_context(persona, edits):
     return {**context, "hash": digest(context)}
 
 
+def compose_prompt(topic, phrases, generation):
+    parts = [topic["basic_prompt_en"], *phrases, generation["positive_prompt_tail"]]
+    normalized = [part.strip().rstrip(" ,.\n") for part in parts if part.strip()]
+    return ", ".join(normalized) + "."
+
+
 def cache_key(prompt, settings, seed, context=None):
     return digest(
         {"prompt": prompt, "settings": settings, "seed": seed, "context": context}

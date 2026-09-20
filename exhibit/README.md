@@ -41,7 +41,7 @@ GPU推論は既存の `tailored-visions-repro/.venv/bin/python` を別プロセ�
 
 ## 生成モデルとモチーフ
 
-[Illustrious XL v2.0-STABLE](https://huggingface.co/OnomaAIResearch/Illustrious-XL-v2.0)（revision `69459c1fe6f46db41ab31e6114f05acc0e06bcaa`）を使用します。1024×1024・28 steps・Euler ancestral・CFG 6.5・fp16で生成します。単一safetensorsを `from_single_file` で読み込み、構成ファイルとtokenizerだけを初期Illustriousの固定revisionから読みます。推論時は全てローカルファイルを使用します。
+[Illustrious XL v2.0-STABLE](https://huggingface.co/OnomaAIResearch/Illustrious-XL-v2.0)（revision `69459c1fe6f46db41ab31e6114f05acc0e06bcaa`）を使用します。1024×1024・28 steps・Euler ancestral・CFG 5.0・fp16で生成します。単一safetensorsを `from_single_file` で読み込み、構成ファイルとtokenizerだけを初期Illustriousの固定revisionから読みます。推論時は全てローカルファイルを使用します。コミュニティガイドの「Clip skip 2」はWebUI側の表記であり、使用中のDiffusers SDXLは既定でpenultimate hidden stateを使います。`clip_skip=1`/`2`の直指定は実画像比較で出力を破綻させたため、追加の`clip_skip`引数は渡しません。
 
 お題は「窓辺で猫と過ごす少女」「東京の夜景と青年」「森を旅する魔法使い」「海辺の灯台と船乗り」「雨の街角の少女」「カフェで迎える店員」の6件です。人物・衣装・場面を基本プロンプトに固定し、色・光・構図・描画表現・雰囲気を好みに合わせます。髪型や顔立ちの好み推定と、画像間で同一キャラクターを厳密に維持する機能はありません。
 
@@ -103,3 +103,5 @@ uv run --project exhibit python exhibit/scripts/rehearsal.py --sessions 20
 旧Illustrious初期版（v0）の記録：2026-09-20にSDXLから切替。固定画像58枚と根拠を更新し、Python 40件・JavaScript 4件、18条件の実LLM書き換え、起動前検査が成功しました。実ブラウザーで4枚生成を20.87秒で確認し、訂正・キャッシュ・全OFF・リセット・サンプル表示も通過しました。画像内容の残る制約を含め、[Illustrious検証記録](../docs/reports/zipp-demo/illustrious/index.html)を参照してください。
 
 2026-09-20にキャラクター版へ更新し、Illustrious XL v2.0-STABLEを採用。全58枚を再生成・目視確認し、VLM根拠とオフラインHTMLを更新しました。Python 46件・JavaScript 4件、18条件の実LLM書き換え、起動前検査が成功しました。実ブラウザーの4枚生成は24.4秒で、訂正・キャッシュ・全OFF・リセット・サンプル表示も確認しました。検証範囲と全画像は[キャラクター版の記録](../docs/reports/zipp-demo/characters/index.html)を参照してください。
+
+2026-09-21にIllustrious v2.0向け生成プロファイルをv4へ更新。品質タグを先頭、`absurdres, highres`を末尾へ統一し、negative promptを整理、CFGを5.0へ変更して全58枚を再生成しました。WebUIの「Clip skip 2」をDiffusersへ直訳すると出力が破綻することを同一prompt・seedで確認し、SDXL既定のpenultimate hidden stateを採用しています。Python 52件・JavaScript 4件、実LLM書き換え18/18件、preflight、実ブラウザー全14項目が成功し、4枚生成は24.4秒、外部通信とJS例外は0件でした。
