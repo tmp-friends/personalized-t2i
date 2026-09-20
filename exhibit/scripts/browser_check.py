@@ -7,18 +7,20 @@ import os
 import time
 from pathlib import Path
 
+from exhibit.config import CONFIG
 from playwright.sync_api import sync_playwright
 
 REPO = Path(__file__).resolve().parents[2]
-REPORT = REPO / "docs/reports/zipp-demo"
 
 
 def main():
     p = argparse.ArgumentParser()
     p.add_argument("--quick", action="store_true")
+    p.add_argument("--report-dir", type=Path, default=REPO / "docs/reports/zipp-demo")
     args = p.parse_args()
-    REPORT.mkdir(parents=True, exist_ok=True)
-    (REPORT / "screenshots").mkdir(exist_ok=True)
+    report_dir = args.report_dir
+    report_dir.mkdir(parents=True, exist_ok=True)
+    (report_dir / "screenshots").mkdir(exist_ok=True)
     errors = []
     external = []
     with sync_playwright() as pw:
@@ -43,14 +45,14 @@ def main():
         )
         page.goto("http://127.0.0.1:7860")
         page.get_by_role("button", name="体験をはじめる").wait_for()
-        page.screenshot(path=REPORT / "screenshots/01-welcome.png", full_page=True)
+        page.screenshot(path=report_dir / "screenshots/01-welcome.png", full_page=True)
         if args.quick:
             print(json.dumps({"errors": errors, "external_requests": external}))
             browser.close()
             return
         page.get_by_role("button", name="体験をはじめる").click()
         page.get_by_role("button", name="左の画像を選ぶ").wait_for()
-        page.screenshot(path=REPORT / "screenshots/02-choice.png", full_page=True)
+        page.screenshot(path=report_dir / "screenshots/02-choice.png", full_page=True)
         for i in range(5):
             page.get_by_role("button", name="左の画像を選ぶ").click()
             if i < 4:
@@ -61,9 +63,9 @@ def main():
         page.get_by_role("button", name="お題を選ぶ").wait_for()
         page.get_by_label("色づかいの反映方法").select_option("cool")
         page.get_by_label("光の反映方法").select_option("__off")
-        page.screenshot(path=REPORT / "screenshots/03-persona.png", full_page=True)
+        page.screenshot(path=report_dir / "screenshots/03-persona.png", full_page=True)
         page.get_by_role("button", name="お題を選ぶ").click()
-        page.screenshot(path=REPORT / "screenshots/04-topics.png", full_page=True)
+        page.screenshot(path=report_dir / "screenshots/04-topics.png", full_page=True)
         started = time.monotonic()
         page.get_by_role("button", name="この好みで描く").click()
         page.get_by_role("button", name="しっくりくる画像はなかった").wait_for(
@@ -77,6 +79,10 @@ def main():
         data = page.request.get(f"http://127.0.0.1:7860/api/sessions/{sid}").json()
         run = data["run"]
         assert len(run["personalized"]) == 4 and run["mode"] == "live", run
+        assert all(
+            image["settings"] == CONFIG["generation"]
+            for image in run["generic"] + run["personalized"]
+        ), "Displayed images must use the configured Illustrious model and settings"
         assert "lighting" not in run["context"]["preferences"]
         assert run["context"]["preferences"]["color"] == "cool"
         assert [x["seed"] for x in run["generic"]] == [
@@ -85,14 +91,16 @@ def main():
         assert all(
             x["context_hash"] == run["context"]["hash"] for x in run["personalized"]
         )
-        page.screenshot(path=REPORT / "screenshots/05-result.png", full_page=True)
+        page.screenshot(path=report_dir / "screenshots/05-result.png", full_page=True)
         page.get_by_role("button", name="あなた向けの画像2を選ぶ").click()
         page.get_by_text("あなたの一枚を選びました。", exact=False).wait_for()
-        page.screenshot(path=REPORT / "screenshots/06-selection.png", full_page=True)
+        page.screenshot(
+            path=report_dir / "screenshots/06-selection.png", full_page=True
+        )
         page.reload()
         page.get_by_text("あなたの一枚を選びました。", exact=False).wait_for()
         page.set_viewport_size({"width": 390, "height": 844})
-        page.screenshot(path=REPORT / "screenshots/07-mobile.png", full_page=True)
+        page.screenshot(path=report_dir / "screenshots/07-mobile.png", full_page=True)
         assert page.evaluate("document.documentElement.scrollWidth <= innerWidth")
         page.set_viewport_size({"width": 1440, "height": 1100})
         page.get_by_role("button", name="好みを直してもう一度").click()
@@ -109,7 +117,7 @@ def main():
         page.get_by_role("button", name="この好みで描く").click()
         page.get_by_text("通常画像のみ", exact=True).wait_for(timeout=15000)
         assert page.locator(".candidate").count() == 4
-        page.screenshot(path=REPORT / "screenshots/08-all-off.png", full_page=True)
+        page.screenshot(path=report_dir / "screenshots/08-all-off.png", full_page=True)
         page.locator("#finish").click()
         page.get_by_role("button", name="体験をはじめる").wait_for()
         assert (
@@ -132,12 +140,14 @@ def main():
         page.get_by_text("有効な選択が0回でした。", exact=False).wait_for()
         page.reload()
         page.get_by_text("有効な選択が0回でした。", exact=False).wait_for()
-        page.screenshot(path=REPORT / "screenshots/09-skips.png", full_page=True)
+        page.screenshot(path=report_dir / "screenshots/09-skips.png", full_page=True)
         if page.locator("#sample").count():
             page.locator("#sample").click()
             page.get_by_text("事前生成サンプル", exact=True).wait_for()
             assert page.locator(".candidate").count() == 8
-            page.screenshot(path=REPORT / "screenshots/10-sample.png", full_page=True)
+            page.screenshot(
+                path=report_dir / "screenshots/10-sample.png", full_page=True
+            )
         page.locator("#reset").click()
         report = {
             "browser": "Chromium headless / actual localhost",
@@ -148,7 +158,7 @@ def main():
                 "five choices",
                 "persona correction",
                 "axis off",
-                "four real SDXL images",
+                "four real Illustrious XL illustrations",
                 "matched seeds",
                 "shared context hash",
                 "manual selection",
@@ -163,7 +173,7 @@ def main():
             "page_errors": errors,
             "external_requests": external,
         }
-        (REPORT / "browser-evidence.json").write_text(
+        (report_dir / "browser-evidence.json").write_text(
             json.dumps(report, ensure_ascii=False, indent=2) + "\n"
         )
         assert not errors, errors
