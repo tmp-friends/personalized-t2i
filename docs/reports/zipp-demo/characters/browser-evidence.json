@@ -1,0 +1,405 @@
+{
+  "browser": "Chromium headless / actual localhost",
+  "url": "http://127.0.0.1:7860",
+  "browser_wall_seconds": 24.4,
+  "run": {
+    "id": "ecbd1d2bd0624f5d9a73013d4bd60e77",
+    "request_id": "0579e283-7700-486a-8ed4-d014ab0302b6",
+    "fingerprint": "ad54bef5ce1d7332e444e89077c14a2899e1dc422e8a484f1d4354869569d0b5",
+    "context": {
+      "version": 1,
+      "preferences": {
+        "color": "cool",
+        "composition": "spacious",
+        "texture": "painterly",
+        "mood": "lively"
+      },
+      "overrides": {
+        "color": "cool"
+      },
+      "evidence": [
+        {
+          "id": "p3-a-e1",
+          "pair_id": "p3",
+          "pair_version": 3,
+          "chosen_id": "p3-a",
+          "dimensions": [
+            "composition"
+          ],
+          "values": {
+            "composition": "spacious"
+          },
+          "text": "The selected illustration shows more of the traveler and the surrounding grassland and sky.",
+          "context_source": "generic_vlm",
+          "source": {
+            "model": "Qwen/Qwen3.5-4B",
+            "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+            "template_version": "append-aesthetic-character-v3"
+          },
+          "image_hashes": {
+            "p3-a": "7579e9836b382143f177ecbda216654d93abc1835a45336bf4749ec982fcccbc",
+            "p3-b": "d8a0eb9a9193ca7ec6b567ad45745740074f8ea41cf1650786f6612c30e0d31d"
+          },
+          "basic_prompt_en": "1girl, solo, silver hair, cloak, grassland, detailed eyes, illustration, masterpiece, best quality.",
+          "template_version": "single-axis-relative-v1",
+          "template_hash": "4cc18c54fe3fb7644ea2024d89ce66f1b10d3286bdc7f4c259d8cc50cccc7fc7",
+          "preprocessing": "RGB; aspect preserved; longest edge 448"
+        },
+        {
+          "id": "p4-a-e1",
+          "pair_id": "p4",
+          "pair_version": 3,
+          "chosen_id": "p4-a",
+          "dimensions": [
+            "texture"
+          ],
+          "values": {
+            "texture": "painterly"
+          },
+          "text": "The selected witch illustration has softer, blended shading and watercolor-like flowers compared with the outlined alternative.",
+          "context_source": "generic_vlm",
+          "source": {
+            "model": "Qwen/Qwen3.5-4B",
+            "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+            "template_version": "append-aesthetic-character-v3"
+          },
+          "image_hashes": {
+            "p4-a": "35919ad5cec7f6a773ce8016388a880b78924c62bbcd4e921a7d2f6c732bb9d7",
+            "p4-b": "1fc5568fd77be9788370b84a9840246ae759b98bb159b027a932eea1bc2d04c3"
+          },
+          "basic_prompt_en": "1girl, solo, blonde hair, witch hat, cloak, flower garden, upper body, detailed eyes, illustration, masterpiece, best quality.",
+          "template_version": "single-axis-relative-v1",
+          "template_hash": "4cc18c54fe3fb7644ea2024d89ce66f1b10d3286bdc7f4c259d8cc50cccc7fc7",
+          "preprocessing": "RGB; aspect preserved; longest edge 448"
+        },
+        {
+          "id": "p5-b-e1",
+          "pair_id": "p5",
+          "pair_version": 3,
+          "chosen_id": "p5-b",
+          "dimensions": [
+            "mood"
+          ],
+          "values": {
+            "mood": "lively"
+          },
+          "text": "The selected cafe character has a laughing, open-mouth expression and a more cheerful atmosphere.",
+          "context_source": "generic_vlm",
+          "source": {
+            "model": "Qwen/Qwen3.5-4B",
+            "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+            "template_version": "append-aesthetic-character-v3"
+          },
+          "image_hashes": {
+            "p5-a": "708443c3422182dac4b17fb36739388b7ec77ca6f8551676ac3a3f86b16438ca",
+            "p5-b": "ce9c25f53f08733491a645475e0ded67aafa8298129eddfb3ed3c6892a1b375c"
+          },
+          "basic_prompt_en": "1boy, solo, brown hair, apron, white shirt, cafe, upper body, detailed eyes, illustration, masterpiece, best quality.",
+          "template_version": "single-axis-relative-v1",
+          "template_hash": "4cc18c54fe3fb7644ea2024d89ce66f1b10d3286bdc7f4c259d8cc50cccc7fc7",
+          "preprocessing": "RGB; aspect preserved; longest edge 448"
+        }
+      ],
+      "choice_ids": [
+        "p1:p1-b",
+        "p2:p2-b",
+        "p3:p3-a",
+        "p4:p4-a",
+        "p5:p5-b"
+      ],
+      "text": "The selected illustration shows more of the traveler and the surrounding grassland and sky.\nThe selected witch illustration has softer, blended shading and watercolor-like flowers compared with the outlined alternative.\nThe selected cafe character has a laughing, open-mouth expression and a more cheerful atmosphere.\nUser explicitly requests cool accent colors.",
+      "hash": "27f1382ab3a8d7f4b0862d90e853f2f81a731972c867c1bdb6c008762789a71f"
+    },
+    "topic_id": "cat",
+    "status": "done",
+    "mode": "live",
+    "generic": [
+      {
+        "type": "image",
+        "id": "generic-0",
+        "path": "generic/cat-0.png",
+        "sha256": "36c4e3d77887e8de83266307d83b30c01f347f49d260a1359688775750f307d1",
+        "seed": 230923,
+        "prompt": "1girl, solo, brown hair, green eyes, sweater, holding cat, window, upper body, detailed eyes, beautiful detailed illustration, delicate shading, masterpiece, best quality. balanced composition, natural lighting, detailed textures.",
+        "settings": {
+          "model": "OnomaAIResearch/Illustrious-XL-v2.0",
+          "revision": "69459c1fe6f46db41ab31e6114f05acc0e06bcaa",
+          "scheduler": "EulerAncestralDiscreteScheduler",
+          "width": 1024,
+          "height": 1024,
+          "steps": 28,
+          "guidance_scale": 6.5,
+          "negative_prompt": "worst quality, bad quality, lowres, blurry, bad anatomy, bad hands, extra digits, fewer digits, multiple views, comic, text, watermark, signature, photo, photorealistic, 3d, monochrome, greyscale, sketch, unfinished, nsfw, nude, multiple people, chibi, 2girls, 2boys",
+          "precision": "fp16",
+          "pipeline_config": {
+            "model": "OnomaAIResearch/Illustrious-xl-early-release-v0",
+            "revision": "dca0dac303e6dc4b0c31d8001bc685b89b5d0204"
+          },
+          "checkpoint": "Illustrious-XL-v2.0.safetensors"
+        },
+        "seconds": 3.959,
+        "context_hash": null,
+        "source": "local-illustrious-xl-v2.0",
+        "license": "creativeml-openrail-m",
+        "asset_version": 3,
+        "url": "/assets/generic/cat-0.png"
+      },
+      {
+        "type": "image",
+        "id": "generic-1",
+        "path": "generic/cat-1.png",
+        "sha256": "f09d2579a18147ac3582507c76c3aaee94a0d7aacf9e0cbab00b4575a74e7261",
+        "seed": 230924,
+        "prompt": "1girl, solo, brown hair, green eyes, sweater, holding cat, window, upper body, detailed eyes, beautiful detailed illustration, delicate shading, masterpiece, best quality. balanced composition, natural lighting, detailed textures.",
+        "settings": {
+          "model": "OnomaAIResearch/Illustrious-XL-v2.0",
+          "revision": "69459c1fe6f46db41ab31e6114f05acc0e06bcaa",
+          "scheduler": "EulerAncestralDiscreteScheduler",
+          "width": 1024,
+          "height": 1024,
+          "steps": 28,
+          "guidance_scale": 6.5,
+          "negative_prompt": "worst quality, bad quality, lowres, blurry, bad anatomy, bad hands, extra digits, fewer digits, multiple views, comic, text, watermark, signature, photo, photorealistic, 3d, monochrome, greyscale, sketch, unfinished, nsfw, nude, multiple people, chibi, 2girls, 2boys",
+          "precision": "fp16",
+          "pipeline_config": {
+            "model": "OnomaAIResearch/Illustrious-xl-early-release-v0",
+            "revision": "dca0dac303e6dc4b0c31d8001bc685b89b5d0204"
+          },
+          "checkpoint": "Illustrious-XL-v2.0.safetensors"
+        },
+        "seconds": 3.77,
+        "context_hash": null,
+        "source": "local-illustrious-xl-v2.0",
+        "license": "creativeml-openrail-m",
+        "asset_version": 3,
+        "url": "/assets/generic/cat-1.png"
+      },
+      {
+        "type": "image",
+        "id": "generic-2",
+        "path": "generic/cat-2.png",
+        "sha256": "3a923269ff1c5d21c214388da8de6f2e0e5b20bed2a1c02e107beb10409e2219",
+        "seed": 230925,
+        "prompt": "1girl, solo, brown hair, green eyes, sweater, holding cat, window, upper body, detailed eyes, beautiful detailed illustration, delicate shading, masterpiece, best quality. balanced composition, natural lighting, detailed textures.",
+        "settings": {
+          "model": "OnomaAIResearch/Illustrious-XL-v2.0",
+          "revision": "69459c1fe6f46db41ab31e6114f05acc0e06bcaa",
+          "scheduler": "EulerAncestralDiscreteScheduler",
+          "width": 1024,
+          "height": 1024,
+          "steps": 28,
+          "guidance_scale": 6.5,
+          "negative_prompt": "worst quality, bad quality, lowres, blurry, bad anatomy, bad hands, extra digits, fewer digits, multiple views, comic, text, watermark, signature, photo, photorealistic, 3d, monochrome, greyscale, sketch, unfinished, nsfw, nude, multiple people, chibi, 2girls, 2boys",
+          "precision": "fp16",
+          "pipeline_config": {
+            "model": "OnomaAIResearch/Illustrious-xl-early-release-v0",
+            "revision": "dca0dac303e6dc4b0c31d8001bc685b89b5d0204"
+          },
+          "checkpoint": "Illustrious-XL-v2.0.safetensors"
+        },
+        "seconds": 3.772,
+        "context_hash": null,
+        "source": "local-illustrious-xl-v2.0",
+        "license": "creativeml-openrail-m",
+        "asset_version": 3,
+        "url": "/assets/generic/cat-2.png"
+      },
+      {
+        "type": "image",
+        "id": "generic-3",
+        "path": "generic/cat-3.png",
+        "sha256": "23e092f0a494216c29046bdaf6c6a11d78edce19d0b15f1afef2593dc576b7f9",
+        "seed": 230926,
+        "prompt": "1girl, solo, brown hair, green eyes, sweater, holding cat, window, upper body, detailed eyes, beautiful detailed illustration, delicate shading, masterpiece, best quality. balanced composition, natural lighting, detailed textures.",
+        "settings": {
+          "model": "OnomaAIResearch/Illustrious-XL-v2.0",
+          "revision": "69459c1fe6f46db41ab31e6114f05acc0e06bcaa",
+          "scheduler": "EulerAncestralDiscreteScheduler",
+          "width": 1024,
+          "height": 1024,
+          "steps": 28,
+          "guidance_scale": 6.5,
+          "negative_prompt": "worst quality, bad quality, lowres, blurry, bad anatomy, bad hands, extra digits, fewer digits, multiple views, comic, text, watermark, signature, photo, photorealistic, 3d, monochrome, greyscale, sketch, unfinished, nsfw, nude, multiple people, chibi, 2girls, 2boys",
+          "precision": "fp16",
+          "pipeline_config": {
+            "model": "OnomaAIResearch/Illustrious-xl-early-release-v0",
+            "revision": "dca0dac303e6dc4b0c31d8001bc685b89b5d0204"
+          },
+          "checkpoint": "Illustrious-XL-v2.0.safetensors"
+        },
+        "seconds": 3.774,
+        "context_hash": null,
+        "source": "local-illustrious-xl-v2.0",
+        "license": "creativeml-openrail-m",
+        "asset_version": 3,
+        "url": "/assets/generic/cat-3.png"
+      }
+    ],
+    "personalized": [
+      {
+        "type": "image",
+        "id": "personal-0",
+        "path": "/home/tomoya/stable-diffusion/personalized-t2i/exhibit/outputs/sessions/1cffb244e8a048849e2875919403432b/ecbd1d2bd0624f5d9a73013d4bd60e77/personal-0.png",
+        "sha256": "b0a7503a5ca3e9dd2709991fafe2a83709d5b00ea2c57b185b25538222a1d985",
+        "seed": 230923,
+        "prompt": "1girl, solo, brown hair, green eyes, sweater, holding cat, window, upper body, detailed eyes, beautiful detailed illustration, delicate shading, masterpiece, best quality. cool accent colors, spacious composition, painterly texture, lively atmosphere.",
+        "settings": {
+          "model": "OnomaAIResearch/Illustrious-XL-v2.0",
+          "revision": "69459c1fe6f46db41ab31e6114f05acc0e06bcaa",
+          "scheduler": "EulerAncestralDiscreteScheduler",
+          "width": 1024,
+          "height": 1024,
+          "steps": 28,
+          "guidance_scale": 6.5,
+          "negative_prompt": "worst quality, bad quality, lowres, blurry, bad anatomy, bad hands, extra digits, fewer digits, multiple views, comic, text, watermark, signature, photo, photorealistic, 3d, monochrome, greyscale, sketch, unfinished, nsfw, nude, multiple people, chibi, 2girls, 2boys",
+          "precision": "fp16",
+          "pipeline_config": {
+            "model": "OnomaAIResearch/Illustrious-xl-early-release-v0",
+            "revision": "dca0dac303e6dc4b0c31d8001bc685b89b5d0204"
+          },
+          "checkpoint": "Illustrious-XL-v2.0.safetensors"
+        },
+        "seconds": 3.953,
+        "context_hash": "27f1382ab3a8d7f4b0862d90e853f2f81a731972c867c1bdb6c008762789a71f",
+        "relative_path": "ecbd1d2bd0624f5d9a73013d4bd60e77/personal-0.png",
+        "url": "/api/sessions/1cffb244e8a048849e2875919403432b/images/ecbd1d2bd0624f5d9a73013d4bd60e77/personal-0.png"
+      },
+      {
+        "type": "image",
+        "id": "personal-1",
+        "path": "/home/tomoya/stable-diffusion/personalized-t2i/exhibit/outputs/sessions/1cffb244e8a048849e2875919403432b/ecbd1d2bd0624f5d9a73013d4bd60e77/personal-1.png",
+        "sha256": "80b9fcf290849545204df84043c57519bf3945dd45de5c5afaec6399affe6fa8",
+        "seed": 230924,
+        "prompt": "1girl, solo, brown hair, green eyes, sweater, holding cat, window, upper body, detailed eyes, beautiful detailed illustration, delicate shading, masterpiece, best quality. cool accent colors, spacious composition, painterly texture, lively atmosphere.",
+        "settings": {
+          "model": "OnomaAIResearch/Illustrious-XL-v2.0",
+          "revision": "69459c1fe6f46db41ab31e6114f05acc0e06bcaa",
+          "scheduler": "EulerAncestralDiscreteScheduler",
+          "width": 1024,
+          "height": 1024,
+          "steps": 28,
+          "guidance_scale": 6.5,
+          "negative_prompt": "worst quality, bad quality, lowres, blurry, bad anatomy, bad hands, extra digits, fewer digits, multiple views, comic, text, watermark, signature, photo, photorealistic, 3d, monochrome, greyscale, sketch, unfinished, nsfw, nude, multiple people, chibi, 2girls, 2boys",
+          "precision": "fp16",
+          "pipeline_config": {
+            "model": "OnomaAIResearch/Illustrious-xl-early-release-v0",
+            "revision": "dca0dac303e6dc4b0c31d8001bc685b89b5d0204"
+          },
+          "checkpoint": "Illustrious-XL-v2.0.safetensors"
+        },
+        "seconds": 3.762,
+        "context_hash": "27f1382ab3a8d7f4b0862d90e853f2f81a731972c867c1bdb6c008762789a71f",
+        "relative_path": "ecbd1d2bd0624f5d9a73013d4bd60e77/personal-1.png",
+        "url": "/api/sessions/1cffb244e8a048849e2875919403432b/images/ecbd1d2bd0624f5d9a73013d4bd60e77/personal-1.png"
+      },
+      {
+        "type": "image",
+        "id": "personal-2",
+        "path": "/home/tomoya/stable-diffusion/personalized-t2i/exhibit/outputs/sessions/1cffb244e8a048849e2875919403432b/ecbd1d2bd0624f5d9a73013d4bd60e77/personal-2.png",
+        "sha256": "50e2babd177dacccb22818284bd88cc37352d7b1b57da4d73ed05453fea29a36",
+        "seed": 230925,
+        "prompt": "1girl, solo, brown hair, green eyes, sweater, holding cat, window, upper body, detailed eyes, beautiful detailed illustration, delicate shading, masterpiece, best quality. cool accent colors, spacious composition, painterly texture, lively atmosphere.",
+        "settings": {
+          "model": "OnomaAIResearch/Illustrious-XL-v2.0",
+          "revision": "69459c1fe6f46db41ab31e6114f05acc0e06bcaa",
+          "scheduler": "EulerAncestralDiscreteScheduler",
+          "width": 1024,
+          "height": 1024,
+          "steps": 28,
+          "guidance_scale": 6.5,
+          "negative_prompt": "worst quality, bad quality, lowres, blurry, bad anatomy, bad hands, extra digits, fewer digits, multiple views, comic, text, watermark, signature, photo, photorealistic, 3d, monochrome, greyscale, sketch, unfinished, nsfw, nude, multiple people, chibi, 2girls, 2boys",
+          "precision": "fp16",
+          "pipeline_config": {
+            "model": "OnomaAIResearch/Illustrious-xl-early-release-v0",
+            "revision": "dca0dac303e6dc4b0c31d8001bc685b89b5d0204"
+          },
+          "checkpoint": "Illustrious-XL-v2.0.safetensors"
+        },
+        "seconds": 3.782,
+        "context_hash": "27f1382ab3a8d7f4b0862d90e853f2f81a731972c867c1bdb6c008762789a71f",
+        "relative_path": "ecbd1d2bd0624f5d9a73013d4bd60e77/personal-2.png",
+        "url": "/api/sessions/1cffb244e8a048849e2875919403432b/images/ecbd1d2bd0624f5d9a73013d4bd60e77/personal-2.png"
+      },
+      {
+        "type": "image",
+        "id": "personal-3",
+        "path": "/home/tomoya/stable-diffusion/personalized-t2i/exhibit/outputs/sessions/1cffb244e8a048849e2875919403432b/ecbd1d2bd0624f5d9a73013d4bd60e77/personal-3.png",
+        "sha256": "b00d01969184539aa5b172090976495239f2512366e56a0b0d7b4b2fcd3ff263",
+        "seed": 230926,
+        "prompt": "1girl, solo, brown hair, green eyes, sweater, holding cat, window, upper body, detailed eyes, beautiful detailed illustration, delicate shading, masterpiece, best quality. cool accent colors, spacious composition, painterly texture, lively atmosphere.",
+        "settings": {
+          "model": "OnomaAIResearch/Illustrious-XL-v2.0",
+          "revision": "69459c1fe6f46db41ab31e6114f05acc0e06bcaa",
+          "scheduler": "EulerAncestralDiscreteScheduler",
+          "width": 1024,
+          "height": 1024,
+          "steps": 28,
+          "guidance_scale": 6.5,
+          "negative_prompt": "worst quality, bad quality, lowres, blurry, bad anatomy, bad hands, extra digits, fewer digits, multiple views, comic, text, watermark, signature, photo, photorealistic, 3d, monochrome, greyscale, sketch, unfinished, nsfw, nude, multiple people, chibi, 2girls, 2boys",
+          "precision": "fp16",
+          "pipeline_config": {
+            "model": "OnomaAIResearch/Illustrious-xl-early-release-v0",
+            "revision": "dca0dac303e6dc4b0c31d8001bc685b89b5d0204"
+          },
+          "checkpoint": "Illustrious-XL-v2.0.safetensors"
+        },
+        "seconds": 3.793,
+        "context_hash": "27f1382ab3a8d7f4b0862d90e853f2f81a731972c867c1bdb6c008762789a71f",
+        "relative_path": "ecbd1d2bd0624f5d9a73013d4bd60e77/personal-3.png",
+        "url": "/api/sessions/1cffb244e8a048849e2875919403432b/images/ecbd1d2bd0624f5d9a73013d4bd60e77/personal-3.png"
+      }
+    ],
+    "winner_id": null,
+    "judgments": [],
+    "message": "4枚ができました。自動推薦は利用していません。好きな1枚を選んでください。",
+    "timings": {
+      "rewrite": {
+        "returncode": 0,
+        "wall_seconds": 4.61
+      },
+      "generation": {
+        "returncode": 0,
+        "wall_seconds": 19.304
+      }
+    },
+    "elapsed_seconds": 23.92,
+    "selected_id": null,
+    "generic_prompt": "1girl, solo, brown hair, green eyes, sweater, holding cat, window, upper body, detailed eyes, beautiful detailed illustration, delicate shading, masterpiece, best quality. balanced composition, natural lighting, detailed textures.",
+    "personalized_prompt": "1girl, solo, brown hair, green eyes, sweater, holding cat, window, upper body, detailed eyes, beautiful detailed illustration, delicate shading, masterpiece, best quality. cool accent colors, spacious composition, painterly texture, lively atmosphere.",
+    "reason": "",
+    "metrics": [
+      {
+        "type": "metrics",
+        "stage": "rewrite",
+        "worker_seconds": 3.555,
+        "peak_vram_mib": 8135.7,
+        "peak_rss_mib": 9002.0
+      },
+      {
+        "type": "metrics",
+        "stage": "generate",
+        "worker_seconds": 18.209,
+        "peak_vram_mib": 10736.3,
+        "peak_rss_mib": 7937.6
+      }
+    ]
+  },
+  "checks": [
+    "five choices",
+    "persona correction",
+    "axis off",
+    "four real Illustrious XL illustrations",
+    "matched seeds",
+    "shared context hash",
+    "manual selection",
+    "reload",
+    "mobile width",
+    "exact cache",
+    "all off",
+    "reset deletion",
+    "five skips",
+    "sample"
+  ],
+  "page_errors": [],
+  "external_requests": []
+}

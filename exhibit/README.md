@@ -1,6 +1,6 @@
 # Taste — あなたの「好き」を描く
 
-固定5対の選択から好みを確かめ、訂正した好みで画像を生成するローカル展示デモ。
+固定5対のキャラクターイラストから好みを確かめ、訂正した好みでIllustrious XL v2.0のキャラクターイラストを生成するローカル展示デモ。
 設計は [ZIPP-style persona × PIGReward](../docs/superpowers/specs/2026-09-19-zipp-pigreward-exhibition-demo-design.md)。
 
 ## 起動
@@ -13,7 +13,7 @@ uv run --project exhibit python exhibit/scripts/preflight.py --models
 uv run --project exhibit uvicorn exhibit.app:app --host 127.0.0.1 --port 7860
 ```
 
-ブラウザーで **http://localhost:7860** を開きます。作業結果は [HTML report](../docs/reports/zipp-demo/index.html)、サーバー経由では http://localhost:7860/report/ 。
+ブラウザーで **http://localhost:7860** を開きます。キャラクター版の検証記録は [HTML report](../docs/reports/zipp-demo/characters/index.html)、サーバー経由では http://localhost:7860/report/characters/ 。[初期Illustrious版の記録](../docs/reports/zipp-demo/illustrious/index.html)も保存しています。[旧SDXL構成の検証記録](../docs/reports/zipp-demo/index.html)も保存しています。
 
 GPU推論は既存の `tailored-visions-repro/.venv/bin/python` を別プロセスで使います。別環境を使う場合は `EXHIBIT_GPU_PYTHON=/absolute/path/to/python` を設定してください。参照環境は PyTorch 2.14.0 / Transformers 5.16.1 / Diffusers 0.40.0 / Accelerate 1.14.0 / Pillow 12.3.0。既存環境は変更していません。
 
@@ -34,14 +34,41 @@ GPU推論は既存の `tailored-visions-repro/.venv/bin/python` を別プロセ�
 **ZIPP-style実生成 + 本人の手動選択**。原ZIPPのReddit/GATを再現していません。
 
 - Qwen3.5-4Bによる固定10方向のVLM解析を実施。確認した軸別の根拠を集計するpersona簡易表示を採用しています。自由文personaのオンライン生成は未採用です。
-- ローカルLLMが承認済みの美的表現を並べる制約付き書き換え。元のお題は文字列として固定し、SDXLの両tokenizer上限を検査。書き換え失敗時は通常画像だけを表示。
+- ローカルLLMが承認済みの美的表現を並べる制約付き書き換え。元のお題とキャラクターの描画指定を文字列として固定し、Illustrious XLの両tokenizer上限を検査。書き換え失敗時は通常画像だけを表示。
 - 通常も個人化も同じローカルLLM・同じtemplate・同じ長さ上限で書き換え。個人化により語数が変わる点は制約として残ります。
 - PIGRewardは実checkpoint用adapterを実装済みですが、G0の採用条件を満たすまでは推薦無効です。理由やwinnerの欠損を補って推薦を作りません。
 - 学習済みモデルの公式スコアをこの展示の満足度と扱いません。
 
+## 生成モデルとモチーフ
+
+[Illustrious XL v2.0-STABLE](https://huggingface.co/OnomaAIResearch/Illustrious-XL-v2.0)（revision `69459c1fe6f46db41ab31e6114f05acc0e06bcaa`）を使用します。1024×1024・28 steps・Euler ancestral・CFG 6.5・fp16で生成します。単一safetensorsを `from_single_file` で読み込み、構成ファイルとtokenizerだけを初期Illustriousの固定revisionから読みます。推論時は全てローカルファイルを使用します。
+
+お題は「窓辺で猫と過ごす少女」「東京の夜景と青年」「森を旅する魔法使い」「海辺の灯台と船乗り」「雨の街角の少女」「カフェで迎える店員」の6件です。人物・衣装・場面を基本プロンプトに固定し、色・光・構図・描画表現・雰囲気を好みに合わせます。髪型や顔立ちの好み推定と、画像間で同一キャラクターを厳密に維持する機能はありません。
+
+公式モデルカードのタグ・生成設定を出発点に、実画像を見てプロンプトを調整しています。[プロンプトの出典と設計根拠](../docs/reports/zipp-demo/characters/prompt-notes.md)を参照してください。通常側と個人化側のモデル・設定・seedは一致させます。選択対もキャラクター中心で、外見や小物の変化は残るため各軸が完全に独立した比較とは扱いません。
+
+モデル・お題・生成設定を変えた際は、選択10枚・通常24枚・サンプル24枚、VLM根拠、オフラインHTMLをすべて再生成します。旧モデルの測定結果はv2.0の性能値として扱いません。
+
 ## 固定assetの準備
 
-重みは `configs/demo.json` / `pigreward-repro/configs/model.json` の固定revisionを準備時に取得します。起動時downloadは行いません。画像・根拠は `assets/manifest.json` に出典、hash、生成条件を保持します。
+重みは `configs/demo.json` / `pigreward-repro/configs/model.json` の固定revisionを準備時に取得します。起動時downloadは行いません。画像・根拠は `assets/manifest.json` に出典、hash、生成条件を保持します。Illustriousの取得例（リポジトリルートで一度だけ実行）:
+
+```bash
+tailored-visions-repro/.venv/bin/python - <<'PY'
+import json
+from huggingface_hub import hf_hub_download, snapshot_download
+settings = json.load(open("exhibit/configs/demo.json"))["generation"]
+hf_hub_download(
+    settings["model"], filename=settings["checkpoint"], revision=settings["revision"]
+)
+config = settings["pipeline_config"]
+snapshot_download(
+    config["model"], revision=config["revision"],
+    allow_patterns=["model_index.json", "scheduler/*.json", "unet/config.json",
+                    "vae/config.json", "text_encoder*/config.json", "tokenizer/*", "tokenizer_2/*"],
+)
+PY
+```
 
 ```bash
 uv run --project exhibit python exhibit/scripts/prepare.py base
@@ -61,7 +88,7 @@ uv run --project exhibit python exhibit/scripts/preflight.py --models
 
 ```bash
 uv run --project exhibit pytest exhibit/tests pigreward-repro/tests tests -q
-uv run --project exhibit python exhibit/scripts/browser_check.py
+uv run --project exhibit python exhibit/scripts/browser_check.py --report-dir docs/reports/zipp-demo/characters
 uv run --project exhibit python exhibit/scripts/pigreward_probe.py --smoke
 uv run --project exhibit python exhibit/scripts/pigreward_probe.py
 uv run --project exhibit python exhibit/scripts/rehearsal.py --sessions 20
@@ -71,4 +98,8 @@ uv run --project exhibit python exhibit/scripts/rehearsal.py --sessions 20
 
 第三者5人での理解度確認と2時間連続稼働は別の展示受入作業です。実施済みの内容・計測範囲・残項目はHTMLレポートに記載します。
 
-2026-09-20に中断後の再確認を実施。実ブラウザーで4枚生成から最終選択・リセットまで20.88秒で成功し、子プロセスのMemoryError／SIGKILLでも完成画像の保持と次sessionへの復帰を確認しました。申告されたOOMの原因自体は未特定です。詳細は[再確認記録](../docs/reports/zipp-demo/recovery-evidence.json)を参照してください。
+旧SDXL構成について、2026-09-20に中断後の再確認を実施。実ブラウザーで4枚生成から最終選択・リセットまで20.88秒で成功し、子プロセスのMemoryError／SIGKILLでも完成画像の保持と次sessionへの復帰を確認しました。申告されたOOMの原因自体は未特定です。詳細は[再確認記録](../docs/reports/zipp-demo/recovery-evidence.json)を参照してください。
+
+旧Illustrious初期版（v0）の記録：2026-09-20にSDXLから切替。固定画像58枚と根拠を更新し、Python 40件・JavaScript 4件、18条件の実LLM書き換え、起動前検査が成功しました。実ブラウザーで4枚生成を20.87秒で確認し、訂正・キャッシュ・全OFF・リセット・サンプル表示も通過しました。画像内容の残る制約を含め、[Illustrious検証記録](../docs/reports/zipp-demo/illustrious/index.html)を参照してください。
+
+2026-09-20にキャラクター版へ更新し、Illustrious XL v2.0-STABLEを採用。全58枚を再生成・目視確認し、VLM根拠とオフラインHTMLを更新しました。Python 46件・JavaScript 4件、18条件の実LLM書き換え、起動前検査が成功しました。実ブラウザーの4枚生成は24.4秒で、訂正・キャッシュ・全OFF・リセット・サンプル表示も確認しました。検証範囲と全画像は[キャラクター版の記録](../docs/reports/zipp-demo/characters/index.html)を参照してください。

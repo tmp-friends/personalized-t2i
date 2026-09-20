@@ -1,0 +1,365 @@
+{
+  "browser": "Chromium headless / actual localhost",
+  "url": "http://127.0.0.1:7860",
+  "browser_wall_seconds": 20.87,
+  "run": {
+    "id": "7e0ceddc726342ef8cceb5338919a068",
+    "request_id": "5c6bc7a9-25e8-4eb1-a9a8-7bee23a081c1",
+    "fingerprint": "21407603f215d8d9aa09db795ee7dc98c0b415169a196f59f58e8284216f89f4",
+    "context": {
+      "version": 1,
+      "preferences": {
+        "color": "cool",
+        "composition": "close",
+        "texture": "painterly",
+        "mood": "calm"
+      },
+      "overrides": {
+        "color": "cool"
+      },
+      "evidence": [
+        {
+          "id": "p3-b-e1",
+          "pair_id": "p3",
+          "pair_version": 2,
+          "chosen_id": "p3-b",
+          "dimensions": [
+            "composition"
+          ],
+          "values": {
+            "composition": "close"
+          },
+          "text": "The selected image shows the lighthouse tower from below, filling most of the frame.",
+          "context_source": "generic_vlm",
+          "source": {
+            "model": "Qwen/Qwen3.5-4B",
+            "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+            "template_version": "append-aesthetic-illustration-v2"
+          },
+          "image_hashes": {
+            "p3-a": "6a003aeea1ba593829d5df45d6aaab590d8ec45ffbdd6d488ca1d7e8e9122cc1",
+            "p3-b": "0cebb85da96597f556fbb7413c223177b2b998573b40dade44f2e3b6a50cb42a"
+          },
+          "basic_prompt_en": "scenery, lighthouse, coastline, ocean, no humans, 2D anime illustration, full color, best quality.",
+          "template_version": "single-axis-relative-v1",
+          "template_hash": "4cc18c54fe3fb7644ea2024d89ce66f1b10d3286bdc7f4c259d8cc50cccc7fc7",
+          "preprocessing": "RGB; aspect preserved; longest edge 448"
+        },
+        {
+          "id": "p4-a-e1",
+          "pair_id": "p4",
+          "pair_version": 2,
+          "chosen_id": "p4-a",
+          "dimensions": [
+            "texture"
+          ],
+          "values": {
+            "texture": "painterly"
+          },
+          "text": "The selected forest path has softer, more painterly texture than the other image.",
+          "context_source": "generic_vlm",
+          "source": {
+            "model": "Qwen/Qwen3.5-4B",
+            "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+            "template_version": "append-aesthetic-illustration-v2"
+          },
+          "image_hashes": {
+            "p4-a": "ddc63b8b0b674c680a4f0356082e824fd3b8eeb377b774d3e1899de735741cb0",
+            "p4-b": "7a4c946fa36571645b99b4049f471b29cb02a24106b573653c94100268db5968"
+          },
+          "basic_prompt_en": "scenery, winding forest path, trees, foliage, no humans, 2D anime illustration, full color, best quality.",
+          "template_version": "single-axis-relative-v1",
+          "template_hash": "4cc18c54fe3fb7644ea2024d89ce66f1b10d3286bdc7f4c259d8cc50cccc7fc7",
+          "preprocessing": "RGB; aspect preserved; longest edge 448"
+        },
+        {
+          "id": "p5-a-e1",
+          "pair_id": "p5",
+          "pair_version": 2,
+          "chosen_id": "p5-a",
+          "dimensions": [
+            "mood"
+          ],
+          "values": {
+            "mood": "calm"
+          },
+          "text": "The selected cafe illustration has a quieter, calmer atmosphere than the brighter street scene.",
+          "context_source": "generic_vlm",
+          "source": {
+            "model": "Qwen/Qwen3.5-4B",
+            "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+            "template_version": "append-aesthetic-illustration-v2"
+          },
+          "image_hashes": {
+            "p5-a": "fa28578f3b580dc9c0042aac039454afa74de831b56bbf120687462d135d6fe7",
+            "p5-b": "a00dbbd3ee1377364f5c20070e4b751b9a766fb278e1fccee2ef83e341bc7384"
+          },
+          "basic_prompt_en": "scenery, outdoor cafe, city street, tables, chairs, no humans, 2D anime illustration, full color, best quality.",
+          "template_version": "single-axis-relative-v1",
+          "template_hash": "4cc18c54fe3fb7644ea2024d89ce66f1b10d3286bdc7f4c259d8cc50cccc7fc7",
+          "preprocessing": "RGB; aspect preserved; longest edge 448"
+        }
+      ],
+      "choice_ids": [
+        "p1:p1-a",
+        "p2:p2-a",
+        "p3:p3-b",
+        "p4:p4-a",
+        "p5:p5-a"
+      ],
+      "text": "The selected image shows the lighthouse tower from below, filling most of the frame.\nThe selected forest path has softer, more painterly texture than the other image.\nThe selected cafe illustration has a quieter, calmer atmosphere than the brighter street scene.\nUser explicitly requests cool accent colors.",
+      "hash": "a805da966dc4ae87f8b6cc2e5237dcd75856cc974d0e0372e61f0054bd4d9519"
+    },
+    "topic_id": "cat",
+    "status": "done",
+    "mode": "live",
+    "generic": [
+      {
+        "type": "image",
+        "id": "generic-0",
+        "path": "generic/cat-0.png",
+        "sha256": "d5dacd12695c30a10bd6759b9cdf0b44ca877807956453be1afe9b26a1b10cf4",
+        "seed": 230923,
+        "prompt": "cat, solo, animal focus, sitting, windowsill, window, indoors, no humans, 2D anime illustration, full color, best quality. balanced composition, natural lighting, detailed textures.",
+        "settings": {
+          "model": "OnomaAIResearch/Illustrious-xl-early-release-v0",
+          "revision": "dca0dac303e6dc4b0c31d8001bc685b89b5d0204",
+          "scheduler": "EulerAncestralDiscreteScheduler",
+          "width": 1024,
+          "height": 1024,
+          "steps": 20,
+          "guidance_scale": 7.0,
+          "negative_prompt": "worst quality, bad quality, lowres, blurry, photo, photorealistic, 3d, text, watermark, monochrome, greyscale, sketch, unfinished, 1girl, 1boy, person",
+          "precision": "fp16"
+        },
+        "seconds": 3.072,
+        "context_hash": null,
+        "source": "local-illustrious-xl",
+        "license": "fair-ai-public-license-1.0-sd",
+        "asset_version": 2,
+        "url": "/assets/generic/cat-0.png"
+      },
+      {
+        "type": "image",
+        "id": "generic-1",
+        "path": "generic/cat-1.png",
+        "sha256": "53225b3406a56f45c644941a1f7364b1d1ef8805d3aa76453c205724a32b1eff",
+        "seed": 230924,
+        "prompt": "cat, solo, animal focus, sitting, windowsill, window, indoors, no humans, 2D anime illustration, full color, best quality. balanced composition, natural lighting, detailed textures.",
+        "settings": {
+          "model": "OnomaAIResearch/Illustrious-xl-early-release-v0",
+          "revision": "dca0dac303e6dc4b0c31d8001bc685b89b5d0204",
+          "scheduler": "EulerAncestralDiscreteScheduler",
+          "width": 1024,
+          "height": 1024,
+          "steps": 20,
+          "guidance_scale": 7.0,
+          "negative_prompt": "worst quality, bad quality, lowres, blurry, photo, photorealistic, 3d, text, watermark, monochrome, greyscale, sketch, unfinished, 1girl, 1boy, person",
+          "precision": "fp16"
+        },
+        "seconds": 2.84,
+        "context_hash": null,
+        "source": "local-illustrious-xl",
+        "license": "fair-ai-public-license-1.0-sd",
+        "asset_version": 2,
+        "url": "/assets/generic/cat-1.png"
+      },
+      {
+        "type": "image",
+        "id": "generic-2",
+        "path": "generic/cat-2.png",
+        "sha256": "9f67233f7e7cc1b536987362d005641927900812f8a60ac197e1351b48954cf7",
+        "seed": 230925,
+        "prompt": "cat, solo, animal focus, sitting, windowsill, window, indoors, no humans, 2D anime illustration, full color, best quality. balanced composition, natural lighting, detailed textures.",
+        "settings": {
+          "model": "OnomaAIResearch/Illustrious-xl-early-release-v0",
+          "revision": "dca0dac303e6dc4b0c31d8001bc685b89b5d0204",
+          "scheduler": "EulerAncestralDiscreteScheduler",
+          "width": 1024,
+          "height": 1024,
+          "steps": 20,
+          "guidance_scale": 7.0,
+          "negative_prompt": "worst quality, bad quality, lowres, blurry, photo, photorealistic, 3d, text, watermark, monochrome, greyscale, sketch, unfinished, 1girl, 1boy, person",
+          "precision": "fp16"
+        },
+        "seconds": 2.837,
+        "context_hash": null,
+        "source": "local-illustrious-xl",
+        "license": "fair-ai-public-license-1.0-sd",
+        "asset_version": 2,
+        "url": "/assets/generic/cat-2.png"
+      },
+      {
+        "type": "image",
+        "id": "generic-3",
+        "path": "generic/cat-3.png",
+        "sha256": "b64296403fedf9f305c7c21db849c27d4eef4b3abbc12c4d65a5b7456a458a34",
+        "seed": 230926,
+        "prompt": "cat, solo, animal focus, sitting, windowsill, window, indoors, no humans, 2D anime illustration, full color, best quality. balanced composition, natural lighting, detailed textures.",
+        "settings": {
+          "model": "OnomaAIResearch/Illustrious-xl-early-release-v0",
+          "revision": "dca0dac303e6dc4b0c31d8001bc685b89b5d0204",
+          "scheduler": "EulerAncestralDiscreteScheduler",
+          "width": 1024,
+          "height": 1024,
+          "steps": 20,
+          "guidance_scale": 7.0,
+          "negative_prompt": "worst quality, bad quality, lowres, blurry, photo, photorealistic, 3d, text, watermark, monochrome, greyscale, sketch, unfinished, 1girl, 1boy, person",
+          "precision": "fp16"
+        },
+        "seconds": 2.839,
+        "context_hash": null,
+        "source": "local-illustrious-xl",
+        "license": "fair-ai-public-license-1.0-sd",
+        "asset_version": 2,
+        "url": "/assets/generic/cat-3.png"
+      }
+    ],
+    "personalized": [
+      {
+        "type": "image",
+        "id": "personal-0",
+        "path": "/home/tomoya/stable-diffusion/personalized-t2i/exhibit/outputs/sessions/f209b87cd8c94ab4b9b62319b8853455/7e0ceddc726342ef8cceb5338919a068/personal-0.png",
+        "sha256": "20fffeedc0ff53c8e6cdd75eb74c38bc32ed0f6f95334056489d0282f414424c",
+        "seed": 230923,
+        "prompt": "cat, solo, animal focus, sitting, windowsill, window, indoors, no humans, 2D anime illustration, full color, best quality. cool accent colors, close framing, painterly texture, calm atmosphere.",
+        "settings": {
+          "model": "OnomaAIResearch/Illustrious-xl-early-release-v0",
+          "revision": "dca0dac303e6dc4b0c31d8001bc685b89b5d0204",
+          "scheduler": "EulerAncestralDiscreteScheduler",
+          "width": 1024,
+          "height": 1024,
+          "steps": 20,
+          "guidance_scale": 7.0,
+          "negative_prompt": "worst quality, bad quality, lowres, blurry, photo, photorealistic, 3d, text, watermark, monochrome, greyscale, sketch, unfinished, 1girl, 1boy, person",
+          "precision": "fp16"
+        },
+        "seconds": 3.055,
+        "context_hash": "a805da966dc4ae87f8b6cc2e5237dcd75856cc974d0e0372e61f0054bd4d9519",
+        "relative_path": "7e0ceddc726342ef8cceb5338919a068/personal-0.png",
+        "url": "/api/sessions/f209b87cd8c94ab4b9b62319b8853455/images/7e0ceddc726342ef8cceb5338919a068/personal-0.png"
+      },
+      {
+        "type": "image",
+        "id": "personal-1",
+        "path": "/home/tomoya/stable-diffusion/personalized-t2i/exhibit/outputs/sessions/f209b87cd8c94ab4b9b62319b8853455/7e0ceddc726342ef8cceb5338919a068/personal-1.png",
+        "sha256": "1d0bd3515ba50480b6a97129e02bdc623677f8e6915e4e38f53443c023e32c53",
+        "seed": 230924,
+        "prompt": "cat, solo, animal focus, sitting, windowsill, window, indoors, no humans, 2D anime illustration, full color, best quality. cool accent colors, close framing, painterly texture, calm atmosphere.",
+        "settings": {
+          "model": "OnomaAIResearch/Illustrious-xl-early-release-v0",
+          "revision": "dca0dac303e6dc4b0c31d8001bc685b89b5d0204",
+          "scheduler": "EulerAncestralDiscreteScheduler",
+          "width": 1024,
+          "height": 1024,
+          "steps": 20,
+          "guidance_scale": 7.0,
+          "negative_prompt": "worst quality, bad quality, lowres, blurry, photo, photorealistic, 3d, text, watermark, monochrome, greyscale, sketch, unfinished, 1girl, 1boy, person",
+          "precision": "fp16"
+        },
+        "seconds": 2.857,
+        "context_hash": "a805da966dc4ae87f8b6cc2e5237dcd75856cc974d0e0372e61f0054bd4d9519",
+        "relative_path": "7e0ceddc726342ef8cceb5338919a068/personal-1.png",
+        "url": "/api/sessions/f209b87cd8c94ab4b9b62319b8853455/images/7e0ceddc726342ef8cceb5338919a068/personal-1.png"
+      },
+      {
+        "type": "image",
+        "id": "personal-2",
+        "path": "/home/tomoya/stable-diffusion/personalized-t2i/exhibit/outputs/sessions/f209b87cd8c94ab4b9b62319b8853455/7e0ceddc726342ef8cceb5338919a068/personal-2.png",
+        "sha256": "d3bb362e6877e9613046b352132495a69aafd2965d6198aa382b9c1cac784590",
+        "seed": 230925,
+        "prompt": "cat, solo, animal focus, sitting, windowsill, window, indoors, no humans, 2D anime illustration, full color, best quality. cool accent colors, close framing, painterly texture, calm atmosphere.",
+        "settings": {
+          "model": "OnomaAIResearch/Illustrious-xl-early-release-v0",
+          "revision": "dca0dac303e6dc4b0c31d8001bc685b89b5d0204",
+          "scheduler": "EulerAncestralDiscreteScheduler",
+          "width": 1024,
+          "height": 1024,
+          "steps": 20,
+          "guidance_scale": 7.0,
+          "negative_prompt": "worst quality, bad quality, lowres, blurry, photo, photorealistic, 3d, text, watermark, monochrome, greyscale, sketch, unfinished, 1girl, 1boy, person",
+          "precision": "fp16"
+        },
+        "seconds": 2.815,
+        "context_hash": "a805da966dc4ae87f8b6cc2e5237dcd75856cc974d0e0372e61f0054bd4d9519",
+        "relative_path": "7e0ceddc726342ef8cceb5338919a068/personal-2.png",
+        "url": "/api/sessions/f209b87cd8c94ab4b9b62319b8853455/images/7e0ceddc726342ef8cceb5338919a068/personal-2.png"
+      },
+      {
+        "type": "image",
+        "id": "personal-3",
+        "path": "/home/tomoya/stable-diffusion/personalized-t2i/exhibit/outputs/sessions/f209b87cd8c94ab4b9b62319b8853455/7e0ceddc726342ef8cceb5338919a068/personal-3.png",
+        "sha256": "8ee03e82066361daed0abf7e91f4e4a1d756df32fad0cd017ddc1db25e754d80",
+        "seed": 230926,
+        "prompt": "cat, solo, animal focus, sitting, windowsill, window, indoors, no humans, 2D anime illustration, full color, best quality. cool accent colors, close framing, painterly texture, calm atmosphere.",
+        "settings": {
+          "model": "OnomaAIResearch/Illustrious-xl-early-release-v0",
+          "revision": "dca0dac303e6dc4b0c31d8001bc685b89b5d0204",
+          "scheduler": "EulerAncestralDiscreteScheduler",
+          "width": 1024,
+          "height": 1024,
+          "steps": 20,
+          "guidance_scale": 7.0,
+          "negative_prompt": "worst quality, bad quality, lowres, blurry, photo, photorealistic, 3d, text, watermark, monochrome, greyscale, sketch, unfinished, 1girl, 1boy, person",
+          "precision": "fp16"
+        },
+        "seconds": 2.833,
+        "context_hash": "a805da966dc4ae87f8b6cc2e5237dcd75856cc974d0e0372e61f0054bd4d9519",
+        "relative_path": "7e0ceddc726342ef8cceb5338919a068/personal-3.png",
+        "url": "/api/sessions/f209b87cd8c94ab4b9b62319b8853455/images/7e0ceddc726342ef8cceb5338919a068/personal-3.png"
+      }
+    ],
+    "winner_id": null,
+    "judgments": [],
+    "message": "4枚ができました。自動推薦は利用していません。好きな1枚を選んでください。",
+    "timings": {
+      "rewrite": {
+        "returncode": 0,
+        "wall_seconds": 4.864
+      },
+      "generation": {
+        "returncode": 0,
+        "wall_seconds": 15.539
+      }
+    },
+    "elapsed_seconds": 20.41,
+    "selected_id": null,
+    "generic_prompt": "cat, solo, animal focus, sitting, windowsill, window, indoors, no humans, 2D anime illustration, full color, best quality. balanced composition, natural lighting, detailed textures.",
+    "personalized_prompt": "cat, solo, animal focus, sitting, windowsill, window, indoors, no humans, 2D anime illustration, full color, best quality. cool accent colors, close framing, painterly texture, calm atmosphere.",
+    "reason": "",
+    "metrics": [
+      {
+        "type": "metrics",
+        "stage": "rewrite",
+        "worker_seconds": 3.834,
+        "peak_vram_mib": 8137.0,
+        "peak_rss_mib": 9002.7
+      },
+      {
+        "type": "metrics",
+        "stage": "generate",
+        "worker_seconds": 14.443,
+        "peak_vram_mib": 10736.3,
+        "peak_rss_mib": 5761.2
+      }
+    ]
+  },
+  "checks": [
+    "five choices",
+    "persona correction",
+    "axis off",
+    "four real Illustrious XL illustrations",
+    "matched seeds",
+    "shared context hash",
+    "manual selection",
+    "reload",
+    "mobile width",
+    "exact cache",
+    "all off",
+    "reset deletion",
+    "five skips",
+    "sample"
+  ],
+  "page_errors": [],
+  "external_requests": []
+}

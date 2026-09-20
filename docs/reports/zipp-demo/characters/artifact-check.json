@@ -1,0 +1,18 @@
+{
+  "checked": [
+    {
+      "url": "http://127.0.0.1:7860/report/characters/",
+      "loaded_images": 59
+    },
+    {
+      "url": "file:///home/tomoya/stable-diffusion/personalized-t2i/exhibit/assets/fallback.html",
+      "loaded_images": 48
+    }
+  ],
+  "health": {
+    "status": "ok",
+    "gpu_busy": false,
+    "mode": "zipp-style-manual",
+    "offline": true
+  }
+}

@@ -1,0 +1,22 @@
+<!doctype html><html lang="ja"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Taste · Illustrious XLへの変更</title>
+<style>body{margin:0;background:#f4f2eb;color:#24392d;font:16px/1.9 system-ui,sans-serif}main{max-width:1050px;margin:auto;padding:48px 24px}h1,h2{font-weight:500}a{color:#315d44}img{width:100%;border:1px solid #d7ddd0;border-radius:8px}pre{overflow:auto;background:#e3eadc;padding:20px;border-radius:8px;font-size:13px}.note{background:#e3eadc;padding:20px;border-radius:8px}figcaption{color:#697466;font-size:13px}figure{margin:30px 0}table{border-collapse:collapse;width:100%}td,th{text-align:left;padding:10px;border-bottom:1px solid #d7ddd0}</style>
+<main><p>Taste / 2026-09-20</p><h1>Illustrious XLで、二次元イラストの好みを描く。</h1>
+<p>生成器をIllustrious XLへ切り替え、選択画像10枚・通常画像24枚・事前サンプル24枚を再生成しました。6お題は背景・動物イラストとして描き、描画表現の選択肢を「柔らかな絵筆のタッチ／くっきりしたアニメ塗り」に変更しています。新画像をVLMで両方向から解析し、目視確認に合わせて根拠を更新しました。</p>
+<p class="note">現在の採用モードはZIPP-styleの実生成＋本人の手動選択です。PIGRewardの自動推薦は無効です。</p>
+<table><tr><th>確認項目</th><th>結果</th></tr><tr><td>Python / JavaScript</td><td>40件 / 4件成功（既存の非推奨警告2件）</td></tr><tr><td>起動前検査</td><td>画像・hash・モデルrevision・通常／サンプルの生成条件すべて整合</td></tr><tr><td>6お題×3代表履歴</td><td>18/18で固定プロンプトと両tokenizer上限を確認</td></tr><tr><td>実ブラウザーでの4枚生成</td><td>20.87秒（書き換え・モデル読込を含む1回の計測）</td></tr><tr><td>体験の通し確認</td><td>5回答、好み訂正、OFF、同一seed、手動選択、再読込、モバイル幅、キャッシュ、全OFF、リセット、サンプル表示</td></tr><tr><td>ブラウザー例外 / 外部通信</td><td>0件 / 0件</td></tr></table>
+<figure><img src="screenshots/01-welcome.png" alt="Illustrious XLの猫イラストを使った開始画面"><figcaption>開始画面</figcaption></figure>
+<figure><img src="screenshots/03-persona.png" alt="イラストの描画表現を選べる好みの編集画面"><figcaption>新画像の根拠とイラスト向けの描画表現</figcaption></figure>
+<figure><img src="screenshots/05-result.png" alt="通常4枚と実生成した個人化4枚の比較"><figcaption>通常側と個人化側は同一モデル・設定・seedで比較</figcaption></figure>
+<h2>生成設定</h2><pre>{
+  &quot;model&quot;: &quot;OnomaAIResearch/Illustrious-xl-early-release-v0&quot;,
+  &quot;revision&quot;: &quot;dca0dac303e6dc4b0c31d8001bc685b89b5d0204&quot;,
+  &quot;scheduler&quot;: &quot;EulerAncestralDiscreteScheduler&quot;,
+  &quot;width&quot;: 1024,
+  &quot;height&quot;: 1024,
+  &quot;steps&quot;: 20,
+  &quot;guidance_scale&quot;: 7.0,
+  &quot;negative_prompt&quot;: &quot;worst quality, bad quality, lowres, blurry, photo, photorealistic, 3d, text, watermark, monochrome, greyscale, sketch, unfinished, 1girl, 1boy, person&quot;,
+  &quot;precision&quot;: &quot;fp16&quot;
+}</pre>
+<p>二次元イラストへの切替と動作は確認しましたが、画像には猫や家の複数化、分割構図、被写体が弱い／欠ける例も残ります。プロンプトの文字列保持は画像内容の完全な保証ではありません。今回の1回の速度をp95や長時間安定性の実測値とは扱いません。旧SDXLの20セッション測定は別の記録です。</p>
+<p><a href="evidence.json">検証記録JSON</a> · <a href="browser-evidence.json">実ブラウザーの記録</a> · <a href="../index.html">旧SDXL構成の記録</a> · <a href="https://huggingface.co/OnomaAIResearch/Illustrious-xl-early-release-v0">Illustrious XL公式モデルカード</a></p></main></html>

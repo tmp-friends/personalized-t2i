@@ -1,0 +1,26 @@
+{
+  "ready": true,
+  "mode": "zipp-style-manual",
+  "errors": [],
+  "fixed_images": 34,
+  "evidence_directions": 10,
+  "samples": 6,
+  "recommendation_enabled": false,
+  "models": {
+    "ready": true,
+    "errors": [],
+    "models": [
+      {
+        "model": "Qwen/Qwen3.5-4B",
+        "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+        "weight_files": 2
+      },
+      {
+        "model": "OnomaAIResearch/Illustrious-XL-v2.0",
+        "revision": "69459c1fe6f46db41ab31e6114f05acc0e06bcaa",
+        "weight_files": 1
+      }
+    ],
+    "gpu_python": "/home/tomoya/stable-diffusion/personalized-t2i/tailored-visions-repro/.venv/bin/python"
+  }
+}
