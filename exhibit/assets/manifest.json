@@ -1,5 +1,5 @@
 {
-  "version": 3,
+  "version": 5,
   "generation": {
     "model": "OnomaAIResearch/Illustrious-XL-v2.0",
     "revision": "69459c1fe6f46db41ab31e6114f05acc0e06bcaa",
@@ -7,313 +7,47 @@
     "width": 1024,
     "height": 1024,
     "steps": 28,
-    "guidance_scale": 6.5,
-    "negative_prompt": "worst quality, bad quality, lowres, blurry, bad anatomy, bad hands, extra digits, fewer digits, multiple views, comic, text, watermark, signature, photo, photorealistic, 3d, monochrome, greyscale, sketch, unfinished, nsfw, nude, multiple people, chibi, 2girls, 2boys",
+    "guidance_scale": 5.0,
+    "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
     "precision": "fp16",
     "pipeline_config": {
       "model": "OnomaAIResearch/Illustrious-xl-early-release-v0",
       "revision": "dca0dac303e6dc4b0c31d8001bc685b89b5d0204"
     },
-    "checkpoint": "Illustrious-XL-v2.0.safetensors"
+    "checkpoint": "Illustrious-XL-v2.0.safetensors",
+    "positive_prompt_tail": "absurdres, highres"
+  },
+  "fan": {
+    "python": "fan-repro/.venv/bin/python",
+    "upstream": "fan-repro/.work/upstream",
+    "commit": "9d0b76843f6437718195accac9cf3f050a25d26b",
+    "decoders": {
+      "L.pth": "e35c04b57c42425ef0fcdc671254fb76dc6a5d580c742cecc1fcf2d5ac679807",
+      "bigG.pth": "35cc21f7e6bfab0c97ee0198e998bee4f7b41346cab24c26d380a96950ce4391"
+    },
+    "skip": -2,
+    "sample_size": 0,
+    "skip_pa": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "use_attn_mask": false
   },
   "images": {
-    "p1-a": {
-      "type": "image",
-      "id": "p1-a",
-      "path": "pairs/p1-a.png",
-      "sha256": "1448fb0052f2a7472cd2e92e30de33965c90e7350c95d99f9c6ee963fe4fee08",
-      "seed": 601,
-      "prompt": "1girl, solo, brown hair, beret, coat, town square, upper body, detailed eyes, illustration, masterpiece, best quality. warm color palette, amber and orange tones.",
-      "settings": {
-        "model": "OnomaAIResearch/Illustrious-XL-v2.0",
-        "revision": "69459c1fe6f46db41ab31e6114f05acc0e06bcaa",
-        "scheduler": "EulerAncestralDiscreteScheduler",
-        "width": 1024,
-        "height": 1024,
-        "steps": 28,
-        "guidance_scale": 6.5,
-        "negative_prompt": "worst quality, bad quality, lowres, blurry, bad anatomy, bad hands, extra digits, fewer digits, multiple views, comic, text, watermark, signature, photo, photorealistic, 3d, monochrome, greyscale, sketch, unfinished, nsfw, nude, multiple people, chibi, 2girls, 2boys",
-        "precision": "fp16",
-        "pipeline_config": {
-          "model": "OnomaAIResearch/Illustrious-xl-early-release-v0",
-          "revision": "dca0dac303e6dc4b0c31d8001bc685b89b5d0204"
-        },
-        "checkpoint": "Illustrious-XL-v2.0.safetensors"
-      },
-      "seconds": 3.947,
-      "context_hash": null,
-      "source": "local-illustrious-xl-v2.0",
-      "license": "creativeml-openrail-m",
-      "asset_version": 3
-    },
-    "p1-b": {
-      "type": "image",
-      "id": "p1-b",
-      "path": "pairs/p1-b.png",
-      "sha256": "d2f57d62adedecaa20a0fd81ed540fdcd5e476f9a377493673d5a5bb286174aa",
-      "seed": 601,
-      "prompt": "1girl, solo, brown hair, beret, coat, town square, upper body, detailed eyes, illustration, masterpiece, best quality. cool color palette, blue and teal tones.",
-      "settings": {
-        "model": "OnomaAIResearch/Illustrious-XL-v2.0",
-        "revision": "69459c1fe6f46db41ab31e6114f05acc0e06bcaa",
-        "scheduler": "EulerAncestralDiscreteScheduler",
-        "width": 1024,
-        "height": 1024,
-        "steps": 28,
-        "guidance_scale": 6.5,
-        "negative_prompt": "worst quality, bad quality, lowres, blurry, bad anatomy, bad hands, extra digits, fewer digits, multiple views, comic, text, watermark, signature, photo, photorealistic, 3d, monochrome, greyscale, sketch, unfinished, nsfw, nude, multiple people, chibi, 2girls, 2boys",
-        "precision": "fp16",
-        "pipeline_config": {
-          "model": "OnomaAIResearch/Illustrious-xl-early-release-v0",
-          "revision": "dca0dac303e6dc4b0c31d8001bc685b89b5d0204"
-        },
-        "checkpoint": "Illustrious-XL-v2.0.safetensors"
-      },
-      "seconds": 3.746,
-      "context_hash": null,
-      "source": "local-illustrious-xl-v2.0",
-      "license": "creativeml-openrail-m",
-      "asset_version": 3
-    },
-    "p2-a": {
-      "type": "image",
-      "id": "p2-a",
-      "path": "pairs/p2-a.png",
-      "sha256": "ce1dbddcdbe0bd784ea3eec0a28d3f518d6a35d19eeae375a534b30421c9c088",
-      "seed": 602,
-      "prompt": "1boy, solo, black hair, vest, white shirt, library, upper body, detailed eyes, illustration, masterpiece, best quality. soft diffused light, gentle shadows.",
-      "settings": {
-        "model": "OnomaAIResearch/Illustrious-XL-v2.0",
-        "revision": "69459c1fe6f46db41ab31e6114f05acc0e06bcaa",
-        "scheduler": "EulerAncestralDiscreteScheduler",
-        "width": 1024,
-        "height": 1024,
-        "steps": 28,
-        "guidance_scale": 6.5,
-        "negative_prompt": "worst quality, bad quality, lowres, blurry, bad anatomy, bad hands, extra digits, fewer digits, multiple views, comic, text, watermark, signature, photo, photorealistic, 3d, monochrome, greyscale, sketch, unfinished, nsfw, nude, multiple people, chibi, 2girls, 2boys",
-        "precision": "fp16",
-        "pipeline_config": {
-          "model": "OnomaAIResearch/Illustrious-xl-early-release-v0",
-          "revision": "dca0dac303e6dc4b0c31d8001bc685b89b5d0204"
-        },
-        "checkpoint": "Illustrious-XL-v2.0.safetensors"
-      },
-      "seconds": 3.769,
-      "context_hash": null,
-      "source": "local-illustrious-xl-v2.0",
-      "license": "creativeml-openrail-m",
-      "asset_version": 3
-    },
-    "p2-b": {
-      "type": "image",
-      "id": "p2-b",
-      "path": "pairs/p2-b.png",
-      "sha256": "e604e8bcb68aa46988b271914ca703f2a1451a7f53c11d419f4649c4a87e9c58",
-      "seed": 602,
-      "prompt": "1boy, solo, black hair, vest, white shirt, library, upper body, detailed eyes, illustration, masterpiece, best quality. dramatic lighting, strong shadows, rim light.",
-      "settings": {
-        "model": "OnomaAIResearch/Illustrious-XL-v2.0",
-        "revision": "69459c1fe6f46db41ab31e6114f05acc0e06bcaa",
-        "scheduler": "EulerAncestralDiscreteScheduler",
-        "width": 1024,
-        "height": 1024,
-        "steps": 28,
-        "guidance_scale": 6.5,
-        "negative_prompt": "worst quality, bad quality, lowres, blurry, bad anatomy, bad hands, extra digits, fewer digits, multiple views, comic, text, watermark, signature, photo, photorealistic, 3d, monochrome, greyscale, sketch, unfinished, nsfw, nude, multiple people, chibi, 2girls, 2boys",
-        "precision": "fp16",
-        "pipeline_config": {
-          "model": "OnomaAIResearch/Illustrious-xl-early-release-v0",
-          "revision": "dca0dac303e6dc4b0c31d8001bc685b89b5d0204"
-        },
-        "checkpoint": "Illustrious-XL-v2.0.safetensors"
-      },
-      "seconds": 3.774,
-      "context_hash": null,
-      "source": "local-illustrious-xl-v2.0",
-      "license": "creativeml-openrail-m",
-      "asset_version": 3
-    },
-    "p3-a": {
-      "type": "image",
-      "id": "p3-a",
-      "path": "pairs/p3-a.png",
-      "sha256": "7579e9836b382143f177ecbda216654d93abc1835a45336bf4749ec982fcccbc",
-      "seed": 603,
-      "prompt": "1girl, solo, silver hair, cloak, grassland, detailed eyes, illustration, masterpiece, best quality. cowboy shot, off-center composition, expansive sky, negative space.",
-      "settings": {
-        "model": "OnomaAIResearch/Illustrious-XL-v2.0",
-        "revision": "69459c1fe6f46db41ab31e6114f05acc0e06bcaa",
-        "scheduler": "EulerAncestralDiscreteScheduler",
-        "width": 1024,
-        "height": 1024,
-        "steps": 28,
-        "guidance_scale": 6.5,
-        "negative_prompt": "worst quality, bad quality, lowres, blurry, bad anatomy, bad hands, extra digits, fewer digits, multiple views, comic, text, watermark, signature, photo, photorealistic, 3d, monochrome, greyscale, sketch, unfinished, nsfw, nude, multiple people, chibi, 2girls, 2boys",
-        "precision": "fp16",
-        "pipeline_config": {
-          "model": "OnomaAIResearch/Illustrious-xl-early-release-v0",
-          "revision": "dca0dac303e6dc4b0c31d8001bc685b89b5d0204"
-        },
-        "checkpoint": "Illustrious-XL-v2.0.safetensors"
-      },
-      "seconds": 3.776,
-      "context_hash": null,
-      "source": "local-illustrious-xl-v2.0",
-      "license": "creativeml-openrail-m",
-      "asset_version": 3
-    },
-    "p3-b": {
-      "type": "image",
-      "id": "p3-b",
-      "path": "pairs/p3-b.png",
-      "sha256": "d8a0eb9a9193ca7ec6b567ad45745740074f8ea41cf1650786f6612c30e0d31d",
-      "seed": 603,
-      "prompt": "1girl, solo, silver hair, cloak, grassland, detailed eyes, illustration, masterpiece, best quality. upper body, portrait, face focus.",
-      "settings": {
-        "model": "OnomaAIResearch/Illustrious-XL-v2.0",
-        "revision": "69459c1fe6f46db41ab31e6114f05acc0e06bcaa",
-        "scheduler": "EulerAncestralDiscreteScheduler",
-        "width": 1024,
-        "height": 1024,
-        "steps": 28,
-        "guidance_scale": 6.5,
-        "negative_prompt": "worst quality, bad quality, lowres, blurry, bad anatomy, bad hands, extra digits, fewer digits, multiple views, comic, text, watermark, signature, photo, photorealistic, 3d, monochrome, greyscale, sketch, unfinished, nsfw, nude, multiple people, chibi, 2girls, 2boys",
-        "precision": "fp16",
-        "pipeline_config": {
-          "model": "OnomaAIResearch/Illustrious-xl-early-release-v0",
-          "revision": "dca0dac303e6dc4b0c31d8001bc685b89b5d0204"
-        },
-        "checkpoint": "Illustrious-XL-v2.0.safetensors"
-      },
-      "seconds": 3.769,
-      "context_hash": null,
-      "source": "local-illustrious-xl-v2.0",
-      "license": "creativeml-openrail-m",
-      "asset_version": 3
-    },
-    "p4-a": {
-      "type": "image",
-      "id": "p4-a",
-      "path": "pairs/p4-a.png",
-      "sha256": "35919ad5cec7f6a773ce8016388a880b78924c62bbcd4e921a7d2f6c732bb9d7",
-      "seed": 604,
-      "prompt": "1girl, solo, blonde hair, witch hat, cloak, flower garden, upper body, detailed eyes, illustration, masterpiece, best quality. watercolor painting, soft brushwork, painterly texture.",
-      "settings": {
-        "model": "OnomaAIResearch/Illustrious-XL-v2.0",
-        "revision": "69459c1fe6f46db41ab31e6114f05acc0e06bcaa",
-        "scheduler": "EulerAncestralDiscreteScheduler",
-        "width": 1024,
-        "height": 1024,
-        "steps": 28,
-        "guidance_scale": 6.5,
-        "negative_prompt": "worst quality, bad quality, lowres, blurry, bad anatomy, bad hands, extra digits, fewer digits, multiple views, comic, text, watermark, signature, photo, photorealistic, 3d, monochrome, greyscale, sketch, unfinished, nsfw, nude, multiple people, chibi, 2girls, 2boys",
-        "precision": "fp16",
-        "pipeline_config": {
-          "model": "OnomaAIResearch/Illustrious-xl-early-release-v0",
-          "revision": "dca0dac303e6dc4b0c31d8001bc685b89b5d0204"
-        },
-        "checkpoint": "Illustrious-XL-v2.0.safetensors"
-      },
-      "seconds": 3.791,
-      "context_hash": null,
-      "source": "local-illustrious-xl-v2.0",
-      "license": "creativeml-openrail-m",
-      "asset_version": 3
-    },
-    "p4-b": {
-      "type": "image",
-      "id": "p4-b",
-      "path": "pairs/p4-b.png",
-      "sha256": "1fc5568fd77be9788370b84a9840246ae759b98bb159b027a932eea1bc2d04c3",
-      "seed": 604,
-      "prompt": "1girl, solo, blonde hair, witch hat, cloak, flower garden, upper body, detailed eyes, illustration, masterpiece, best quality. cel shading, clean lineart, anime coloring.",
-      "settings": {
-        "model": "OnomaAIResearch/Illustrious-XL-v2.0",
-        "revision": "69459c1fe6f46db41ab31e6114f05acc0e06bcaa",
-        "scheduler": "EulerAncestralDiscreteScheduler",
-        "width": 1024,
-        "height": 1024,
-        "steps": 28,
-        "guidance_scale": 6.5,
-        "negative_prompt": "worst quality, bad quality, lowres, blurry, bad anatomy, bad hands, extra digits, fewer digits, multiple views, comic, text, watermark, signature, photo, photorealistic, 3d, monochrome, greyscale, sketch, unfinished, nsfw, nude, multiple people, chibi, 2girls, 2boys",
-        "precision": "fp16",
-        "pipeline_config": {
-          "model": "OnomaAIResearch/Illustrious-xl-early-release-v0",
-          "revision": "dca0dac303e6dc4b0c31d8001bc685b89b5d0204"
-        },
-        "checkpoint": "Illustrious-XL-v2.0.safetensors"
-      },
-      "seconds": 3.778,
-      "context_hash": null,
-      "source": "local-illustrious-xl-v2.0",
-      "license": "creativeml-openrail-m",
-      "asset_version": 3
-    },
-    "p5-a": {
-      "type": "image",
-      "id": "p5-a",
-      "path": "pairs/p5-a.png",
-      "sha256": "708443c3422182dac4b17fb36739388b7ec77ca6f8551676ac3a3f86b16438ca",
-      "seed": 605,
-      "prompt": "1boy, solo, brown hair, apron, white shirt, cafe, upper body, detailed eyes, illustration, masterpiece, best quality. closed mouth, gentle expression, peaceful, calm atmosphere.",
-      "settings": {
-        "model": "OnomaAIResearch/Illustrious-XL-v2.0",
-        "revision": "69459c1fe6f46db41ab31e6114f05acc0e06bcaa",
-        "scheduler": "EulerAncestralDiscreteScheduler",
-        "width": 1024,
-        "height": 1024,
-        "steps": 28,
-        "guidance_scale": 6.5,
-        "negative_prompt": "worst quality, bad quality, lowres, blurry, bad anatomy, bad hands, extra digits, fewer digits, multiple views, comic, text, watermark, signature, photo, photorealistic, 3d, monochrome, greyscale, sketch, unfinished, nsfw, nude, multiple people, chibi, 2girls, 2boys",
-        "precision": "fp16",
-        "pipeline_config": {
-          "model": "OnomaAIResearch/Illustrious-xl-early-release-v0",
-          "revision": "dca0dac303e6dc4b0c31d8001bc685b89b5d0204"
-        },
-        "checkpoint": "Illustrious-XL-v2.0.safetensors"
-      },
-      "seconds": 3.778,
-      "context_hash": null,
-      "source": "local-illustrious-xl-v2.0",
-      "license": "creativeml-openrail-m",
-      "asset_version": 3
-    },
-    "p5-b": {
-      "type": "image",
-      "id": "p5-b",
-      "path": "pairs/p5-b.png",
-      "sha256": "ce9c25f53f08733491a645475e0ded67aafa8298129eddfb3ed3c6892a1b375c",
-      "seed": 605,
-      "prompt": "1boy, solo, brown hair, apron, white shirt, cafe, upper body, detailed eyes, illustration, masterpiece, best quality. open mouth, laughing, cheerful expression, lively atmosphere.",
-      "settings": {
-        "model": "OnomaAIResearch/Illustrious-XL-v2.0",
-        "revision": "69459c1fe6f46db41ab31e6114f05acc0e06bcaa",
-        "scheduler": "EulerAncestralDiscreteScheduler",
-        "width": 1024,
-        "height": 1024,
-        "steps": 28,
-        "guidance_scale": 6.5,
-        "negative_prompt": "worst quality, bad quality, lowres, blurry, bad anatomy, bad hands, extra digits, fewer digits, multiple views, comic, text, watermark, signature, photo, photorealistic, 3d, monochrome, greyscale, sketch, unfinished, nsfw, nude, multiple people, chibi, 2girls, 2boys",
-        "precision": "fp16",
-        "pipeline_config": {
-          "model": "OnomaAIResearch/Illustrious-xl-early-release-v0",
-          "revision": "dca0dac303e6dc4b0c31d8001bc685b89b5d0204"
-        },
-        "checkpoint": "Illustrious-XL-v2.0.safetensors"
-      },
-      "seconds": 3.782,
-      "context_hash": null,
-      "source": "local-illustrious-xl-v2.0",
-      "license": "creativeml-openrail-m",
-      "asset_version": 3
-    },
     "cat-0": {
       "type": "image",
       "id": "cat-0",
       "path": "generic/cat-0.png",
-      "sha256": "36c4e3d77887e8de83266307d83b30c01f347f49d260a1359688775750f307d1",
+      "sha256": "80e43027785b7c9a568360bee8ad931aea7ee95afb78ce1bfb974a0d23e8b370",
       "seed": 230923,
-      "prompt": "1girl, solo, brown hair, green eyes, sweater, holding cat, window, upper body, detailed eyes, beautiful detailed illustration, delicate shading, masterpiece, best quality. balanced composition, natural lighting, detailed textures.",
+      "prompt": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1girl, solo, brown hair, green eyes, sweater, holding cat, window, upper body, detailed eyes, detailed illustration, absurdres, highres.",
+      "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
       "settings": {
         "model": "OnomaAIResearch/Illustrious-XL-v2.0",
         "revision": "69459c1fe6f46db41ab31e6114f05acc0e06bcaa",
@@ -321,28 +55,48 @@
         "width": 1024,
         "height": 1024,
         "steps": 28,
-        "guidance_scale": 6.5,
-        "negative_prompt": "worst quality, bad quality, lowres, blurry, bad anatomy, bad hands, extra digits, fewer digits, multiple views, comic, text, watermark, signature, photo, photorealistic, 3d, monochrome, greyscale, sketch, unfinished, nsfw, nude, multiple people, chibi, 2girls, 2boys",
+        "guidance_scale": 5.0,
+        "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
         "precision": "fp16",
         "pipeline_config": {
           "model": "OnomaAIResearch/Illustrious-xl-early-release-v0",
           "revision": "dca0dac303e6dc4b0c31d8001bc685b89b5d0204"
         },
-        "checkpoint": "Illustrious-XL-v2.0.safetensors"
+        "checkpoint": "Illustrious-XL-v2.0.safetensors",
+        "positive_prompt_tail": "absurdres, highres"
       },
-      "seconds": 3.959,
-      "context_hash": null,
+      "fan": {
+        "commit": "9d0b76843f6437718195accac9cf3f050a25d26b",
+        "pooled": "plain",
+        "skip": -2,
+        "sample_size": 0,
+        "skip_pa": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "use_attn_mask": false
+      },
+      "pooled": "plain",
+      "personalization_hash": null,
+      "seconds": 3.883,
       "source": "local-illustrious-xl-v2.0",
       "license": "creativeml-openrail-m",
-      "asset_version": 3
+      "asset_version": 5
     },
     "cat-1": {
       "type": "image",
       "id": "cat-1",
       "path": "generic/cat-1.png",
-      "sha256": "f09d2579a18147ac3582507c76c3aaee94a0d7aacf9e0cbab00b4575a74e7261",
+      "sha256": "d1ca3445644c595047cd83437572ed29c386456d19d028face2ba24c1a772af0",
       "seed": 230924,
-      "prompt": "1girl, solo, brown hair, green eyes, sweater, holding cat, window, upper body, detailed eyes, beautiful detailed illustration, delicate shading, masterpiece, best quality. balanced composition, natural lighting, detailed textures.",
+      "prompt": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1girl, solo, brown hair, green eyes, sweater, holding cat, window, upper body, detailed eyes, detailed illustration, absurdres, highres.",
+      "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
       "settings": {
         "model": "OnomaAIResearch/Illustrious-XL-v2.0",
         "revision": "69459c1fe6f46db41ab31e6114f05acc0e06bcaa",
@@ -350,28 +104,48 @@
         "width": 1024,
         "height": 1024,
         "steps": 28,
-        "guidance_scale": 6.5,
-        "negative_prompt": "worst quality, bad quality, lowres, blurry, bad anatomy, bad hands, extra digits, fewer digits, multiple views, comic, text, watermark, signature, photo, photorealistic, 3d, monochrome, greyscale, sketch, unfinished, nsfw, nude, multiple people, chibi, 2girls, 2boys",
+        "guidance_scale": 5.0,
+        "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
         "precision": "fp16",
         "pipeline_config": {
           "model": "OnomaAIResearch/Illustrious-xl-early-release-v0",
           "revision": "dca0dac303e6dc4b0c31d8001bc685b89b5d0204"
         },
-        "checkpoint": "Illustrious-XL-v2.0.safetensors"
+        "checkpoint": "Illustrious-XL-v2.0.safetensors",
+        "positive_prompt_tail": "absurdres, highres"
       },
-      "seconds": 3.77,
-      "context_hash": null,
+      "fan": {
+        "commit": "9d0b76843f6437718195accac9cf3f050a25d26b",
+        "pooled": "plain",
+        "skip": -2,
+        "sample_size": 0,
+        "skip_pa": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "use_attn_mask": false
+      },
+      "pooled": "plain",
+      "personalization_hash": null,
+      "seconds": 3.808,
       "source": "local-illustrious-xl-v2.0",
       "license": "creativeml-openrail-m",
-      "asset_version": 3
+      "asset_version": 5
     },
     "cat-2": {
       "type": "image",
       "id": "cat-2",
       "path": "generic/cat-2.png",
-      "sha256": "3a923269ff1c5d21c214388da8de6f2e0e5b20bed2a1c02e107beb10409e2219",
+      "sha256": "c7652ffdc8f907df60f4ddd9da3cf50c8ba4993c4223f2d5ea9ddb3fe8c8077b",
       "seed": 230925,
-      "prompt": "1girl, solo, brown hair, green eyes, sweater, holding cat, window, upper body, detailed eyes, beautiful detailed illustration, delicate shading, masterpiece, best quality. balanced composition, natural lighting, detailed textures.",
+      "prompt": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1girl, solo, brown hair, green eyes, sweater, holding cat, window, upper body, detailed eyes, detailed illustration, absurdres, highres.",
+      "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
       "settings": {
         "model": "OnomaAIResearch/Illustrious-XL-v2.0",
         "revision": "69459c1fe6f46db41ab31e6114f05acc0e06bcaa",
@@ -379,28 +153,48 @@
         "width": 1024,
         "height": 1024,
         "steps": 28,
-        "guidance_scale": 6.5,
-        "negative_prompt": "worst quality, bad quality, lowres, blurry, bad anatomy, bad hands, extra digits, fewer digits, multiple views, comic, text, watermark, signature, photo, photorealistic, 3d, monochrome, greyscale, sketch, unfinished, nsfw, nude, multiple people, chibi, 2girls, 2boys",
+        "guidance_scale": 5.0,
+        "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
         "precision": "fp16",
         "pipeline_config": {
           "model": "OnomaAIResearch/Illustrious-xl-early-release-v0",
           "revision": "dca0dac303e6dc4b0c31d8001bc685b89b5d0204"
         },
-        "checkpoint": "Illustrious-XL-v2.0.safetensors"
+        "checkpoint": "Illustrious-XL-v2.0.safetensors",
+        "positive_prompt_tail": "absurdres, highres"
       },
-      "seconds": 3.772,
-      "context_hash": null,
+      "fan": {
+        "commit": "9d0b76843f6437718195accac9cf3f050a25d26b",
+        "pooled": "plain",
+        "skip": -2,
+        "sample_size": 0,
+        "skip_pa": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "use_attn_mask": false
+      },
+      "pooled": "plain",
+      "personalization_hash": null,
+      "seconds": 3.788,
       "source": "local-illustrious-xl-v2.0",
       "license": "creativeml-openrail-m",
-      "asset_version": 3
+      "asset_version": 5
     },
     "cat-3": {
       "type": "image",
       "id": "cat-3",
       "path": "generic/cat-3.png",
-      "sha256": "23e092f0a494216c29046bdaf6c6a11d78edce19d0b15f1afef2593dc576b7f9",
+      "sha256": "e8d2ed6ba422f4fae5ecc1997bf7ca57e831a0558c164fa5d551dd3688cd7011",
       "seed": 230926,
-      "prompt": "1girl, solo, brown hair, green eyes, sweater, holding cat, window, upper body, detailed eyes, beautiful detailed illustration, delicate shading, masterpiece, best quality. balanced composition, natural lighting, detailed textures.",
+      "prompt": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1girl, solo, brown hair, green eyes, sweater, holding cat, window, upper body, detailed eyes, detailed illustration, absurdres, highres.",
+      "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
       "settings": {
         "model": "OnomaAIResearch/Illustrious-XL-v2.0",
         "revision": "69459c1fe6f46db41ab31e6114f05acc0e06bcaa",
@@ -408,28 +202,48 @@
         "width": 1024,
         "height": 1024,
         "steps": 28,
-        "guidance_scale": 6.5,
-        "negative_prompt": "worst quality, bad quality, lowres, blurry, bad anatomy, bad hands, extra digits, fewer digits, multiple views, comic, text, watermark, signature, photo, photorealistic, 3d, monochrome, greyscale, sketch, unfinished, nsfw, nude, multiple people, chibi, 2girls, 2boys",
+        "guidance_scale": 5.0,
+        "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
         "precision": "fp16",
         "pipeline_config": {
           "model": "OnomaAIResearch/Illustrious-xl-early-release-v0",
           "revision": "dca0dac303e6dc4b0c31d8001bc685b89b5d0204"
         },
-        "checkpoint": "Illustrious-XL-v2.0.safetensors"
+        "checkpoint": "Illustrious-XL-v2.0.safetensors",
+        "positive_prompt_tail": "absurdres, highres"
       },
-      "seconds": 3.774,
-      "context_hash": null,
+      "fan": {
+        "commit": "9d0b76843f6437718195accac9cf3f050a25d26b",
+        "pooled": "plain",
+        "skip": -2,
+        "sample_size": 0,
+        "skip_pa": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "use_attn_mask": false
+      },
+      "pooled": "plain",
+      "personalization_hash": null,
+      "seconds": 3.782,
       "source": "local-illustrious-xl-v2.0",
       "license": "creativeml-openrail-m",
-      "asset_version": 3
+      "asset_version": 5
     },
     "tokyo-0": {
       "type": "image",
       "id": "tokyo-0",
       "path": "generic/tokyo-0.png",
-      "sha256": "70321ae3dbdd561428e60986a92469d13c8d2d659f42b7c13ff27ad61e064849",
+      "sha256": "a5b968752332a82872a6000df8d9012ba925c082ef00a045ff5fab099588953a",
       "seed": 230923,
-      "prompt": "1boy, solo, male focus, short black hair, jacket, Tokyo skyline, night, portrait, detailed eyes, beautiful detailed illustration, delicate shading, masterpiece, best quality. balanced composition, natural lighting, detailed textures.",
+      "prompt": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1boy, solo, male focus, short black hair, jacket, Tokyo skyline, night, portrait, detailed eyes, detailed illustration, absurdres, highres.",
+      "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
       "settings": {
         "model": "OnomaAIResearch/Illustrious-XL-v2.0",
         "revision": "69459c1fe6f46db41ab31e6114f05acc0e06bcaa",
@@ -437,28 +251,48 @@
         "width": 1024,
         "height": 1024,
         "steps": 28,
-        "guidance_scale": 6.5,
-        "negative_prompt": "worst quality, bad quality, lowres, blurry, bad anatomy, bad hands, extra digits, fewer digits, multiple views, comic, text, watermark, signature, photo, photorealistic, 3d, monochrome, greyscale, sketch, unfinished, nsfw, nude, multiple people, chibi, 2girls, 2boys",
+        "guidance_scale": 5.0,
+        "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
         "precision": "fp16",
         "pipeline_config": {
           "model": "OnomaAIResearch/Illustrious-xl-early-release-v0",
           "revision": "dca0dac303e6dc4b0c31d8001bc685b89b5d0204"
         },
-        "checkpoint": "Illustrious-XL-v2.0.safetensors"
+        "checkpoint": "Illustrious-XL-v2.0.safetensors",
+        "positive_prompt_tail": "absurdres, highres"
       },
-      "seconds": 3.76,
-      "context_hash": null,
+      "fan": {
+        "commit": "9d0b76843f6437718195accac9cf3f050a25d26b",
+        "pooled": "plain",
+        "skip": -2,
+        "sample_size": 0,
+        "skip_pa": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "use_attn_mask": false
+      },
+      "pooled": "plain",
+      "personalization_hash": null,
+      "seconds": 3.822,
       "source": "local-illustrious-xl-v2.0",
       "license": "creativeml-openrail-m",
-      "asset_version": 3
+      "asset_version": 5
     },
     "tokyo-1": {
       "type": "image",
       "id": "tokyo-1",
       "path": "generic/tokyo-1.png",
-      "sha256": "7e418dc5997ddcd0f5af849a49101ac5846daacf34874d430f9666f9a93ce761",
+      "sha256": "6b3300fee96b676ffe9bfc99905d92e9442538fcf640f4da860488e7a6b7df70",
       "seed": 230924,
-      "prompt": "1boy, solo, male focus, short black hair, jacket, Tokyo skyline, night, portrait, detailed eyes, beautiful detailed illustration, delicate shading, masterpiece, best quality. balanced composition, natural lighting, detailed textures.",
+      "prompt": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1boy, solo, male focus, short black hair, jacket, Tokyo skyline, night, portrait, detailed eyes, detailed illustration, absurdres, highres.",
+      "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
       "settings": {
         "model": "OnomaAIResearch/Illustrious-XL-v2.0",
         "revision": "69459c1fe6f46db41ab31e6114f05acc0e06bcaa",
@@ -466,28 +300,48 @@
         "width": 1024,
         "height": 1024,
         "steps": 28,
-        "guidance_scale": 6.5,
-        "negative_prompt": "worst quality, bad quality, lowres, blurry, bad anatomy, bad hands, extra digits, fewer digits, multiple views, comic, text, watermark, signature, photo, photorealistic, 3d, monochrome, greyscale, sketch, unfinished, nsfw, nude, multiple people, chibi, 2girls, 2boys",
+        "guidance_scale": 5.0,
+        "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
         "precision": "fp16",
         "pipeline_config": {
           "model": "OnomaAIResearch/Illustrious-xl-early-release-v0",
           "revision": "dca0dac303e6dc4b0c31d8001bc685b89b5d0204"
         },
-        "checkpoint": "Illustrious-XL-v2.0.safetensors"
+        "checkpoint": "Illustrious-XL-v2.0.safetensors",
+        "positive_prompt_tail": "absurdres, highres"
       },
-      "seconds": 3.771,
-      "context_hash": null,
+      "fan": {
+        "commit": "9d0b76843f6437718195accac9cf3f050a25d26b",
+        "pooled": "plain",
+        "skip": -2,
+        "sample_size": 0,
+        "skip_pa": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "use_attn_mask": false
+      },
+      "pooled": "plain",
+      "personalization_hash": null,
+      "seconds": 3.758,
       "source": "local-illustrious-xl-v2.0",
       "license": "creativeml-openrail-m",
-      "asset_version": 3
+      "asset_version": 5
     },
     "tokyo-2": {
       "type": "image",
       "id": "tokyo-2",
       "path": "generic/tokyo-2.png",
-      "sha256": "95205238854e08ba5d0c52a5d647ae56e02aa08181625d7e365f072547f514cb",
+      "sha256": "af329944081ec0c2523df3132cfe4a04d92b1352d7268ff326aa950cb7433720",
       "seed": 230925,
-      "prompt": "1boy, solo, male focus, short black hair, jacket, Tokyo skyline, night, portrait, detailed eyes, beautiful detailed illustration, delicate shading, masterpiece, best quality. balanced composition, natural lighting, detailed textures.",
+      "prompt": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1boy, solo, male focus, short black hair, jacket, Tokyo skyline, night, portrait, detailed eyes, detailed illustration, absurdres, highres.",
+      "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
       "settings": {
         "model": "OnomaAIResearch/Illustrious-XL-v2.0",
         "revision": "69459c1fe6f46db41ab31e6114f05acc0e06bcaa",
@@ -495,28 +349,48 @@
         "width": 1024,
         "height": 1024,
         "steps": 28,
-        "guidance_scale": 6.5,
-        "negative_prompt": "worst quality, bad quality, lowres, blurry, bad anatomy, bad hands, extra digits, fewer digits, multiple views, comic, text, watermark, signature, photo, photorealistic, 3d, monochrome, greyscale, sketch, unfinished, nsfw, nude, multiple people, chibi, 2girls, 2boys",
+        "guidance_scale": 5.0,
+        "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
         "precision": "fp16",
         "pipeline_config": {
           "model": "OnomaAIResearch/Illustrious-xl-early-release-v0",
           "revision": "dca0dac303e6dc4b0c31d8001bc685b89b5d0204"
         },
-        "checkpoint": "Illustrious-XL-v2.0.safetensors"
+        "checkpoint": "Illustrious-XL-v2.0.safetensors",
+        "positive_prompt_tail": "absurdres, highres"
       },
-      "seconds": 3.776,
-      "context_hash": null,
+      "fan": {
+        "commit": "9d0b76843f6437718195accac9cf3f050a25d26b",
+        "pooled": "plain",
+        "skip": -2,
+        "sample_size": 0,
+        "skip_pa": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "use_attn_mask": false
+      },
+      "pooled": "plain",
+      "personalization_hash": null,
+      "seconds": 3.788,
       "source": "local-illustrious-xl-v2.0",
       "license": "creativeml-openrail-m",
-      "asset_version": 3
+      "asset_version": 5
     },
     "tokyo-3": {
       "type": "image",
       "id": "tokyo-3",
       "path": "generic/tokyo-3.png",
-      "sha256": "d6eb1da3b3466f8b1fbdf9f481cf5a171f23872c0dd2899c1d818bed5aa20a0d",
+      "sha256": "4799ac722cc8ca64fa160d1dda29b2261cd1db715edc43b77a6d59e6c5a7cc02",
       "seed": 230926,
-      "prompt": "1boy, solo, male focus, short black hair, jacket, Tokyo skyline, night, portrait, detailed eyes, beautiful detailed illustration, delicate shading, masterpiece, best quality. balanced composition, natural lighting, detailed textures.",
+      "prompt": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1boy, solo, male focus, short black hair, jacket, Tokyo skyline, night, portrait, detailed eyes, detailed illustration, absurdres, highres.",
+      "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
       "settings": {
         "model": "OnomaAIResearch/Illustrious-XL-v2.0",
         "revision": "69459c1fe6f46db41ab31e6114f05acc0e06bcaa",
@@ -524,28 +398,48 @@
         "width": 1024,
         "height": 1024,
         "steps": 28,
-        "guidance_scale": 6.5,
-        "negative_prompt": "worst quality, bad quality, lowres, blurry, bad anatomy, bad hands, extra digits, fewer digits, multiple views, comic, text, watermark, signature, photo, photorealistic, 3d, monochrome, greyscale, sketch, unfinished, nsfw, nude, multiple people, chibi, 2girls, 2boys",
+        "guidance_scale": 5.0,
+        "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
         "precision": "fp16",
         "pipeline_config": {
           "model": "OnomaAIResearch/Illustrious-xl-early-release-v0",
           "revision": "dca0dac303e6dc4b0c31d8001bc685b89b5d0204"
         },
-        "checkpoint": "Illustrious-XL-v2.0.safetensors"
+        "checkpoint": "Illustrious-XL-v2.0.safetensors",
+        "positive_prompt_tail": "absurdres, highres"
       },
-      "seconds": 3.788,
-      "context_hash": null,
+      "fan": {
+        "commit": "9d0b76843f6437718195accac9cf3f050a25d26b",
+        "pooled": "plain",
+        "skip": -2,
+        "sample_size": 0,
+        "skip_pa": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "use_attn_mask": false
+      },
+      "pooled": "plain",
+      "personalization_hash": null,
+      "seconds": 3.803,
       "source": "local-illustrious-xl-v2.0",
       "license": "creativeml-openrail-m",
-      "asset_version": 3
+      "asset_version": 5
     },
     "forest-0": {
       "type": "image",
       "id": "forest-0",
       "path": "generic/forest-0.png",
-      "sha256": "9d35b328b05671996c786cc6c51e4ebf72a3eeb778442e03dac383f9d862efab",
+      "sha256": "a208a23ec904f83a954835da5cc53607043807d5b4efa10707af7c3991c25757",
       "seed": 230923,
-      "prompt": "1girl, solo, silver hair, witch hat, cloak, forest, upper body, detailed eyes, beautiful detailed illustration, delicate shading, masterpiece, best quality. balanced composition, natural lighting, detailed textures.",
+      "prompt": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1girl, solo, silver hair, witch hat, cloak, forest, upper body, detailed eyes, detailed illustration, absurdres, highres.",
+      "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
       "settings": {
         "model": "OnomaAIResearch/Illustrious-XL-v2.0",
         "revision": "69459c1fe6f46db41ab31e6114f05acc0e06bcaa",
@@ -553,28 +447,48 @@
         "width": 1024,
         "height": 1024,
         "steps": 28,
-        "guidance_scale": 6.5,
-        "negative_prompt": "worst quality, bad quality, lowres, blurry, bad anatomy, bad hands, extra digits, fewer digits, multiple views, comic, text, watermark, signature, photo, photorealistic, 3d, monochrome, greyscale, sketch, unfinished, nsfw, nude, multiple people, chibi, 2girls, 2boys",
+        "guidance_scale": 5.0,
+        "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
         "precision": "fp16",
         "pipeline_config": {
           "model": "OnomaAIResearch/Illustrious-xl-early-release-v0",
           "revision": "dca0dac303e6dc4b0c31d8001bc685b89b5d0204"
         },
-        "checkpoint": "Illustrious-XL-v2.0.safetensors"
+        "checkpoint": "Illustrious-XL-v2.0.safetensors",
+        "positive_prompt_tail": "absurdres, highres"
       },
-      "seconds": 3.791,
-      "context_hash": null,
+      "fan": {
+        "commit": "9d0b76843f6437718195accac9cf3f050a25d26b",
+        "pooled": "plain",
+        "skip": -2,
+        "sample_size": 0,
+        "skip_pa": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "use_attn_mask": false
+      },
+      "pooled": "plain",
+      "personalization_hash": null,
+      "seconds": 3.762,
       "source": "local-illustrious-xl-v2.0",
       "license": "creativeml-openrail-m",
-      "asset_version": 3
+      "asset_version": 5
     },
     "forest-1": {
       "type": "image",
       "id": "forest-1",
       "path": "generic/forest-1.png",
-      "sha256": "fcc0e210780859dce27830b07d00474961f05020523ae689410c806f7853c2de",
+      "sha256": "894d9b15b28484a9dba47e160df9a9e51c0762511b18d77a2c17d1999ab64710",
       "seed": 230924,
-      "prompt": "1girl, solo, silver hair, witch hat, cloak, forest, upper body, detailed eyes, beautiful detailed illustration, delicate shading, masterpiece, best quality. balanced composition, natural lighting, detailed textures.",
+      "prompt": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1girl, solo, silver hair, witch hat, cloak, forest, upper body, detailed eyes, detailed illustration, absurdres, highres.",
+      "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
       "settings": {
         "model": "OnomaAIResearch/Illustrious-XL-v2.0",
         "revision": "69459c1fe6f46db41ab31e6114f05acc0e06bcaa",
@@ -582,28 +496,48 @@
         "width": 1024,
         "height": 1024,
         "steps": 28,
-        "guidance_scale": 6.5,
-        "negative_prompt": "worst quality, bad quality, lowres, blurry, bad anatomy, bad hands, extra digits, fewer digits, multiple views, comic, text, watermark, signature, photo, photorealistic, 3d, monochrome, greyscale, sketch, unfinished, nsfw, nude, multiple people, chibi, 2girls, 2boys",
+        "guidance_scale": 5.0,
+        "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
         "precision": "fp16",
         "pipeline_config": {
           "model": "OnomaAIResearch/Illustrious-xl-early-release-v0",
           "revision": "dca0dac303e6dc4b0c31d8001bc685b89b5d0204"
         },
-        "checkpoint": "Illustrious-XL-v2.0.safetensors"
+        "checkpoint": "Illustrious-XL-v2.0.safetensors",
+        "positive_prompt_tail": "absurdres, highres"
       },
-      "seconds": 3.801,
-      "context_hash": null,
+      "fan": {
+        "commit": "9d0b76843f6437718195accac9cf3f050a25d26b",
+        "pooled": "plain",
+        "skip": -2,
+        "sample_size": 0,
+        "skip_pa": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "use_attn_mask": false
+      },
+      "pooled": "plain",
+      "personalization_hash": null,
+      "seconds": 3.8,
       "source": "local-illustrious-xl-v2.0",
       "license": "creativeml-openrail-m",
-      "asset_version": 3
+      "asset_version": 5
     },
     "forest-2": {
       "type": "image",
       "id": "forest-2",
       "path": "generic/forest-2.png",
-      "sha256": "bd42ade8bfb9ab4754c1d43b3101e9f9d5502b190bd83679f6c1d191bc19e6d6",
+      "sha256": "9e0c743df7a311de7f2606d92ec52e549d339b6f354daf47b990db0e6c07a9a8",
       "seed": 230925,
-      "prompt": "1girl, solo, silver hair, witch hat, cloak, forest, upper body, detailed eyes, beautiful detailed illustration, delicate shading, masterpiece, best quality. balanced composition, natural lighting, detailed textures.",
+      "prompt": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1girl, solo, silver hair, witch hat, cloak, forest, upper body, detailed eyes, detailed illustration, absurdres, highres.",
+      "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
       "settings": {
         "model": "OnomaAIResearch/Illustrious-XL-v2.0",
         "revision": "69459c1fe6f46db41ab31e6114f05acc0e06bcaa",
@@ -611,28 +545,48 @@
         "width": 1024,
         "height": 1024,
         "steps": 28,
-        "guidance_scale": 6.5,
-        "negative_prompt": "worst quality, bad quality, lowres, blurry, bad anatomy, bad hands, extra digits, fewer digits, multiple views, comic, text, watermark, signature, photo, photorealistic, 3d, monochrome, greyscale, sketch, unfinished, nsfw, nude, multiple people, chibi, 2girls, 2boys",
+        "guidance_scale": 5.0,
+        "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
         "precision": "fp16",
         "pipeline_config": {
           "model": "OnomaAIResearch/Illustrious-xl-early-release-v0",
           "revision": "dca0dac303e6dc4b0c31d8001bc685b89b5d0204"
         },
-        "checkpoint": "Illustrious-XL-v2.0.safetensors"
+        "checkpoint": "Illustrious-XL-v2.0.safetensors",
+        "positive_prompt_tail": "absurdres, highres"
       },
-      "seconds": 3.804,
-      "context_hash": null,
+      "fan": {
+        "commit": "9d0b76843f6437718195accac9cf3f050a25d26b",
+        "pooled": "plain",
+        "skip": -2,
+        "sample_size": 0,
+        "skip_pa": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "use_attn_mask": false
+      },
+      "pooled": "plain",
+      "personalization_hash": null,
+      "seconds": 3.813,
       "source": "local-illustrious-xl-v2.0",
       "license": "creativeml-openrail-m",
-      "asset_version": 3
+      "asset_version": 5
     },
     "forest-3": {
       "type": "image",
       "id": "forest-3",
       "path": "generic/forest-3.png",
-      "sha256": "2621768c41196b75a0edfc57906644704e174fc70bc79142e803631b23bebc12",
+      "sha256": "5f0ec45078efb456cf2785167683410fc06e2d3b98fadebbcf5d878c28a6fe3c",
       "seed": 230926,
-      "prompt": "1girl, solo, silver hair, witch hat, cloak, forest, upper body, detailed eyes, beautiful detailed illustration, delicate shading, masterpiece, best quality. balanced composition, natural lighting, detailed textures.",
+      "prompt": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1girl, solo, silver hair, witch hat, cloak, forest, upper body, detailed eyes, detailed illustration, absurdres, highres.",
+      "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
       "settings": {
         "model": "OnomaAIResearch/Illustrious-XL-v2.0",
         "revision": "69459c1fe6f46db41ab31e6114f05acc0e06bcaa",
@@ -640,28 +594,48 @@
         "width": 1024,
         "height": 1024,
         "steps": 28,
-        "guidance_scale": 6.5,
-        "negative_prompt": "worst quality, bad quality, lowres, blurry, bad anatomy, bad hands, extra digits, fewer digits, multiple views, comic, text, watermark, signature, photo, photorealistic, 3d, monochrome, greyscale, sketch, unfinished, nsfw, nude, multiple people, chibi, 2girls, 2boys",
+        "guidance_scale": 5.0,
+        "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
         "precision": "fp16",
         "pipeline_config": {
           "model": "OnomaAIResearch/Illustrious-xl-early-release-v0",
           "revision": "dca0dac303e6dc4b0c31d8001bc685b89b5d0204"
         },
-        "checkpoint": "Illustrious-XL-v2.0.safetensors"
+        "checkpoint": "Illustrious-XL-v2.0.safetensors",
+        "positive_prompt_tail": "absurdres, highres"
       },
-      "seconds": 3.808,
-      "context_hash": null,
+      "fan": {
+        "commit": "9d0b76843f6437718195accac9cf3f050a25d26b",
+        "pooled": "plain",
+        "skip": -2,
+        "sample_size": 0,
+        "skip_pa": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "use_attn_mask": false
+      },
+      "pooled": "plain",
+      "personalization_hash": null,
+      "seconds": 3.796,
       "source": "local-illustrious-xl-v2.0",
       "license": "creativeml-openrail-m",
-      "asset_version": 3
+      "asset_version": 5
     },
     "lighthouse-0": {
       "type": "image",
       "id": "lighthouse-0",
       "path": "generic/lighthouse-0.png",
-      "sha256": "62d2dc023bbf6302a32f5874aaaa503e5d5470e0af1e1dbfd4a1ec24537e7448",
+      "sha256": "c08a172178ff41ed54af5982db8bdaba0c32c96ee4a084b4ff5c3bf454370b25",
       "seed": 230923,
-      "prompt": "1boy, solo, male focus, short blond hair, sailor hat, striped shirt, lighthouse, ocean, upper body, detailed eyes, beautiful detailed illustration, delicate shading, masterpiece, best quality. balanced composition, natural lighting, detailed textures.",
+      "prompt": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1boy, solo, male focus, short blond hair, sailor hat, striped shirt, lighthouse, ocean, upper body, detailed eyes, detailed illustration, absurdres, highres.",
+      "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
       "settings": {
         "model": "OnomaAIResearch/Illustrious-XL-v2.0",
         "revision": "69459c1fe6f46db41ab31e6114f05acc0e06bcaa",
@@ -669,28 +643,48 @@
         "width": 1024,
         "height": 1024,
         "steps": 28,
-        "guidance_scale": 6.5,
-        "negative_prompt": "worst quality, bad quality, lowres, blurry, bad anatomy, bad hands, extra digits, fewer digits, multiple views, comic, text, watermark, signature, photo, photorealistic, 3d, monochrome, greyscale, sketch, unfinished, nsfw, nude, multiple people, chibi, 2girls, 2boys",
+        "guidance_scale": 5.0,
+        "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
         "precision": "fp16",
         "pipeline_config": {
           "model": "OnomaAIResearch/Illustrious-xl-early-release-v0",
           "revision": "dca0dac303e6dc4b0c31d8001bc685b89b5d0204"
         },
-        "checkpoint": "Illustrious-XL-v2.0.safetensors"
+        "checkpoint": "Illustrious-XL-v2.0.safetensors",
+        "positive_prompt_tail": "absurdres, highres"
       },
-      "seconds": 3.791,
-      "context_hash": null,
+      "fan": {
+        "commit": "9d0b76843f6437718195accac9cf3f050a25d26b",
+        "pooled": "plain",
+        "skip": -2,
+        "sample_size": 0,
+        "skip_pa": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "use_attn_mask": false
+      },
+      "pooled": "plain",
+      "personalization_hash": null,
+      "seconds": 3.799,
       "source": "local-illustrious-xl-v2.0",
       "license": "creativeml-openrail-m",
-      "asset_version": 3
+      "asset_version": 5
     },
     "lighthouse-1": {
       "type": "image",
       "id": "lighthouse-1",
       "path": "generic/lighthouse-1.png",
-      "sha256": "0e9c3cb99d501670e7317831f093bd64f376c2bb47b1fa33630b634096fab15b",
+      "sha256": "10bae1f6f7a525747120564ee6f9a84acd17bc4bff0eb9ff44b11431c55e6a9c",
       "seed": 230924,
-      "prompt": "1boy, solo, male focus, short blond hair, sailor hat, striped shirt, lighthouse, ocean, upper body, detailed eyes, beautiful detailed illustration, delicate shading, masterpiece, best quality. balanced composition, natural lighting, detailed textures.",
+      "prompt": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1boy, solo, male focus, short blond hair, sailor hat, striped shirt, lighthouse, ocean, upper body, detailed eyes, detailed illustration, absurdres, highres.",
+      "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
       "settings": {
         "model": "OnomaAIResearch/Illustrious-XL-v2.0",
         "revision": "69459c1fe6f46db41ab31e6114f05acc0e06bcaa",
@@ -698,28 +692,48 @@
         "width": 1024,
         "height": 1024,
         "steps": 28,
-        "guidance_scale": 6.5,
-        "negative_prompt": "worst quality, bad quality, lowres, blurry, bad anatomy, bad hands, extra digits, fewer digits, multiple views, comic, text, watermark, signature, photo, photorealistic, 3d, monochrome, greyscale, sketch, unfinished, nsfw, nude, multiple people, chibi, 2girls, 2boys",
+        "guidance_scale": 5.0,
+        "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
         "precision": "fp16",
         "pipeline_config": {
           "model": "OnomaAIResearch/Illustrious-xl-early-release-v0",
           "revision": "dca0dac303e6dc4b0c31d8001bc685b89b5d0204"
         },
-        "checkpoint": "Illustrious-XL-v2.0.safetensors"
+        "checkpoint": "Illustrious-XL-v2.0.safetensors",
+        "positive_prompt_tail": "absurdres, highres"
       },
-      "seconds": 3.777,
-      "context_hash": null,
+      "fan": {
+        "commit": "9d0b76843f6437718195accac9cf3f050a25d26b",
+        "pooled": "plain",
+        "skip": -2,
+        "sample_size": 0,
+        "skip_pa": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "use_attn_mask": false
+      },
+      "pooled": "plain",
+      "personalization_hash": null,
+      "seconds": 3.791,
       "source": "local-illustrious-xl-v2.0",
       "license": "creativeml-openrail-m",
-      "asset_version": 3
+      "asset_version": 5
     },
     "lighthouse-2": {
       "type": "image",
       "id": "lighthouse-2",
       "path": "generic/lighthouse-2.png",
-      "sha256": "f35109e59e5f2e78e28bc523c3b2e19622197e7bcd94254e0fa8217ed5da1246",
+      "sha256": "bfb0116c965fbe347b6f769f0280b264e672ba3a2f6a56ffbb56a9ec1693712e",
       "seed": 230925,
-      "prompt": "1boy, solo, male focus, short blond hair, sailor hat, striped shirt, lighthouse, ocean, upper body, detailed eyes, beautiful detailed illustration, delicate shading, masterpiece, best quality. balanced composition, natural lighting, detailed textures.",
+      "prompt": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1boy, solo, male focus, short blond hair, sailor hat, striped shirt, lighthouse, ocean, upper body, detailed eyes, detailed illustration, absurdres, highres.",
+      "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
       "settings": {
         "model": "OnomaAIResearch/Illustrious-XL-v2.0",
         "revision": "69459c1fe6f46db41ab31e6114f05acc0e06bcaa",
@@ -727,28 +741,48 @@
         "width": 1024,
         "height": 1024,
         "steps": 28,
-        "guidance_scale": 6.5,
-        "negative_prompt": "worst quality, bad quality, lowres, blurry, bad anatomy, bad hands, extra digits, fewer digits, multiple views, comic, text, watermark, signature, photo, photorealistic, 3d, monochrome, greyscale, sketch, unfinished, nsfw, nude, multiple people, chibi, 2girls, 2boys",
+        "guidance_scale": 5.0,
+        "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
         "precision": "fp16",
         "pipeline_config": {
           "model": "OnomaAIResearch/Illustrious-xl-early-release-v0",
           "revision": "dca0dac303e6dc4b0c31d8001bc685b89b5d0204"
         },
-        "checkpoint": "Illustrious-XL-v2.0.safetensors"
+        "checkpoint": "Illustrious-XL-v2.0.safetensors",
+        "positive_prompt_tail": "absurdres, highres"
       },
-      "seconds": 3.8,
-      "context_hash": null,
+      "fan": {
+        "commit": "9d0b76843f6437718195accac9cf3f050a25d26b",
+        "pooled": "plain",
+        "skip": -2,
+        "sample_size": 0,
+        "skip_pa": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "use_attn_mask": false
+      },
+      "pooled": "plain",
+      "personalization_hash": null,
+      "seconds": 3.793,
       "source": "local-illustrious-xl-v2.0",
       "license": "creativeml-openrail-m",
-      "asset_version": 3
+      "asset_version": 5
     },
     "lighthouse-3": {
       "type": "image",
       "id": "lighthouse-3",
       "path": "generic/lighthouse-3.png",
-      "sha256": "872a3507c86b38bdc3ea4956f285bac01fd30650f1088cea63adb74f0d490ae3",
+      "sha256": "219e18ebb0f258d0eded45f1e313a70e15e700734441ac6ae3bb7145d600158a",
       "seed": 230926,
-      "prompt": "1boy, solo, male focus, short blond hair, sailor hat, striped shirt, lighthouse, ocean, upper body, detailed eyes, beautiful detailed illustration, delicate shading, masterpiece, best quality. balanced composition, natural lighting, detailed textures.",
+      "prompt": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1boy, solo, male focus, short blond hair, sailor hat, striped shirt, lighthouse, ocean, upper body, detailed eyes, detailed illustration, absurdres, highres.",
+      "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
       "settings": {
         "model": "OnomaAIResearch/Illustrious-XL-v2.0",
         "revision": "69459c1fe6f46db41ab31e6114f05acc0e06bcaa",
@@ -756,28 +790,48 @@
         "width": 1024,
         "height": 1024,
         "steps": 28,
-        "guidance_scale": 6.5,
-        "negative_prompt": "worst quality, bad quality, lowres, blurry, bad anatomy, bad hands, extra digits, fewer digits, multiple views, comic, text, watermark, signature, photo, photorealistic, 3d, monochrome, greyscale, sketch, unfinished, nsfw, nude, multiple people, chibi, 2girls, 2boys",
+        "guidance_scale": 5.0,
+        "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
         "precision": "fp16",
         "pipeline_config": {
           "model": "OnomaAIResearch/Illustrious-xl-early-release-v0",
           "revision": "dca0dac303e6dc4b0c31d8001bc685b89b5d0204"
         },
-        "checkpoint": "Illustrious-XL-v2.0.safetensors"
+        "checkpoint": "Illustrious-XL-v2.0.safetensors",
+        "positive_prompt_tail": "absurdres, highres"
       },
-      "seconds": 3.799,
-      "context_hash": null,
+      "fan": {
+        "commit": "9d0b76843f6437718195accac9cf3f050a25d26b",
+        "pooled": "plain",
+        "skip": -2,
+        "sample_size": 0,
+        "skip_pa": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "use_attn_mask": false
+      },
+      "pooled": "plain",
+      "personalization_hash": null,
+      "seconds": 3.797,
       "source": "local-illustrious-xl-v2.0",
       "license": "creativeml-openrail-m",
-      "asset_version": 3
+      "asset_version": 5
     },
     "rain-0": {
       "type": "image",
       "id": "rain-0",
       "path": "generic/rain-0.png",
-      "sha256": "cfe5d682698a58a620eb9d4ef308ba99cdda5df392cdaee79b95524204005eee",
+      "sha256": "5d353ac3387bd2d72f2b28b32a9926bc3994c242b77bbfe1001d014b48c30a21",
       "seed": 230923,
-      "prompt": "1girl, solo, blue hair, raincoat, rain, city street, upper body, detailed eyes, beautiful detailed illustration, delicate shading, masterpiece, best quality. balanced composition, natural lighting, detailed textures.",
+      "prompt": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1girl, solo, blue hair, raincoat, rain, city street, upper body, detailed eyes, detailed illustration, absurdres, highres.",
+      "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
       "settings": {
         "model": "OnomaAIResearch/Illustrious-XL-v2.0",
         "revision": "69459c1fe6f46db41ab31e6114f05acc0e06bcaa",
@@ -785,28 +839,48 @@
         "width": 1024,
         "height": 1024,
         "steps": 28,
-        "guidance_scale": 6.5,
-        "negative_prompt": "worst quality, bad quality, lowres, blurry, bad anatomy, bad hands, extra digits, fewer digits, multiple views, comic, text, watermark, signature, photo, photorealistic, 3d, monochrome, greyscale, sketch, unfinished, nsfw, nude, multiple people, chibi, 2girls, 2boys",
+        "guidance_scale": 5.0,
+        "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
         "precision": "fp16",
         "pipeline_config": {
           "model": "OnomaAIResearch/Illustrious-xl-early-release-v0",
           "revision": "dca0dac303e6dc4b0c31d8001bc685b89b5d0204"
         },
-        "checkpoint": "Illustrious-XL-v2.0.safetensors"
+        "checkpoint": "Illustrious-XL-v2.0.safetensors",
+        "positive_prompt_tail": "absurdres, highres"
       },
-      "seconds": 3.816,
-      "context_hash": null,
+      "fan": {
+        "commit": "9d0b76843f6437718195accac9cf3f050a25d26b",
+        "pooled": "plain",
+        "skip": -2,
+        "sample_size": 0,
+        "skip_pa": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "use_attn_mask": false
+      },
+      "pooled": "plain",
+      "personalization_hash": null,
+      "seconds": 3.837,
       "source": "local-illustrious-xl-v2.0",
       "license": "creativeml-openrail-m",
-      "asset_version": 3
+      "asset_version": 5
     },
     "rain-1": {
       "type": "image",
       "id": "rain-1",
       "path": "generic/rain-1.png",
-      "sha256": "7358c09deac7d488f972343bc6117bb8d52b234f1f534861545976364299cf9e",
+      "sha256": "beefa41e63ea91ce6d0e0608e36382963b62ccb4632b5b78acbc30dd69324bc0",
       "seed": 230924,
-      "prompt": "1girl, solo, blue hair, raincoat, rain, city street, upper body, detailed eyes, beautiful detailed illustration, delicate shading, masterpiece, best quality. balanced composition, natural lighting, detailed textures.",
+      "prompt": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1girl, solo, blue hair, raincoat, rain, city street, upper body, detailed eyes, detailed illustration, absurdres, highres.",
+      "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
       "settings": {
         "model": "OnomaAIResearch/Illustrious-XL-v2.0",
         "revision": "69459c1fe6f46db41ab31e6114f05acc0e06bcaa",
@@ -814,28 +888,48 @@
         "width": 1024,
         "height": 1024,
         "steps": 28,
-        "guidance_scale": 6.5,
-        "negative_prompt": "worst quality, bad quality, lowres, blurry, bad anatomy, bad hands, extra digits, fewer digits, multiple views, comic, text, watermark, signature, photo, photorealistic, 3d, monochrome, greyscale, sketch, unfinished, nsfw, nude, multiple people, chibi, 2girls, 2boys",
+        "guidance_scale": 5.0,
+        "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
         "precision": "fp16",
         "pipeline_config": {
           "model": "OnomaAIResearch/Illustrious-xl-early-release-v0",
           "revision": "dca0dac303e6dc4b0c31d8001bc685b89b5d0204"
         },
-        "checkpoint": "Illustrious-XL-v2.0.safetensors"
+        "checkpoint": "Illustrious-XL-v2.0.safetensors",
+        "positive_prompt_tail": "absurdres, highres"
       },
-      "seconds": 3.808,
-      "context_hash": null,
+      "fan": {
+        "commit": "9d0b76843f6437718195accac9cf3f050a25d26b",
+        "pooled": "plain",
+        "skip": -2,
+        "sample_size": 0,
+        "skip_pa": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "use_attn_mask": false
+      },
+      "pooled": "plain",
+      "personalization_hash": null,
+      "seconds": 3.806,
       "source": "local-illustrious-xl-v2.0",
       "license": "creativeml-openrail-m",
-      "asset_version": 3
+      "asset_version": 5
     },
     "rain-2": {
       "type": "image",
       "id": "rain-2",
       "path": "generic/rain-2.png",
-      "sha256": "79b71f8ff989a38badd70a36e9f5a1b67e1fae1e1124cb3fcfe9e7c099e6d1aa",
+      "sha256": "5a2ddfcebfa4b349424714349e401aab3e6a68b713c4b9373457a7ad75218620",
       "seed": 230925,
-      "prompt": "1girl, solo, blue hair, raincoat, rain, city street, upper body, detailed eyes, beautiful detailed illustration, delicate shading, masterpiece, best quality. balanced composition, natural lighting, detailed textures.",
+      "prompt": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1girl, solo, blue hair, raincoat, rain, city street, upper body, detailed eyes, detailed illustration, absurdres, highres.",
+      "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
       "settings": {
         "model": "OnomaAIResearch/Illustrious-XL-v2.0",
         "revision": "69459c1fe6f46db41ab31e6114f05acc0e06bcaa",
@@ -843,28 +937,48 @@
         "width": 1024,
         "height": 1024,
         "steps": 28,
-        "guidance_scale": 6.5,
-        "negative_prompt": "worst quality, bad quality, lowres, blurry, bad anatomy, bad hands, extra digits, fewer digits, multiple views, comic, text, watermark, signature, photo, photorealistic, 3d, monochrome, greyscale, sketch, unfinished, nsfw, nude, multiple people, chibi, 2girls, 2boys",
+        "guidance_scale": 5.0,
+        "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
         "precision": "fp16",
         "pipeline_config": {
           "model": "OnomaAIResearch/Illustrious-xl-early-release-v0",
           "revision": "dca0dac303e6dc4b0c31d8001bc685b89b5d0204"
         },
-        "checkpoint": "Illustrious-XL-v2.0.safetensors"
+        "checkpoint": "Illustrious-XL-v2.0.safetensors",
+        "positive_prompt_tail": "absurdres, highres"
       },
-      "seconds": 3.82,
-      "context_hash": null,
+      "fan": {
+        "commit": "9d0b76843f6437718195accac9cf3f050a25d26b",
+        "pooled": "plain",
+        "skip": -2,
+        "sample_size": 0,
+        "skip_pa": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "use_attn_mask": false
+      },
+      "pooled": "plain",
+      "personalization_hash": null,
+      "seconds": 3.814,
       "source": "local-illustrious-xl-v2.0",
       "license": "creativeml-openrail-m",
-      "asset_version": 3
+      "asset_version": 5
     },
     "rain-3": {
       "type": "image",
       "id": "rain-3",
       "path": "generic/rain-3.png",
-      "sha256": "adba631250805a1afc6ea1341e8315211204a9d7947639a008863081da8c983f",
+      "sha256": "2ba84ad7c83ff11aaf74c9fc99304fc8d617dbeb46b6d67225a60861275f33a7",
       "seed": 230926,
-      "prompt": "1girl, solo, blue hair, raincoat, rain, city street, upper body, detailed eyes, beautiful detailed illustration, delicate shading, masterpiece, best quality. balanced composition, natural lighting, detailed textures.",
+      "prompt": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1girl, solo, blue hair, raincoat, rain, city street, upper body, detailed eyes, detailed illustration, absurdres, highres.",
+      "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
       "settings": {
         "model": "OnomaAIResearch/Illustrious-XL-v2.0",
         "revision": "69459c1fe6f46db41ab31e6114f05acc0e06bcaa",
@@ -872,28 +986,48 @@
         "width": 1024,
         "height": 1024,
         "steps": 28,
-        "guidance_scale": 6.5,
-        "negative_prompt": "worst quality, bad quality, lowres, blurry, bad anatomy, bad hands, extra digits, fewer digits, multiple views, comic, text, watermark, signature, photo, photorealistic, 3d, monochrome, greyscale, sketch, unfinished, nsfw, nude, multiple people, chibi, 2girls, 2boys",
+        "guidance_scale": 5.0,
+        "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
         "precision": "fp16",
         "pipeline_config": {
           "model": "OnomaAIResearch/Illustrious-xl-early-release-v0",
           "revision": "dca0dac303e6dc4b0c31d8001bc685b89b5d0204"
         },
-        "checkpoint": "Illustrious-XL-v2.0.safetensors"
+        "checkpoint": "Illustrious-XL-v2.0.safetensors",
+        "positive_prompt_tail": "absurdres, highres"
       },
+      "fan": {
+        "commit": "9d0b76843f6437718195accac9cf3f050a25d26b",
+        "pooled": "plain",
+        "skip": -2,
+        "sample_size": 0,
+        "skip_pa": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "use_attn_mask": false
+      },
+      "pooled": "plain",
+      "personalization_hash": null,
       "seconds": 3.801,
-      "context_hash": null,
       "source": "local-illustrious-xl-v2.0",
       "license": "creativeml-openrail-m",
-      "asset_version": 3
+      "asset_version": 5
     },
     "cafe-0": {
       "type": "image",
       "id": "cafe-0",
       "path": "generic/cafe-0.png",
-      "sha256": "4a40a2259633ef9a7d57d5471c5501f9c6df526a534991232ec0d86601ad4360",
+      "sha256": "b87374bf9550ae18da9a8c1196eef701ff1c793e32714915f3ab2eadb838d2ec",
       "seed": 230923,
-      "prompt": "1girl, solo, auburn hair, white shirt, apron, cafe, upper body, detailed eyes, beautiful detailed illustration, delicate shading, masterpiece, best quality. balanced composition, natural lighting, detailed textures.",
+      "prompt": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1girl, solo, auburn hair, white shirt, apron, cafe, upper body, detailed eyes, detailed illustration, absurdres, highres.",
+      "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
       "settings": {
         "model": "OnomaAIResearch/Illustrious-XL-v2.0",
         "revision": "69459c1fe6f46db41ab31e6114f05acc0e06bcaa",
@@ -901,28 +1035,48 @@
         "width": 1024,
         "height": 1024,
         "steps": 28,
-        "guidance_scale": 6.5,
-        "negative_prompt": "worst quality, bad quality, lowres, blurry, bad anatomy, bad hands, extra digits, fewer digits, multiple views, comic, text, watermark, signature, photo, photorealistic, 3d, monochrome, greyscale, sketch, unfinished, nsfw, nude, multiple people, chibi, 2girls, 2boys",
+        "guidance_scale": 5.0,
+        "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
         "precision": "fp16",
         "pipeline_config": {
           "model": "OnomaAIResearch/Illustrious-xl-early-release-v0",
           "revision": "dca0dac303e6dc4b0c31d8001bc685b89b5d0204"
         },
-        "checkpoint": "Illustrious-XL-v2.0.safetensors"
+        "checkpoint": "Illustrious-XL-v2.0.safetensors",
+        "positive_prompt_tail": "absurdres, highres"
       },
-      "seconds": 3.784,
-      "context_hash": null,
+      "fan": {
+        "commit": "9d0b76843f6437718195accac9cf3f050a25d26b",
+        "pooled": "plain",
+        "skip": -2,
+        "sample_size": 0,
+        "skip_pa": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "use_attn_mask": false
+      },
+      "pooled": "plain",
+      "personalization_hash": null,
+      "seconds": 3.808,
       "source": "local-illustrious-xl-v2.0",
       "license": "creativeml-openrail-m",
-      "asset_version": 3
+      "asset_version": 5
     },
     "cafe-1": {
       "type": "image",
       "id": "cafe-1",
       "path": "generic/cafe-1.png",
-      "sha256": "e95331c31e6a05ab13b45c2ec5f244f8febd4ad6e010595c56cf900d80bca737",
+      "sha256": "ea2f46137dca12e3e28ce2ba1ba14932091fc7c363b6a7dd34a3c9a548915fa7",
       "seed": 230924,
-      "prompt": "1girl, solo, auburn hair, white shirt, apron, cafe, upper body, detailed eyes, beautiful detailed illustration, delicate shading, masterpiece, best quality. balanced composition, natural lighting, detailed textures.",
+      "prompt": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1girl, solo, auburn hair, white shirt, apron, cafe, upper body, detailed eyes, detailed illustration, absurdres, highres.",
+      "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
       "settings": {
         "model": "OnomaAIResearch/Illustrious-XL-v2.0",
         "revision": "69459c1fe6f46db41ab31e6114f05acc0e06bcaa",
@@ -930,28 +1084,48 @@
         "width": 1024,
         "height": 1024,
         "steps": 28,
-        "guidance_scale": 6.5,
-        "negative_prompt": "worst quality, bad quality, lowres, blurry, bad anatomy, bad hands, extra digits, fewer digits, multiple views, comic, text, watermark, signature, photo, photorealistic, 3d, monochrome, greyscale, sketch, unfinished, nsfw, nude, multiple people, chibi, 2girls, 2boys",
+        "guidance_scale": 5.0,
+        "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
         "precision": "fp16",
         "pipeline_config": {
           "model": "OnomaAIResearch/Illustrious-xl-early-release-v0",
           "revision": "dca0dac303e6dc4b0c31d8001bc685b89b5d0204"
         },
-        "checkpoint": "Illustrious-XL-v2.0.safetensors"
+        "checkpoint": "Illustrious-XL-v2.0.safetensors",
+        "positive_prompt_tail": "absurdres, highres"
       },
-      "seconds": 3.792,
-      "context_hash": null,
+      "fan": {
+        "commit": "9d0b76843f6437718195accac9cf3f050a25d26b",
+        "pooled": "plain",
+        "skip": -2,
+        "sample_size": 0,
+        "skip_pa": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "use_attn_mask": false
+      },
+      "pooled": "plain",
+      "personalization_hash": null,
+      "seconds": 3.804,
       "source": "local-illustrious-xl-v2.0",
       "license": "creativeml-openrail-m",
-      "asset_version": 3
+      "asset_version": 5
     },
     "cafe-2": {
       "type": "image",
       "id": "cafe-2",
       "path": "generic/cafe-2.png",
-      "sha256": "3cbf4de1a6b20615fcb70d3de5d057989000a279e611515b75ee0fd00b6765db",
+      "sha256": "f7ac71eff3e63b16436d6270f087c32d3390ecf45f8ebc24ffe28eee2cd4b806",
       "seed": 230925,
-      "prompt": "1girl, solo, auburn hair, white shirt, apron, cafe, upper body, detailed eyes, beautiful detailed illustration, delicate shading, masterpiece, best quality. balanced composition, natural lighting, detailed textures.",
+      "prompt": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1girl, solo, auburn hair, white shirt, apron, cafe, upper body, detailed eyes, detailed illustration, absurdres, highres.",
+      "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
       "settings": {
         "model": "OnomaAIResearch/Illustrious-XL-v2.0",
         "revision": "69459c1fe6f46db41ab31e6114f05acc0e06bcaa",
@@ -959,28 +1133,48 @@
         "width": 1024,
         "height": 1024,
         "steps": 28,
-        "guidance_scale": 6.5,
-        "negative_prompt": "worst quality, bad quality, lowres, blurry, bad anatomy, bad hands, extra digits, fewer digits, multiple views, comic, text, watermark, signature, photo, photorealistic, 3d, monochrome, greyscale, sketch, unfinished, nsfw, nude, multiple people, chibi, 2girls, 2boys",
+        "guidance_scale": 5.0,
+        "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
         "precision": "fp16",
         "pipeline_config": {
           "model": "OnomaAIResearch/Illustrious-xl-early-release-v0",
           "revision": "dca0dac303e6dc4b0c31d8001bc685b89b5d0204"
         },
-        "checkpoint": "Illustrious-XL-v2.0.safetensors"
+        "checkpoint": "Illustrious-XL-v2.0.safetensors",
+        "positive_prompt_tail": "absurdres, highres"
       },
-      "seconds": 3.796,
-      "context_hash": null,
+      "fan": {
+        "commit": "9d0b76843f6437718195accac9cf3f050a25d26b",
+        "pooled": "plain",
+        "skip": -2,
+        "sample_size": 0,
+        "skip_pa": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "use_attn_mask": false
+      },
+      "pooled": "plain",
+      "personalization_hash": null,
+      "seconds": 3.805,
       "source": "local-illustrious-xl-v2.0",
       "license": "creativeml-openrail-m",
-      "asset_version": 3
+      "asset_version": 5
     },
     "cafe-3": {
       "type": "image",
       "id": "cafe-3",
       "path": "generic/cafe-3.png",
-      "sha256": "4f4d7d626466ae8225a30b22af9f4fce9c0ce1855d0445f963da122b9d325610",
+      "sha256": "96eeb8d80464dcc5ecc82d329f9f2859ac8336d7713e8c2ab3eb2d41a5ab5b06",
       "seed": 230926,
-      "prompt": "1girl, solo, auburn hair, white shirt, apron, cafe, upper body, detailed eyes, beautiful detailed illustration, delicate shading, masterpiece, best quality. balanced composition, natural lighting, detailed textures.",
+      "prompt": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1girl, solo, auburn hair, white shirt, apron, cafe, upper body, detailed eyes, detailed illustration, absurdres, highres.",
+      "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
       "settings": {
         "model": "OnomaAIResearch/Illustrious-XL-v2.0",
         "revision": "69459c1fe6f46db41ab31e6114f05acc0e06bcaa",
@@ -988,36 +1182,1004 @@
         "width": 1024,
         "height": 1024,
         "steps": 28,
-        "guidance_scale": 6.5,
-        "negative_prompt": "worst quality, bad quality, lowres, blurry, bad anatomy, bad hands, extra digits, fewer digits, multiple views, comic, text, watermark, signature, photo, photorealistic, 3d, monochrome, greyscale, sketch, unfinished, nsfw, nude, multiple people, chibi, 2girls, 2boys",
+        "guidance_scale": 5.0,
+        "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
         "precision": "fp16",
         "pipeline_config": {
           "model": "OnomaAIResearch/Illustrious-xl-early-release-v0",
           "revision": "dca0dac303e6dc4b0c31d8001bc685b89b5d0204"
         },
-        "checkpoint": "Illustrious-XL-v2.0.safetensors"
+        "checkpoint": "Illustrious-XL-v2.0.safetensors",
+        "positive_prompt_tail": "absurdres, highres"
       },
-      "seconds": 3.797,
-      "context_hash": null,
+      "fan": {
+        "commit": "9d0b76843f6437718195accac9cf3f050a25d26b",
+        "pooled": "plain",
+        "skip": -2,
+        "sample_size": 0,
+        "skip_pa": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "use_attn_mask": false
+      },
+      "pooled": "plain",
+      "personalization_hash": null,
+      "seconds": 3.8,
       "source": "local-illustrious-xl-v2.0",
       "license": "creativeml-openrail-m",
-      "asset_version": 3
+      "asset_version": 5
+    },
+    "girl-warm_soft": {
+      "type": "image",
+      "id": "girl-warm_soft",
+      "path": "cards/girl-warm_soft.png",
+      "sha256": "66f52b793ae5937b266fed58c2f1bb1ce3e71370a502c0ef4b62f1e24a206458",
+      "seed": 601,
+      "prompt": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1girl, solo, brown hair, beret, coat, town square, upper body, detailed eyes, detailed illustration, warm color palette, amber and orange tones, warm golden hour light, gentle shadows, watercolor painting, soft brushwork, painterly texture, calm atmosphere, absurdres, highres.",
+      "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
+      "settings": {
+        "model": "OnomaAIResearch/Illustrious-XL-v2.0",
+        "revision": "69459c1fe6f46db41ab31e6114f05acc0e06bcaa",
+        "scheduler": "EulerAncestralDiscreteScheduler",
+        "width": 1024,
+        "height": 1024,
+        "steps": 28,
+        "guidance_scale": 5.0,
+        "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
+        "precision": "fp16",
+        "pipeline_config": {
+          "model": "OnomaAIResearch/Illustrious-xl-early-release-v0",
+          "revision": "dca0dac303e6dc4b0c31d8001bc685b89b5d0204"
+        },
+        "checkpoint": "Illustrious-XL-v2.0.safetensors",
+        "positive_prompt_tail": "absurdres, highres"
+      },
+      "fan": {
+        "commit": "9d0b76843f6437718195accac9cf3f050a25d26b",
+        "pooled": "plain",
+        "skip": -2,
+        "sample_size": 0,
+        "skip_pa": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "use_attn_mask": false
+      },
+      "pooled": "plain",
+      "personalization_hash": null,
+      "seconds": 3.899,
+      "ref_en": "warm color palette, amber and orange tones, warm golden hour light, gentle shadows, watercolor painting, soft brushwork, painterly texture, calm atmosphere",
+      "aspects": {
+        "color": "warm color palette, amber and orange tones",
+        "lighting": "warm golden hour light, gentle shadows",
+        "texture": "watercolor painting, soft brushwork, painterly texture",
+        "mood": "calm atmosphere"
+      },
+      "subject_id": "girl",
+      "profile_id": "warm_soft",
+      "source": "local-illustrious-xl-v2.0",
+      "license": "creativeml-openrail-m",
+      "asset_version": 5
+    },
+    "girl-cool_clean": {
+      "type": "image",
+      "id": "girl-cool_clean",
+      "path": "cards/girl-cool_clean.png",
+      "sha256": "9bad24b90f6f325cf43ae79fe1ecd4340b91693f4ea1b40025fde38bb7f65daf",
+      "seed": 601,
+      "prompt": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1girl, solo, brown hair, beret, coat, town square, upper body, detailed eyes, detailed illustration, cool color palette, blue and teal tones, soft diffused light, cel shading, clean lineart, anime coloring, calm atmosphere, absurdres, highres.",
+      "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
+      "settings": {
+        "model": "OnomaAIResearch/Illustrious-XL-v2.0",
+        "revision": "69459c1fe6f46db41ab31e6114f05acc0e06bcaa",
+        "scheduler": "EulerAncestralDiscreteScheduler",
+        "width": 1024,
+        "height": 1024,
+        "steps": 28,
+        "guidance_scale": 5.0,
+        "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
+        "precision": "fp16",
+        "pipeline_config": {
+          "model": "OnomaAIResearch/Illustrious-xl-early-release-v0",
+          "revision": "dca0dac303e6dc4b0c31d8001bc685b89b5d0204"
+        },
+        "checkpoint": "Illustrious-XL-v2.0.safetensors",
+        "positive_prompt_tail": "absurdres, highres"
+      },
+      "fan": {
+        "commit": "9d0b76843f6437718195accac9cf3f050a25d26b",
+        "pooled": "plain",
+        "skip": -2,
+        "sample_size": 0,
+        "skip_pa": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "use_attn_mask": false
+      },
+      "pooled": "plain",
+      "personalization_hash": null,
+      "seconds": 3.756,
+      "ref_en": "cool color palette, blue and teal tones, soft diffused light, cel shading, clean lineart, anime coloring, calm atmosphere",
+      "aspects": {
+        "color": "cool color palette, blue and teal tones",
+        "lighting": "soft diffused light",
+        "texture": "cel shading, clean lineart, anime coloring",
+        "mood": "calm atmosphere"
+      },
+      "subject_id": "girl",
+      "profile_id": "cool_clean",
+      "source": "local-illustrious-xl-v2.0",
+      "license": "creativeml-openrail-m",
+      "asset_version": 5
+    },
+    "girl-dramatic": {
+      "type": "image",
+      "id": "girl-dramatic",
+      "path": "cards/girl-dramatic.png",
+      "sha256": "e58b28c44be1bdd36db8a0adfbcb9b6c28f5d2f77eaf9bce8400531465a4b388",
+      "seed": 601,
+      "prompt": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1girl, solo, brown hair, beret, coat, town square, upper body, detailed eyes, detailed illustration, muted colors, dark background, dramatic lighting, strong shadows, rim light, detailed shading, painterly texture, serious atmosphere, absurdres, highres.",
+      "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
+      "settings": {
+        "model": "OnomaAIResearch/Illustrious-XL-v2.0",
+        "revision": "69459c1fe6f46db41ab31e6114f05acc0e06bcaa",
+        "scheduler": "EulerAncestralDiscreteScheduler",
+        "width": 1024,
+        "height": 1024,
+        "steps": 28,
+        "guidance_scale": 5.0,
+        "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
+        "precision": "fp16",
+        "pipeline_config": {
+          "model": "OnomaAIResearch/Illustrious-xl-early-release-v0",
+          "revision": "dca0dac303e6dc4b0c31d8001bc685b89b5d0204"
+        },
+        "checkpoint": "Illustrious-XL-v2.0.safetensors",
+        "positive_prompt_tail": "absurdres, highres"
+      },
+      "fan": {
+        "commit": "9d0b76843f6437718195accac9cf3f050a25d26b",
+        "pooled": "plain",
+        "skip": -2,
+        "sample_size": 0,
+        "skip_pa": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "use_attn_mask": false
+      },
+      "pooled": "plain",
+      "personalization_hash": null,
+      "seconds": 3.789,
+      "ref_en": "muted colors, dark background, dramatic lighting, strong shadows, rim light, detailed shading, painterly texture, serious atmosphere",
+      "aspects": {
+        "color": "muted colors, dark background",
+        "lighting": "dramatic lighting, strong shadows, rim light",
+        "texture": "detailed shading, painterly texture",
+        "mood": "serious atmosphere"
+      },
+      "subject_id": "girl",
+      "profile_id": "dramatic",
+      "source": "local-illustrious-xl-v2.0",
+      "license": "creativeml-openrail-m",
+      "asset_version": 5
+    },
+    "girl-vivid_lively": {
+      "type": "image",
+      "id": "girl-vivid_lively",
+      "path": "cards/girl-vivid_lively.png",
+      "sha256": "9c5547456b212aa3f979b3d3fff64a9291b49cb74ed6bd08af2f368fa1ac46a4",
+      "seed": 601,
+      "prompt": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1girl, solo, brown hair, beret, coat, town square, upper body, detailed eyes, detailed illustration, vivid colors, colorful, high saturation, bright lighting, sparkle, cel shading, flat color, cheerful expression, lively atmosphere, absurdres, highres.",
+      "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
+      "settings": {
+        "model": "OnomaAIResearch/Illustrious-XL-v2.0",
+        "revision": "69459c1fe6f46db41ab31e6114f05acc0e06bcaa",
+        "scheduler": "EulerAncestralDiscreteScheduler",
+        "width": 1024,
+        "height": 1024,
+        "steps": 28,
+        "guidance_scale": 5.0,
+        "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
+        "precision": "fp16",
+        "pipeline_config": {
+          "model": "OnomaAIResearch/Illustrious-xl-early-release-v0",
+          "revision": "dca0dac303e6dc4b0c31d8001bc685b89b5d0204"
+        },
+        "checkpoint": "Illustrious-XL-v2.0.safetensors",
+        "positive_prompt_tail": "absurdres, highres"
+      },
+      "fan": {
+        "commit": "9d0b76843f6437718195accac9cf3f050a25d26b",
+        "pooled": "plain",
+        "skip": -2,
+        "sample_size": 0,
+        "skip_pa": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "use_attn_mask": false
+      },
+      "pooled": "plain",
+      "personalization_hash": null,
+      "seconds": 3.8,
+      "ref_en": "vivid colors, colorful, high saturation, bright lighting, sparkle, cel shading, flat color, cheerful expression, lively atmosphere",
+      "aspects": {
+        "color": "vivid colors, colorful, high saturation",
+        "lighting": "bright lighting, sparkle",
+        "texture": "cel shading, flat color",
+        "mood": "cheerful expression, lively atmosphere"
+      },
+      "subject_id": "girl",
+      "profile_id": "vivid_lively",
+      "source": "local-illustrious-xl-v2.0",
+      "license": "creativeml-openrail-m",
+      "asset_version": 5
+    },
+    "student-warm_soft": {
+      "type": "image",
+      "id": "student-warm_soft",
+      "path": "cards/student-warm_soft.png",
+      "sha256": "ddd4e6da12d0d69f8338764d5a9c21c171a50f6ce65bc864b2892fac38338aca",
+      "seed": 602,
+      "prompt": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1boy, solo, male focus, black hair, vest, white shirt, library, upper body, detailed eyes, detailed illustration, warm color palette, amber and orange tones, warm golden hour light, gentle shadows, watercolor painting, soft brushwork, painterly texture, calm atmosphere, absurdres, highres.",
+      "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
+      "settings": {
+        "model": "OnomaAIResearch/Illustrious-XL-v2.0",
+        "revision": "69459c1fe6f46db41ab31e6114f05acc0e06bcaa",
+        "scheduler": "EulerAncestralDiscreteScheduler",
+        "width": 1024,
+        "height": 1024,
+        "steps": 28,
+        "guidance_scale": 5.0,
+        "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
+        "precision": "fp16",
+        "pipeline_config": {
+          "model": "OnomaAIResearch/Illustrious-xl-early-release-v0",
+          "revision": "dca0dac303e6dc4b0c31d8001bc685b89b5d0204"
+        },
+        "checkpoint": "Illustrious-XL-v2.0.safetensors",
+        "positive_prompt_tail": "absurdres, highres"
+      },
+      "fan": {
+        "commit": "9d0b76843f6437718195accac9cf3f050a25d26b",
+        "pooled": "plain",
+        "skip": -2,
+        "sample_size": 0,
+        "skip_pa": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "use_attn_mask": false
+      },
+      "pooled": "plain",
+      "personalization_hash": null,
+      "seconds": 3.81,
+      "ref_en": "warm color palette, amber and orange tones, warm golden hour light, gentle shadows, watercolor painting, soft brushwork, painterly texture, calm atmosphere",
+      "aspects": {
+        "color": "warm color palette, amber and orange tones",
+        "lighting": "warm golden hour light, gentle shadows",
+        "texture": "watercolor painting, soft brushwork, painterly texture",
+        "mood": "calm atmosphere"
+      },
+      "subject_id": "student",
+      "profile_id": "warm_soft",
+      "source": "local-illustrious-xl-v2.0",
+      "license": "creativeml-openrail-m",
+      "asset_version": 5
+    },
+    "student-cool_clean": {
+      "type": "image",
+      "id": "student-cool_clean",
+      "path": "cards/student-cool_clean.png",
+      "sha256": "5cd339da4d6cc39a54c9064174c4035ff9fc0bcacd2fb554f6a58bc50a27327f",
+      "seed": 602,
+      "prompt": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1boy, solo, male focus, black hair, vest, white shirt, library, upper body, detailed eyes, detailed illustration, cool color palette, blue and teal tones, soft diffused light, cel shading, clean lineart, anime coloring, calm atmosphere, absurdres, highres.",
+      "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
+      "settings": {
+        "model": "OnomaAIResearch/Illustrious-XL-v2.0",
+        "revision": "69459c1fe6f46db41ab31e6114f05acc0e06bcaa",
+        "scheduler": "EulerAncestralDiscreteScheduler",
+        "width": 1024,
+        "height": 1024,
+        "steps": 28,
+        "guidance_scale": 5.0,
+        "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
+        "precision": "fp16",
+        "pipeline_config": {
+          "model": "OnomaAIResearch/Illustrious-xl-early-release-v0",
+          "revision": "dca0dac303e6dc4b0c31d8001bc685b89b5d0204"
+        },
+        "checkpoint": "Illustrious-XL-v2.0.safetensors",
+        "positive_prompt_tail": "absurdres, highres"
+      },
+      "fan": {
+        "commit": "9d0b76843f6437718195accac9cf3f050a25d26b",
+        "pooled": "plain",
+        "skip": -2,
+        "sample_size": 0,
+        "skip_pa": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "use_attn_mask": false
+      },
+      "pooled": "plain",
+      "personalization_hash": null,
+      "seconds": 3.79,
+      "ref_en": "cool color palette, blue and teal tones, soft diffused light, cel shading, clean lineart, anime coloring, calm atmosphere",
+      "aspects": {
+        "color": "cool color palette, blue and teal tones",
+        "lighting": "soft diffused light",
+        "texture": "cel shading, clean lineart, anime coloring",
+        "mood": "calm atmosphere"
+      },
+      "subject_id": "student",
+      "profile_id": "cool_clean",
+      "source": "local-illustrious-xl-v2.0",
+      "license": "creativeml-openrail-m",
+      "asset_version": 5
+    },
+    "student-dramatic": {
+      "type": "image",
+      "id": "student-dramatic",
+      "path": "cards/student-dramatic.png",
+      "sha256": "be10356d5649924b09131c16a3b29305e698557d16ac85bd102a6c979b92d6bb",
+      "seed": 602,
+      "prompt": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1boy, solo, male focus, black hair, vest, white shirt, library, upper body, detailed eyes, detailed illustration, muted colors, dark background, dramatic lighting, strong shadows, rim light, detailed shading, painterly texture, serious atmosphere, absurdres, highres.",
+      "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
+      "settings": {
+        "model": "OnomaAIResearch/Illustrious-XL-v2.0",
+        "revision": "69459c1fe6f46db41ab31e6114f05acc0e06bcaa",
+        "scheduler": "EulerAncestralDiscreteScheduler",
+        "width": 1024,
+        "height": 1024,
+        "steps": 28,
+        "guidance_scale": 5.0,
+        "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
+        "precision": "fp16",
+        "pipeline_config": {
+          "model": "OnomaAIResearch/Illustrious-xl-early-release-v0",
+          "revision": "dca0dac303e6dc4b0c31d8001bc685b89b5d0204"
+        },
+        "checkpoint": "Illustrious-XL-v2.0.safetensors",
+        "positive_prompt_tail": "absurdres, highres"
+      },
+      "fan": {
+        "commit": "9d0b76843f6437718195accac9cf3f050a25d26b",
+        "pooled": "plain",
+        "skip": -2,
+        "sample_size": 0,
+        "skip_pa": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "use_attn_mask": false
+      },
+      "pooled": "plain",
+      "personalization_hash": null,
+      "seconds": 3.789,
+      "ref_en": "muted colors, dark background, dramatic lighting, strong shadows, rim light, detailed shading, painterly texture, serious atmosphere",
+      "aspects": {
+        "color": "muted colors, dark background",
+        "lighting": "dramatic lighting, strong shadows, rim light",
+        "texture": "detailed shading, painterly texture",
+        "mood": "serious atmosphere"
+      },
+      "subject_id": "student",
+      "profile_id": "dramatic",
+      "source": "local-illustrious-xl-v2.0",
+      "license": "creativeml-openrail-m",
+      "asset_version": 5
+    },
+    "student-vivid_lively": {
+      "type": "image",
+      "id": "student-vivid_lively",
+      "path": "cards/student-vivid_lively.png",
+      "sha256": "cf6191f494270e0a29a5983c87ee41829aac53493aeac1fd227a7b83ee33adaf",
+      "seed": 602,
+      "prompt": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1boy, solo, male focus, black hair, vest, white shirt, library, upper body, detailed eyes, detailed illustration, vivid colors, colorful, high saturation, bright lighting, sparkle, cel shading, flat color, cheerful expression, lively atmosphere, absurdres, highres.",
+      "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
+      "settings": {
+        "model": "OnomaAIResearch/Illustrious-XL-v2.0",
+        "revision": "69459c1fe6f46db41ab31e6114f05acc0e06bcaa",
+        "scheduler": "EulerAncestralDiscreteScheduler",
+        "width": 1024,
+        "height": 1024,
+        "steps": 28,
+        "guidance_scale": 5.0,
+        "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
+        "precision": "fp16",
+        "pipeline_config": {
+          "model": "OnomaAIResearch/Illustrious-xl-early-release-v0",
+          "revision": "dca0dac303e6dc4b0c31d8001bc685b89b5d0204"
+        },
+        "checkpoint": "Illustrious-XL-v2.0.safetensors",
+        "positive_prompt_tail": "absurdres, highres"
+      },
+      "fan": {
+        "commit": "9d0b76843f6437718195accac9cf3f050a25d26b",
+        "pooled": "plain",
+        "skip": -2,
+        "sample_size": 0,
+        "skip_pa": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "use_attn_mask": false
+      },
+      "pooled": "plain",
+      "personalization_hash": null,
+      "seconds": 3.826,
+      "ref_en": "vivid colors, colorful, high saturation, bright lighting, sparkle, cel shading, flat color, cheerful expression, lively atmosphere",
+      "aspects": {
+        "color": "vivid colors, colorful, high saturation",
+        "lighting": "bright lighting, sparkle",
+        "texture": "cel shading, flat color",
+        "mood": "cheerful expression, lively atmosphere"
+      },
+      "subject_id": "student",
+      "profile_id": "vivid_lively",
+      "source": "local-illustrious-xl-v2.0",
+      "license": "creativeml-openrail-m",
+      "asset_version": 5
+    },
+    "traveler-warm_soft": {
+      "type": "image",
+      "id": "traveler-warm_soft",
+      "path": "cards/traveler-warm_soft.png",
+      "sha256": "911fcd1bd0d8396fa2bf61a8558dcbae1290d9f87c0c19f4569d1375975f53a9",
+      "seed": 603,
+      "prompt": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1girl, solo, silver hair, cloak, grassland, detailed eyes, detailed illustration, warm color palette, amber and orange tones, warm golden hour light, gentle shadows, watercolor painting, soft brushwork, painterly texture, calm atmosphere, absurdres, highres.",
+      "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
+      "settings": {
+        "model": "OnomaAIResearch/Illustrious-XL-v2.0",
+        "revision": "69459c1fe6f46db41ab31e6114f05acc0e06bcaa",
+        "scheduler": "EulerAncestralDiscreteScheduler",
+        "width": 1024,
+        "height": 1024,
+        "steps": 28,
+        "guidance_scale": 5.0,
+        "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
+        "precision": "fp16",
+        "pipeline_config": {
+          "model": "OnomaAIResearch/Illustrious-xl-early-release-v0",
+          "revision": "dca0dac303e6dc4b0c31d8001bc685b89b5d0204"
+        },
+        "checkpoint": "Illustrious-XL-v2.0.safetensors",
+        "positive_prompt_tail": "absurdres, highres"
+      },
+      "fan": {
+        "commit": "9d0b76843f6437718195accac9cf3f050a25d26b",
+        "pooled": "plain",
+        "skip": -2,
+        "sample_size": 0,
+        "skip_pa": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "use_attn_mask": false
+      },
+      "pooled": "plain",
+      "personalization_hash": null,
+      "seconds": 3.839,
+      "ref_en": "warm color palette, amber and orange tones, warm golden hour light, gentle shadows, watercolor painting, soft brushwork, painterly texture, calm atmosphere",
+      "aspects": {
+        "color": "warm color palette, amber and orange tones",
+        "lighting": "warm golden hour light, gentle shadows",
+        "texture": "watercolor painting, soft brushwork, painterly texture",
+        "mood": "calm atmosphere"
+      },
+      "subject_id": "traveler",
+      "profile_id": "warm_soft",
+      "source": "local-illustrious-xl-v2.0",
+      "license": "creativeml-openrail-m",
+      "asset_version": 5
+    },
+    "traveler-cool_clean": {
+      "type": "image",
+      "id": "traveler-cool_clean",
+      "path": "cards/traveler-cool_clean.png",
+      "sha256": "5c1fc0305b534b0df49dc2ac3cf3870a1340ac91d0fd217cb4a615842abe5347",
+      "seed": 603,
+      "prompt": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1girl, solo, silver hair, cloak, grassland, detailed eyes, detailed illustration, cool color palette, blue and teal tones, soft diffused light, cel shading, clean lineart, anime coloring, calm atmosphere, absurdres, highres.",
+      "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
+      "settings": {
+        "model": "OnomaAIResearch/Illustrious-XL-v2.0",
+        "revision": "69459c1fe6f46db41ab31e6114f05acc0e06bcaa",
+        "scheduler": "EulerAncestralDiscreteScheduler",
+        "width": 1024,
+        "height": 1024,
+        "steps": 28,
+        "guidance_scale": 5.0,
+        "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
+        "precision": "fp16",
+        "pipeline_config": {
+          "model": "OnomaAIResearch/Illustrious-xl-early-release-v0",
+          "revision": "dca0dac303e6dc4b0c31d8001bc685b89b5d0204"
+        },
+        "checkpoint": "Illustrious-XL-v2.0.safetensors",
+        "positive_prompt_tail": "absurdres, highres"
+      },
+      "fan": {
+        "commit": "9d0b76843f6437718195accac9cf3f050a25d26b",
+        "pooled": "plain",
+        "skip": -2,
+        "sample_size": 0,
+        "skip_pa": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "use_attn_mask": false
+      },
+      "pooled": "plain",
+      "personalization_hash": null,
+      "seconds": 3.758,
+      "ref_en": "cool color palette, blue and teal tones, soft diffused light, cel shading, clean lineart, anime coloring, calm atmosphere",
+      "aspects": {
+        "color": "cool color palette, blue and teal tones",
+        "lighting": "soft diffused light",
+        "texture": "cel shading, clean lineart, anime coloring",
+        "mood": "calm atmosphere"
+      },
+      "subject_id": "traveler",
+      "profile_id": "cool_clean",
+      "source": "local-illustrious-xl-v2.0",
+      "license": "creativeml-openrail-m",
+      "asset_version": 5
+    },
+    "traveler-dramatic": {
+      "type": "image",
+      "id": "traveler-dramatic",
+      "path": "cards/traveler-dramatic.png",
+      "sha256": "73192d7b113a6b1c8e4ed85aae64c17824ad722c109dcbd71d386655dab15566",
+      "seed": 603,
+      "prompt": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1girl, solo, silver hair, cloak, grassland, detailed eyes, detailed illustration, muted colors, dark background, dramatic lighting, strong shadows, rim light, detailed shading, painterly texture, serious atmosphere, absurdres, highres.",
+      "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
+      "settings": {
+        "model": "OnomaAIResearch/Illustrious-XL-v2.0",
+        "revision": "69459c1fe6f46db41ab31e6114f05acc0e06bcaa",
+        "scheduler": "EulerAncestralDiscreteScheduler",
+        "width": 1024,
+        "height": 1024,
+        "steps": 28,
+        "guidance_scale": 5.0,
+        "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
+        "precision": "fp16",
+        "pipeline_config": {
+          "model": "OnomaAIResearch/Illustrious-xl-early-release-v0",
+          "revision": "dca0dac303e6dc4b0c31d8001bc685b89b5d0204"
+        },
+        "checkpoint": "Illustrious-XL-v2.0.safetensors",
+        "positive_prompt_tail": "absurdres, highres"
+      },
+      "fan": {
+        "commit": "9d0b76843f6437718195accac9cf3f050a25d26b",
+        "pooled": "plain",
+        "skip": -2,
+        "sample_size": 0,
+        "skip_pa": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "use_attn_mask": false
+      },
+      "pooled": "plain",
+      "personalization_hash": null,
+      "seconds": 3.792,
+      "ref_en": "muted colors, dark background, dramatic lighting, strong shadows, rim light, detailed shading, painterly texture, serious atmosphere",
+      "aspects": {
+        "color": "muted colors, dark background",
+        "lighting": "dramatic lighting, strong shadows, rim light",
+        "texture": "detailed shading, painterly texture",
+        "mood": "serious atmosphere"
+      },
+      "subject_id": "traveler",
+      "profile_id": "dramatic",
+      "source": "local-illustrious-xl-v2.0",
+      "license": "creativeml-openrail-m",
+      "asset_version": 5
+    },
+    "traveler-vivid_lively": {
+      "type": "image",
+      "id": "traveler-vivid_lively",
+      "path": "cards/traveler-vivid_lively.png",
+      "sha256": "1da9bb598a88f1b7f3815d210b8960b966522ccbe9f60f4f4818cf1df7273cdb",
+      "seed": 603,
+      "prompt": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1girl, solo, silver hair, cloak, grassland, detailed eyes, detailed illustration, vivid colors, colorful, high saturation, bright lighting, sparkle, cel shading, flat color, cheerful expression, lively atmosphere, absurdres, highres.",
+      "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
+      "settings": {
+        "model": "OnomaAIResearch/Illustrious-XL-v2.0",
+        "revision": "69459c1fe6f46db41ab31e6114f05acc0e06bcaa",
+        "scheduler": "EulerAncestralDiscreteScheduler",
+        "width": 1024,
+        "height": 1024,
+        "steps": 28,
+        "guidance_scale": 5.0,
+        "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
+        "precision": "fp16",
+        "pipeline_config": {
+          "model": "OnomaAIResearch/Illustrious-xl-early-release-v0",
+          "revision": "dca0dac303e6dc4b0c31d8001bc685b89b5d0204"
+        },
+        "checkpoint": "Illustrious-XL-v2.0.safetensors",
+        "positive_prompt_tail": "absurdres, highres"
+      },
+      "fan": {
+        "commit": "9d0b76843f6437718195accac9cf3f050a25d26b",
+        "pooled": "plain",
+        "skip": -2,
+        "sample_size": 0,
+        "skip_pa": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "use_attn_mask": false
+      },
+      "pooled": "plain",
+      "personalization_hash": null,
+      "seconds": 3.78,
+      "ref_en": "vivid colors, colorful, high saturation, bright lighting, sparkle, cel shading, flat color, cheerful expression, lively atmosphere",
+      "aspects": {
+        "color": "vivid colors, colorful, high saturation",
+        "lighting": "bright lighting, sparkle",
+        "texture": "cel shading, flat color",
+        "mood": "cheerful expression, lively atmosphere"
+      },
+      "subject_id": "traveler",
+      "profile_id": "vivid_lively",
+      "source": "local-illustrious-xl-v2.0",
+      "license": "creativeml-openrail-m",
+      "asset_version": 5
+    },
+    "barista-warm_soft": {
+      "type": "image",
+      "id": "barista-warm_soft",
+      "path": "cards/barista-warm_soft.png",
+      "sha256": "a4936abea1429866e8ca3fcb9a240415600619a022be71516d81cc2f9e435e7c",
+      "seed": 604,
+      "prompt": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1boy, solo, male focus, brown hair, apron, white shirt, cafe, upper body, detailed eyes, detailed illustration, warm color palette, amber and orange tones, warm golden hour light, gentle shadows, watercolor painting, soft brushwork, painterly texture, calm atmosphere, absurdres, highres.",
+      "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
+      "settings": {
+        "model": "OnomaAIResearch/Illustrious-XL-v2.0",
+        "revision": "69459c1fe6f46db41ab31e6114f05acc0e06bcaa",
+        "scheduler": "EulerAncestralDiscreteScheduler",
+        "width": 1024,
+        "height": 1024,
+        "steps": 28,
+        "guidance_scale": 5.0,
+        "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
+        "precision": "fp16",
+        "pipeline_config": {
+          "model": "OnomaAIResearch/Illustrious-xl-early-release-v0",
+          "revision": "dca0dac303e6dc4b0c31d8001bc685b89b5d0204"
+        },
+        "checkpoint": "Illustrious-XL-v2.0.safetensors",
+        "positive_prompt_tail": "absurdres, highres"
+      },
+      "fan": {
+        "commit": "9d0b76843f6437718195accac9cf3f050a25d26b",
+        "pooled": "plain",
+        "skip": -2,
+        "sample_size": 0,
+        "skip_pa": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "use_attn_mask": false
+      },
+      "pooled": "plain",
+      "personalization_hash": null,
+      "seconds": 3.813,
+      "ref_en": "warm color palette, amber and orange tones, warm golden hour light, gentle shadows, watercolor painting, soft brushwork, painterly texture, calm atmosphere",
+      "aspects": {
+        "color": "warm color palette, amber and orange tones",
+        "lighting": "warm golden hour light, gentle shadows",
+        "texture": "watercolor painting, soft brushwork, painterly texture",
+        "mood": "calm atmosphere"
+      },
+      "subject_id": "barista",
+      "profile_id": "warm_soft",
+      "source": "local-illustrious-xl-v2.0",
+      "license": "creativeml-openrail-m",
+      "asset_version": 5
+    },
+    "barista-cool_clean": {
+      "type": "image",
+      "id": "barista-cool_clean",
+      "path": "cards/barista-cool_clean.png",
+      "sha256": "a2be1c9018f3049d98b2107b9c13ad1f2de3794a9279f63152a8a86d550e5365",
+      "seed": 604,
+      "prompt": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1boy, solo, male focus, brown hair, apron, white shirt, cafe, upper body, detailed eyes, detailed illustration, cool color palette, blue and teal tones, soft diffused light, cel shading, clean lineart, anime coloring, calm atmosphere, absurdres, highres.",
+      "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
+      "settings": {
+        "model": "OnomaAIResearch/Illustrious-XL-v2.0",
+        "revision": "69459c1fe6f46db41ab31e6114f05acc0e06bcaa",
+        "scheduler": "EulerAncestralDiscreteScheduler",
+        "width": 1024,
+        "height": 1024,
+        "steps": 28,
+        "guidance_scale": 5.0,
+        "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
+        "precision": "fp16",
+        "pipeline_config": {
+          "model": "OnomaAIResearch/Illustrious-xl-early-release-v0",
+          "revision": "dca0dac303e6dc4b0c31d8001bc685b89b5d0204"
+        },
+        "checkpoint": "Illustrious-XL-v2.0.safetensors",
+        "positive_prompt_tail": "absurdres, highres"
+      },
+      "fan": {
+        "commit": "9d0b76843f6437718195accac9cf3f050a25d26b",
+        "pooled": "plain",
+        "skip": -2,
+        "sample_size": 0,
+        "skip_pa": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "use_attn_mask": false
+      },
+      "pooled": "plain",
+      "personalization_hash": null,
+      "seconds": 3.804,
+      "ref_en": "cool color palette, blue and teal tones, soft diffused light, cel shading, clean lineart, anime coloring, calm atmosphere",
+      "aspects": {
+        "color": "cool color palette, blue and teal tones",
+        "lighting": "soft diffused light",
+        "texture": "cel shading, clean lineart, anime coloring",
+        "mood": "calm atmosphere"
+      },
+      "subject_id": "barista",
+      "profile_id": "cool_clean",
+      "source": "local-illustrious-xl-v2.0",
+      "license": "creativeml-openrail-m",
+      "asset_version": 5
+    },
+    "barista-dramatic": {
+      "type": "image",
+      "id": "barista-dramatic",
+      "path": "cards/barista-dramatic.png",
+      "sha256": "b22f70668ac14dde9e6734fa43f83c7b22e1b404a79b00440ca1933028bf1827",
+      "seed": 604,
+      "prompt": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1boy, solo, male focus, brown hair, apron, white shirt, cafe, upper body, detailed eyes, detailed illustration, muted colors, dark background, dramatic lighting, strong shadows, rim light, detailed shading, painterly texture, serious atmosphere, absurdres, highres.",
+      "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
+      "settings": {
+        "model": "OnomaAIResearch/Illustrious-XL-v2.0",
+        "revision": "69459c1fe6f46db41ab31e6114f05acc0e06bcaa",
+        "scheduler": "EulerAncestralDiscreteScheduler",
+        "width": 1024,
+        "height": 1024,
+        "steps": 28,
+        "guidance_scale": 5.0,
+        "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
+        "precision": "fp16",
+        "pipeline_config": {
+          "model": "OnomaAIResearch/Illustrious-xl-early-release-v0",
+          "revision": "dca0dac303e6dc4b0c31d8001bc685b89b5d0204"
+        },
+        "checkpoint": "Illustrious-XL-v2.0.safetensors",
+        "positive_prompt_tail": "absurdres, highres"
+      },
+      "fan": {
+        "commit": "9d0b76843f6437718195accac9cf3f050a25d26b",
+        "pooled": "plain",
+        "skip": -2,
+        "sample_size": 0,
+        "skip_pa": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "use_attn_mask": false
+      },
+      "pooled": "plain",
+      "personalization_hash": null,
+      "seconds": 3.8,
+      "ref_en": "muted colors, dark background, dramatic lighting, strong shadows, rim light, detailed shading, painterly texture, serious atmosphere",
+      "aspects": {
+        "color": "muted colors, dark background",
+        "lighting": "dramatic lighting, strong shadows, rim light",
+        "texture": "detailed shading, painterly texture",
+        "mood": "serious atmosphere"
+      },
+      "subject_id": "barista",
+      "profile_id": "dramatic",
+      "source": "local-illustrious-xl-v2.0",
+      "license": "creativeml-openrail-m",
+      "asset_version": 5
+    },
+    "barista-vivid_lively": {
+      "type": "image",
+      "id": "barista-vivid_lively",
+      "path": "cards/barista-vivid_lively.png",
+      "sha256": "f8941007ff92a3fdc5a4b178fb90895531df951b79926726d9158009ab69fa72",
+      "seed": 604,
+      "prompt": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1boy, solo, male focus, brown hair, apron, white shirt, cafe, upper body, detailed eyes, detailed illustration, vivid colors, colorful, high saturation, bright lighting, sparkle, cel shading, flat color, cheerful expression, lively atmosphere, absurdres, highres.",
+      "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
+      "settings": {
+        "model": "OnomaAIResearch/Illustrious-XL-v2.0",
+        "revision": "69459c1fe6f46db41ab31e6114f05acc0e06bcaa",
+        "scheduler": "EulerAncestralDiscreteScheduler",
+        "width": 1024,
+        "height": 1024,
+        "steps": 28,
+        "guidance_scale": 5.0,
+        "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
+        "precision": "fp16",
+        "pipeline_config": {
+          "model": "OnomaAIResearch/Illustrious-xl-early-release-v0",
+          "revision": "dca0dac303e6dc4b0c31d8001bc685b89b5d0204"
+        },
+        "checkpoint": "Illustrious-XL-v2.0.safetensors",
+        "positive_prompt_tail": "absurdres, highres"
+      },
+      "fan": {
+        "commit": "9d0b76843f6437718195accac9cf3f050a25d26b",
+        "pooled": "plain",
+        "skip": -2,
+        "sample_size": 0,
+        "skip_pa": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "use_attn_mask": false
+      },
+      "pooled": "plain",
+      "personalization_hash": null,
+      "seconds": 3.81,
+      "ref_en": "vivid colors, colorful, high saturation, bright lighting, sparkle, cel shading, flat color, cheerful expression, lively atmosphere",
+      "aspects": {
+        "color": "vivid colors, colorful, high saturation",
+        "lighting": "bright lighting, sparkle",
+        "texture": "cel shading, flat color",
+        "mood": "cheerful expression, lively atmosphere"
+      },
+      "subject_id": "barista",
+      "profile_id": "vivid_lively",
+      "source": "local-illustrious-xl-v2.0",
+      "license": "creativeml-openrail-m",
+      "asset_version": 5
     }
   },
   "metrics": [
     {
       "type": "metrics",
       "stage": "generate",
-      "worker_seconds": 132.048,
+      "worker_seconds": 132.082,
       "peak_vram_mib": 10737.8,
-      "peak_rss_mib": 7936.9
+      "peak_rss_mib": 7936.6
     },
     {
       "type": "metrics",
       "stage": "generate",
-      "worker_seconds": 48.414,
-      "peak_vram_mib": 10737.8,
-      "peak_rss_mib": 7936.5
+      "worker_seconds": 63.497,
+      "peak_vram_mib": 10743.9,
+      "peak_rss_mib": 7934.3
+    },
+    {
+      "type": "metrics",
+      "stage": "generate",
+      "worker_seconds": 93.889,
+      "peak_vram_mib": 10741.1,
+      "peak_rss_mib": 7934.0
+    },
+    {
+      "type": "metrics",
+      "stage": "generate",
+      "worker_seconds": 63.609,
+      "peak_vram_mib": 10743.9,
+      "peak_rss_mib": 7934.0
+    },
+    {
+      "type": "metrics",
+      "stage": "generate",
+      "worker_seconds": 63.421,
+      "peak_vram_mib": 10743.9,
+      "peak_rss_mib": 7933.9
     }
   ]
 }

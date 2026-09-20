@@ -1,196 +1,80 @@
 [
   {
-    "id": "h1-cat",
+    "id": "s1-cat",
     "topic_id": "cat",
-    "choices": [
+    "label": "あたたかい表現を選んだ人 · 窓辺で猫と過ごす少女",
+    "alpha_key": "mid",
+    "selection": [
       {
-        "pair_id": "p1",
-        "chosen_id": "p1-a"
+        "card_id": "girl-warm_soft",
+        "aspects_off": []
       },
       {
-        "pair_id": "p2",
-        "chosen_id": "p2-a"
+        "card_id": "student-warm_soft",
+        "aspects_off": []
       },
       {
-        "pair_id": "p3",
-        "chosen_id": "p3-a"
-      },
-      {
-        "pair_id": "p4",
-        "chosen_id": "p4-a"
-      },
-      {
-        "pair_id": "p5",
-        "chosen_id": "p5-a"
+        "card_id": "barista-warm_soft",
+        "aspects_off": []
       }
     ],
-    "context": {
-      "version": 1,
-      "preferences": {
-        "color": "warm",
-        "lighting": "soft",
-        "composition": "spacious",
-        "texture": "painterly",
-        "mood": "calm"
-      },
-      "overrides": {},
-      "evidence": [
+    "personalization": {
+      "refs": [
         {
-          "id": "p1-a-e1",
-          "pair_id": "p1",
-          "pair_version": 3,
-          "chosen_id": "p1-a",
-          "dimensions": [
-            "color"
-          ],
-          "values": {
-            "color": "warm"
-          },
-          "text": "The selected character illustration uses warmer orange and golden tones in the clothes and background.",
-          "context_source": "generic_vlm",
-          "source": {
-            "model": "Qwen/Qwen3.5-4B",
-            "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
-            "template_version": "append-aesthetic-character-v3"
-          },
-          "image_hashes": {
-            "p1-a": "1448fb0052f2a7472cd2e92e30de33965c90e7350c95d99f9c6ee963fe4fee08",
-            "p1-b": "d2f57d62adedecaa20a0fd81ed540fdcd5e476f9a377493673d5a5bb286174aa"
-          },
-          "basic_prompt_en": "1girl, solo, brown hair, beret, coat, town square, upper body, detailed eyes, illustration, masterpiece, best quality.",
-          "template_version": "single-axis-relative-v1",
-          "template_hash": "4cc18c54fe3fb7644ea2024d89ce66f1b10d3286bdc7f4c259d8cc50cccc7fc7",
-          "preprocessing": "RGB; aspect preserved; longest edge 448"
+          "text": "warm color palette, amber and orange tones",
+          "weight": 3.0,
+          "aspect": "color",
+          "card_ids": [
+            "girl-warm_soft",
+            "student-warm_soft",
+            "barista-warm_soft"
+          ]
         },
         {
-          "id": "p2-a-e1",
-          "pair_id": "p2",
-          "pair_version": 3,
-          "chosen_id": "p2-a",
-          "dimensions": [
-            "lighting"
-          ],
-          "values": {
-            "lighting": "soft"
-          },
-          "text": "The selected library portrait has softer, more diffused light on the character than the other image.",
-          "context_source": "generic_vlm",
-          "source": {
-            "model": "Qwen/Qwen3.5-4B",
-            "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
-            "template_version": "append-aesthetic-character-v3"
-          },
-          "image_hashes": {
-            "p2-a": "ce1dbddcdbe0bd784ea3eec0a28d3f518d6a35d19eeae375a534b30421c9c088",
-            "p2-b": "e604e8bcb68aa46988b271914ca703f2a1451a7f53c11d419f4649c4a87e9c58"
-          },
-          "basic_prompt_en": "1boy, solo, black hair, vest, white shirt, library, upper body, detailed eyes, illustration, masterpiece, best quality.",
-          "template_version": "single-axis-relative-v1",
-          "template_hash": "4cc18c54fe3fb7644ea2024d89ce66f1b10d3286bdc7f4c259d8cc50cccc7fc7",
-          "preprocessing": "RGB; aspect preserved; longest edge 448"
+          "text": "warm golden hour light, gentle shadows",
+          "weight": 3.0,
+          "aspect": "lighting",
+          "card_ids": [
+            "girl-warm_soft",
+            "student-warm_soft",
+            "barista-warm_soft"
+          ]
         },
         {
-          "id": "p3-a-e1",
-          "pair_id": "p3",
-          "pair_version": 3,
-          "chosen_id": "p3-a",
-          "dimensions": [
-            "composition"
-          ],
-          "values": {
-            "composition": "spacious"
-          },
-          "text": "The selected illustration shows more of the traveler and the surrounding grassland and sky.",
-          "context_source": "generic_vlm",
-          "source": {
-            "model": "Qwen/Qwen3.5-4B",
-            "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
-            "template_version": "append-aesthetic-character-v3"
-          },
-          "image_hashes": {
-            "p3-a": "7579e9836b382143f177ecbda216654d93abc1835a45336bf4749ec982fcccbc",
-            "p3-b": "d8a0eb9a9193ca7ec6b567ad45745740074f8ea41cf1650786f6612c30e0d31d"
-          },
-          "basic_prompt_en": "1girl, solo, silver hair, cloak, grassland, detailed eyes, illustration, masterpiece, best quality.",
-          "template_version": "single-axis-relative-v1",
-          "template_hash": "4cc18c54fe3fb7644ea2024d89ce66f1b10d3286bdc7f4c259d8cc50cccc7fc7",
-          "preprocessing": "RGB; aspect preserved; longest edge 448"
+          "text": "watercolor painting, soft brushwork, painterly texture",
+          "weight": 3.0,
+          "aspect": "texture",
+          "card_ids": [
+            "girl-warm_soft",
+            "student-warm_soft",
+            "barista-warm_soft"
+          ]
         },
         {
-          "id": "p4-a-e1",
-          "pair_id": "p4",
-          "pair_version": 3,
-          "chosen_id": "p4-a",
-          "dimensions": [
-            "texture"
-          ],
-          "values": {
-            "texture": "painterly"
-          },
-          "text": "The selected witch illustration has softer, blended shading and watercolor-like flowers compared with the outlined alternative.",
-          "context_source": "generic_vlm",
-          "source": {
-            "model": "Qwen/Qwen3.5-4B",
-            "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
-            "template_version": "append-aesthetic-character-v3"
-          },
-          "image_hashes": {
-            "p4-a": "35919ad5cec7f6a773ce8016388a880b78924c62bbcd4e921a7d2f6c732bb9d7",
-            "p4-b": "1fc5568fd77be9788370b84a9840246ae759b98bb159b027a932eea1bc2d04c3"
-          },
-          "basic_prompt_en": "1girl, solo, blonde hair, witch hat, cloak, flower garden, upper body, detailed eyes, illustration, masterpiece, best quality.",
-          "template_version": "single-axis-relative-v1",
-          "template_hash": "4cc18c54fe3fb7644ea2024d89ce66f1b10d3286bdc7f4c259d8cc50cccc7fc7",
-          "preprocessing": "RGB; aspect preserved; longest edge 448"
-        },
-        {
-          "id": "p5-a-e1",
-          "pair_id": "p5",
-          "pair_version": 3,
-          "chosen_id": "p5-a",
-          "dimensions": [
-            "mood"
-          ],
-          "values": {
-            "mood": "calm"
-          },
-          "text": "The selected cafe character has a gentle, closed-mouth expression and a calmer atmosphere than the laughing alternative.",
-          "context_source": "generic_vlm",
-          "source": {
-            "model": "Qwen/Qwen3.5-4B",
-            "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
-            "template_version": "append-aesthetic-character-v3"
-          },
-          "image_hashes": {
-            "p5-a": "708443c3422182dac4b17fb36739388b7ec77ca6f8551676ac3a3f86b16438ca",
-            "p5-b": "ce9c25f53f08733491a645475e0ded67aafa8298129eddfb3ed3c6892a1b375c"
-          },
-          "basic_prompt_en": "1boy, solo, brown hair, apron, white shirt, cafe, upper body, detailed eyes, illustration, masterpiece, best quality.",
-          "template_version": "single-axis-relative-v1",
-          "template_hash": "4cc18c54fe3fb7644ea2024d89ce66f1b10d3286bdc7f4c259d8cc50cccc7fc7",
-          "preprocessing": "RGB; aspect preserved; longest edge 448"
+          "text": "calm atmosphere",
+          "weight": 3.0,
+          "aspect": "mood",
+          "card_ids": [
+            "girl-warm_soft",
+            "student-warm_soft",
+            "barista-warm_soft"
+          ]
         }
       ],
-      "choice_ids": [
-        "p1:p1-a",
-        "p2:p2-a",
-        "p3:p3-a",
-        "p4:p4-a",
-        "p5:p5-a"
-      ],
-      "text": "The selected character illustration uses warmer orange and golden tones in the clothes and background.\nThe selected library portrait has softer, more diffused light on the character than the other image.\nThe selected illustration shows more of the traveler and the surrounding grassland and sky.\nThe selected witch illustration has softer, blended shading and watercolor-like flowers compared with the outlined alternative.\nThe selected cafe character has a gentle, closed-mouth expression and a calmer atmosphere than the laughing alternative.",
-      "hash": "397e75e05fd0cc495b68c9c2d4cd9e353712c3cba19d0eea73a0bd2eb54e5781"
+      "alpha": 0.5,
+      "sample_size": 0,
+      "hash": "85b29b931444495a13684eee09ef09038b1149b6cb21ce8eaab054ef369dc215"
     },
     "mode": "sample",
-    "recommendation": null,
     "images": [
       {
         "type": "image",
-        "id": "h1-cat-0",
-        "path": "samples/h1-cat-0.png",
-        "sha256": "6dacae72ec7c79f386dcd99471d23b1748a58805581f3c907b1ca6b437c31cf8",
+        "id": "s1-cat-0",
+        "path": "samples/s1-cat-0.png",
+        "sha256": "eb55318979160678a0f31c3c648391554d716d897a535ea8640b9ce22b029588",
         "seed": 230923,
-        "prompt": "1girl, solo, brown hair, green eyes, sweater, holding cat, window, upper body, detailed eyes, beautiful detailed illustration, delicate shading, masterpiece, best quality. warm accent colors, soft lighting, spacious composition, painterly texture, calm atmosphere.",
+        "prompt": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1girl, solo, brown hair, green eyes, sweater, holding cat, window, upper body, detailed eyes, detailed illustration, absurdres, highres.",
+        "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
         "settings": {
           "model": "OnomaAIResearch/Illustrious-XL-v2.0",
           "revision": "69459c1fe6f46db41ab31e6114f05acc0e06bcaa",
@@ -198,25 +82,45 @@
           "width": 1024,
           "height": 1024,
           "steps": 28,
-          "guidance_scale": 6.5,
-          "negative_prompt": "worst quality, bad quality, lowres, blurry, bad anatomy, bad hands, extra digits, fewer digits, multiple views, comic, text, watermark, signature, photo, photorealistic, 3d, monochrome, greyscale, sketch, unfinished, nsfw, nude, multiple people, chibi, 2girls, 2boys",
+          "guidance_scale": 5.0,
+          "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
           "precision": "fp16",
           "pipeline_config": {
             "model": "OnomaAIResearch/Illustrious-xl-early-release-v0",
             "revision": "dca0dac303e6dc4b0c31d8001bc685b89b5d0204"
           },
-          "checkpoint": "Illustrious-XL-v2.0.safetensors"
+          "checkpoint": "Illustrious-XL-v2.0.safetensors",
+          "positive_prompt_tail": "absurdres, highres"
         },
-        "seconds": 3.952,
-        "context_hash": "397e75e05fd0cc495b68c9c2d4cd9e353712c3cba19d0eea73a0bd2eb54e5781"
+        "fan": {
+          "commit": "9d0b76843f6437718195accac9cf3f050a25d26b",
+          "pooled": "plain",
+          "skip": -2,
+          "sample_size": 0,
+          "skip_pa": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "use_attn_mask": false
+        },
+        "pooled": "plain",
+        "personalization_hash": "85b29b931444495a13684eee09ef09038b1149b6cb21ce8eaab054ef369dc215",
+        "seconds": 3.96
       },
       {
         "type": "image",
-        "id": "h1-cat-1",
-        "path": "samples/h1-cat-1.png",
-        "sha256": "fb34669016c574eb14832f4c81880cd5fc27699ae35a968f87cca42ae9087197",
+        "id": "s1-cat-1",
+        "path": "samples/s1-cat-1.png",
+        "sha256": "bf3a661dbd5539d6b7eb409ca3e5891f70697574bbb694884d547797348ebc6c",
         "seed": 230924,
-        "prompt": "1girl, solo, brown hair, green eyes, sweater, holding cat, window, upper body, detailed eyes, beautiful detailed illustration, delicate shading, masterpiece, best quality. warm accent colors, soft lighting, spacious composition, painterly texture, calm atmosphere.",
+        "prompt": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1girl, solo, brown hair, green eyes, sweater, holding cat, window, upper body, detailed eyes, detailed illustration, absurdres, highres.",
+        "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
         "settings": {
           "model": "OnomaAIResearch/Illustrious-XL-v2.0",
           "revision": "69459c1fe6f46db41ab31e6114f05acc0e06bcaa",
@@ -224,25 +128,45 @@
           "width": 1024,
           "height": 1024,
           "steps": 28,
-          "guidance_scale": 6.5,
-          "negative_prompt": "worst quality, bad quality, lowres, blurry, bad anatomy, bad hands, extra digits, fewer digits, multiple views, comic, text, watermark, signature, photo, photorealistic, 3d, monochrome, greyscale, sketch, unfinished, nsfw, nude, multiple people, chibi, 2girls, 2boys",
+          "guidance_scale": 5.0,
+          "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
           "precision": "fp16",
           "pipeline_config": {
             "model": "OnomaAIResearch/Illustrious-xl-early-release-v0",
             "revision": "dca0dac303e6dc4b0c31d8001bc685b89b5d0204"
           },
-          "checkpoint": "Illustrious-XL-v2.0.safetensors"
+          "checkpoint": "Illustrious-XL-v2.0.safetensors",
+          "positive_prompt_tail": "absurdres, highres"
         },
-        "seconds": 3.785,
-        "context_hash": "397e75e05fd0cc495b68c9c2d4cd9e353712c3cba19d0eea73a0bd2eb54e5781"
+        "fan": {
+          "commit": "9d0b76843f6437718195accac9cf3f050a25d26b",
+          "pooled": "plain",
+          "skip": -2,
+          "sample_size": 0,
+          "skip_pa": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "use_attn_mask": false
+        },
+        "pooled": "plain",
+        "personalization_hash": "85b29b931444495a13684eee09ef09038b1149b6cb21ce8eaab054ef369dc215",
+        "seconds": 3.853
       },
       {
         "type": "image",
-        "id": "h1-cat-2",
-        "path": "samples/h1-cat-2.png",
-        "sha256": "39ae8a63464008f10ab5f2f457f12de161b12976f60f22fdee50f0f79ea852e1",
+        "id": "s1-cat-2",
+        "path": "samples/s1-cat-2.png",
+        "sha256": "0be5e4b493f2c339144af8bc84ed2cb83c149c86f7dd19fe4bb30a2236b152c1",
         "seed": 230925,
-        "prompt": "1girl, solo, brown hair, green eyes, sweater, holding cat, window, upper body, detailed eyes, beautiful detailed illustration, delicate shading, masterpiece, best quality. warm accent colors, soft lighting, spacious composition, painterly texture, calm atmosphere.",
+        "prompt": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1girl, solo, brown hair, green eyes, sweater, holding cat, window, upper body, detailed eyes, detailed illustration, absurdres, highres.",
+        "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
         "settings": {
           "model": "OnomaAIResearch/Illustrious-XL-v2.0",
           "revision": "69459c1fe6f46db41ab31e6114f05acc0e06bcaa",
@@ -250,25 +174,45 @@
           "width": 1024,
           "height": 1024,
           "steps": 28,
-          "guidance_scale": 6.5,
-          "negative_prompt": "worst quality, bad quality, lowres, blurry, bad anatomy, bad hands, extra digits, fewer digits, multiple views, comic, text, watermark, signature, photo, photorealistic, 3d, monochrome, greyscale, sketch, unfinished, nsfw, nude, multiple people, chibi, 2girls, 2boys",
+          "guidance_scale": 5.0,
+          "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
           "precision": "fp16",
           "pipeline_config": {
             "model": "OnomaAIResearch/Illustrious-xl-early-release-v0",
             "revision": "dca0dac303e6dc4b0c31d8001bc685b89b5d0204"
           },
-          "checkpoint": "Illustrious-XL-v2.0.safetensors"
+          "checkpoint": "Illustrious-XL-v2.0.safetensors",
+          "positive_prompt_tail": "absurdres, highres"
         },
-        "seconds": 3.781,
-        "context_hash": "397e75e05fd0cc495b68c9c2d4cd9e353712c3cba19d0eea73a0bd2eb54e5781"
+        "fan": {
+          "commit": "9d0b76843f6437718195accac9cf3f050a25d26b",
+          "pooled": "plain",
+          "skip": -2,
+          "sample_size": 0,
+          "skip_pa": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "use_attn_mask": false
+        },
+        "pooled": "plain",
+        "personalization_hash": "85b29b931444495a13684eee09ef09038b1149b6cb21ce8eaab054ef369dc215",
+        "seconds": 3.84
       },
       {
         "type": "image",
-        "id": "h1-cat-3",
-        "path": "samples/h1-cat-3.png",
-        "sha256": "2af742ed6db7c4ba56b4fa9bf459c27e2b3756a501c0b4b371032c3ff2f42744",
+        "id": "s1-cat-3",
+        "path": "samples/s1-cat-3.png",
+        "sha256": "0d1c5c11e1ec028082da3687323cecb07ea91754890c9d9efac729448b6ffbfb",
         "seed": 230926,
-        "prompt": "1girl, solo, brown hair, green eyes, sweater, holding cat, window, upper body, detailed eyes, beautiful detailed illustration, delicate shading, masterpiece, best quality. warm accent colors, soft lighting, spacious composition, painterly texture, calm atmosphere.",
+        "prompt": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1girl, solo, brown hair, green eyes, sweater, holding cat, window, upper body, detailed eyes, detailed illustration, absurdres, highres.",
+        "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
         "settings": {
           "model": "OnomaAIResearch/Illustrious-XL-v2.0",
           "revision": "69459c1fe6f46db41ab31e6114f05acc0e06bcaa",
@@ -276,229 +220,115 @@
           "width": 1024,
           "height": 1024,
           "steps": 28,
-          "guidance_scale": 6.5,
-          "negative_prompt": "worst quality, bad quality, lowres, blurry, bad anatomy, bad hands, extra digits, fewer digits, multiple views, comic, text, watermark, signature, photo, photorealistic, 3d, monochrome, greyscale, sketch, unfinished, nsfw, nude, multiple people, chibi, 2girls, 2boys",
+          "guidance_scale": 5.0,
+          "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
           "precision": "fp16",
           "pipeline_config": {
             "model": "OnomaAIResearch/Illustrious-xl-early-release-v0",
             "revision": "dca0dac303e6dc4b0c31d8001bc685b89b5d0204"
           },
-          "checkpoint": "Illustrious-XL-v2.0.safetensors"
+          "checkpoint": "Illustrious-XL-v2.0.safetensors",
+          "positive_prompt_tail": "absurdres, highres"
         },
-        "seconds": 3.787,
-        "context_hash": "397e75e05fd0cc495b68c9c2d4cd9e353712c3cba19d0eea73a0bd2eb54e5781"
+        "fan": {
+          "commit": "9d0b76843f6437718195accac9cf3f050a25d26b",
+          "pooled": "plain",
+          "skip": -2,
+          "sample_size": 0,
+          "skip_pa": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "use_attn_mask": false
+        },
+        "pooled": "plain",
+        "personalization_hash": "85b29b931444495a13684eee09ef09038b1149b6cb21ce8eaab054ef369dc215",
+        "seconds": 3.827
       }
-    ],
-    "rewrite": {
-      "type": "rewrite",
-      "id": "h1-cat",
-      "prompt": "1girl, solo, brown hair, green eyes, sweater, holding cat, window, upper body, detailed eyes, beautiful detailed illustration, delicate shading, masterpiece, best quality. warm accent colors, soft lighting, spacious composition, painterly texture, calm atmosphere.",
-      "raw": "warm accent colors, soft lighting, spacious composition, painterly texture, calm atmosphere",
-      "valid": true,
-      "context_hash": "397e75e05fd0cc495b68c9c2d4cd9e353712c3cba19d0eea73a0bd2eb54e5781",
-      "model": {
-        "model": "Qwen/Qwen3.5-4B",
-        "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
-        "template_version": "append-aesthetic-character-v3"
-      },
-      "token_lengths": [
-        56,
-        56
-      ]
-    }
+    ]
   },
   {
-    "id": "h1-tokyo",
+    "id": "s1-tokyo",
     "topic_id": "tokyo",
-    "choices": [
+    "label": "あたたかい表現を選んだ人 · 東京の夜景と青年",
+    "alpha_key": "mid",
+    "selection": [
       {
-        "pair_id": "p1",
-        "chosen_id": "p1-a"
+        "card_id": "girl-warm_soft",
+        "aspects_off": []
       },
       {
-        "pair_id": "p2",
-        "chosen_id": "p2-a"
+        "card_id": "student-warm_soft",
+        "aspects_off": []
       },
       {
-        "pair_id": "p3",
-        "chosen_id": "p3-a"
-      },
-      {
-        "pair_id": "p4",
-        "chosen_id": "p4-a"
-      },
-      {
-        "pair_id": "p5",
-        "chosen_id": "p5-a"
+        "card_id": "barista-warm_soft",
+        "aspects_off": []
       }
     ],
-    "context": {
-      "version": 1,
-      "preferences": {
-        "color": "warm",
-        "lighting": "soft",
-        "composition": "spacious",
-        "texture": "painterly",
-        "mood": "calm"
-      },
-      "overrides": {},
-      "evidence": [
+    "personalization": {
+      "refs": [
         {
-          "id": "p1-a-e1",
-          "pair_id": "p1",
-          "pair_version": 3,
-          "chosen_id": "p1-a",
-          "dimensions": [
-            "color"
-          ],
-          "values": {
-            "color": "warm"
-          },
-          "text": "The selected character illustration uses warmer orange and golden tones in the clothes and background.",
-          "context_source": "generic_vlm",
-          "source": {
-            "model": "Qwen/Qwen3.5-4B",
-            "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
-            "template_version": "append-aesthetic-character-v3"
-          },
-          "image_hashes": {
-            "p1-a": "1448fb0052f2a7472cd2e92e30de33965c90e7350c95d99f9c6ee963fe4fee08",
-            "p1-b": "d2f57d62adedecaa20a0fd81ed540fdcd5e476f9a377493673d5a5bb286174aa"
-          },
-          "basic_prompt_en": "1girl, solo, brown hair, beret, coat, town square, upper body, detailed eyes, illustration, masterpiece, best quality.",
-          "template_version": "single-axis-relative-v1",
-          "template_hash": "4cc18c54fe3fb7644ea2024d89ce66f1b10d3286bdc7f4c259d8cc50cccc7fc7",
-          "preprocessing": "RGB; aspect preserved; longest edge 448"
+          "text": "warm color palette, amber and orange tones",
+          "weight": 3.0,
+          "aspect": "color",
+          "card_ids": [
+            "girl-warm_soft",
+            "student-warm_soft",
+            "barista-warm_soft"
+          ]
         },
         {
-          "id": "p2-a-e1",
-          "pair_id": "p2",
-          "pair_version": 3,
-          "chosen_id": "p2-a",
-          "dimensions": [
-            "lighting"
-          ],
-          "values": {
-            "lighting": "soft"
-          },
-          "text": "The selected library portrait has softer, more diffused light on the character than the other image.",
-          "context_source": "generic_vlm",
-          "source": {
-            "model": "Qwen/Qwen3.5-4B",
-            "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
-            "template_version": "append-aesthetic-character-v3"
-          },
-          "image_hashes": {
-            "p2-a": "ce1dbddcdbe0bd784ea3eec0a28d3f518d6a35d19eeae375a534b30421c9c088",
-            "p2-b": "e604e8bcb68aa46988b271914ca703f2a1451a7f53c11d419f4649c4a87e9c58"
-          },
-          "basic_prompt_en": "1boy, solo, black hair, vest, white shirt, library, upper body, detailed eyes, illustration, masterpiece, best quality.",
-          "template_version": "single-axis-relative-v1",
-          "template_hash": "4cc18c54fe3fb7644ea2024d89ce66f1b10d3286bdc7f4c259d8cc50cccc7fc7",
-          "preprocessing": "RGB; aspect preserved; longest edge 448"
+          "text": "warm golden hour light, gentle shadows",
+          "weight": 3.0,
+          "aspect": "lighting",
+          "card_ids": [
+            "girl-warm_soft",
+            "student-warm_soft",
+            "barista-warm_soft"
+          ]
         },
         {
-          "id": "p3-a-e1",
-          "pair_id": "p3",
-          "pair_version": 3,
-          "chosen_id": "p3-a",
-          "dimensions": [
-            "composition"
-          ],
-          "values": {
-            "composition": "spacious"
-          },
-          "text": "The selected illustration shows more of the traveler and the surrounding grassland and sky.",
-          "context_source": "generic_vlm",
-          "source": {
-            "model": "Qwen/Qwen3.5-4B",
-            "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
-            "template_version": "append-aesthetic-character-v3"
-          },
-          "image_hashes": {
-            "p3-a": "7579e9836b382143f177ecbda216654d93abc1835a45336bf4749ec982fcccbc",
-            "p3-b": "d8a0eb9a9193ca7ec6b567ad45745740074f8ea41cf1650786f6612c30e0d31d"
-          },
-          "basic_prompt_en": "1girl, solo, silver hair, cloak, grassland, detailed eyes, illustration, masterpiece, best quality.",
-          "template_version": "single-axis-relative-v1",
-          "template_hash": "4cc18c54fe3fb7644ea2024d89ce66f1b10d3286bdc7f4c259d8cc50cccc7fc7",
-          "preprocessing": "RGB; aspect preserved; longest edge 448"
+          "text": "watercolor painting, soft brushwork, painterly texture",
+          "weight": 3.0,
+          "aspect": "texture",
+          "card_ids": [
+            "girl-warm_soft",
+            "student-warm_soft",
+            "barista-warm_soft"
+          ]
         },
         {
-          "id": "p4-a-e1",
-          "pair_id": "p4",
-          "pair_version": 3,
-          "chosen_id": "p4-a",
-          "dimensions": [
-            "texture"
-          ],
-          "values": {
-            "texture": "painterly"
-          },
-          "text": "The selected witch illustration has softer, blended shading and watercolor-like flowers compared with the outlined alternative.",
-          "context_source": "generic_vlm",
-          "source": {
-            "model": "Qwen/Qwen3.5-4B",
-            "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
-            "template_version": "append-aesthetic-character-v3"
-          },
-          "image_hashes": {
-            "p4-a": "35919ad5cec7f6a773ce8016388a880b78924c62bbcd4e921a7d2f6c732bb9d7",
-            "p4-b": "1fc5568fd77be9788370b84a9840246ae759b98bb159b027a932eea1bc2d04c3"
-          },
-          "basic_prompt_en": "1girl, solo, blonde hair, witch hat, cloak, flower garden, upper body, detailed eyes, illustration, masterpiece, best quality.",
-          "template_version": "single-axis-relative-v1",
-          "template_hash": "4cc18c54fe3fb7644ea2024d89ce66f1b10d3286bdc7f4c259d8cc50cccc7fc7",
-          "preprocessing": "RGB; aspect preserved; longest edge 448"
-        },
-        {
-          "id": "p5-a-e1",
-          "pair_id": "p5",
-          "pair_version": 3,
-          "chosen_id": "p5-a",
-          "dimensions": [
-            "mood"
-          ],
-          "values": {
-            "mood": "calm"
-          },
-          "text": "The selected cafe character has a gentle, closed-mouth expression and a calmer atmosphere than the laughing alternative.",
-          "context_source": "generic_vlm",
-          "source": {
-            "model": "Qwen/Qwen3.5-4B",
-            "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
-            "template_version": "append-aesthetic-character-v3"
-          },
-          "image_hashes": {
-            "p5-a": "708443c3422182dac4b17fb36739388b7ec77ca6f8551676ac3a3f86b16438ca",
-            "p5-b": "ce9c25f53f08733491a645475e0ded67aafa8298129eddfb3ed3c6892a1b375c"
-          },
-          "basic_prompt_en": "1boy, solo, brown hair, apron, white shirt, cafe, upper body, detailed eyes, illustration, masterpiece, best quality.",
-          "template_version": "single-axis-relative-v1",
-          "template_hash": "4cc18c54fe3fb7644ea2024d89ce66f1b10d3286bdc7f4c259d8cc50cccc7fc7",
-          "preprocessing": "RGB; aspect preserved; longest edge 448"
+          "text": "calm atmosphere",
+          "weight": 3.0,
+          "aspect": "mood",
+          "card_ids": [
+            "girl-warm_soft",
+            "student-warm_soft",
+            "barista-warm_soft"
+          ]
         }
       ],
-      "choice_ids": [
-        "p1:p1-a",
-        "p2:p2-a",
-        "p3:p3-a",
-        "p4:p4-a",
-        "p5:p5-a"
-      ],
-      "text": "The selected character illustration uses warmer orange and golden tones in the clothes and background.\nThe selected library portrait has softer, more diffused light on the character than the other image.\nThe selected illustration shows more of the traveler and the surrounding grassland and sky.\nThe selected witch illustration has softer, blended shading and watercolor-like flowers compared with the outlined alternative.\nThe selected cafe character has a gentle, closed-mouth expression and a calmer atmosphere than the laughing alternative.",
-      "hash": "397e75e05fd0cc495b68c9c2d4cd9e353712c3cba19d0eea73a0bd2eb54e5781"
+      "alpha": 0.5,
+      "sample_size": 0,
+      "hash": "85b29b931444495a13684eee09ef09038b1149b6cb21ce8eaab054ef369dc215"
     },
     "mode": "sample",
-    "recommendation": null,
     "images": [
       {
         "type": "image",
-        "id": "h1-tokyo-0",
-        "path": "samples/h1-tokyo-0.png",
-        "sha256": "325ad2db22951ca71d0659edae498cd2646e040767f4fd8d74f13a36ad1f15b8",
+        "id": "s1-tokyo-0",
+        "path": "samples/s1-tokyo-0.png",
+        "sha256": "c8d8a0ab32eade914a31fd58ba288d4b3596ef5c6369ef6696a04f9df7fff65a",
         "seed": 230923,
-        "prompt": "1boy, solo, male focus, short black hair, jacket, Tokyo skyline, night, portrait, detailed eyes, beautiful detailed illustration, delicate shading, masterpiece, best quality. warm accent colors, soft lighting, spacious composition, painterly texture, calm atmosphere.",
+        "prompt": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1boy, solo, male focus, short black hair, jacket, Tokyo skyline, night, portrait, detailed eyes, detailed illustration, absurdres, highres.",
+        "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
         "settings": {
           "model": "OnomaAIResearch/Illustrious-XL-v2.0",
           "revision": "69459c1fe6f46db41ab31e6114f05acc0e06bcaa",
@@ -506,25 +336,45 @@
           "width": 1024,
           "height": 1024,
           "steps": 28,
-          "guidance_scale": 6.5,
-          "negative_prompt": "worst quality, bad quality, lowres, blurry, bad anatomy, bad hands, extra digits, fewer digits, multiple views, comic, text, watermark, signature, photo, photorealistic, 3d, monochrome, greyscale, sketch, unfinished, nsfw, nude, multiple people, chibi, 2girls, 2boys",
+          "guidance_scale": 5.0,
+          "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
           "precision": "fp16",
           "pipeline_config": {
             "model": "OnomaAIResearch/Illustrious-xl-early-release-v0",
             "revision": "dca0dac303e6dc4b0c31d8001bc685b89b5d0204"
           },
-          "checkpoint": "Illustrious-XL-v2.0.safetensors"
+          "checkpoint": "Illustrious-XL-v2.0.safetensors",
+          "positive_prompt_tail": "absurdres, highres"
         },
-        "seconds": 3.759,
-        "context_hash": "397e75e05fd0cc495b68c9c2d4cd9e353712c3cba19d0eea73a0bd2eb54e5781"
+        "fan": {
+          "commit": "9d0b76843f6437718195accac9cf3f050a25d26b",
+          "pooled": "plain",
+          "skip": -2,
+          "sample_size": 0,
+          "skip_pa": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "use_attn_mask": false
+        },
+        "pooled": "plain",
+        "personalization_hash": "85b29b931444495a13684eee09ef09038b1149b6cb21ce8eaab054ef369dc215",
+        "seconds": 3.861
       },
       {
         "type": "image",
-        "id": "h1-tokyo-1",
-        "path": "samples/h1-tokyo-1.png",
-        "sha256": "c64bb00736b90d60e0dd8d654e5d6d0420b778b30a133910f49ceefdb950a1a7",
+        "id": "s1-tokyo-1",
+        "path": "samples/s1-tokyo-1.png",
+        "sha256": "db11a121b442dc104c22d39de1ac5055d6883cefc951476828e2bd310a5a5c87",
         "seed": 230924,
-        "prompt": "1boy, solo, male focus, short black hair, jacket, Tokyo skyline, night, portrait, detailed eyes, beautiful detailed illustration, delicate shading, masterpiece, best quality. warm accent colors, soft lighting, spacious composition, painterly texture, calm atmosphere.",
+        "prompt": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1boy, solo, male focus, short black hair, jacket, Tokyo skyline, night, portrait, detailed eyes, detailed illustration, absurdres, highres.",
+        "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
         "settings": {
           "model": "OnomaAIResearch/Illustrious-XL-v2.0",
           "revision": "69459c1fe6f46db41ab31e6114f05acc0e06bcaa",
@@ -532,25 +382,45 @@
           "width": 1024,
           "height": 1024,
           "steps": 28,
-          "guidance_scale": 6.5,
-          "negative_prompt": "worst quality, bad quality, lowres, blurry, bad anatomy, bad hands, extra digits, fewer digits, multiple views, comic, text, watermark, signature, photo, photorealistic, 3d, monochrome, greyscale, sketch, unfinished, nsfw, nude, multiple people, chibi, 2girls, 2boys",
+          "guidance_scale": 5.0,
+          "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
           "precision": "fp16",
           "pipeline_config": {
             "model": "OnomaAIResearch/Illustrious-xl-early-release-v0",
             "revision": "dca0dac303e6dc4b0c31d8001bc685b89b5d0204"
           },
-          "checkpoint": "Illustrious-XL-v2.0.safetensors"
+          "checkpoint": "Illustrious-XL-v2.0.safetensors",
+          "positive_prompt_tail": "absurdres, highres"
         },
-        "seconds": 3.78,
-        "context_hash": "397e75e05fd0cc495b68c9c2d4cd9e353712c3cba19d0eea73a0bd2eb54e5781"
+        "fan": {
+          "commit": "9d0b76843f6437718195accac9cf3f050a25d26b",
+          "pooled": "plain",
+          "skip": -2,
+          "sample_size": 0,
+          "skip_pa": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "use_attn_mask": false
+        },
+        "pooled": "plain",
+        "personalization_hash": "85b29b931444495a13684eee09ef09038b1149b6cb21ce8eaab054ef369dc215",
+        "seconds": 3.831
       },
       {
         "type": "image",
-        "id": "h1-tokyo-2",
-        "path": "samples/h1-tokyo-2.png",
-        "sha256": "78d6fd929fb8ce577391b1ee4271acf9c8d7f1fdc95a24d2ea6b577feca53963",
+        "id": "s1-tokyo-2",
+        "path": "samples/s1-tokyo-2.png",
+        "sha256": "893ea073c39cef8506f32e4644a9b3fb280fa8eacef86ba8859700070b1e62ab",
         "seed": 230925,
-        "prompt": "1boy, solo, male focus, short black hair, jacket, Tokyo skyline, night, portrait, detailed eyes, beautiful detailed illustration, delicate shading, masterpiece, best quality. warm accent colors, soft lighting, spacious composition, painterly texture, calm atmosphere.",
+        "prompt": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1boy, solo, male focus, short black hair, jacket, Tokyo skyline, night, portrait, detailed eyes, detailed illustration, absurdres, highres.",
+        "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
         "settings": {
           "model": "OnomaAIResearch/Illustrious-XL-v2.0",
           "revision": "69459c1fe6f46db41ab31e6114f05acc0e06bcaa",
@@ -558,25 +428,45 @@
           "width": 1024,
           "height": 1024,
           "steps": 28,
-          "guidance_scale": 6.5,
-          "negative_prompt": "worst quality, bad quality, lowres, blurry, bad anatomy, bad hands, extra digits, fewer digits, multiple views, comic, text, watermark, signature, photo, photorealistic, 3d, monochrome, greyscale, sketch, unfinished, nsfw, nude, multiple people, chibi, 2girls, 2boys",
+          "guidance_scale": 5.0,
+          "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
           "precision": "fp16",
           "pipeline_config": {
             "model": "OnomaAIResearch/Illustrious-xl-early-release-v0",
             "revision": "dca0dac303e6dc4b0c31d8001bc685b89b5d0204"
           },
-          "checkpoint": "Illustrious-XL-v2.0.safetensors"
+          "checkpoint": "Illustrious-XL-v2.0.safetensors",
+          "positive_prompt_tail": "absurdres, highres"
         },
-        "seconds": 3.788,
-        "context_hash": "397e75e05fd0cc495b68c9c2d4cd9e353712c3cba19d0eea73a0bd2eb54e5781"
+        "fan": {
+          "commit": "9d0b76843f6437718195accac9cf3f050a25d26b",
+          "pooled": "plain",
+          "skip": -2,
+          "sample_size": 0,
+          "skip_pa": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "use_attn_mask": false
+        },
+        "pooled": "plain",
+        "personalization_hash": "85b29b931444495a13684eee09ef09038b1149b6cb21ce8eaab054ef369dc215",
+        "seconds": 3.824
       },
       {
         "type": "image",
-        "id": "h1-tokyo-3",
-        "path": "samples/h1-tokyo-3.png",
-        "sha256": "e57ef0f183c04c14115149c5fe5a453fded2160df0abfa5143f23529c16b4d30",
+        "id": "s1-tokyo-3",
+        "path": "samples/s1-tokyo-3.png",
+        "sha256": "373043b608563c4e8c47294cbf97eb4657dac678de27e2a31bd151b3b2167321",
         "seed": 230926,
-        "prompt": "1boy, solo, male focus, short black hair, jacket, Tokyo skyline, night, portrait, detailed eyes, beautiful detailed illustration, delicate shading, masterpiece, best quality. warm accent colors, soft lighting, spacious composition, painterly texture, calm atmosphere.",
+        "prompt": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1boy, solo, male focus, short black hair, jacket, Tokyo skyline, night, portrait, detailed eyes, detailed illustration, absurdres, highres.",
+        "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
         "settings": {
           "model": "OnomaAIResearch/Illustrious-XL-v2.0",
           "revision": "69459c1fe6f46db41ab31e6114f05acc0e06bcaa",
@@ -584,229 +474,115 @@
           "width": 1024,
           "height": 1024,
           "steps": 28,
-          "guidance_scale": 6.5,
-          "negative_prompt": "worst quality, bad quality, lowres, blurry, bad anatomy, bad hands, extra digits, fewer digits, multiple views, comic, text, watermark, signature, photo, photorealistic, 3d, monochrome, greyscale, sketch, unfinished, nsfw, nude, multiple people, chibi, 2girls, 2boys",
+          "guidance_scale": 5.0,
+          "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
           "precision": "fp16",
           "pipeline_config": {
             "model": "OnomaAIResearch/Illustrious-xl-early-release-v0",
             "revision": "dca0dac303e6dc4b0c31d8001bc685b89b5d0204"
           },
-          "checkpoint": "Illustrious-XL-v2.0.safetensors"
+          "checkpoint": "Illustrious-XL-v2.0.safetensors",
+          "positive_prompt_tail": "absurdres, highres"
         },
-        "seconds": 3.789,
-        "context_hash": "397e75e05fd0cc495b68c9c2d4cd9e353712c3cba19d0eea73a0bd2eb54e5781"
+        "fan": {
+          "commit": "9d0b76843f6437718195accac9cf3f050a25d26b",
+          "pooled": "plain",
+          "skip": -2,
+          "sample_size": 0,
+          "skip_pa": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "use_attn_mask": false
+        },
+        "pooled": "plain",
+        "personalization_hash": "85b29b931444495a13684eee09ef09038b1149b6cb21ce8eaab054ef369dc215",
+        "seconds": 3.828
       }
-    ],
-    "rewrite": {
-      "type": "rewrite",
-      "id": "h1-tokyo",
-      "prompt": "1boy, solo, male focus, short black hair, jacket, Tokyo skyline, night, portrait, detailed eyes, beautiful detailed illustration, delicate shading, masterpiece, best quality. warm accent colors, soft lighting, spacious composition, painterly texture, calm atmosphere.",
-      "raw": "warm accent colors, soft lighting, spacious composition, painterly texture, calm atmosphere",
-      "valid": true,
-      "context_hash": "397e75e05fd0cc495b68c9c2d4cd9e353712c3cba19d0eea73a0bd2eb54e5781",
-      "model": {
-        "model": "Qwen/Qwen3.5-4B",
-        "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
-        "template_version": "append-aesthetic-character-v3"
-      },
-      "token_lengths": [
-        56,
-        56
-      ]
-    }
+    ]
   },
   {
-    "id": "h2-cat",
+    "id": "s2-cat",
     "topic_id": "cat",
-    "choices": [
+    "label": "涼しくくっきりした表現を選んだ人 · 窓辺で猫と過ごす少女",
+    "alpha_key": "mid",
+    "selection": [
       {
-        "pair_id": "p1",
-        "chosen_id": "p1-b"
+        "card_id": "girl-cool_clean",
+        "aspects_off": []
       },
       {
-        "pair_id": "p2",
-        "chosen_id": "p2-b"
+        "card_id": "traveler-cool_clean",
+        "aspects_off": []
       },
       {
-        "pair_id": "p3",
-        "chosen_id": "p3-b"
-      },
-      {
-        "pair_id": "p4",
-        "chosen_id": "p4-b"
-      },
-      {
-        "pair_id": "p5",
-        "chosen_id": "p5-b"
+        "card_id": "barista-cool_clean",
+        "aspects_off": []
       }
     ],
-    "context": {
-      "version": 1,
-      "preferences": {
-        "color": "cool",
-        "lighting": "dramatic",
-        "composition": "close",
-        "texture": "cel_shaded",
-        "mood": "lively"
-      },
-      "overrides": {},
-      "evidence": [
+    "personalization": {
+      "refs": [
         {
-          "id": "p1-b-e1",
-          "pair_id": "p1",
-          "pair_version": 3,
-          "chosen_id": "p1-b",
-          "dimensions": [
-            "color"
-          ],
-          "values": {
-            "color": "cool"
-          },
-          "text": "The selected character illustration uses more cool teal in the hat, clothes, and town background than the warmer alternative.",
-          "context_source": "generic_vlm",
-          "source": {
-            "model": "Qwen/Qwen3.5-4B",
-            "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
-            "template_version": "append-aesthetic-character-v3"
-          },
-          "image_hashes": {
-            "p1-a": "1448fb0052f2a7472cd2e92e30de33965c90e7350c95d99f9c6ee963fe4fee08",
-            "p1-b": "d2f57d62adedecaa20a0fd81ed540fdcd5e476f9a377493673d5a5bb286174aa"
-          },
-          "basic_prompt_en": "1girl, solo, brown hair, beret, coat, town square, upper body, detailed eyes, illustration, masterpiece, best quality.",
-          "template_version": "single-axis-relative-v1",
-          "template_hash": "4cc18c54fe3fb7644ea2024d89ce66f1b10d3286bdc7f4c259d8cc50cccc7fc7",
-          "preprocessing": "RGB; aspect preserved; longest edge 448"
+          "text": "cool color palette, blue and teal tones",
+          "weight": 3.0,
+          "aspect": "color",
+          "card_ids": [
+            "girl-cool_clean",
+            "traveler-cool_clean",
+            "barista-cool_clean"
+          ]
         },
         {
-          "id": "p2-b-e1",
-          "pair_id": "p2",
-          "pair_version": 3,
-          "chosen_id": "p2-b",
-          "dimensions": [
-            "lighting"
-          ],
-          "values": {
-            "lighting": "dramatic"
-          },
-          "text": "The selected library portrait has stronger light and shadow contrast around the character and bookshelves.",
-          "context_source": "generic_vlm",
-          "source": {
-            "model": "Qwen/Qwen3.5-4B",
-            "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
-            "template_version": "append-aesthetic-character-v3"
-          },
-          "image_hashes": {
-            "p2-a": "ce1dbddcdbe0bd784ea3eec0a28d3f518d6a35d19eeae375a534b30421c9c088",
-            "p2-b": "e604e8bcb68aa46988b271914ca703f2a1451a7f53c11d419f4649c4a87e9c58"
-          },
-          "basic_prompt_en": "1boy, solo, black hair, vest, white shirt, library, upper body, detailed eyes, illustration, masterpiece, best quality.",
-          "template_version": "single-axis-relative-v1",
-          "template_hash": "4cc18c54fe3fb7644ea2024d89ce66f1b10d3286bdc7f4c259d8cc50cccc7fc7",
-          "preprocessing": "RGB; aspect preserved; longest edge 448"
+          "text": "soft diffused light",
+          "weight": 3.0,
+          "aspect": "lighting",
+          "card_ids": [
+            "girl-cool_clean",
+            "traveler-cool_clean",
+            "barista-cool_clean"
+          ]
         },
         {
-          "id": "p3-b-e1",
-          "pair_id": "p3",
-          "pair_version": 3,
-          "chosen_id": "p3-b",
-          "dimensions": [
-            "composition"
-          ],
-          "values": {
-            "composition": "close"
-          },
-          "text": "The selected illustration frames the traveler more closely, with the face filling more of the image.",
-          "context_source": "generic_vlm",
-          "source": {
-            "model": "Qwen/Qwen3.5-4B",
-            "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
-            "template_version": "append-aesthetic-character-v3"
-          },
-          "image_hashes": {
-            "p3-a": "7579e9836b382143f177ecbda216654d93abc1835a45336bf4749ec982fcccbc",
-            "p3-b": "d8a0eb9a9193ca7ec6b567ad45745740074f8ea41cf1650786f6612c30e0d31d"
-          },
-          "basic_prompt_en": "1girl, solo, silver hair, cloak, grassland, detailed eyes, illustration, masterpiece, best quality.",
-          "template_version": "single-axis-relative-v1",
-          "template_hash": "4cc18c54fe3fb7644ea2024d89ce66f1b10d3286bdc7f4c259d8cc50cccc7fc7",
-          "preprocessing": "RGB; aspect preserved; longest edge 448"
+          "text": "cel shading, clean lineart, anime coloring",
+          "weight": 3.0,
+          "aspect": "texture",
+          "card_ids": [
+            "girl-cool_clean",
+            "traveler-cool_clean",
+            "barista-cool_clean"
+          ]
         },
         {
-          "id": "p4-b-e1",
-          "pair_id": "p4",
-          "pair_version": 3,
-          "chosen_id": "p4-b",
-          "dimensions": [
-            "texture"
-          ],
-          "values": {
-            "texture": "cel_shaded"
-          },
-          "text": "The selected witch illustration has clearer outlines and more distinct areas of color than the softer alternative.",
-          "context_source": "generic_vlm",
-          "source": {
-            "model": "Qwen/Qwen3.5-4B",
-            "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
-            "template_version": "append-aesthetic-character-v3"
-          },
-          "image_hashes": {
-            "p4-a": "35919ad5cec7f6a773ce8016388a880b78924c62bbcd4e921a7d2f6c732bb9d7",
-            "p4-b": "1fc5568fd77be9788370b84a9840246ae759b98bb159b027a932eea1bc2d04c3"
-          },
-          "basic_prompt_en": "1girl, solo, blonde hair, witch hat, cloak, flower garden, upper body, detailed eyes, illustration, masterpiece, best quality.",
-          "template_version": "single-axis-relative-v1",
-          "template_hash": "4cc18c54fe3fb7644ea2024d89ce66f1b10d3286bdc7f4c259d8cc50cccc7fc7",
-          "preprocessing": "RGB; aspect preserved; longest edge 448"
-        },
-        {
-          "id": "p5-b-e1",
-          "pair_id": "p5",
-          "pair_version": 3,
-          "chosen_id": "p5-b",
-          "dimensions": [
-            "mood"
-          ],
-          "values": {
-            "mood": "lively"
-          },
-          "text": "The selected cafe character has a laughing, open-mouth expression and a more cheerful atmosphere.",
-          "context_source": "generic_vlm",
-          "source": {
-            "model": "Qwen/Qwen3.5-4B",
-            "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
-            "template_version": "append-aesthetic-character-v3"
-          },
-          "image_hashes": {
-            "p5-a": "708443c3422182dac4b17fb36739388b7ec77ca6f8551676ac3a3f86b16438ca",
-            "p5-b": "ce9c25f53f08733491a645475e0ded67aafa8298129eddfb3ed3c6892a1b375c"
-          },
-          "basic_prompt_en": "1boy, solo, brown hair, apron, white shirt, cafe, upper body, detailed eyes, illustration, masterpiece, best quality.",
-          "template_version": "single-axis-relative-v1",
-          "template_hash": "4cc18c54fe3fb7644ea2024d89ce66f1b10d3286bdc7f4c259d8cc50cccc7fc7",
-          "preprocessing": "RGB; aspect preserved; longest edge 448"
+          "text": "calm atmosphere",
+          "weight": 3.0,
+          "aspect": "mood",
+          "card_ids": [
+            "girl-cool_clean",
+            "traveler-cool_clean",
+            "barista-cool_clean"
+          ]
         }
       ],
-      "choice_ids": [
-        "p1:p1-b",
-        "p2:p2-b",
-        "p3:p3-b",
-        "p4:p4-b",
-        "p5:p5-b"
-      ],
-      "text": "The selected character illustration uses more cool teal in the hat, clothes, and town background than the warmer alternative.\nThe selected library portrait has stronger light and shadow contrast around the character and bookshelves.\nThe selected illustration frames the traveler more closely, with the face filling more of the image.\nThe selected witch illustration has clearer outlines and more distinct areas of color than the softer alternative.\nThe selected cafe character has a laughing, open-mouth expression and a more cheerful atmosphere.",
-      "hash": "5c7604cd1713035d73997e907805547212cfbfab65a2ee08c252502cbe304fc0"
+      "alpha": 0.5,
+      "sample_size": 0,
+      "hash": "6b2a7250a4bdb3d684246e584f2dda02ffdc8c89b397845c0d8888e27fd4e1a4"
     },
     "mode": "sample",
-    "recommendation": null,
     "images": [
       {
         "type": "image",
-        "id": "h2-cat-0",
-        "path": "samples/h2-cat-0.png",
-        "sha256": "3e86bf29f57adc3d22c35f8ce1dc084d30f4bedab66e7c076a3984a78b71a898",
+        "id": "s2-cat-0",
+        "path": "samples/s2-cat-0.png",
+        "sha256": "73db8c150c74242327f1feb54ebfc241b3bfbc9ead1c9f64ec5e33c0dcc85c40",
         "seed": 230923,
-        "prompt": "1girl, solo, brown hair, green eyes, sweater, holding cat, window, upper body, detailed eyes, beautiful detailed illustration, delicate shading, masterpiece, best quality. cool accent colors, dramatic contrast, close framing, clean lineart with cel shading, lively atmosphere.",
+        "prompt": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1girl, solo, brown hair, green eyes, sweater, holding cat, window, upper body, detailed eyes, detailed illustration, absurdres, highres.",
+        "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
         "settings": {
           "model": "OnomaAIResearch/Illustrious-XL-v2.0",
           "revision": "69459c1fe6f46db41ab31e6114f05acc0e06bcaa",
@@ -814,25 +590,45 @@
           "width": 1024,
           "height": 1024,
           "steps": 28,
-          "guidance_scale": 6.5,
-          "negative_prompt": "worst quality, bad quality, lowres, blurry, bad anatomy, bad hands, extra digits, fewer digits, multiple views, comic, text, watermark, signature, photo, photorealistic, 3d, monochrome, greyscale, sketch, unfinished, nsfw, nude, multiple people, chibi, 2girls, 2boys",
+          "guidance_scale": 5.0,
+          "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
           "precision": "fp16",
           "pipeline_config": {
             "model": "OnomaAIResearch/Illustrious-xl-early-release-v0",
             "revision": "dca0dac303e6dc4b0c31d8001bc685b89b5d0204"
           },
-          "checkpoint": "Illustrious-XL-v2.0.safetensors"
+          "checkpoint": "Illustrious-XL-v2.0.safetensors",
+          "positive_prompt_tail": "absurdres, highres"
         },
-        "seconds": 3.803,
-        "context_hash": "5c7604cd1713035d73997e907805547212cfbfab65a2ee08c252502cbe304fc0"
+        "fan": {
+          "commit": "9d0b76843f6437718195accac9cf3f050a25d26b",
+          "pooled": "plain",
+          "skip": -2,
+          "sample_size": 0,
+          "skip_pa": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "use_attn_mask": false
+        },
+        "pooled": "plain",
+        "personalization_hash": "6b2a7250a4bdb3d684246e584f2dda02ffdc8c89b397845c0d8888e27fd4e1a4",
+        "seconds": 3.837
       },
       {
         "type": "image",
-        "id": "h2-cat-1",
-        "path": "samples/h2-cat-1.png",
-        "sha256": "64b4379f5b3901a97bba8b4cba357e6a0cf4c407a3d11a31af5cb09198faf66c",
+        "id": "s2-cat-1",
+        "path": "samples/s2-cat-1.png",
+        "sha256": "d44fe8c82ee2957af590e09b3284602c6edec634522c63345a5ea576c6942380",
         "seed": 230924,
-        "prompt": "1girl, solo, brown hair, green eyes, sweater, holding cat, window, upper body, detailed eyes, beautiful detailed illustration, delicate shading, masterpiece, best quality. cool accent colors, dramatic contrast, close framing, clean lineart with cel shading, lively atmosphere.",
+        "prompt": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1girl, solo, brown hair, green eyes, sweater, holding cat, window, upper body, detailed eyes, detailed illustration, absurdres, highres.",
+        "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
         "settings": {
           "model": "OnomaAIResearch/Illustrious-XL-v2.0",
           "revision": "69459c1fe6f46db41ab31e6114f05acc0e06bcaa",
@@ -840,25 +636,45 @@
           "width": 1024,
           "height": 1024,
           "steps": 28,
-          "guidance_scale": 6.5,
-          "negative_prompt": "worst quality, bad quality, lowres, blurry, bad anatomy, bad hands, extra digits, fewer digits, multiple views, comic, text, watermark, signature, photo, photorealistic, 3d, monochrome, greyscale, sketch, unfinished, nsfw, nude, multiple people, chibi, 2girls, 2boys",
+          "guidance_scale": 5.0,
+          "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
           "precision": "fp16",
           "pipeline_config": {
             "model": "OnomaAIResearch/Illustrious-xl-early-release-v0",
             "revision": "dca0dac303e6dc4b0c31d8001bc685b89b5d0204"
           },
-          "checkpoint": "Illustrious-XL-v2.0.safetensors"
+          "checkpoint": "Illustrious-XL-v2.0.safetensors",
+          "positive_prompt_tail": "absurdres, highres"
         },
-        "seconds": 3.773,
-        "context_hash": "5c7604cd1713035d73997e907805547212cfbfab65a2ee08c252502cbe304fc0"
+        "fan": {
+          "commit": "9d0b76843f6437718195accac9cf3f050a25d26b",
+          "pooled": "plain",
+          "skip": -2,
+          "sample_size": 0,
+          "skip_pa": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "use_attn_mask": false
+        },
+        "pooled": "plain",
+        "personalization_hash": "6b2a7250a4bdb3d684246e584f2dda02ffdc8c89b397845c0d8888e27fd4e1a4",
+        "seconds": 3.852
       },
       {
         "type": "image",
-        "id": "h2-cat-2",
-        "path": "samples/h2-cat-2.png",
-        "sha256": "0b106698a48bc08f256fa26ab4cc8c134b9afb6749b0e10bfa55539cb76a3de7",
+        "id": "s2-cat-2",
+        "path": "samples/s2-cat-2.png",
+        "sha256": "d0cb849e3f66fdff37b6263753538040f4bc1dc7b3e8dedc2f20d9ecaa5ee12d",
         "seed": 230925,
-        "prompt": "1girl, solo, brown hair, green eyes, sweater, holding cat, window, upper body, detailed eyes, beautiful detailed illustration, delicate shading, masterpiece, best quality. cool accent colors, dramatic contrast, close framing, clean lineart with cel shading, lively atmosphere.",
+        "prompt": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1girl, solo, brown hair, green eyes, sweater, holding cat, window, upper body, detailed eyes, detailed illustration, absurdres, highres.",
+        "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
         "settings": {
           "model": "OnomaAIResearch/Illustrious-XL-v2.0",
           "revision": "69459c1fe6f46db41ab31e6114f05acc0e06bcaa",
@@ -866,25 +682,45 @@
           "width": 1024,
           "height": 1024,
           "steps": 28,
-          "guidance_scale": 6.5,
-          "negative_prompt": "worst quality, bad quality, lowres, blurry, bad anatomy, bad hands, extra digits, fewer digits, multiple views, comic, text, watermark, signature, photo, photorealistic, 3d, monochrome, greyscale, sketch, unfinished, nsfw, nude, multiple people, chibi, 2girls, 2boys",
+          "guidance_scale": 5.0,
+          "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
           "precision": "fp16",
           "pipeline_config": {
             "model": "OnomaAIResearch/Illustrious-xl-early-release-v0",
             "revision": "dca0dac303e6dc4b0c31d8001bc685b89b5d0204"
           },
-          "checkpoint": "Illustrious-XL-v2.0.safetensors"
+          "checkpoint": "Illustrious-XL-v2.0.safetensors",
+          "positive_prompt_tail": "absurdres, highres"
         },
-        "seconds": 3.765,
-        "context_hash": "5c7604cd1713035d73997e907805547212cfbfab65a2ee08c252502cbe304fc0"
+        "fan": {
+          "commit": "9d0b76843f6437718195accac9cf3f050a25d26b",
+          "pooled": "plain",
+          "skip": -2,
+          "sample_size": 0,
+          "skip_pa": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "use_attn_mask": false
+        },
+        "pooled": "plain",
+        "personalization_hash": "6b2a7250a4bdb3d684246e584f2dda02ffdc8c89b397845c0d8888e27fd4e1a4",
+        "seconds": 3.838
       },
       {
         "type": "image",
-        "id": "h2-cat-3",
-        "path": "samples/h2-cat-3.png",
-        "sha256": "cc268e993f84bf7cd46a1316d700f87ee67f542917efbb1a11e0f5dd3cd23d0c",
+        "id": "s2-cat-3",
+        "path": "samples/s2-cat-3.png",
+        "sha256": "f498b08889cdc206d0afd4b15cad37dea5ad3deae02dea9d68d9b697edcd8c12",
         "seed": 230926,
-        "prompt": "1girl, solo, brown hair, green eyes, sweater, holding cat, window, upper body, detailed eyes, beautiful detailed illustration, delicate shading, masterpiece, best quality. cool accent colors, dramatic contrast, close framing, clean lineart with cel shading, lively atmosphere.",
+        "prompt": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1girl, solo, brown hair, green eyes, sweater, holding cat, window, upper body, detailed eyes, detailed illustration, absurdres, highres.",
+        "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
         "settings": {
           "model": "OnomaAIResearch/Illustrious-XL-v2.0",
           "revision": "69459c1fe6f46db41ab31e6114f05acc0e06bcaa",
@@ -892,229 +728,115 @@
           "width": 1024,
           "height": 1024,
           "steps": 28,
-          "guidance_scale": 6.5,
-          "negative_prompt": "worst quality, bad quality, lowres, blurry, bad anatomy, bad hands, extra digits, fewer digits, multiple views, comic, text, watermark, signature, photo, photorealistic, 3d, monochrome, greyscale, sketch, unfinished, nsfw, nude, multiple people, chibi, 2girls, 2boys",
+          "guidance_scale": 5.0,
+          "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
           "precision": "fp16",
           "pipeline_config": {
             "model": "OnomaAIResearch/Illustrious-xl-early-release-v0",
             "revision": "dca0dac303e6dc4b0c31d8001bc685b89b5d0204"
           },
-          "checkpoint": "Illustrious-XL-v2.0.safetensors"
+          "checkpoint": "Illustrious-XL-v2.0.safetensors",
+          "positive_prompt_tail": "absurdres, highres"
         },
-        "seconds": 3.775,
-        "context_hash": "5c7604cd1713035d73997e907805547212cfbfab65a2ee08c252502cbe304fc0"
+        "fan": {
+          "commit": "9d0b76843f6437718195accac9cf3f050a25d26b",
+          "pooled": "plain",
+          "skip": -2,
+          "sample_size": 0,
+          "skip_pa": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "use_attn_mask": false
+        },
+        "pooled": "plain",
+        "personalization_hash": "6b2a7250a4bdb3d684246e584f2dda02ffdc8c89b397845c0d8888e27fd4e1a4",
+        "seconds": 3.832
       }
-    ],
-    "rewrite": {
-      "type": "rewrite",
-      "id": "h2-cat",
-      "prompt": "1girl, solo, brown hair, green eyes, sweater, holding cat, window, upper body, detailed eyes, beautiful detailed illustration, delicate shading, masterpiece, best quality. cool accent colors, dramatic contrast, close framing, clean lineart with cel shading, lively atmosphere.",
-      "raw": "cool accent colors, dramatic contrast, close framing, clean lineart with cel shading, lively atmosphere",
-      "valid": true,
-      "context_hash": "5c7604cd1713035d73997e907805547212cfbfab65a2ee08c252502cbe304fc0",
-      "model": {
-        "model": "Qwen/Qwen3.5-4B",
-        "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
-        "template_version": "append-aesthetic-character-v3"
-      },
-      "token_lengths": [
-        58,
-        58
-      ]
-    }
+    ]
   },
   {
-    "id": "h2-tokyo",
+    "id": "s2-tokyo",
     "topic_id": "tokyo",
-    "choices": [
+    "label": "涼しくくっきりした表現を選んだ人 · 東京の夜景と青年",
+    "alpha_key": "mid",
+    "selection": [
       {
-        "pair_id": "p1",
-        "chosen_id": "p1-b"
+        "card_id": "girl-cool_clean",
+        "aspects_off": []
       },
       {
-        "pair_id": "p2",
-        "chosen_id": "p2-b"
+        "card_id": "traveler-cool_clean",
+        "aspects_off": []
       },
       {
-        "pair_id": "p3",
-        "chosen_id": "p3-b"
-      },
-      {
-        "pair_id": "p4",
-        "chosen_id": "p4-b"
-      },
-      {
-        "pair_id": "p5",
-        "chosen_id": "p5-b"
+        "card_id": "barista-cool_clean",
+        "aspects_off": []
       }
     ],
-    "context": {
-      "version": 1,
-      "preferences": {
-        "color": "cool",
-        "lighting": "dramatic",
-        "composition": "close",
-        "texture": "cel_shaded",
-        "mood": "lively"
-      },
-      "overrides": {},
-      "evidence": [
+    "personalization": {
+      "refs": [
         {
-          "id": "p1-b-e1",
-          "pair_id": "p1",
-          "pair_version": 3,
-          "chosen_id": "p1-b",
-          "dimensions": [
-            "color"
-          ],
-          "values": {
-            "color": "cool"
-          },
-          "text": "The selected character illustration uses more cool teal in the hat, clothes, and town background than the warmer alternative.",
-          "context_source": "generic_vlm",
-          "source": {
-            "model": "Qwen/Qwen3.5-4B",
-            "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
-            "template_version": "append-aesthetic-character-v3"
-          },
-          "image_hashes": {
-            "p1-a": "1448fb0052f2a7472cd2e92e30de33965c90e7350c95d99f9c6ee963fe4fee08",
-            "p1-b": "d2f57d62adedecaa20a0fd81ed540fdcd5e476f9a377493673d5a5bb286174aa"
-          },
-          "basic_prompt_en": "1girl, solo, brown hair, beret, coat, town square, upper body, detailed eyes, illustration, masterpiece, best quality.",
-          "template_version": "single-axis-relative-v1",
-          "template_hash": "4cc18c54fe3fb7644ea2024d89ce66f1b10d3286bdc7f4c259d8cc50cccc7fc7",
-          "preprocessing": "RGB; aspect preserved; longest edge 448"
+          "text": "cool color palette, blue and teal tones",
+          "weight": 3.0,
+          "aspect": "color",
+          "card_ids": [
+            "girl-cool_clean",
+            "traveler-cool_clean",
+            "barista-cool_clean"
+          ]
         },
         {
-          "id": "p2-b-e1",
-          "pair_id": "p2",
-          "pair_version": 3,
-          "chosen_id": "p2-b",
-          "dimensions": [
-            "lighting"
-          ],
-          "values": {
-            "lighting": "dramatic"
-          },
-          "text": "The selected library portrait has stronger light and shadow contrast around the character and bookshelves.",
-          "context_source": "generic_vlm",
-          "source": {
-            "model": "Qwen/Qwen3.5-4B",
-            "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
-            "template_version": "append-aesthetic-character-v3"
-          },
-          "image_hashes": {
-            "p2-a": "ce1dbddcdbe0bd784ea3eec0a28d3f518d6a35d19eeae375a534b30421c9c088",
-            "p2-b": "e604e8bcb68aa46988b271914ca703f2a1451a7f53c11d419f4649c4a87e9c58"
-          },
-          "basic_prompt_en": "1boy, solo, black hair, vest, white shirt, library, upper body, detailed eyes, illustration, masterpiece, best quality.",
-          "template_version": "single-axis-relative-v1",
-          "template_hash": "4cc18c54fe3fb7644ea2024d89ce66f1b10d3286bdc7f4c259d8cc50cccc7fc7",
-          "preprocessing": "RGB; aspect preserved; longest edge 448"
+          "text": "soft diffused light",
+          "weight": 3.0,
+          "aspect": "lighting",
+          "card_ids": [
+            "girl-cool_clean",
+            "traveler-cool_clean",
+            "barista-cool_clean"
+          ]
         },
         {
-          "id": "p3-b-e1",
-          "pair_id": "p3",
-          "pair_version": 3,
-          "chosen_id": "p3-b",
-          "dimensions": [
-            "composition"
-          ],
-          "values": {
-            "composition": "close"
-          },
-          "text": "The selected illustration frames the traveler more closely, with the face filling more of the image.",
-          "context_source": "generic_vlm",
-          "source": {
-            "model": "Qwen/Qwen3.5-4B",
-            "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
-            "template_version": "append-aesthetic-character-v3"
-          },
-          "image_hashes": {
-            "p3-a": "7579e9836b382143f177ecbda216654d93abc1835a45336bf4749ec982fcccbc",
-            "p3-b": "d8a0eb9a9193ca7ec6b567ad45745740074f8ea41cf1650786f6612c30e0d31d"
-          },
-          "basic_prompt_en": "1girl, solo, silver hair, cloak, grassland, detailed eyes, illustration, masterpiece, best quality.",
-          "template_version": "single-axis-relative-v1",
-          "template_hash": "4cc18c54fe3fb7644ea2024d89ce66f1b10d3286bdc7f4c259d8cc50cccc7fc7",
-          "preprocessing": "RGB; aspect preserved; longest edge 448"
+          "text": "cel shading, clean lineart, anime coloring",
+          "weight": 3.0,
+          "aspect": "texture",
+          "card_ids": [
+            "girl-cool_clean",
+            "traveler-cool_clean",
+            "barista-cool_clean"
+          ]
         },
         {
-          "id": "p4-b-e1",
-          "pair_id": "p4",
-          "pair_version": 3,
-          "chosen_id": "p4-b",
-          "dimensions": [
-            "texture"
-          ],
-          "values": {
-            "texture": "cel_shaded"
-          },
-          "text": "The selected witch illustration has clearer outlines and more distinct areas of color than the softer alternative.",
-          "context_source": "generic_vlm",
-          "source": {
-            "model": "Qwen/Qwen3.5-4B",
-            "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
-            "template_version": "append-aesthetic-character-v3"
-          },
-          "image_hashes": {
-            "p4-a": "35919ad5cec7f6a773ce8016388a880b78924c62bbcd4e921a7d2f6c732bb9d7",
-            "p4-b": "1fc5568fd77be9788370b84a9840246ae759b98bb159b027a932eea1bc2d04c3"
-          },
-          "basic_prompt_en": "1girl, solo, blonde hair, witch hat, cloak, flower garden, upper body, detailed eyes, illustration, masterpiece, best quality.",
-          "template_version": "single-axis-relative-v1",
-          "template_hash": "4cc18c54fe3fb7644ea2024d89ce66f1b10d3286bdc7f4c259d8cc50cccc7fc7",
-          "preprocessing": "RGB; aspect preserved; longest edge 448"
-        },
-        {
-          "id": "p5-b-e1",
-          "pair_id": "p5",
-          "pair_version": 3,
-          "chosen_id": "p5-b",
-          "dimensions": [
-            "mood"
-          ],
-          "values": {
-            "mood": "lively"
-          },
-          "text": "The selected cafe character has a laughing, open-mouth expression and a more cheerful atmosphere.",
-          "context_source": "generic_vlm",
-          "source": {
-            "model": "Qwen/Qwen3.5-4B",
-            "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
-            "template_version": "append-aesthetic-character-v3"
-          },
-          "image_hashes": {
-            "p5-a": "708443c3422182dac4b17fb36739388b7ec77ca6f8551676ac3a3f86b16438ca",
-            "p5-b": "ce9c25f53f08733491a645475e0ded67aafa8298129eddfb3ed3c6892a1b375c"
-          },
-          "basic_prompt_en": "1boy, solo, brown hair, apron, white shirt, cafe, upper body, detailed eyes, illustration, masterpiece, best quality.",
-          "template_version": "single-axis-relative-v1",
-          "template_hash": "4cc18c54fe3fb7644ea2024d89ce66f1b10d3286bdc7f4c259d8cc50cccc7fc7",
-          "preprocessing": "RGB; aspect preserved; longest edge 448"
+          "text": "calm atmosphere",
+          "weight": 3.0,
+          "aspect": "mood",
+          "card_ids": [
+            "girl-cool_clean",
+            "traveler-cool_clean",
+            "barista-cool_clean"
+          ]
         }
       ],
-      "choice_ids": [
-        "p1:p1-b",
-        "p2:p2-b",
-        "p3:p3-b",
-        "p4:p4-b",
-        "p5:p5-b"
-      ],
-      "text": "The selected character illustration uses more cool teal in the hat, clothes, and town background than the warmer alternative.\nThe selected library portrait has stronger light and shadow contrast around the character and bookshelves.\nThe selected illustration frames the traveler more closely, with the face filling more of the image.\nThe selected witch illustration has clearer outlines and more distinct areas of color than the softer alternative.\nThe selected cafe character has a laughing, open-mouth expression and a more cheerful atmosphere.",
-      "hash": "5c7604cd1713035d73997e907805547212cfbfab65a2ee08c252502cbe304fc0"
+      "alpha": 0.5,
+      "sample_size": 0,
+      "hash": "6b2a7250a4bdb3d684246e584f2dda02ffdc8c89b397845c0d8888e27fd4e1a4"
     },
     "mode": "sample",
-    "recommendation": null,
     "images": [
       {
         "type": "image",
-        "id": "h2-tokyo-0",
-        "path": "samples/h2-tokyo-0.png",
-        "sha256": "a8f76a2b5639ff60722579de9b3e07f46caefc8b18999a97e3464caa6c7978d8",
+        "id": "s2-tokyo-0",
+        "path": "samples/s2-tokyo-0.png",
+        "sha256": "154971d8746e8a0dc32e47cae28e0505f2312276dfb96913452fb84d6ce744da",
         "seed": 230923,
-        "prompt": "1boy, solo, male focus, short black hair, jacket, Tokyo skyline, night, portrait, detailed eyes, beautiful detailed illustration, delicate shading, masterpiece, best quality. cool accent colors, dramatic contrast, close framing, clean lineart with cel shading, lively atmosphere.",
+        "prompt": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1boy, solo, male focus, short black hair, jacket, Tokyo skyline, night, portrait, detailed eyes, detailed illustration, absurdres, highres.",
+        "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
         "settings": {
           "model": "OnomaAIResearch/Illustrious-XL-v2.0",
           "revision": "69459c1fe6f46db41ab31e6114f05acc0e06bcaa",
@@ -1122,25 +844,45 @@
           "width": 1024,
           "height": 1024,
           "steps": 28,
-          "guidance_scale": 6.5,
-          "negative_prompt": "worst quality, bad quality, lowres, blurry, bad anatomy, bad hands, extra digits, fewer digits, multiple views, comic, text, watermark, signature, photo, photorealistic, 3d, monochrome, greyscale, sketch, unfinished, nsfw, nude, multiple people, chibi, 2girls, 2boys",
+          "guidance_scale": 5.0,
+          "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
           "precision": "fp16",
           "pipeline_config": {
             "model": "OnomaAIResearch/Illustrious-xl-early-release-v0",
             "revision": "dca0dac303e6dc4b0c31d8001bc685b89b5d0204"
           },
-          "checkpoint": "Illustrious-XL-v2.0.safetensors"
+          "checkpoint": "Illustrious-XL-v2.0.safetensors",
+          "positive_prompt_tail": "absurdres, highres"
         },
-        "seconds": 3.756,
-        "context_hash": "5c7604cd1713035d73997e907805547212cfbfab65a2ee08c252502cbe304fc0"
+        "fan": {
+          "commit": "9d0b76843f6437718195accac9cf3f050a25d26b",
+          "pooled": "plain",
+          "skip": -2,
+          "sample_size": 0,
+          "skip_pa": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "use_attn_mask": false
+        },
+        "pooled": "plain",
+        "personalization_hash": "6b2a7250a4bdb3d684246e584f2dda02ffdc8c89b397845c0d8888e27fd4e1a4",
+        "seconds": 3.846
       },
       {
         "type": "image",
-        "id": "h2-tokyo-1",
-        "path": "samples/h2-tokyo-1.png",
-        "sha256": "4aae9ea7f5c7113cb86a34b4ecb4068b1b7788ff7ec5ebbae88f9343a9e1d7e8",
+        "id": "s2-tokyo-1",
+        "path": "samples/s2-tokyo-1.png",
+        "sha256": "f84b80ba46870f6628af593338fe4c58d7ef82eaa340b01f994d8daf6eda4995",
         "seed": 230924,
-        "prompt": "1boy, solo, male focus, short black hair, jacket, Tokyo skyline, night, portrait, detailed eyes, beautiful detailed illustration, delicate shading, masterpiece, best quality. cool accent colors, dramatic contrast, close framing, clean lineart with cel shading, lively atmosphere.",
+        "prompt": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1boy, solo, male focus, short black hair, jacket, Tokyo skyline, night, portrait, detailed eyes, detailed illustration, absurdres, highres.",
+        "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
         "settings": {
           "model": "OnomaAIResearch/Illustrious-XL-v2.0",
           "revision": "69459c1fe6f46db41ab31e6114f05acc0e06bcaa",
@@ -1148,25 +890,45 @@
           "width": 1024,
           "height": 1024,
           "steps": 28,
-          "guidance_scale": 6.5,
-          "negative_prompt": "worst quality, bad quality, lowres, blurry, bad anatomy, bad hands, extra digits, fewer digits, multiple views, comic, text, watermark, signature, photo, photorealistic, 3d, monochrome, greyscale, sketch, unfinished, nsfw, nude, multiple people, chibi, 2girls, 2boys",
+          "guidance_scale": 5.0,
+          "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
           "precision": "fp16",
           "pipeline_config": {
             "model": "OnomaAIResearch/Illustrious-xl-early-release-v0",
             "revision": "dca0dac303e6dc4b0c31d8001bc685b89b5d0204"
           },
-          "checkpoint": "Illustrious-XL-v2.0.safetensors"
+          "checkpoint": "Illustrious-XL-v2.0.safetensors",
+          "positive_prompt_tail": "absurdres, highres"
         },
-        "seconds": 3.766,
-        "context_hash": "5c7604cd1713035d73997e907805547212cfbfab65a2ee08c252502cbe304fc0"
+        "fan": {
+          "commit": "9d0b76843f6437718195accac9cf3f050a25d26b",
+          "pooled": "plain",
+          "skip": -2,
+          "sample_size": 0,
+          "skip_pa": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "use_attn_mask": false
+        },
+        "pooled": "plain",
+        "personalization_hash": "6b2a7250a4bdb3d684246e584f2dda02ffdc8c89b397845c0d8888e27fd4e1a4",
+        "seconds": 3.824
       },
       {
         "type": "image",
-        "id": "h2-tokyo-2",
-        "path": "samples/h2-tokyo-2.png",
-        "sha256": "40826ce5a3c3ae8a5f8a42dc1c7ba58101c931fb43c69dc950d5ab148cf8a2ae",
+        "id": "s2-tokyo-2",
+        "path": "samples/s2-tokyo-2.png",
+        "sha256": "68f9cba942e716d54f815df8d460cebc503aab0b2eed0dfc271d2ae6bd84ead8",
         "seed": 230925,
-        "prompt": "1boy, solo, male focus, short black hair, jacket, Tokyo skyline, night, portrait, detailed eyes, beautiful detailed illustration, delicate shading, masterpiece, best quality. cool accent colors, dramatic contrast, close framing, clean lineart with cel shading, lively atmosphere.",
+        "prompt": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1boy, solo, male focus, short black hair, jacket, Tokyo skyline, night, portrait, detailed eyes, detailed illustration, absurdres, highres.",
+        "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
         "settings": {
           "model": "OnomaAIResearch/Illustrious-XL-v2.0",
           "revision": "69459c1fe6f46db41ab31e6114f05acc0e06bcaa",
@@ -1174,25 +936,45 @@
           "width": 1024,
           "height": 1024,
           "steps": 28,
-          "guidance_scale": 6.5,
-          "negative_prompt": "worst quality, bad quality, lowres, blurry, bad anatomy, bad hands, extra digits, fewer digits, multiple views, comic, text, watermark, signature, photo, photorealistic, 3d, monochrome, greyscale, sketch, unfinished, nsfw, nude, multiple people, chibi, 2girls, 2boys",
+          "guidance_scale": 5.0,
+          "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
           "precision": "fp16",
           "pipeline_config": {
             "model": "OnomaAIResearch/Illustrious-xl-early-release-v0",
             "revision": "dca0dac303e6dc4b0c31d8001bc685b89b5d0204"
           },
-          "checkpoint": "Illustrious-XL-v2.0.safetensors"
+          "checkpoint": "Illustrious-XL-v2.0.safetensors",
+          "positive_prompt_tail": "absurdres, highres"
         },
-        "seconds": 3.772,
-        "context_hash": "5c7604cd1713035d73997e907805547212cfbfab65a2ee08c252502cbe304fc0"
+        "fan": {
+          "commit": "9d0b76843f6437718195accac9cf3f050a25d26b",
+          "pooled": "plain",
+          "skip": -2,
+          "sample_size": 0,
+          "skip_pa": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "use_attn_mask": false
+        },
+        "pooled": "plain",
+        "personalization_hash": "6b2a7250a4bdb3d684246e584f2dda02ffdc8c89b397845c0d8888e27fd4e1a4",
+        "seconds": 3.821
       },
       {
         "type": "image",
-        "id": "h2-tokyo-3",
-        "path": "samples/h2-tokyo-3.png",
-        "sha256": "db279ee7dceedcfce0b69bce60fc17f7561eff8863a3a3607b69fa874e0b7a86",
+        "id": "s2-tokyo-3",
+        "path": "samples/s2-tokyo-3.png",
+        "sha256": "ed6491d5a58c3b5bc1b4b8fb88bd99737b14cde9e363326c0f254958df013a3d",
         "seed": 230926,
-        "prompt": "1boy, solo, male focus, short black hair, jacket, Tokyo skyline, night, portrait, detailed eyes, beautiful detailed illustration, delicate shading, masterpiece, best quality. cool accent colors, dramatic contrast, close framing, clean lineart with cel shading, lively atmosphere.",
+        "prompt": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1boy, solo, male focus, short black hair, jacket, Tokyo skyline, night, portrait, detailed eyes, detailed illustration, absurdres, highres.",
+        "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
         "settings": {
           "model": "OnomaAIResearch/Illustrious-XL-v2.0",
           "revision": "69459c1fe6f46db41ab31e6114f05acc0e06bcaa",
@@ -1200,229 +982,143 @@
           "width": 1024,
           "height": 1024,
           "steps": 28,
-          "guidance_scale": 6.5,
-          "negative_prompt": "worst quality, bad quality, lowres, blurry, bad anatomy, bad hands, extra digits, fewer digits, multiple views, comic, text, watermark, signature, photo, photorealistic, 3d, monochrome, greyscale, sketch, unfinished, nsfw, nude, multiple people, chibi, 2girls, 2boys",
+          "guidance_scale": 5.0,
+          "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
           "precision": "fp16",
           "pipeline_config": {
             "model": "OnomaAIResearch/Illustrious-xl-early-release-v0",
             "revision": "dca0dac303e6dc4b0c31d8001bc685b89b5d0204"
           },
-          "checkpoint": "Illustrious-XL-v2.0.safetensors"
+          "checkpoint": "Illustrious-XL-v2.0.safetensors",
+          "positive_prompt_tail": "absurdres, highres"
         },
-        "seconds": 3.783,
-        "context_hash": "5c7604cd1713035d73997e907805547212cfbfab65a2ee08c252502cbe304fc0"
+        "fan": {
+          "commit": "9d0b76843f6437718195accac9cf3f050a25d26b",
+          "pooled": "plain",
+          "skip": -2,
+          "sample_size": 0,
+          "skip_pa": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "use_attn_mask": false
+        },
+        "pooled": "plain",
+        "personalization_hash": "6b2a7250a4bdb3d684246e584f2dda02ffdc8c89b397845c0d8888e27fd4e1a4",
+        "seconds": 3.835
       }
-    ],
-    "rewrite": {
-      "type": "rewrite",
-      "id": "h2-tokyo",
-      "prompt": "1boy, solo, male focus, short black hair, jacket, Tokyo skyline, night, portrait, detailed eyes, beautiful detailed illustration, delicate shading, masterpiece, best quality. cool accent colors, dramatic contrast, close framing, clean lineart with cel shading, lively atmosphere.",
-      "raw": "cool accent colors, dramatic contrast, close framing, clean lineart with cel shading, lively atmosphere",
-      "valid": true,
-      "context_hash": "5c7604cd1713035d73997e907805547212cfbfab65a2ee08c252502cbe304fc0",
-      "model": {
-        "model": "Qwen/Qwen3.5-4B",
-        "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
-        "template_version": "append-aesthetic-character-v3"
-      },
-      "token_lengths": [
-        58,
-        58
-      ]
-    }
+    ]
   },
   {
-    "id": "h3-cat",
+    "id": "s3-cat",
     "topic_id": "cat",
-    "choices": [
+    "label": "劇的な光と鮮やかさを選んだ人 · 窓辺で猫と過ごす少女",
+    "alpha_key": "mid",
+    "selection": [
       {
-        "pair_id": "p1",
-        "chosen_id": "p1-a"
+        "card_id": "student-dramatic",
+        "aspects_off": []
       },
       {
-        "pair_id": "p2",
-        "chosen_id": "p2-b"
+        "card_id": "traveler-dramatic",
+        "aspects_off": []
       },
       {
-        "pair_id": "p3",
-        "chosen_id": "p3-a"
-      },
-      {
-        "pair_id": "p4",
-        "chosen_id": "p4-b"
-      },
-      {
-        "pair_id": "p5",
-        "chosen_id": "p5-a"
+        "card_id": "girl-vivid_lively",
+        "aspects_off": []
       }
     ],
-    "context": {
-      "version": 1,
-      "preferences": {
-        "color": "warm",
-        "lighting": "dramatic",
-        "composition": "spacious",
-        "texture": "cel_shaded",
-        "mood": "calm"
-      },
-      "overrides": {},
-      "evidence": [
+    "personalization": {
+      "refs": [
         {
-          "id": "p1-a-e1",
-          "pair_id": "p1",
-          "pair_version": 3,
-          "chosen_id": "p1-a",
-          "dimensions": [
-            "color"
-          ],
-          "values": {
-            "color": "warm"
-          },
-          "text": "The selected character illustration uses warmer orange and golden tones in the clothes and background.",
-          "context_source": "generic_vlm",
-          "source": {
-            "model": "Qwen/Qwen3.5-4B",
-            "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
-            "template_version": "append-aesthetic-character-v3"
-          },
-          "image_hashes": {
-            "p1-a": "1448fb0052f2a7472cd2e92e30de33965c90e7350c95d99f9c6ee963fe4fee08",
-            "p1-b": "d2f57d62adedecaa20a0fd81ed540fdcd5e476f9a377493673d5a5bb286174aa"
-          },
-          "basic_prompt_en": "1girl, solo, brown hair, beret, coat, town square, upper body, detailed eyes, illustration, masterpiece, best quality.",
-          "template_version": "single-axis-relative-v1",
-          "template_hash": "4cc18c54fe3fb7644ea2024d89ce66f1b10d3286bdc7f4c259d8cc50cccc7fc7",
-          "preprocessing": "RGB; aspect preserved; longest edge 448"
+          "text": "muted colors, dark background",
+          "weight": 2.0,
+          "aspect": "color",
+          "card_ids": [
+            "student-dramatic",
+            "traveler-dramatic"
+          ]
         },
         {
-          "id": "p2-b-e1",
-          "pair_id": "p2",
-          "pair_version": 3,
-          "chosen_id": "p2-b",
-          "dimensions": [
-            "lighting"
-          ],
-          "values": {
-            "lighting": "dramatic"
-          },
-          "text": "The selected library portrait has stronger light and shadow contrast around the character and bookshelves.",
-          "context_source": "generic_vlm",
-          "source": {
-            "model": "Qwen/Qwen3.5-4B",
-            "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
-            "template_version": "append-aesthetic-character-v3"
-          },
-          "image_hashes": {
-            "p2-a": "ce1dbddcdbe0bd784ea3eec0a28d3f518d6a35d19eeae375a534b30421c9c088",
-            "p2-b": "e604e8bcb68aa46988b271914ca703f2a1451a7f53c11d419f4649c4a87e9c58"
-          },
-          "basic_prompt_en": "1boy, solo, black hair, vest, white shirt, library, upper body, detailed eyes, illustration, masterpiece, best quality.",
-          "template_version": "single-axis-relative-v1",
-          "template_hash": "4cc18c54fe3fb7644ea2024d89ce66f1b10d3286bdc7f4c259d8cc50cccc7fc7",
-          "preprocessing": "RGB; aspect preserved; longest edge 448"
+          "text": "dramatic lighting, strong shadows, rim light",
+          "weight": 2.0,
+          "aspect": "lighting",
+          "card_ids": [
+            "student-dramatic",
+            "traveler-dramatic"
+          ]
         },
         {
-          "id": "p3-a-e1",
-          "pair_id": "p3",
-          "pair_version": 3,
-          "chosen_id": "p3-a",
-          "dimensions": [
-            "composition"
-          ],
-          "values": {
-            "composition": "spacious"
-          },
-          "text": "The selected illustration shows more of the traveler and the surrounding grassland and sky.",
-          "context_source": "generic_vlm",
-          "source": {
-            "model": "Qwen/Qwen3.5-4B",
-            "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
-            "template_version": "append-aesthetic-character-v3"
-          },
-          "image_hashes": {
-            "p3-a": "7579e9836b382143f177ecbda216654d93abc1835a45336bf4749ec982fcccbc",
-            "p3-b": "d8a0eb9a9193ca7ec6b567ad45745740074f8ea41cf1650786f6612c30e0d31d"
-          },
-          "basic_prompt_en": "1girl, solo, silver hair, cloak, grassland, detailed eyes, illustration, masterpiece, best quality.",
-          "template_version": "single-axis-relative-v1",
-          "template_hash": "4cc18c54fe3fb7644ea2024d89ce66f1b10d3286bdc7f4c259d8cc50cccc7fc7",
-          "preprocessing": "RGB; aspect preserved; longest edge 448"
+          "text": "detailed shading, painterly texture",
+          "weight": 2.0,
+          "aspect": "texture",
+          "card_ids": [
+            "student-dramatic",
+            "traveler-dramatic"
+          ]
         },
         {
-          "id": "p4-b-e1",
-          "pair_id": "p4",
-          "pair_version": 3,
-          "chosen_id": "p4-b",
-          "dimensions": [
-            "texture"
-          ],
-          "values": {
-            "texture": "cel_shaded"
-          },
-          "text": "The selected witch illustration has clearer outlines and more distinct areas of color than the softer alternative.",
-          "context_source": "generic_vlm",
-          "source": {
-            "model": "Qwen/Qwen3.5-4B",
-            "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
-            "template_version": "append-aesthetic-character-v3"
-          },
-          "image_hashes": {
-            "p4-a": "35919ad5cec7f6a773ce8016388a880b78924c62bbcd4e921a7d2f6c732bb9d7",
-            "p4-b": "1fc5568fd77be9788370b84a9840246ae759b98bb159b027a932eea1bc2d04c3"
-          },
-          "basic_prompt_en": "1girl, solo, blonde hair, witch hat, cloak, flower garden, upper body, detailed eyes, illustration, masterpiece, best quality.",
-          "template_version": "single-axis-relative-v1",
-          "template_hash": "4cc18c54fe3fb7644ea2024d89ce66f1b10d3286bdc7f4c259d8cc50cccc7fc7",
-          "preprocessing": "RGB; aspect preserved; longest edge 448"
+          "text": "serious atmosphere",
+          "weight": 2.0,
+          "aspect": "mood",
+          "card_ids": [
+            "student-dramatic",
+            "traveler-dramatic"
+          ]
         },
         {
-          "id": "p5-a-e1",
-          "pair_id": "p5",
-          "pair_version": 3,
-          "chosen_id": "p5-a",
-          "dimensions": [
-            "mood"
-          ],
-          "values": {
-            "mood": "calm"
-          },
-          "text": "The selected cafe character has a gentle, closed-mouth expression and a calmer atmosphere than the laughing alternative.",
-          "context_source": "generic_vlm",
-          "source": {
-            "model": "Qwen/Qwen3.5-4B",
-            "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
-            "template_version": "append-aesthetic-character-v3"
-          },
-          "image_hashes": {
-            "p5-a": "708443c3422182dac4b17fb36739388b7ec77ca6f8551676ac3a3f86b16438ca",
-            "p5-b": "ce9c25f53f08733491a645475e0ded67aafa8298129eddfb3ed3c6892a1b375c"
-          },
-          "basic_prompt_en": "1boy, solo, brown hair, apron, white shirt, cafe, upper body, detailed eyes, illustration, masterpiece, best quality.",
-          "template_version": "single-axis-relative-v1",
-          "template_hash": "4cc18c54fe3fb7644ea2024d89ce66f1b10d3286bdc7f4c259d8cc50cccc7fc7",
-          "preprocessing": "RGB; aspect preserved; longest edge 448"
+          "text": "vivid colors, colorful, high saturation",
+          "weight": 1.0,
+          "aspect": "color",
+          "card_ids": [
+            "girl-vivid_lively"
+          ]
+        },
+        {
+          "text": "bright lighting, sparkle",
+          "weight": 1.0,
+          "aspect": "lighting",
+          "card_ids": [
+            "girl-vivid_lively"
+          ]
+        },
+        {
+          "text": "cel shading, flat color",
+          "weight": 1.0,
+          "aspect": "texture",
+          "card_ids": [
+            "girl-vivid_lively"
+          ]
+        },
+        {
+          "text": "cheerful expression, lively atmosphere",
+          "weight": 1.0,
+          "aspect": "mood",
+          "card_ids": [
+            "girl-vivid_lively"
+          ]
         }
       ],
-      "choice_ids": [
-        "p1:p1-a",
-        "p2:p2-b",
-        "p3:p3-a",
-        "p4:p4-b",
-        "p5:p5-a"
-      ],
-      "text": "The selected character illustration uses warmer orange and golden tones in the clothes and background.\nThe selected library portrait has stronger light and shadow contrast around the character and bookshelves.\nThe selected illustration shows more of the traveler and the surrounding grassland and sky.\nThe selected witch illustration has clearer outlines and more distinct areas of color than the softer alternative.\nThe selected cafe character has a gentle, closed-mouth expression and a calmer atmosphere than the laughing alternative.",
-      "hash": "caa49c3505a4394bd1528fdd701e5074708f442fb84a9b75d805da2f958e5753"
+      "alpha": 0.5,
+      "sample_size": 0,
+      "hash": "3b7bafa740428289a602baf1ff37d3dd0e6b8bdd133b869a5460bb41045d9959"
     },
     "mode": "sample",
-    "recommendation": null,
     "images": [
       {
         "type": "image",
-        "id": "h3-cat-0",
-        "path": "samples/h3-cat-0.png",
-        "sha256": "523dac72d25052b6976939f7386b7a79c99b84cb917061ed2f6cd70f70dea4be",
+        "id": "s3-cat-0",
+        "path": "samples/s3-cat-0.png",
+        "sha256": "f2a579ea20e858c0615971c31d1b7ccd43158f3c2cc87cfb53d3ac1d289adf92",
         "seed": 230923,
-        "prompt": "1girl, solo, brown hair, green eyes, sweater, holding cat, window, upper body, detailed eyes, beautiful detailed illustration, delicate shading, masterpiece, best quality. warm accent colors, dramatic contrast, spacious composition, clean lineart with cel shading, calm atmosphere.",
+        "prompt": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1girl, solo, brown hair, green eyes, sweater, holding cat, window, upper body, detailed eyes, detailed illustration, absurdres, highres.",
+        "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
         "settings": {
           "model": "OnomaAIResearch/Illustrious-XL-v2.0",
           "revision": "69459c1fe6f46db41ab31e6114f05acc0e06bcaa",
@@ -1430,25 +1126,45 @@
           "width": 1024,
           "height": 1024,
           "steps": 28,
-          "guidance_scale": 6.5,
-          "negative_prompt": "worst quality, bad quality, lowres, blurry, bad anatomy, bad hands, extra digits, fewer digits, multiple views, comic, text, watermark, signature, photo, photorealistic, 3d, monochrome, greyscale, sketch, unfinished, nsfw, nude, multiple people, chibi, 2girls, 2boys",
+          "guidance_scale": 5.0,
+          "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
           "precision": "fp16",
           "pipeline_config": {
             "model": "OnomaAIResearch/Illustrious-xl-early-release-v0",
             "revision": "dca0dac303e6dc4b0c31d8001bc685b89b5d0204"
           },
-          "checkpoint": "Illustrious-XL-v2.0.safetensors"
+          "checkpoint": "Illustrious-XL-v2.0.safetensors",
+          "positive_prompt_tail": "absurdres, highres"
         },
-        "seconds": 3.822,
-        "context_hash": "caa49c3505a4394bd1528fdd701e5074708f442fb84a9b75d805da2f958e5753"
+        "fan": {
+          "commit": "9d0b76843f6437718195accac9cf3f050a25d26b",
+          "pooled": "plain",
+          "skip": -2,
+          "sample_size": 0,
+          "skip_pa": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "use_attn_mask": false
+        },
+        "pooled": "plain",
+        "personalization_hash": "3b7bafa740428289a602baf1ff37d3dd0e6b8bdd133b869a5460bb41045d9959",
+        "seconds": 3.853
       },
       {
         "type": "image",
-        "id": "h3-cat-1",
-        "path": "samples/h3-cat-1.png",
-        "sha256": "3879c1012f534bf9fd8a6e203ac9339a1ff2485919df815b73b3b4ce5a767844",
+        "id": "s3-cat-1",
+        "path": "samples/s3-cat-1.png",
+        "sha256": "f5440127fcd35db3d9a401d480270dd6d95babed8ba851d9ab1dceecdccea119",
         "seed": 230924,
-        "prompt": "1girl, solo, brown hair, green eyes, sweater, holding cat, window, upper body, detailed eyes, beautiful detailed illustration, delicate shading, masterpiece, best quality. warm accent colors, dramatic contrast, spacious composition, clean lineart with cel shading, calm atmosphere.",
+        "prompt": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1girl, solo, brown hair, green eyes, sweater, holding cat, window, upper body, detailed eyes, detailed illustration, absurdres, highres.",
+        "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
         "settings": {
           "model": "OnomaAIResearch/Illustrious-XL-v2.0",
           "revision": "69459c1fe6f46db41ab31e6114f05acc0e06bcaa",
@@ -1456,25 +1172,45 @@
           "width": 1024,
           "height": 1024,
           "steps": 28,
-          "guidance_scale": 6.5,
-          "negative_prompt": "worst quality, bad quality, lowres, blurry, bad anatomy, bad hands, extra digits, fewer digits, multiple views, comic, text, watermark, signature, photo, photorealistic, 3d, monochrome, greyscale, sketch, unfinished, nsfw, nude, multiple people, chibi, 2girls, 2boys",
+          "guidance_scale": 5.0,
+          "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
           "precision": "fp16",
           "pipeline_config": {
             "model": "OnomaAIResearch/Illustrious-xl-early-release-v0",
             "revision": "dca0dac303e6dc4b0c31d8001bc685b89b5d0204"
           },
-          "checkpoint": "Illustrious-XL-v2.0.safetensors"
+          "checkpoint": "Illustrious-XL-v2.0.safetensors",
+          "positive_prompt_tail": "absurdres, highres"
         },
-        "seconds": 3.794,
-        "context_hash": "caa49c3505a4394bd1528fdd701e5074708f442fb84a9b75d805da2f958e5753"
+        "fan": {
+          "commit": "9d0b76843f6437718195accac9cf3f050a25d26b",
+          "pooled": "plain",
+          "skip": -2,
+          "sample_size": 0,
+          "skip_pa": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "use_attn_mask": false
+        },
+        "pooled": "plain",
+        "personalization_hash": "3b7bafa740428289a602baf1ff37d3dd0e6b8bdd133b869a5460bb41045d9959",
+        "seconds": 3.854
       },
       {
         "type": "image",
-        "id": "h3-cat-2",
-        "path": "samples/h3-cat-2.png",
-        "sha256": "845f1c69cf7e062130bc70b090a137bae686c1bad6efad707800c8ba9cfe2c48",
+        "id": "s3-cat-2",
+        "path": "samples/s3-cat-2.png",
+        "sha256": "8e73908f7f8bd6b53395a7e5a12f58b99789f6ffc4a0524f585b757f6ee6d3e3",
         "seed": 230925,
-        "prompt": "1girl, solo, brown hair, green eyes, sweater, holding cat, window, upper body, detailed eyes, beautiful detailed illustration, delicate shading, masterpiece, best quality. warm accent colors, dramatic contrast, spacious composition, clean lineart with cel shading, calm atmosphere.",
+        "prompt": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1girl, solo, brown hair, green eyes, sweater, holding cat, window, upper body, detailed eyes, detailed illustration, absurdres, highres.",
+        "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
         "settings": {
           "model": "OnomaAIResearch/Illustrious-XL-v2.0",
           "revision": "69459c1fe6f46db41ab31e6114f05acc0e06bcaa",
@@ -1482,25 +1218,45 @@
           "width": 1024,
           "height": 1024,
           "steps": 28,
-          "guidance_scale": 6.5,
-          "negative_prompt": "worst quality, bad quality, lowres, blurry, bad anatomy, bad hands, extra digits, fewer digits, multiple views, comic, text, watermark, signature, photo, photorealistic, 3d, monochrome, greyscale, sketch, unfinished, nsfw, nude, multiple people, chibi, 2girls, 2boys",
+          "guidance_scale": 5.0,
+          "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
           "precision": "fp16",
           "pipeline_config": {
             "model": "OnomaAIResearch/Illustrious-xl-early-release-v0",
             "revision": "dca0dac303e6dc4b0c31d8001bc685b89b5d0204"
           },
-          "checkpoint": "Illustrious-XL-v2.0.safetensors"
+          "checkpoint": "Illustrious-XL-v2.0.safetensors",
+          "positive_prompt_tail": "absurdres, highres"
         },
-        "seconds": 3.775,
-        "context_hash": "caa49c3505a4394bd1528fdd701e5074708f442fb84a9b75d805da2f958e5753"
+        "fan": {
+          "commit": "9d0b76843f6437718195accac9cf3f050a25d26b",
+          "pooled": "plain",
+          "skip": -2,
+          "sample_size": 0,
+          "skip_pa": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "use_attn_mask": false
+        },
+        "pooled": "plain",
+        "personalization_hash": "3b7bafa740428289a602baf1ff37d3dd0e6b8bdd133b869a5460bb41045d9959",
+        "seconds": 3.854
       },
       {
         "type": "image",
-        "id": "h3-cat-3",
-        "path": "samples/h3-cat-3.png",
-        "sha256": "524b3f53541ff772dd6c07c07a70532aa79f1924cded0dfab430b466e0ca71c8",
+        "id": "s3-cat-3",
+        "path": "samples/s3-cat-3.png",
+        "sha256": "1f4dbb759a425ed94f18f5430677ec1f54b32519bb281de2be18e8e57248f30e",
         "seed": 230926,
-        "prompt": "1girl, solo, brown hair, green eyes, sweater, holding cat, window, upper body, detailed eyes, beautiful detailed illustration, delicate shading, masterpiece, best quality. warm accent colors, dramatic contrast, spacious composition, clean lineart with cel shading, calm atmosphere.",
+        "prompt": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1girl, solo, brown hair, green eyes, sweater, holding cat, window, upper body, detailed eyes, detailed illustration, absurdres, highres.",
+        "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
         "settings": {
           "model": "OnomaAIResearch/Illustrious-XL-v2.0",
           "revision": "69459c1fe6f46db41ab31e6114f05acc0e06bcaa",
@@ -1508,229 +1264,143 @@
           "width": 1024,
           "height": 1024,
           "steps": 28,
-          "guidance_scale": 6.5,
-          "negative_prompt": "worst quality, bad quality, lowres, blurry, bad anatomy, bad hands, extra digits, fewer digits, multiple views, comic, text, watermark, signature, photo, photorealistic, 3d, monochrome, greyscale, sketch, unfinished, nsfw, nude, multiple people, chibi, 2girls, 2boys",
+          "guidance_scale": 5.0,
+          "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
           "precision": "fp16",
           "pipeline_config": {
             "model": "OnomaAIResearch/Illustrious-xl-early-release-v0",
             "revision": "dca0dac303e6dc4b0c31d8001bc685b89b5d0204"
           },
-          "checkpoint": "Illustrious-XL-v2.0.safetensors"
+          "checkpoint": "Illustrious-XL-v2.0.safetensors",
+          "positive_prompt_tail": "absurdres, highres"
         },
-        "seconds": 3.796,
-        "context_hash": "caa49c3505a4394bd1528fdd701e5074708f442fb84a9b75d805da2f958e5753"
+        "fan": {
+          "commit": "9d0b76843f6437718195accac9cf3f050a25d26b",
+          "pooled": "plain",
+          "skip": -2,
+          "sample_size": 0,
+          "skip_pa": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "use_attn_mask": false
+        },
+        "pooled": "plain",
+        "personalization_hash": "3b7bafa740428289a602baf1ff37d3dd0e6b8bdd133b869a5460bb41045d9959",
+        "seconds": 3.838
       }
-    ],
-    "rewrite": {
-      "type": "rewrite",
-      "id": "h3-cat",
-      "prompt": "1girl, solo, brown hair, green eyes, sweater, holding cat, window, upper body, detailed eyes, beautiful detailed illustration, delicate shading, masterpiece, best quality. warm accent colors, dramatic contrast, spacious composition, clean lineart with cel shading, calm atmosphere.",
-      "raw": "warm accent colors, dramatic contrast, spacious composition, clean lineart with cel shading, calm atmosphere",
-      "valid": true,
-      "context_hash": "caa49c3505a4394bd1528fdd701e5074708f442fb84a9b75d805da2f958e5753",
-      "model": {
-        "model": "Qwen/Qwen3.5-4B",
-        "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
-        "template_version": "append-aesthetic-character-v3"
-      },
-      "token_lengths": [
-        58,
-        58
-      ]
-    }
+    ]
   },
   {
-    "id": "h3-tokyo",
+    "id": "s3-tokyo",
     "topic_id": "tokyo",
-    "choices": [
+    "label": "劇的な光と鮮やかさを選んだ人 · 東京の夜景と青年",
+    "alpha_key": "mid",
+    "selection": [
       {
-        "pair_id": "p1",
-        "chosen_id": "p1-a"
+        "card_id": "student-dramatic",
+        "aspects_off": []
       },
       {
-        "pair_id": "p2",
-        "chosen_id": "p2-b"
+        "card_id": "traveler-dramatic",
+        "aspects_off": []
       },
       {
-        "pair_id": "p3",
-        "chosen_id": "p3-a"
-      },
-      {
-        "pair_id": "p4",
-        "chosen_id": "p4-b"
-      },
-      {
-        "pair_id": "p5",
-        "chosen_id": "p5-a"
+        "card_id": "girl-vivid_lively",
+        "aspects_off": []
       }
     ],
-    "context": {
-      "version": 1,
-      "preferences": {
-        "color": "warm",
-        "lighting": "dramatic",
-        "composition": "spacious",
-        "texture": "cel_shaded",
-        "mood": "calm"
-      },
-      "overrides": {},
-      "evidence": [
+    "personalization": {
+      "refs": [
         {
-          "id": "p1-a-e1",
-          "pair_id": "p1",
-          "pair_version": 3,
-          "chosen_id": "p1-a",
-          "dimensions": [
-            "color"
-          ],
-          "values": {
-            "color": "warm"
-          },
-          "text": "The selected character illustration uses warmer orange and golden tones in the clothes and background.",
-          "context_source": "generic_vlm",
-          "source": {
-            "model": "Qwen/Qwen3.5-4B",
-            "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
-            "template_version": "append-aesthetic-character-v3"
-          },
-          "image_hashes": {
-            "p1-a": "1448fb0052f2a7472cd2e92e30de33965c90e7350c95d99f9c6ee963fe4fee08",
-            "p1-b": "d2f57d62adedecaa20a0fd81ed540fdcd5e476f9a377493673d5a5bb286174aa"
-          },
-          "basic_prompt_en": "1girl, solo, brown hair, beret, coat, town square, upper body, detailed eyes, illustration, masterpiece, best quality.",
-          "template_version": "single-axis-relative-v1",
-          "template_hash": "4cc18c54fe3fb7644ea2024d89ce66f1b10d3286bdc7f4c259d8cc50cccc7fc7",
-          "preprocessing": "RGB; aspect preserved; longest edge 448"
+          "text": "muted colors, dark background",
+          "weight": 2.0,
+          "aspect": "color",
+          "card_ids": [
+            "student-dramatic",
+            "traveler-dramatic"
+          ]
         },
         {
-          "id": "p2-b-e1",
-          "pair_id": "p2",
-          "pair_version": 3,
-          "chosen_id": "p2-b",
-          "dimensions": [
-            "lighting"
-          ],
-          "values": {
-            "lighting": "dramatic"
-          },
-          "text": "The selected library portrait has stronger light and shadow contrast around the character and bookshelves.",
-          "context_source": "generic_vlm",
-          "source": {
-            "model": "Qwen/Qwen3.5-4B",
-            "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
-            "template_version": "append-aesthetic-character-v3"
-          },
-          "image_hashes": {
-            "p2-a": "ce1dbddcdbe0bd784ea3eec0a28d3f518d6a35d19eeae375a534b30421c9c088",
-            "p2-b": "e604e8bcb68aa46988b271914ca703f2a1451a7f53c11d419f4649c4a87e9c58"
-          },
-          "basic_prompt_en": "1boy, solo, black hair, vest, white shirt, library, upper body, detailed eyes, illustration, masterpiece, best quality.",
-          "template_version": "single-axis-relative-v1",
-          "template_hash": "4cc18c54fe3fb7644ea2024d89ce66f1b10d3286bdc7f4c259d8cc50cccc7fc7",
-          "preprocessing": "RGB; aspect preserved; longest edge 448"
+          "text": "dramatic lighting, strong shadows, rim light",
+          "weight": 2.0,
+          "aspect": "lighting",
+          "card_ids": [
+            "student-dramatic",
+            "traveler-dramatic"
+          ]
         },
         {
-          "id": "p3-a-e1",
-          "pair_id": "p3",
-          "pair_version": 3,
-          "chosen_id": "p3-a",
-          "dimensions": [
-            "composition"
-          ],
-          "values": {
-            "composition": "spacious"
-          },
-          "text": "The selected illustration shows more of the traveler and the surrounding grassland and sky.",
-          "context_source": "generic_vlm",
-          "source": {
-            "model": "Qwen/Qwen3.5-4B",
-            "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
-            "template_version": "append-aesthetic-character-v3"
-          },
-          "image_hashes": {
-            "p3-a": "7579e9836b382143f177ecbda216654d93abc1835a45336bf4749ec982fcccbc",
-            "p3-b": "d8a0eb9a9193ca7ec6b567ad45745740074f8ea41cf1650786f6612c30e0d31d"
-          },
-          "basic_prompt_en": "1girl, solo, silver hair, cloak, grassland, detailed eyes, illustration, masterpiece, best quality.",
-          "template_version": "single-axis-relative-v1",
-          "template_hash": "4cc18c54fe3fb7644ea2024d89ce66f1b10d3286bdc7f4c259d8cc50cccc7fc7",
-          "preprocessing": "RGB; aspect preserved; longest edge 448"
+          "text": "detailed shading, painterly texture",
+          "weight": 2.0,
+          "aspect": "texture",
+          "card_ids": [
+            "student-dramatic",
+            "traveler-dramatic"
+          ]
         },
         {
-          "id": "p4-b-e1",
-          "pair_id": "p4",
-          "pair_version": 3,
-          "chosen_id": "p4-b",
-          "dimensions": [
-            "texture"
-          ],
-          "values": {
-            "texture": "cel_shaded"
-          },
-          "text": "The selected witch illustration has clearer outlines and more distinct areas of color than the softer alternative.",
-          "context_source": "generic_vlm",
-          "source": {
-            "model": "Qwen/Qwen3.5-4B",
-            "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
-            "template_version": "append-aesthetic-character-v3"
-          },
-          "image_hashes": {
-            "p4-a": "35919ad5cec7f6a773ce8016388a880b78924c62bbcd4e921a7d2f6c732bb9d7",
-            "p4-b": "1fc5568fd77be9788370b84a9840246ae759b98bb159b027a932eea1bc2d04c3"
-          },
-          "basic_prompt_en": "1girl, solo, blonde hair, witch hat, cloak, flower garden, upper body, detailed eyes, illustration, masterpiece, best quality.",
-          "template_version": "single-axis-relative-v1",
-          "template_hash": "4cc18c54fe3fb7644ea2024d89ce66f1b10d3286bdc7f4c259d8cc50cccc7fc7",
-          "preprocessing": "RGB; aspect preserved; longest edge 448"
+          "text": "serious atmosphere",
+          "weight": 2.0,
+          "aspect": "mood",
+          "card_ids": [
+            "student-dramatic",
+            "traveler-dramatic"
+          ]
         },
         {
-          "id": "p5-a-e1",
-          "pair_id": "p5",
-          "pair_version": 3,
-          "chosen_id": "p5-a",
-          "dimensions": [
-            "mood"
-          ],
-          "values": {
-            "mood": "calm"
-          },
-          "text": "The selected cafe character has a gentle, closed-mouth expression and a calmer atmosphere than the laughing alternative.",
-          "context_source": "generic_vlm",
-          "source": {
-            "model": "Qwen/Qwen3.5-4B",
-            "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
-            "template_version": "append-aesthetic-character-v3"
-          },
-          "image_hashes": {
-            "p5-a": "708443c3422182dac4b17fb36739388b7ec77ca6f8551676ac3a3f86b16438ca",
-            "p5-b": "ce9c25f53f08733491a645475e0ded67aafa8298129eddfb3ed3c6892a1b375c"
-          },
-          "basic_prompt_en": "1boy, solo, brown hair, apron, white shirt, cafe, upper body, detailed eyes, illustration, masterpiece, best quality.",
-          "template_version": "single-axis-relative-v1",
-          "template_hash": "4cc18c54fe3fb7644ea2024d89ce66f1b10d3286bdc7f4c259d8cc50cccc7fc7",
-          "preprocessing": "RGB; aspect preserved; longest edge 448"
+          "text": "vivid colors, colorful, high saturation",
+          "weight": 1.0,
+          "aspect": "color",
+          "card_ids": [
+            "girl-vivid_lively"
+          ]
+        },
+        {
+          "text": "bright lighting, sparkle",
+          "weight": 1.0,
+          "aspect": "lighting",
+          "card_ids": [
+            "girl-vivid_lively"
+          ]
+        },
+        {
+          "text": "cel shading, flat color",
+          "weight": 1.0,
+          "aspect": "texture",
+          "card_ids": [
+            "girl-vivid_lively"
+          ]
+        },
+        {
+          "text": "cheerful expression, lively atmosphere",
+          "weight": 1.0,
+          "aspect": "mood",
+          "card_ids": [
+            "girl-vivid_lively"
+          ]
         }
       ],
-      "choice_ids": [
-        "p1:p1-a",
-        "p2:p2-b",
-        "p3:p3-a",
-        "p4:p4-b",
-        "p5:p5-a"
-      ],
-      "text": "The selected character illustration uses warmer orange and golden tones in the clothes and background.\nThe selected library portrait has stronger light and shadow contrast around the character and bookshelves.\nThe selected illustration shows more of the traveler and the surrounding grassland and sky.\nThe selected witch illustration has clearer outlines and more distinct areas of color than the softer alternative.\nThe selected cafe character has a gentle, closed-mouth expression and a calmer atmosphere than the laughing alternative.",
-      "hash": "caa49c3505a4394bd1528fdd701e5074708f442fb84a9b75d805da2f958e5753"
+      "alpha": 0.5,
+      "sample_size": 0,
+      "hash": "3b7bafa740428289a602baf1ff37d3dd0e6b8bdd133b869a5460bb41045d9959"
     },
     "mode": "sample",
-    "recommendation": null,
     "images": [
       {
         "type": "image",
-        "id": "h3-tokyo-0",
-        "path": "samples/h3-tokyo-0.png",
-        "sha256": "5fef634b7ea20e94dbfd913b430c3a45c5e530412b87c6d336c31ee0ae5c45c9",
+        "id": "s3-tokyo-0",
+        "path": "samples/s3-tokyo-0.png",
+        "sha256": "f25ba2bd7efb59383e546ce65a4dd11762d7c519ab2114a1ca45b8f107b15665",
         "seed": 230923,
-        "prompt": "1boy, solo, male focus, short black hair, jacket, Tokyo skyline, night, portrait, detailed eyes, beautiful detailed illustration, delicate shading, masterpiece, best quality. warm accent colors, dramatic contrast, spacious composition, clean lineart with cel shading, calm atmosphere.",
+        "prompt": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1boy, solo, male focus, short black hair, jacket, Tokyo skyline, night, portrait, detailed eyes, detailed illustration, absurdres, highres.",
+        "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
         "settings": {
           "model": "OnomaAIResearch/Illustrious-XL-v2.0",
           "revision": "69459c1fe6f46db41ab31e6114f05acc0e06bcaa",
@@ -1738,25 +1408,45 @@
           "width": 1024,
           "height": 1024,
           "steps": 28,
-          "guidance_scale": 6.5,
-          "negative_prompt": "worst quality, bad quality, lowres, blurry, bad anatomy, bad hands, extra digits, fewer digits, multiple views, comic, text, watermark, signature, photo, photorealistic, 3d, monochrome, greyscale, sketch, unfinished, nsfw, nude, multiple people, chibi, 2girls, 2boys",
+          "guidance_scale": 5.0,
+          "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
           "precision": "fp16",
           "pipeline_config": {
             "model": "OnomaAIResearch/Illustrious-xl-early-release-v0",
             "revision": "dca0dac303e6dc4b0c31d8001bc685b89b5d0204"
           },
-          "checkpoint": "Illustrious-XL-v2.0.safetensors"
+          "checkpoint": "Illustrious-XL-v2.0.safetensors",
+          "positive_prompt_tail": "absurdres, highres"
         },
-        "seconds": 3.789,
-        "context_hash": "caa49c3505a4394bd1528fdd701e5074708f442fb84a9b75d805da2f958e5753"
+        "fan": {
+          "commit": "9d0b76843f6437718195accac9cf3f050a25d26b",
+          "pooled": "plain",
+          "skip": -2,
+          "sample_size": 0,
+          "skip_pa": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "use_attn_mask": false
+        },
+        "pooled": "plain",
+        "personalization_hash": "3b7bafa740428289a602baf1ff37d3dd0e6b8bdd133b869a5460bb41045d9959",
+        "seconds": 3.841
       },
       {
         "type": "image",
-        "id": "h3-tokyo-1",
-        "path": "samples/h3-tokyo-1.png",
-        "sha256": "388116fa45ab9d2c50fce751924db8bb9f2fcd188a22922cc04543a4b5053e2c",
+        "id": "s3-tokyo-1",
+        "path": "samples/s3-tokyo-1.png",
+        "sha256": "fd91acfa84aa2868ad0a21df7a179ee93179afe18fed1f761cc5067b7c7222f2",
         "seed": 230924,
-        "prompt": "1boy, solo, male focus, short black hair, jacket, Tokyo skyline, night, portrait, detailed eyes, beautiful detailed illustration, delicate shading, masterpiece, best quality. warm accent colors, dramatic contrast, spacious composition, clean lineart with cel shading, calm atmosphere.",
+        "prompt": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1boy, solo, male focus, short black hair, jacket, Tokyo skyline, night, portrait, detailed eyes, detailed illustration, absurdres, highres.",
+        "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
         "settings": {
           "model": "OnomaAIResearch/Illustrious-XL-v2.0",
           "revision": "69459c1fe6f46db41ab31e6114f05acc0e06bcaa",
@@ -1764,25 +1454,45 @@
           "width": 1024,
           "height": 1024,
           "steps": 28,
-          "guidance_scale": 6.5,
-          "negative_prompt": "worst quality, bad quality, lowres, blurry, bad anatomy, bad hands, extra digits, fewer digits, multiple views, comic, text, watermark, signature, photo, photorealistic, 3d, monochrome, greyscale, sketch, unfinished, nsfw, nude, multiple people, chibi, 2girls, 2boys",
+          "guidance_scale": 5.0,
+          "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
           "precision": "fp16",
           "pipeline_config": {
             "model": "OnomaAIResearch/Illustrious-xl-early-release-v0",
             "revision": "dca0dac303e6dc4b0c31d8001bc685b89b5d0204"
           },
-          "checkpoint": "Illustrious-XL-v2.0.safetensors"
+          "checkpoint": "Illustrious-XL-v2.0.safetensors",
+          "positive_prompt_tail": "absurdres, highres"
         },
-        "seconds": 3.793,
-        "context_hash": "caa49c3505a4394bd1528fdd701e5074708f442fb84a9b75d805da2f958e5753"
+        "fan": {
+          "commit": "9d0b76843f6437718195accac9cf3f050a25d26b",
+          "pooled": "plain",
+          "skip": -2,
+          "sample_size": 0,
+          "skip_pa": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "use_attn_mask": false
+        },
+        "pooled": "plain",
+        "personalization_hash": "3b7bafa740428289a602baf1ff37d3dd0e6b8bdd133b869a5460bb41045d9959",
+        "seconds": 3.831
       },
       {
         "type": "image",
-        "id": "h3-tokyo-2",
-        "path": "samples/h3-tokyo-2.png",
-        "sha256": "d559660d552cc60dd295ff998eeb5b6f65d636b71075bcc74a7743dcecbe0903",
+        "id": "s3-tokyo-2",
+        "path": "samples/s3-tokyo-2.png",
+        "sha256": "0f8100ff81c62b6012020ee799197348d50d016c90fcd1082acb1117f9fc82a4",
         "seed": 230925,
-        "prompt": "1boy, solo, male focus, short black hair, jacket, Tokyo skyline, night, portrait, detailed eyes, beautiful detailed illustration, delicate shading, masterpiece, best quality. warm accent colors, dramatic contrast, spacious composition, clean lineart with cel shading, calm atmosphere.",
+        "prompt": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1boy, solo, male focus, short black hair, jacket, Tokyo skyline, night, portrait, detailed eyes, detailed illustration, absurdres, highres.",
+        "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
         "settings": {
           "model": "OnomaAIResearch/Illustrious-XL-v2.0",
           "revision": "69459c1fe6f46db41ab31e6114f05acc0e06bcaa",
@@ -1790,25 +1500,45 @@
           "width": 1024,
           "height": 1024,
           "steps": 28,
-          "guidance_scale": 6.5,
-          "negative_prompt": "worst quality, bad quality, lowres, blurry, bad anatomy, bad hands, extra digits, fewer digits, multiple views, comic, text, watermark, signature, photo, photorealistic, 3d, monochrome, greyscale, sketch, unfinished, nsfw, nude, multiple people, chibi, 2girls, 2boys",
+          "guidance_scale": 5.0,
+          "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
           "precision": "fp16",
           "pipeline_config": {
             "model": "OnomaAIResearch/Illustrious-xl-early-release-v0",
             "revision": "dca0dac303e6dc4b0c31d8001bc685b89b5d0204"
           },
-          "checkpoint": "Illustrious-XL-v2.0.safetensors"
+          "checkpoint": "Illustrious-XL-v2.0.safetensors",
+          "positive_prompt_tail": "absurdres, highres"
         },
-        "seconds": 3.827,
-        "context_hash": "caa49c3505a4394bd1528fdd701e5074708f442fb84a9b75d805da2f958e5753"
+        "fan": {
+          "commit": "9d0b76843f6437718195accac9cf3f050a25d26b",
+          "pooled": "plain",
+          "skip": -2,
+          "sample_size": 0,
+          "skip_pa": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "use_attn_mask": false
+        },
+        "pooled": "plain",
+        "personalization_hash": "3b7bafa740428289a602baf1ff37d3dd0e6b8bdd133b869a5460bb41045d9959",
+        "seconds": 3.818
       },
       {
         "type": "image",
-        "id": "h3-tokyo-3",
-        "path": "samples/h3-tokyo-3.png",
-        "sha256": "5b21fba22ba067142ed01d855a777fff04b960f0df80c235f9af998c341a5788",
+        "id": "s3-tokyo-3",
+        "path": "samples/s3-tokyo-3.png",
+        "sha256": "fb484576dcd72f21e0cd95bec66750b463a4f4dd860dd02ea15ab328f792be2c",
         "seed": 230926,
-        "prompt": "1boy, solo, male focus, short black hair, jacket, Tokyo skyline, night, portrait, detailed eyes, beautiful detailed illustration, delicate shading, masterpiece, best quality. warm accent colors, dramatic contrast, spacious composition, clean lineart with cel shading, calm atmosphere.",
+        "prompt": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1boy, solo, male focus, short black hair, jacket, Tokyo skyline, night, portrait, detailed eyes, detailed illustration, absurdres, highres.",
+        "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
         "settings": {
           "model": "OnomaAIResearch/Illustrious-XL-v2.0",
           "revision": "69459c1fe6f46db41ab31e6114f05acc0e06bcaa",
@@ -1816,35 +1546,37 @@
           "width": 1024,
           "height": 1024,
           "steps": 28,
-          "guidance_scale": 6.5,
-          "negative_prompt": "worst quality, bad quality, lowres, blurry, bad anatomy, bad hands, extra digits, fewer digits, multiple views, comic, text, watermark, signature, photo, photorealistic, 3d, monochrome, greyscale, sketch, unfinished, nsfw, nude, multiple people, chibi, 2girls, 2boys",
+          "guidance_scale": 5.0,
+          "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
           "precision": "fp16",
           "pipeline_config": {
             "model": "OnomaAIResearch/Illustrious-xl-early-release-v0",
             "revision": "dca0dac303e6dc4b0c31d8001bc685b89b5d0204"
           },
-          "checkpoint": "Illustrious-XL-v2.0.safetensors"
+          "checkpoint": "Illustrious-XL-v2.0.safetensors",
+          "positive_prompt_tail": "absurdres, highres"
         },
-        "seconds": 3.787,
-        "context_hash": "caa49c3505a4394bd1528fdd701e5074708f442fb84a9b75d805da2f958e5753"
+        "fan": {
+          "commit": "9d0b76843f6437718195accac9cf3f050a25d26b",
+          "pooled": "plain",
+          "skip": -2,
+          "sample_size": 0,
+          "skip_pa": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "use_attn_mask": false
+        },
+        "pooled": "plain",
+        "personalization_hash": "3b7bafa740428289a602baf1ff37d3dd0e6b8bdd133b869a5460bb41045d9959",
+        "seconds": 3.842
       }
-    ],
-    "rewrite": {
-      "type": "rewrite",
-      "id": "h3-tokyo",
-      "prompt": "1boy, solo, male focus, short black hair, jacket, Tokyo skyline, night, portrait, detailed eyes, beautiful detailed illustration, delicate shading, masterpiece, best quality. warm accent colors, dramatic contrast, spacious composition, clean lineart with cel shading, calm atmosphere.",
-      "raw": "warm accent colors, dramatic contrast, spacious composition, clean lineart with cel shading, calm atmosphere",
-      "valid": true,
-      "context_hash": "caa49c3505a4394bd1528fdd701e5074708f442fb84a9b75d805da2f958e5753",
-      "model": {
-        "model": "Qwen/Qwen3.5-4B",
-        "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
-        "template_version": "append-aesthetic-character-v3"
-      },
-      "token_lengths": [
-        58,
-        58
-      ]
-    }
+    ]
   }
 ]
