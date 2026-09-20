@@ -63,10 +63,11 @@ def rewrite(request):
     from transformers import CLIPTokenizer
 
     settings = CONFIG["generation"]
+    tokenizer_source = settings.get("pipeline_config", settings)
     tokenizers = [
         CLIPTokenizer.from_pretrained(
-            settings["model"],
-            revision=settings["revision"],
+            tokenizer_source["model"],
+            revision=tokenizer_source["revision"],
             subfolder=s,
             local_files_only=True,
         )
@@ -82,11 +83,11 @@ def rewrite(request):
         )
         # The model orders only approved aesthetic phrases. It cannot rewrite the subject.
         instruction = (
-            "Arrange these aesthetic phrases into a comma-separated image prompt suffix. "
-            "Use each phrase exactly once. Add no other words, punctuation, quotation marks or explanation. "
-            f"Keep the subject unchanged: {item['topic']['basic_prompt_en']}\n"
+            "Output ONLY the allowed aesthetic suffix phrases as a comma-separated list. "
+            "Use each allowed phrase exactly once. Do not copy the subject or evidence. Add no other words, quotation marks or explanation. "
+            f"Subject already included by the application (DO NOT OUTPUT): {item['topic']['basic_prompt_en']}\n"
             f"Preference evidence: {context['text'] if context else 'No personal preferences.'}\n"
-            f"Phrases: {', '.join(phrases)}"
+            f"Allowed suffix phrases: {json.dumps(phrases)}"
         )
         valid = False
         raw = ""
@@ -95,7 +96,13 @@ def rewrite(request):
                 model,
                 tokenizer,
                 instruction
-                + ("\nReturn ONLY the supplied phrases." if attempt else ""),
+                + (
+                    "\nYour previous response was invalid. Include every phrase in this complete list exactly once: "
+                    + ", ".join(phrases)
+                    + ". Return only that comma-separated list, with no omissions or additions."
+                    if attempt
+                    else ""
+                ),
             )
             pieces = [s.strip().rstrip(".") for s in raw.split(",")]
             prompt = item["topic"]["basic_prompt_en"] + " " + ", ".join(pieces) + "."
@@ -118,18 +125,46 @@ def rewrite(request):
 
 def generate(request):
     import torch
-    from diffusers import EulerDiscreteScheduler, StableDiffusionXLPipeline
+    from diffusers import EulerAncestralDiscreteScheduler, StableDiffusionXLPipeline
 
     s = request.get("settings", CONFIG["generation"])
-    pipe = StableDiffusionXLPipeline.from_pretrained(
-        s["model"],
-        revision=s["revision"],
-        variant="fp16",
-        torch_dtype=torch.float16,
-        use_safetensors=True,
-        local_files_only=True,
-    ).to("cuda")
-    pipe.scheduler = EulerDiscreteScheduler.from_config(pipe.scheduler.config)
+    if s.get("checkpoint"):
+        from huggingface_hub import hf_hub_download
+
+        checkpoint = hf_hub_download(
+            s["model"],
+            filename=s["checkpoint"],
+            revision=s["revision"],
+            local_files_only=True,
+        )
+        config = s["pipeline_config"]
+        config_path = str(
+            Path(
+                hf_hub_download(
+                    config["model"],
+                    filename="model_index.json",
+                    revision=config["revision"],
+                    local_files_only=True,
+                )
+            ).parent
+        )
+        # Only architecture/tokenizer files come from this config; all neural
+        # weights are loaded from the pinned single-file checkpoint.
+        pipe = StableDiffusionXLPipeline.from_single_file(
+            checkpoint,
+            config=config_path,
+            torch_dtype=torch.float16,
+            local_files_only=True,
+        ).to("cuda")
+    else:
+        pipe = StableDiffusionXLPipeline.from_pretrained(
+            s["model"],
+            revision=s["revision"],
+            torch_dtype=torch.float16,
+            use_safetensors=True,
+            local_files_only=True,
+        ).to("cuda")
+    pipe.scheduler = EulerAncestralDiscreteScheduler.from_config(pipe.scheduler.config)
     pipe.set_progress_bar_config(disable=True)
     emit("loaded", scheduler=dict(pipe.scheduler.config))
     for item in request["items"]:

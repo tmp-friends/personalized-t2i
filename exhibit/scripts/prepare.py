@@ -80,9 +80,9 @@ def main():
             e["id"]: {
                 **e,
                 "path": str(Path(e["path"]).relative_to(ASSETS)),
-                "source": "local-sdxl",
-                "license": "SDXL model: openrail++",
-                "asset_version": 1,
+                "source": "local-illustrious-xl-v2.0",
+                "license": "creativeml-openrail-m",
+                "asset_version": 3,
             }
             for e in events
             if e["type"] == "image"
@@ -90,7 +90,7 @@ def main():
         write_json(
             ASSETS / "manifest.json",
             {
-                "version": 1,
+                "version": 3,
                 "generation": CONFIG["generation"],
                 "images": images,
                 "metrics": [e for e in events if e["type"] == "metrics"],

@@ -91,6 +91,33 @@ def check_models():
         files = list(path.rglob("*.safetensors"))
         if not files or not all(p.exists() for p in files):
             errors.append(f"Missing pinned model: {c['model']}")
+        if c.get("checkpoint"):
+            if not (path / c["checkpoint"]).is_file():
+                errors.append(f"Missing pinned checkpoint: {c['checkpoint']}")
+            config = c["pipeline_config"]
+            config_path = (
+                cache
+                / ("models--" + config["model"].replace("/", "--"))
+                / "snapshots"
+                / config["revision"]
+            )
+            required = [
+                "model_index.json",
+                "scheduler/scheduler_config.json",
+                "unet/config.json",
+                "vae/config.json",
+                "text_encoder/config.json",
+                "text_encoder_2/config.json",
+                "tokenizer/vocab.json",
+                "tokenizer/merges.txt",
+                "tokenizer/tokenizer_config.json",
+                "tokenizer_2/vocab.json",
+                "tokenizer_2/merges.txt",
+                "tokenizer_2/tokenizer_config.json",
+            ]
+            for filename in required:
+                if not (config_path / filename).is_file():
+                    errors.append(f"Missing offline pipeline config: {filename}")
         models.append(
             {"model": c["model"], "revision": c["revision"], "weight_files": len(files)}
         )

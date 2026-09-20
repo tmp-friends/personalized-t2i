@@ -33,8 +33,8 @@ AXES = {
     "texture": {
         "label": "描画表現",
         "values": {
-            "painterly": ("絵画のような表現", "painterly texture"),
-            "photographic": ("写真のような表現", "photographic detail"),
+            "painterly": ("柔らかな絵筆のタッチ", "painterly texture"),
+            "cel_shaded": ("くっきりしたアニメ塗り", "clean lineart with cel shading"),
         },
     },
     "mood": {

@@ -1,20 +1,25 @@
 {
-  "version": "exhibit-v1",
+  "version": "exhibit-illustrious-v2-character-v3",
   "llm": {
     "model": "Qwen/Qwen3.5-4B",
     "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
-    "template_version": "append-aesthetic-v1"
+    "template_version": "append-aesthetic-character-v3"
   },
   "generation": {
-    "model": "stabilityai/stable-diffusion-xl-base-1.0",
-    "revision": "462165984030d82259a11f4367a4eed129e94a7b",
-    "scheduler": "EulerDiscreteScheduler",
+    "model": "OnomaAIResearch/Illustrious-XL-v2.0",
+    "revision": "69459c1fe6f46db41ab31e6114f05acc0e06bcaa",
+    "scheduler": "EulerAncestralDiscreteScheduler",
     "width": 1024,
     "height": 1024,
-    "steps": 20,
-    "guidance_scale": 7.0,
-    "negative_prompt": "",
-    "precision": "fp16"
+    "steps": 28,
+    "guidance_scale": 6.5,
+    "negative_prompt": "worst quality, bad quality, lowres, blurry, bad anatomy, bad hands, extra digits, fewer digits, multiple views, comic, text, watermark, signature, photo, photorealistic, 3d, monochrome, greyscale, sketch, unfinished, nsfw, nude, multiple people, chibi, 2girls, 2boys",
+    "precision": "fp16",
+    "pipeline_config": {
+      "model": "OnomaAIResearch/Illustrious-xl-early-release-v0",
+      "revision": "dca0dac303e6dc4b0c31d8001bc685b89b5d0204"
+    },
+    "checkpoint": "Illustrious-XL-v2.0.safetensors"
   },
   "seeds": [
     230923,
@@ -28,58 +33,58 @@
   "topics": [
     {
       "id": "cat",
-      "label": "窓辺の猫",
-      "basic_prompt_en": "One cat sitting by a window.",
+      "label": "窓辺で猫と過ごす少女",
+      "basic_prompt_en": "1girl, solo, brown hair, green eyes, sweater, holding cat, window, upper body, detailed eyes, beautiful detailed illustration, delicate shading, masterpiece, best quality.",
       "invariants": [
-        "One cat sitting by a window."
+        "1girl, solo, brown hair, green eyes, sweater, holding cat, window, upper body, detailed eyes, beautiful detailed illustration, delicate shading, masterpiece, best quality."
       ]
     },
     {
       "id": "tokyo",
-      "label": "東京の夜景",
-      "basic_prompt_en": "The Tokyo skyline at night.",
+      "label": "東京の夜景と青年",
+      "basic_prompt_en": "1boy, solo, male focus, short black hair, jacket, Tokyo skyline, night, portrait, detailed eyes, beautiful detailed illustration, delicate shading, masterpiece, best quality.",
       "invariants": [
-        "The Tokyo skyline at night."
+        "1boy, solo, male focus, short black hair, jacket, Tokyo skyline, night, portrait, detailed eyes, beautiful detailed illustration, delicate shading, masterpiece, best quality."
       ]
     },
     {
       "id": "forest",
-      "label": "森の小さな家",
-      "basic_prompt_en": "One small house in a forest.",
+      "label": "森を旅する魔法使い",
+      "basic_prompt_en": "1girl, solo, silver hair, witch hat, cloak, forest, upper body, detailed eyes, beautiful detailed illustration, delicate shading, masterpiece, best quality.",
       "invariants": [
-        "One small house in a forest."
+        "1girl, solo, silver hair, witch hat, cloak, forest, upper body, detailed eyes, beautiful detailed illustration, delicate shading, masterpiece, best quality."
       ]
     },
     {
       "id": "lighthouse",
-      "label": "海辺の灯台",
-      "basic_prompt_en": "One lighthouse beside the sea.",
+      "label": "海辺の灯台と船乗り",
+      "basic_prompt_en": "1boy, solo, male focus, short blond hair, sailor hat, striped shirt, lighthouse, ocean, upper body, detailed eyes, beautiful detailed illustration, delicate shading, masterpiece, best quality.",
       "invariants": [
-        "One lighthouse beside the sea."
+        "1boy, solo, male focus, short blond hair, sailor hat, striped shirt, lighthouse, ocean, upper body, detailed eyes, beautiful detailed illustration, delicate shading, masterpiece, best quality."
       ]
     },
     {
       "id": "rain",
-      "label": "雨の街角",
-      "basic_prompt_en": "A street corner in the rain.",
+      "label": "雨の街角の少女",
+      "basic_prompt_en": "1girl, solo, blue hair, raincoat, rain, city street, upper body, detailed eyes, beautiful detailed illustration, delicate shading, masterpiece, best quality.",
       "invariants": [
-        "A street corner in the rain."
+        "1girl, solo, blue hair, raincoat, rain, city street, upper body, detailed eyes, beautiful detailed illustration, delicate shading, masterpiece, best quality."
       ]
     },
     {
       "id": "cafe",
-      "label": "夜のカフェ",
-      "basic_prompt_en": "A cafe interior at night.",
+      "label": "カフェで迎える店員",
+      "basic_prompt_en": "1girl, solo, auburn hair, white shirt, apron, cafe, upper body, detailed eyes, beautiful detailed illustration, delicate shading, masterpiece, best quality.",
       "invariants": [
-        "A cafe interior at night."
+        "1girl, solo, auburn hair, white shirt, apron, cafe, upper body, detailed eyes, beautiful detailed illustration, delicate shading, masterpiece, best quality."
       ]
     }
   ],
   "pairs": [
     {
       "id": "p1",
-      "label": "港の風景",
-      "basic_prompt_en": "A small harbor with moored boats.",
+      "label": "街角の少女",
+      "basic_prompt_en": "1girl, solo, brown hair, beret, coat, town square, upper body, detailed eyes, illustration, masterpiece, best quality.",
       "dimension": "color",
       "values": [
         "warm",
@@ -89,12 +94,16 @@
         "p1-a",
         "p1-b"
       ],
-      "version": 1
+      "version": 3,
+      "prompts": [
+        "1girl, solo, brown hair, beret, coat, town square, upper body, detailed eyes, illustration, masterpiece, best quality. warm color palette, amber and orange tones.",
+        "1girl, solo, brown hair, beret, coat, town square, upper body, detailed eyes, illustration, masterpiece, best quality. cool color palette, blue and teal tones."
+      ]
     },
     {
       "id": "p2",
-      "label": "花のある部屋",
-      "basic_prompt_en": "A vase of flowers on a table in a room.",
+      "label": "図書館の青年",
+      "basic_prompt_en": "1boy, solo, black hair, vest, white shirt, library, upper body, detailed eyes, illustration, masterpiece, best quality.",
       "dimension": "lighting",
       "values": [
         "soft",
@@ -104,12 +113,16 @@
         "p2-a",
         "p2-b"
       ],
-      "version": 1
+      "version": 3,
+      "prompts": [
+        "1boy, solo, black hair, vest, white shirt, library, upper body, detailed eyes, illustration, masterpiece, best quality. soft diffused light, gentle shadows.",
+        "1boy, solo, black hair, vest, white shirt, library, upper body, detailed eyes, illustration, masterpiece, best quality. dramatic lighting, strong shadows, rim light."
+      ]
     },
     {
       "id": "p3",
-      "label": "海辺の灯台",
-      "basic_prompt_en": "One lighthouse beside the sea.",
+      "label": "草原の旅人",
+      "basic_prompt_en": "1girl, solo, silver hair, cloak, grassland, detailed eyes, illustration, masterpiece, best quality.",
       "dimension": "composition",
       "values": [
         "spacious",
@@ -119,31 +132,35 @@
         "p3-a",
         "p3-b"
       ],
-      "version": 1,
+      "version": 3,
       "prompts": [
-        "One lighthouse beside the sea. Very wide distant view, tiny lighthouse in the distance, expansive sky and open ocean, spacious composition.",
-        "One lighthouse beside the sea. Close view of the lighthouse tower filling most of the frame, close framing, detailed architecture."
+        "1girl, solo, silver hair, cloak, grassland, detailed eyes, illustration, masterpiece, best quality. cowboy shot, off-center composition, expansive sky, negative space.",
+        "1girl, solo, silver hair, cloak, grassland, detailed eyes, illustration, masterpiece, best quality. upper body, portrait, face focus."
       ]
     },
     {
       "id": "p4",
-      "label": "森の小道",
-      "basic_prompt_en": "A winding path through a forest.",
+      "label": "花園の魔法使い",
+      "basic_prompt_en": "1girl, solo, blonde hair, witch hat, cloak, flower garden, upper body, detailed eyes, illustration, masterpiece, best quality.",
       "dimension": "texture",
       "values": [
         "painterly",
-        "photographic"
+        "cel_shaded"
       ],
       "image_ids": [
         "p4-a",
         "p4-b"
       ],
-      "version": 1
+      "version": 3,
+      "prompts": [
+        "1girl, solo, blonde hair, witch hat, cloak, flower garden, upper body, detailed eyes, illustration, masterpiece, best quality. watercolor painting, soft brushwork, painterly texture.",
+        "1girl, solo, blonde hair, witch hat, cloak, flower garden, upper body, detailed eyes, illustration, masterpiece, best quality. cel shading, clean lineart, anime coloring."
+      ]
     },
     {
       "id": "p5",
-      "label": "街のカフェ",
-      "basic_prompt_en": "A cafe on a city street.",
+      "label": "カフェの店員",
+      "basic_prompt_en": "1boy, solo, brown hair, apron, white shirt, cafe, upper body, detailed eyes, illustration, masterpiece, best quality.",
       "dimension": "mood",
       "values": [
         "calm",
@@ -153,7 +170,11 @@
         "p5-a",
         "p5-b"
       ],
-      "version": 1
+      "version": 3,
+      "prompts": [
+        "1boy, solo, brown hair, apron, white shirt, cafe, upper body, detailed eyes, illustration, masterpiece, best quality. closed mouth, gentle expression, peaceful, calm atmosphere.",
+        "1boy, solo, brown hair, apron, white shirt, cafe, upper body, detailed eyes, illustration, masterpiece, best quality. open mouth, laughing, cheerful expression, lively atmosphere."
+      ]
     }
   ]
 }
