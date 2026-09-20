@@ -1,0 +1,66 @@
+{
+  "girl-warm_soft": {
+    "reviewed": true,
+    "note": "2026-09-21 目視（golden hour版）: 暖色・夕暮れの光・絵画的な質感・静かな雰囲気と一致。"
+  },
+  "girl-cool_clean": {
+    "reviewed": true,
+    "note": "2026-09-21 目視: 全体が青緑の単色調。涼しげ・線画くっきりは一致。"
+  },
+  "girl-dramatic": {
+    "reviewed": true,
+    "note": "2026-09-21 目視: 色・光・描画・雰囲気の説明文と一致。"
+  },
+  "girl-vivid_lively": {
+    "reviewed": true,
+    "note": "2026-09-21 目視: 背景の街並みがカラフル、笑顔・きらめきあり。人物の彩度は中程度。"
+  },
+  "student-warm_soft": {
+    "reviewed": true,
+    "note": "2026-09-21 目視（golden hour版）: 暖色・夕暮れの光・絵画的な質感・静かな雰囲気と一致。"
+  },
+  "student-cool_clean": {
+    "reviewed": true,
+    "note": "2026-09-21 目視: 色・光・描画・雰囲気の説明文と一致。"
+  },
+  "student-dramatic": {
+    "reviewed": true,
+    "note": "2026-09-21 目視: 色・光・描画・雰囲気の説明文と一致。"
+  },
+  "student-vivid_lively": {
+    "reviewed": true,
+    "note": "2026-09-21 目視: 色・光・描画・雰囲気の説明文と一致。"
+  },
+  "traveler-warm_soft": {
+    "reviewed": true,
+    "note": "2026-09-21 目視（golden hour版）: 夕焼けの草原に小さく立つ構図。暖色・やわらかな光・絵画的な質感は一致、人物は遠景。"
+  },
+  "traveler-cool_clean": {
+    "reviewed": true,
+    "note": "2026-09-21 目視: 色・光・描画・雰囲気の説明文と一致。"
+  },
+  "traveler-dramatic": {
+    "reviewed": true,
+    "note": "2026-09-21 目視: 色・光・描画・雰囲気の説明文と一致。"
+  },
+  "traveler-vivid_lively": {
+    "reviewed": true,
+    "note": "2026-09-21 目視: 明るい緑背景と笑顔。彩度は中程度。"
+  },
+  "barista-warm_soft": {
+    "reviewed": true,
+    "note": "2026-09-21 目視（golden hour版）: 暖色・夕暮れの光・絵画的な質感・静かな雰囲気と一致。"
+  },
+  "barista-cool_clean": {
+    "reviewed": true,
+    "note": "2026-09-21 目視: 色・光・描画・雰囲気の説明文と一致。"
+  },
+  "barista-dramatic": {
+    "reviewed": true,
+    "note": "2026-09-21 目視: 色・光・描画・雰囲気の説明文と一致。"
+  },
+  "barista-vivid_lively": {
+    "reviewed": true,
+    "note": "2026-09-21 目視: 色・光・描画・雰囲気の説明文と一致。"
+  }
+}

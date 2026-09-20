@@ -6,20 +6,39 @@ import threading
 import time
 from pathlib import Path
 
-from exhibit.config import ASSETS, CONFIG, OUTPUTS, read_json, write_json
-from exhibit.domain import AXES
+from exhibit.config import ASSETS, CONFIG, FAN_UPSTREAM, OUTPUTS, read_json, write_json
+from exhibit.domain import CARDS, build_personalization, target_prompt
 from exhibit.gpu import run_stage
 
+# Representative selections for the offline sample experiences (3 cards each).
+SAMPLE_SELECTIONS = [
+    (
+        "s1",
+        "あたたかい表現を選んだ人",
+        ["girl-warm_soft", "student-warm_soft", "barista-warm_soft"],
+    ),
+    (
+        "s2",
+        "涼しくくっきりした表現を選んだ人",
+        ["girl-cool_clean", "traveler-cool_clean", "barista-cool_clean"],
+    ),
+    (
+        "s3",
+        "劇的な光と鮮やかさを選んだ人",
+        ["student-dramatic", "traveler-dramatic", "girl-vivid_lively"],
+    ),
+]
 
-def stage(request, name, seconds=1800):
+
+def stage(request, name, seconds=3600):
     events = []
 
-    def receive(e):
-        events.append(e)
-        print(e["type"], e.get("id", ""), e.get("seconds", ""), flush=True)
+    def receive(event):
+        events.append(event)
+        print(event["type"], event.get("id", ""), event.get("seconds", ""), flush=True)
 
     timing = run_stage(
-        request,
+        {**request, "upstream": str(FAN_UPSTREAM)},
         OUTPUTS / "preparation" / name,
         threading.Event(),
         time.monotonic() + seconds,
@@ -31,142 +50,136 @@ def stage(request, name, seconds=1800):
     return events
 
 
+def merge_manifest(new_images, metrics):
+    manifest = read_json(ASSETS / "manifest.json", {}) or {}
+    images = {
+        key: value
+        for key, value in (manifest.get("images", {}) or {}).items()
+        if key not in new_images
+    }
+    images.update(new_images)
+    write_json(
+        ASSETS / "manifest.json",
+        {
+            "version": 5,
+            "generation": CONFIG["generation"],
+            "fan": CONFIG["fan"],
+            "images": images,
+            "metrics": (manifest.get("metrics", []) or []) + metrics,
+        },
+    )
+
+
+def image_records(events, extra=None):
+    return {
+        event["id"]: {
+            **event,
+            **(extra(event["id"]) if extra else {}),
+            "path": str(Path(event["path"]).relative_to(ASSETS)),
+            "source": "local-illustrious-xl-v2.0",
+            "license": "creativeml-openrail-m",
+            "asset_version": 5,
+        }
+        for event in events
+        if event["type"] == "image"
+    }
+
+
+def prepare_cards():
+    items = [
+        {
+            "id": card["id"],
+            "prompt": card["prompt"],
+            "seed": card["seed"],
+            "path": str(ASSETS / "cards" / f"{card['id']}.png"),
+        }
+        for card in CARDS.values()
+    ]
+    events = stage({"stage": "generate", "items": items}, "card-images")
+    merge_manifest(
+        image_records(
+            events,
+            extra=lambda key: {
+                "ref_en": CARDS[key]["ref_en"],
+                "aspects": CARDS[key]["aspects"],
+                "subject_id": CARDS[key]["subject_id"],
+                "profile_id": CARDS[key]["profile_id"],
+            },
+        ),
+        [e for e in events if e["type"] == "metrics"],
+    )
+    print("cards prepared; review them in configs/cards-review.json", flush=True)
+
+
+def prepare_generic():
+    prompts = {}
+    items = []
+    for topic in CONFIG["topics"]:
+        prompt = target_prompt(topic)
+        prompts[topic["id"]] = {"prompt": prompt, "topic_id": topic["id"]}
+        for index, seed in enumerate(CONFIG["seeds"]):
+            items.append(
+                {
+                    "id": f"{topic['id']}-{index}",
+                    "prompt": prompt,
+                    "seed": seed,
+                    "path": str(ASSETS / "generic" / f"{topic['id']}-{index}.png"),
+                }
+            )
+    write_json(ASSETS / "generic-prompts.json", prompts)
+    events = stage({"stage": "generate", "items": items}, "generic-images")
+    merge_manifest(image_records(events), [e for e in events if e["type"] == "metrics"])
+
+
+def prepare_samples():
+    samples = []
+    items = []
+    for prefix, label, card_ids in SAMPLE_SELECTIONS:
+        selection = [{"card_id": card_id, "aspects_off": []} for card_id in card_ids]
+        personalization = build_personalization(
+            selection, {card_id: "normal" for card_id in card_ids}, "mid"
+        )
+        for topic in CONFIG["topics"][:2]:
+            sample_id = f"{prefix}-{topic['id']}"
+            samples.append(
+                {
+                    "id": sample_id,
+                    "topic_id": topic["id"],
+                    "label": f"{label} · {topic['label']}",
+                    "alpha_key": "mid",
+                    "selection": selection,
+                    "personalization": personalization,
+                    "mode": "sample",
+                    "images": [],
+                }
+            )
+            for index, seed in enumerate(CONFIG["seeds"]):
+                items.append(
+                    {
+                        "id": f"{sample_id}-{index}",
+                        "prompt": target_prompt(topic),
+                        "seed": seed,
+                        "personalization": personalization,
+                        "path": str(ASSETS / "samples" / f"{sample_id}-{index}.png"),
+                    }
+                )
+    events = stage({"stage": "generate", "items": items}, "sample-images")
+    for sample in samples:
+        sample["images"] = [
+            {**event, "path": str(Path(event["path"]).relative_to(ASSETS))}
+            for event in events
+            if event["type"] == "image" and event["id"].startswith(sample["id"] + "-")
+        ]
+    write_json(ASSETS / "samples.json", samples)
+
+
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("step", choices=["base", "analyze", "samples"])
+    parser.add_argument("step", choices=["cards", "generic", "samples"])
     args = parser.parse_args()
-    if args.step == "base":
-        rewrites = stage(
-            {
-                "stage": "rewrite",
-                "items": [{"id": t["id"], "topic": t} for t in CONFIG["topics"]],
-            },
-            "generic-rewrites",
-        )
-        prompts = {
-            e["id"]: e for e in rewrites if e["type"] == "rewrite" and e["valid"]
-        }
-        if len(prompts) != 6:
-            raise RuntimeError("Generic rewrite validation failed")
-        write_json(ASSETS / "generic-prompts.json", prompts)
-        items = []
-        for pair in CONFIG["pairs"]:
-            for i, value in enumerate(pair["values"]):
-                items.append(
-                    {
-                        "id": pair["image_ids"][i],
-                        "prompt": pair.get("prompts", [])[i]
-                        if pair.get("prompts")
-                        else pair["basic_prompt_en"]
-                        + " "
-                        + AXES[pair["dimension"]]["values"][value][1]
-                        + ".",
-                        "seed": 600 + int(pair["id"][1:]),
-                        "path": str(ASSETS / "pairs" / f"{pair['image_ids'][i]}.png"),
-                    }
-                )
-        for topic in CONFIG["topics"]:
-            for i, seed in enumerate(CONFIG["seeds"]):
-                items.append(
-                    {
-                        "id": f"{topic['id']}-{i}",
-                        "prompt": prompts[topic["id"]]["prompt"],
-                        "seed": seed,
-                        "path": str(ASSETS / "generic" / f"{topic['id']}-{i}.png"),
-                    }
-                )
-        events = stage({"stage": "generate", "items": items}, "base-images")
-        images = {
-            e["id"]: {
-                **e,
-                "path": str(Path(e["path"]).relative_to(ASSETS)),
-                "source": "local-illustrious-xl-v2.0",
-                "license": "creativeml-openrail-m",
-                "asset_version": 3,
-            }
-            for e in events
-            if e["type"] == "image"
-        }
-        write_json(
-            ASSETS / "manifest.json",
-            {
-                "version": 3,
-                "generation": CONFIG["generation"],
-                "images": images,
-                "metrics": [e for e in events if e["type"] == "metrics"],
-            },
-        )
-    elif args.step == "analyze":
-        items = []
-        for pair in CONFIG["pairs"]:
-            for i, image_id in enumerate(pair["image_ids"]):
-                items.append(
-                    {
-                        "id": image_id,
-                        "images": [
-                            str(ASSETS / "pairs" / f"{key}.png")
-                            for key in pair["image_ids"]
-                        ],
-                        "chosen_position": i + 1,
-                        "dimension": pair["dimension"],
-                        "basic_prompt_en": pair["basic_prompt_en"],
-                    }
-                )
-        stage({"stage": "analyze", "items": items}, "vlm-evidence")
-    else:
-        from exhibit.domain import build_persona, effective_context
-
-        evidence = read_json(ASSETS / "evidence.json", [])
-        histories = [[0, 0, 0, 0, 0], [1, 1, 1, 1, 1], [0, 1, 0, 1, 0]]
-        requests = []
-        samples = []
-        for h, answers in enumerate(histories):
-            choices = [
-                {"pair_id": p["id"], "chosen_id": p["image_ids"][i]}
-                for p, i in zip(CONFIG["pairs"], answers)
-            ]
-            context = effective_context(build_persona(choices, evidence), {})
-            for topic in CONFIG["topics"][:2]:
-                sid = f"h{h + 1}-{topic['id']}"
-                requests.append({"id": sid, "topic": topic, "context": context})
-                samples.append(
-                    {
-                        "id": sid,
-                        "topic_id": topic["id"],
-                        "choices": choices,
-                        "context": context,
-                        "mode": "sample",
-                        "recommendation": None,
-                        "images": [],
-                    }
-                )
-        outputs = stage({"stage": "rewrite", "items": requests}, "sample-rewrites")
-        rewrites = {
-            e["id"]: e for e in outputs if e["type"] == "rewrite" and e["valid"]
-        }
-        items = []
-        for sample in samples:
-            if sample["id"] not in rewrites:
-                raise RuntimeError("Sample rewrite failed")
-            sample["rewrite"] = rewrites[sample["id"]]
-            for i, seed in enumerate(CONFIG["seeds"]):
-                items.append(
-                    {
-                        "id": f"{sample['id']}-{i}",
-                        "prompt": sample["rewrite"]["prompt"],
-                        "context_hash": sample["context"]["hash"],
-                        "seed": seed,
-                        "path": str(ASSETS / "samples" / f"{sample['id']}-{i}.png"),
-                    }
-                )
-        events = stage({"stage": "generate", "items": items}, "sample-images")
-        for sample in samples:
-            sample["images"] = [
-                {**e, "path": str(Path(e["path"]).relative_to(ASSETS))}
-                for e in events
-                if e["type"] == "image" and e["id"].startswith(sample["id"] + "-")
-            ]
-        write_json(ASSETS / "samples.json", samples)
+    {"cards": prepare_cards, "generic": prepare_generic, "samples": prepare_samples}[
+        args.step
+    ]()
 
 
 if __name__ == "__main__":

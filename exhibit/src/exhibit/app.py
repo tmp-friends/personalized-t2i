@@ -10,11 +10,13 @@ from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, ConfigDict, Field
 
 from .config import ASSETS, CONFIG, REPO, read_json
-from .domain import AXES
+from .domain import CARDS, reviewed_ids
+from .preflight import sample_errors
 from .service import Conflict, Service
 
 service = Service()
 STATIC = Path(__file__).parent / "static"
+REPORT = REPO / "docs/reports/fan-demo"
 
 
 @asynccontextmanager
@@ -32,7 +34,7 @@ async def lifespan(app):
 
 
 app = FastAPI(
-    title="Taste / あなたの「好き」を描く",
+    title="FAN / 同じ一文から、あなたの一枚を",
     lifespan=lifespan,
     docs_url=None,
     redoc_url=None,
@@ -73,19 +75,25 @@ class Body(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
 
-class Choice(Body):
-    pair_id: str = Field(max_length=50)
-    chosen_id: str | None = Field(default=None, max_length=50)
+class Card(Body):
+    card_id: str = Field(max_length=60)
+    aspects_off: list[str] = Field(default_factory=list, max_length=4)
+
+
+class Selection(Body):
+    cards: list[Card] = Field(max_length=16)
 
 
 class Generate(Body):
     topic_id: str = Field(max_length=30)
-    edits: dict[str, str | None] = Field(default_factory=dict)
+    alpha: str = Field(default="mid", max_length=20)
+    weights: dict[str, str] = Field(default_factory=dict)
     request_id: str = Field(min_length=1, max_length=100)
 
 
-class Pick(Body):
-    image_id: str = Field(max_length=100)
+class Blind(Body):
+    pair_index: int = Field(ge=0, le=15)
+    pick: str = Field(max_length=100)
 
 
 class Sample(Body):
@@ -94,17 +102,48 @@ class Sample(Body):
 
 @app.get("/api/config")
 def config():
-    samples = read_json(ASSETS / "samples.json", [])
+    reviewed = reviewed_ids()
+    samples = read_json(ASSETS / "samples.json", []) or []
+    manifest = read_json(ASSETS / "manifest.json", {}) or {}
     return {
-        "topics": CONFIG["topics"],
-        "axes": AXES,
-        "pairs": CONFIG["pairs"],
+        "cards": [
+            {
+                "id": card["id"],
+                "subject_id": card["subject_id"],
+                "profile_id": card["profile_id"],
+                "label": card["label"],
+                "subject_label": card["subject_label"],
+                "profile_label": card["profile_label"],
+                "aspects": card["aspects"],
+                "aspects_ja": card["aspects_ja"],
+                "url": "/assets/" + card["path"],
+            }
+            for card in CARDS.values()
+            if card["id"] in reviewed
+        ],
+        "aspects": CONFIG["aspect_labels"],
+        "topics": [
+            {
+                "id": topic["id"],
+                "label": topic["label"],
+                "preview_url": f"/assets/generic/{topic['id']}-0.png",
+            }
+            for topic in CONFIG["topics"]
+        ],
+        "alphas": CONFIG["alphas"],
+        "alpha_labels": CONFIG["alpha_labels"],
+        "weights": CONFIG["weights"],
+        "weight_labels": CONFIG["weight_labels"],
+        "selection": CONFIG["selection"],
+        "max_variants": CONFIG["max_variants"],
         "idle_seconds": CONFIG["idle_seconds"],
         "timeout_seconds": CONFIG["timeout_seconds"],
-        "recommendation_enabled": CONFIG["recommendation_enabled"],
-        "samples": [{"id": s["id"], "topic_id": s["topic_id"]} for s in samples],
-        "ready": (ASSETS / "manifest.json").exists()
-        and (ASSETS / "evidence.json").exists(),
+        "samples": [
+            {"id": s["id"], "topic_id": s["topic_id"], "label": s.get("label", s["id"])}
+            for s in samples
+            if not sample_errors(s, ASSETS)
+        ],
+        "ready": bool(reviewed) and manifest.get("generation") == CONFIG["generation"],
     }
 
 
@@ -113,7 +152,7 @@ def health():
     return {
         "status": "ok",
         "gpu_busy": service.busy,
-        "mode": "zipp-style-manual",
+        "mode": "fan-live",
         "offline": True,
     }
 
@@ -134,14 +173,26 @@ def touch(sid: str):
     return {"ok": True}
 
 
-@app.post("/api/sessions/{sid}/choices")
-def choice(sid: str, body: Choice):
-    return service.answer(sid, body.pair_id, body.chosen_id)
+@app.put("/api/sessions/{sid}/selection")
+def selection(sid: str, body: Selection):
+    return service.set_selection(sid, [card.model_dump() for card in body.cards])
 
 
 @app.post("/api/sessions/{sid}/runs")
 def generate(sid: str, body: Generate):
-    return service.start_run(sid, body.topic_id, body.edits, body.request_id)
+    return service.start_run(
+        sid, body.topic_id, body.alpha, body.weights, body.request_id
+    )
+
+
+@app.post("/api/sessions/{sid}/blind")
+def blind(sid: str, body: Blind):
+    return service.pick_blind(sid, body.pair_index, body.pick)
+
+
+@app.post("/api/sessions/{sid}/reveal")
+def reveal(sid: str):
+    return service.reveal(sid)
 
 
 @app.post("/api/sessions/{sid}/sample")
@@ -152,11 +203,6 @@ def sample(sid: str, body: Sample):
 @app.post("/api/sessions/{sid}/cancel")
 def cancel(sid: str):
     return service.cancel_run(sid)
-
-
-@app.post("/api/sessions/{sid}/selection")
-def select(sid: str, body: Pick):
-    return service.select(sid, body.image_id)
 
 
 @app.delete("/api/sessions/{sid}")
@@ -189,10 +235,9 @@ def fallback():
 def reference(name: str):
     references = {
         "readme": REPO / "exhibit/README.md",
-        "pigreward": REPO / "pigreward-repro/docs/DEVIATIONS.md",
+        "fan": REPO / "fan-repro/README.md",
         "spec": REPO
-        / "docs/superpowers/specs/2026-09-19-zipp-pigreward-exhibition-demo-design.md",
-        "plan": REPO / "docs/superpowers/plans/2026-09-19-zipp-exhibition-demo.md",
+        / "docs/superpowers/specs/2026-09-21-fan-exhibition-demo-design.md",
     }
     if name not in references:
         raise HTTPException(404)
@@ -201,8 +246,5 @@ def reference(name: str):
 
 app.mount("/static", StaticFiles(directory=STATIC), name="static")
 app.mount("/assets", StaticFiles(directory=ASSETS), name="assets")
-app.mount(
-    "/report",
-    StaticFiles(directory=REPO / "docs/reports/zipp-demo", html=True),
-    name="report",
-)
+REPORT.mkdir(parents=True, exist_ok=True)
+app.mount("/report", StaticFiles(directory=REPORT, html=True), name="report")

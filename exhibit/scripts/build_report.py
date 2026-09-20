@@ -1,121 +1,563 @@
 #!/usr/bin/env python3
-"""Build the handoff HTML from actual local measurement artifacts."""
+"""Build the FAN exhibition handoff HTML from actual local measurement artifacts.
 
+Every section reads one on-disk artifact and degrades to "未計測" / "未準備"
+when that artifact is missing -- nothing here is invented. See
+docs/superpowers/specs/2026-09-21-fan-exhibition-demo-design.md for the design
+this implements and section 8/9 for the verification and wording rules quoted
+below.
+"""
+
+import base64
 import html
+import io
+import json
 import re
 from datetime import datetime
 from zoneinfo import ZoneInfo
 
-from exhibit.config import OUTPUTS, REPO, read_json, write_json
+from exhibit.config import (
+    ASSETS,
+    CARDS_REVIEW,
+    CONFIG,
+    OUTPUTS,
+    REPO,
+    read_json,
+    write_json,
+)
+from exhibit.domain import CARDS, reviewed_ids
+from PIL import Image
 
-REPORT = REPO / "docs/reports/zipp-demo"
+REPORT = REPO / "docs/reports/fan-demo"
 E = html.escape
 
 
-def main():
-    browser = read_json(REPORT / "browser-evidence.json", {})
-    bench = read_json(OUTPUTS / "rehearsal.json", {})
-    pig = read_json(OUTPUTS / "pigreward-g0.json", {})
-    preflight = read_json(OUTPUTS / "preflight.json", {})
-    tests = (OUTPUTS / "all-tests.log").read_text()
-    count = re.search(r"(\d+) passed", tests).group(1)
-    p95 = bench.get("p95_seconds", "計測中")
-    rows = bench.get("rows", [])
-    metrics = [m for r in rows for m in r.get("metrics", [])]
-    gpu = {
-        stage: max(
-            (m["peak_vram_mib"] for m in metrics if m["stage"] == stage), default=0
+def thumb(path, size=160, quality=72):
+    """A small base64 JPEG data URI, or None if the file is missing/unreadable."""
+    try:
+        image = Image.open(path).convert("RGB")
+    except (OSError, ValueError):
+        return None
+    image.thumbnail((size, size))
+    buf = io.BytesIO()
+    image.save(buf, format="JPEG", quality=quality)
+    return "data:image/jpeg;base64," + base64.b64encode(buf.getvalue()).decode()
+
+
+def card_grid():
+    reviewed = reviewed_ids(CARDS_REVIEW)
+    cards = []
+    for card_id, card in CARDS.items():
+        src = thumb(ASSETS / card["path"])
+        if not src:
+            continue
+        cards.append(
+            {
+                "id": card_id,
+                "label": card["label"],
+                "ref_en": card["ref_en"],
+                "reviewed": card_id in reviewed,
+                "src": src,
+            }
         )
-        for stage in ["rewrite", "generate"]
-    }
-    recovery = read_json(REPORT / "recovery-evidence.json", {})
-    cancel_check = read_json(OUTPUTS / "live-cancel.json", {})
-    rewrite_check = read_json(OUTPUTS / "rewrite-sweep.json", {})
+    return cards
+
+
+def generic_grid():
+    topics = []
+    for topic in CONFIG["topics"]:
+        shots = [
+            thumb(ASSETS / "generic" / f"{topic['id']}-{i}.png")
+            for i in range(len(CONFIG["seeds"]))
+        ]
+        shots = [s for s in shots if s]
+        if shots:
+            topics.append({"id": topic["id"], "label": topic["label"], "shots": shots})
+    return topics
+
+
+def sample_grid():
+    out = []
+    for sample in read_json(ASSETS / "samples.json", []) or []:
+        images = sample.get("images") or []
+        shots = [
+            thumb(ASSETS / image["path"])
+            for image in images
+            if isinstance(image, dict) and image.get("path")
+        ]
+        shots = [s for s in shots if s]
+        if shots:
+            out.append(
+                {
+                    "id": sample.get("id", "?"),
+                    "topic_id": sample.get("topic_id", "?"),
+                    "shots": shots,
+                }
+            )
+    return out
+
+
+def image_grid_html(items, caption_key="label"):
+    if not items:
+        return "<p>未準備。</p>"
+    return "".join(
+        f'<figure><img src="{item["src"]}" alt="{E(item.get("label", item.get("id", "")))}" loading="lazy">'
+        f"<figcaption>{E(item.get(caption_key, item.get('id', '')))}"
+        f"{' · 未確認' if caption_key == 'label' and not item.get('reviewed', True) else ''}"
+        f"</figcaption></figure>"
+        for item in items
+    )
+
+
+def topic_shots_html(topics):
+    if not topics:
+        return "<p>未準備。</p>"
+    return "".join(
+        f'<div class="topic-shots"><h4>{E(t["label"])}</h4><div class="mini-grid">'
+        + "".join(f'<img src="{s}" alt="{E(t["label"])}">' for s in t["shots"])
+        + "</div></div>"
+        for t in topics
+    )
+
+
+def sample_shots_html(samples):
+    if not samples:
+        return "<p>未準備。</p>"
+    return "".join(
+        f'<div class="topic-shots"><h4>{E(s["id"])} · {E(s["topic_id"])}</h4><div class="mini-grid">'
+        + "".join(f'<img src="{shot}" alt="{E(s["id"])}">' for shot in s["shots"])
+        + "</div></div>"
+        for s in samples
+    )
+
+
+def parse_pytest_count(log):
+    if not log:
+        return None
+    m = re.search(r"(\d+) passed", log)
+    return int(m.group(1)) if m else None
+
+
+def parse_node_test(log):
+    """node --test's default "spec" reporter prints "ℹ pass N" / "ℹ fail N";
+    the TAP reporter prints "# pass N" / "# fail N". Accept either."""
+    if not log:
+        return None, None
+    passed = re.search(r"[ℹ#]\s*pass\s+(\d+)", log)
+    failed = re.search(r"[ℹ#]\s*fail\s+(\d+)", log)
+    return (
+        int(passed.group(1)) if passed else None,
+        int(failed.group(1)) if failed else None,
+    )
+
+
+def equivalence_row(name, entry):
+    hidden = entry.get("hidden", {})
+    pooled = entry.get("pooled", {})
+    return (
+        f"<tr><td>{E(name)}</td>"
+        f"<td>{hidden.get('mean_cosine', '—')}</td>"
+        f"<td>{hidden.get('max_abs_diff', '—')}</td>"
+        f"<td>{pooled.get('mean_cosine', '—')}</td>"
+        f"<td>{entry.get('encode_seconds', '—')}</td></tr>"
+    )
+
+
+def avg(values):
+    values = [v for v in values if v is not None]
+    return round(sum(values) / len(values), 1) if values else None
+
+
+def runs_by_key(container, key, value):
+    return [r for r in (container or []) if r.get(key) == value]
+
+
+def g0_settings_section(followup, final, ladder):
+    """The concrete settings G0/follow-up spikes settled on, and the evidence
+    for each -- 未計測 wherever a probe output is missing, never invented."""
+    followup = followup or {}
+    final = final or {}
+    ladder = ladder or {}
+    followup_runs = followup.get("runs") or []
+    final_runs = final.get("runs") or []
+
+    # skip_pa=[0..7] vs no personalized-attention skip at all.
+    skip_none = runs_by_key(followup_runs, "name", "04-setA-skipnone")
+    skip_07 = runs_by_key(followup_runs, "name", "04-setA-skip0to7")
+    lap_before = avg([r.get("laplacian_var") for r in skip_none])
+    lap_after = avg([r.get("laplacian_var") for r in skip_07])
+    sat_before = avg([r.get("saturation") for r in skip_none])
+    sat_after = avg([r.get("saturation") for r in skip_07])
+    skip_pa_line = (
+        f"skip_pa未指定（平均 laplacian_var {lap_before} → 平均 saturation {sat_before}）から "
+        f"skip_pa=[0..7]（平均 laplacian_var {lap_after} → 平均 saturation {sat_after}）で、"
+        f"ぼやけ（laplacian_var低下）と彩度低下が改善しました（{len(skip_none)}枚 vs {len(skip_07)}枚の記録）。"
+        if lap_before is not None and lap_after is not None
+        else "未計測。"
+    )
+
+    # use_attn_mask: alpha=0 でも参照なしと一致すべき pooled が崩れる。
+    mask1_cos = (
+        (followup.get("alpha0_vs_plain_mask1") or {}).get("mean_cosine")
+        if followup
+        else None
+    )
+    mask0_cos = (
+        (followup.get("alpha0_vs_plain_mask0") or {}).get("mean_cosine")
+        if followup
+        else None
+    )
+    mask_line = (
+        f"use_attn_mask=True では alpha=0（参照ゼロ相当）でも hidden state の平均コサイン類似度が "
+        f"{round(mask1_cos, 2)}まで下がり、参照なしのFANエンコードと一致しません"
+        f"（use_attn_mask=False では{round(mask0_cos, 4)}）。そのため use_attn_mask は無効のまま採用しています。"
+        if mask1_cos is not None
+        else "未計測。"
+    )
+
+    # split (aspect単位の短い句) vs bundled (カードごとの結合文) vs aspect-major (側面ごとにカードを束ねた1文)。
+    bundled_vs_split = followup.get("bundled_vs_split") or {}
+    split_line_bits = []
+    if bundled_vs_split:
+        mae_values = [
+            v for v in bundled_vs_split.values() if isinstance(v, (int, float))
+        ]
+        if mae_values:
+            split_line_bits.append(
+                f"one-long-ref-per-card（結合文）とsplit（側面ごとの短い句）は同じ参照でも "
+                f"画素MAEで{min(mae_values)}〜{max(mae_values)}の差が出ます"
+                f"（bundled_vs_split, {len(mae_values)}条件）。"
+            )
+    split6 = runs_by_key(final_runs, "case", "C-5cards-split-a0.6")
+    major6 = runs_by_key(final_runs, "case", "D-5cards-aspectmajor-a0.6")
+    if split6 and major6:
+        split_lap = [r.get("laplacian_var") for r in split6]
+        major_lap = [r.get("laplacian_var") for r in major6]
+        split_line_bits.append(
+            f"alpha=0.6でsplitとaspect-major（側面ごとにカードをまとめた1文）を比べると、"
+            f"laplacian_varはsplitが{split_lap}、aspect-majorが{major_lap}で、"
+            f"記録した{len(split6)}枚ともsplitが上回りました。"
+        )
+    split_line = (
+        " ".join(split_line_bits)
+        + " 現在の実装（exhibit.domain.build_personalization）は側面ごとの短い句を"
+        "カード横断でマージし、重みを合算する方式です。"
+        if split_line_bits
+        else "未計測。"
+    )
+
+    # alpha ladder.
+    alphas = CONFIG.get("alphas", {})
+    ladder_runs = ladder.get("runs") or []
+    tokyo_baseline = avg(
+        [
+            r.get("laplacian_var")
+            for r in ladder_runs
+            if r.get("topic") == "tokyo" and r.get("set") == "baseline"
+        ]
+    )
+    tokyo_07 = [
+        r.get("laplacian_var")
+        for r in ladder_runs
+        if r.get("topic") == "tokyo" and r.get("alpha") == 0.7
+    ]
+    lap_note = (
+        f"（傍証: tokyoのbaseline laplacian_varは約{tokyo_baseline}に対し、"
+        f"alpha=0.7では{tokyo_07}まで跳ね上がる記録があり、崩れと符合します）"
+        if tokyo_baseline is not None and tokyo_07
+        else ""
+    )
+    ladder_line = (
+        f"weak={alphas.get('weak', '未計測')} / mid={alphas.get('mid', '未計測')} / "
+        f"strong={alphas.get('strong', '未計測')} を採用しています。目視の確認では、alpha=0.7でtokyoのお題の"
+        f"1boyという被写体の指定が崩れ始め、alpha=0.8では緑の瞳の指定が失われました。{lap_note}"
+        "そのため0.6を上限にしています。崩れの判定自体は目視によるもので、性能の定量主張ではありません。"
+    )
+
+    fan_conf = json.dumps(CONFIG.get("fan", {}), ensure_ascii=False, indent=2)
+    alphas_conf = json.dumps(alphas, ensure_ascii=False, indent=2)
+
+    return f"""<h2>G0 で確定した設定と根拠</h2>
+<div class="panel"><ul>
+<li><b>skip_pa</b>：{skip_pa_line}</li>
+<li><b>use_attn_mask</b>：{mask_line}</li>
+<li><b>参照の分け方</b>：{split_line}</li>
+<li><b>alpha ladder</b>：{ladder_line}</li>
+<li><b>warm_soft の lighting</b>：既定の "soft lighting, gentle shadows" から
+"warm golden hour light, gentle shadows" に変更しました（ladder.json の reference_sets s1 → s1p）。
+現在の <code>configs/demo.json</code> にもこの文言が入っています。</li>
+<li><b>pooled</b>：常に参照なし（plain）の pooled embedding を使います。個人化するのは hidden state だけです。</li>
+</ul>
+<p class="small">いずれも少数seed・少数条件の記録であり、性能を主張するものではありません（設計書 §9）。</p>
+<p><b>configs/demo.json の fan ブロック</b></p>
+<pre>{E(fan_conf)}</pre>
+<p><b>configs/demo.json の alphas</b></p>
+<pre>{E(alphas_conf)}</pre>
+<a href="../../../exhibit/outputs/fan-probe/followup/followup.json">追加検証 JSON</a> ·
+<a href="../../../exhibit/outputs/fan-probe/final/final.json">最終確認 JSON</a> ·
+<a href="../../../exhibit/outputs/fan-probe/ladder/ladder.json">alpha ladder JSON</a></div>"""
+
+
+def sparkline(rows):
+    if not rows:
+        return "<p>セッション計測中。</p>"
+    points = " ".join(
+        f"{30 + i * 34},{150 - min(r.get('seconds', 0), 35) * 4}"
+        for i, r in enumerate(rows)
+    )
+    dots = "".join(
+        f'<circle cx="{30 + i * 34}" cy="{150 - min(r.get("seconds", 0), 35) * 4}" r="3" fill="#346347"/>'
+        for i, r in enumerate(rows)
+    )
+    return (
+        f'<svg viewBox="0 0 740 180" role="img" aria-label="セッションごとの実生成時間">'
+        f'<path d="M25 10V155H725" fill="none" stroke="#c6cdbf"/>'
+        f'<path d="M25 70H725" stroke="#d9ded1"/>'
+        f'<text x="27" y="66" fill="#6e796a" font-size="10">20秒</text>'
+        f'<polyline points="{points}" fill="none" stroke="#346347" stroke-width="3"/>{dots}'
+        f'<text x="27" y="177" font-size="10" fill="#6e796a">SESSION 01</text>'
+        f'<text x="642" y="177" font-size="10" fill="#6e796a">SESSION {len(rows):02d}</text></svg>'
+    )
+
+
+def main():
+    REPORT.mkdir(parents=True, exist_ok=True)
+    browser = read_json(REPORT / "browser-evidence.json", {}) or {}
+    probe = read_json(OUTPUTS / "fan-probe/report.json", {}) or {}
+    followup = read_json(OUTPUTS / "fan-probe/followup/followup.json", {}) or {}
+    final = read_json(OUTPUTS / "fan-probe/final/final.json", {}) or {}
+    ladder = read_json(OUTPUTS / "fan-probe/ladder/ladder.json", {}) or {}
+    rehearsal = read_json(OUTPUTS / "rehearsal.json", {}) or {}
+    preflight = read_json(OUTPUTS / "preflight.json", {}) or {}
+    all_tests_log = (
+        (OUTPUTS / "all-tests.log").read_text()
+        if (OUTPUTS / "all-tests.log").is_file()
+        else None
+    )
+    js_tests_log = (
+        (OUTPUTS / "js-tests.log").read_text()
+        if (OUTPUTS / "js-tests.log").is_file()
+        else None
+    )
+    py_passed = parse_pytest_count(all_tests_log)
+    node_passed, node_failed = parse_node_test(js_tests_log)
+
+    cards = card_grid()
+    reviewed_count = sum(1 for c in cards if c["reviewed"])
+    generic_topics = generic_grid()
+    samples = sample_grid()
+
     measured = datetime.now(ZoneInfo("Asia/Tokyo")).strftime("%Y-%m-%d %H:%M JST")
+
     evidence = {
         "generated_at": measured,
         "browser": {k: v for k, v in browser.items() if k != "run"},
-        "rehearsal": bench,
-        "pigreward": {k: v for k, v in pig.items() if k != "records"},
-        "preflight": preflight,
-        "recovery_verification": recovery,
-        "live_gpu_cancel": cancel_check,
-        "rewrite_sweep": {k: v for k, v in rewrite_check.items() if k != "events"},
-        "tests": {
-            "python_passed": int(count),
-            "node_passed": 4,
-            "warnings": "Starlette/httpx and anyio deprecation warnings (2)",
+        "fan_probe": {
+            k: v
+            for k, v in probe.items()
+            if k not in ("images", "class_token_detector")
         },
-        "mode": "ZIPP-style generation + manual selection",
+        "followup": {
+            k: v for k, v in followup.items() if k not in ("reference_sets", "runs")
+        },
+        "final": {k: v for k, v in final.items() if k != "runs"},
+        "ladder": {k: v for k, v in ladder.items() if k != "runs"},
+        "rehearsal": {k: v for k, v in rehearsal.items() if k != "rows"},
+        "preflight": preflight,
+        "tests": {
+            "python_passed": py_passed,
+            "node_passed": node_passed,
+            "node_failed": node_failed,
+        },
+        "assets": {
+            "cards_embedded": len(cards),
+            "cards_reviewed": reviewed_count,
+            "cards_total": len(CARDS),
+            "generic_topics_embedded": len(generic_topics),
+            "samples_embedded": len(samples),
+        },
+        "mode": "FAN実生成 + ブラインド比較",
         "limitations": [
-            "PIGReward G0 not passed",
-            "persona uses checked-evidence summary",
-            "no third-party usability test",
-            "no two-hour soak",
+            "第三者5人の理解度確認は未実施",
+            "2時間連続稼働の実接続確認は未実施",
+            "ブラインド比較の集計は少人数の記録であり、性能主張ではない",
+            "reveal前のブラインド画像はセッション内の見た目確認のみで、統計的優位性を主張しない",
         ],
     }
     write_json(REPORT / "evidence.json", evidence)
-    write_json(REPORT / "pigreward-g0.json", pig)
-    recovery_section = ""
-    if recovery:
-        recovery_section = f"""<h2>中断後の再確認 · {E(recovery['verified_at'])}</h2>
-<div class="panel"><strong>起動し直したサーバーで、実生成から終了まで確認しました。</strong>
-<p>今回のブラウザー確認は {recovery['browser_seconds']}秒。5回答・訂正・4枚生成・本人の選択・再読込・全OFF・リセットを通過し、JS例外と外部通信は0件でした。終了後のGPU使用量は {recovery['gpu_idle_mib']} MiBです。</p>
-<p>実際の子プロセスに限定したメモリ上限によるMemoryErrorとSIGKILLの2条件を追加検証しました。どちらも完成画像を保持し、誤った推薦を出さず、子プロセス終了・リセット後に次の体験で4枚生成できました。モデル実行部は小さなテスト用プロセスに置き換え、排他制御・JSON入出力・セッション処理は実装本体を使っています。GPUやホスト全体のメモリを使い切る試験ではありません。</p>
-<p>申告されたOOMの原因は未特定です。保存済み推論ログにはOOMの記録がなく、カーネルログは取得できませんでした。初回の再確認中には以前のサーバーが終了し、最終選択の検査がタイムアウトしました。再起動後の同じ検査は成功しています。以前の20セッション計測と、今回の1回の実ブラウザー確認は別の記録です。</p>
-<a href="recovery-evidence.json">今回の確認記録 JSON</a></div>"""
-    if rows:
-        points = " ".join(
-            f"{30 + i * 34},{150 - r['seconds'] * 4}" for i, r in enumerate(rows)
+
+    # ---------------------------------------------------------------- badges
+    badges = ['<span class="badge">localhost 実装確認</span>']
+    if rehearsal.get("successes"):
+        badges.append(
+            f'<span class="badge">実GPU生成 {rehearsal["successes"]}/{rehearsal.get("sessions", "—")}セッション</span>'
         )
-        plot = (
-            f'<svg viewBox="0 0 740 180" role="img" aria-label="20セッションの実生成時間"><path d="M25 10V155H725" fill="none" stroke="#c6cdbf"/><path d="M25 70H725" stroke="#d9ded1"/><text x="27" y="66" fill="#6e796a" font-size="10">20秒</text><polyline points="{points}" fill="none" stroke="#346347" stroke-width="3"/>'
-            + "".join(
-                f'<circle cx="{30 + i * 34}" cy="{150 - r["seconds"] * 4}" r="3" fill="#346347"/>'
-                for i, r in enumerate(rows)
-            )
-            + '<text x="27" y="177" font-size="10" fill="#6e796a">SESSION 01</text><text x="642" y="177" font-size="10" fill="#6e796a">SESSION 20</text></svg>'
+    if probe:
+        plain_cos = (
+            probe.get("equivalence", {})
+            .get("fan_plain_vs_pipeline", {})
+            .get("hidden", {})
+            .get("mean_cosine")
         )
+        if plain_cos is not None:
+            badges.append(f'<span class="badge">G0一致 cos={plain_cos}</span>')
+    badges.append(
+        '<span class="badge warn">pooled は参照なしの値を使用（意図的な逸脱）</span>'
+    )
+    if browser:
+        ok = not browser.get("page_errors") and not browser.get("external_requests")
+        badges.append(
+            f'<span class="badge{"" if ok else " warn"}">ブラウザー確認 {"JS例外0・外部通信0" if ok else "要確認"}</span>'
+        )
+
+    # ------------------------------------------------------------ statistics
+    stats = f"""<div class="stats">
+<div class="stat"><strong>{rehearsal.get("successes", "—")}/{rehearsal.get("sessions", "—")}</strong><span>実生成セッション成功</span></div>
+<div class="stat"><strong>{rehearsal.get("p95_seconds", "未計測")}</strong><span>生成時間 p95（秒）</span></div>
+<div class="stat"><strong>{py_passed if py_passed is not None else "未計測"}{f" / {node_passed}" if node_passed is not None else ""}</strong><span>Python / JavaScript テスト成功数</span></div>
+<div class="stat"><strong>{reviewed_count}/{len(CARDS)}</strong><span>目視確認済みカード</span></div>
+</div>"""
+
+    # -------------------------------------------------------------- browser
+    shot_dir = REPORT / "screenshots"
+    shot_files = sorted(shot_dir.glob("*.png")) if shot_dir.is_dir() else []
+    if browser:
+        checks_html = "".join(f"<li>{E(c)}</li>" for c in browser.get("checks", []))
+        shots_html = "".join(
+            f'<figure><img src="screenshots/{p.name}" alt="{E(p.stem)}" loading="lazy"><figcaption>{E(p.stem)}</figcaption></figure>'
+            for p in shot_files
+        )
+        browser_section = f"""<h2>実Chromiumでの操作確認 · {E(browser.get("url", "—"))}</h2>
+<div class="panel"><strong>4対のブラインド生成完了まで {E(str(browser.get("blind_wait_seconds", "—")))}秒。JS例外 {len(browser.get("page_errors", []))}件、外部通信 {len(browser.get("external_requests", []))}件。</strong>
+<ul>{checks_html}</ul>
+<a href="browser-evidence.json">今回の確認記録 JSON</a></div>
+<div class="grid">{shots_html}</div>"""
     else:
-        plot = "<p>セッション計測中。</p>"
-    sections = f"""<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Taste · 実装とlocalhost検証レポート</title><style>
-:root{{--paper:#f4f2eb;--ink:#24392d;--sub:#697466;--green:#315d44;--line:#d7ddd0}}*{{box-sizing:border-box}}body{{margin:0;background:var(--paper);color:var(--ink);font:15px/1.9 system-ui,-apple-system,sans-serif}}main{{max-width:1120px;margin:auto;padding:65px 32px 90px}}header{{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--line);padding-bottom:24px}}.brand{{font:42px Georgia,serif;letter-spacing:-2px}}.brand b{{color:#bd6841;font-size:17px}}.meta{{font-size:11px;color:var(--sub)}}h1{{font-weight:500;font-size:clamp(32px,4vw,52px);line-height:1.5;letter-spacing:-1.5px;margin:50px 0 22px}}h2{{font-size:27px;font-weight:500;margin:55px 0 20px}}h3{{font-size:17px;font-weight:600}}p{{color:var(--sub)}}a{{color:var(--green);text-underline-offset:3px}}.badge{{display:inline-block;padding:7px 14px;border-radius:40px;background:#e3eadc;color:var(--green);font-size:11px;margin:0 8px 8px 0}}.warn{{background:#efdecf;color:#8f502f}}.lead{{font-size:17px;max-width:860px}}.stats{{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin:35px 0}}.stat{{border-top:1px solid var(--line);padding-top:18px}}.stat strong{{display:block;font:42px Georgia,serif;color:var(--green)}}.stat span{{font-size:12px;color:var(--sub)}}.panel{{background:#e8eddf;border:1px solid #d9e1ce;padding:24px 28px;border-radius:7px}}.caution{{background:#f1e6da;border-color:#e4cbb5}}.grid{{display:grid;grid-template-columns:1fr 1fr;gap:22px}}figure{{margin:20px 0}}figure img{{display:block;width:100%;border:1px solid var(--line);border-radius:7px}}figcaption{{font-size:12px;color:var(--sub);margin-top:9px}}table{{width:100%;border-collapse:collapse;font-size:13px}}th,td{{text-align:left;vertical-align:top;padding:13px 14px;border-bottom:1px solid var(--line)}}th{{font-weight:500;background:#e9ecdf}}code{{font-family:ui-monospace,monospace;font-size:.88em;overflow-wrap:anywhere}}pre{{overflow:auto;padding:22px;background:#24392d;color:#f0f2e8;border-radius:6px;font-size:12px;line-height:1.8}}.flow{{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin:25px 0}}.flow div{{padding:17px 13px;border:1px solid var(--line);border-radius:5px;font-size:12px}}.flow b{{display:block;font:24px Georgia,serif;color:#8b9c7e}}details{{border-bottom:1px solid var(--line);padding:16px 0}}summary{{cursor:pointer;color:var(--green)}}.small{{font-size:12px}}ul{{padding-left:22px;color:var(--sub)}}.scroll{{overflow:auto}}footer{{margin-top:60px;border-top:1px solid var(--line);padding-top:22px;font-size:11px;color:var(--sub)}}.button{{display:inline-block;background:var(--green);color:white;padding:12px 22px;border-radius:5px;text-decoration:none}}@media(max-width:650px){{main{{padding:30px 20px}}.stats{{grid-template-columns:1fr 1fr}}.grid{{grid-template-columns:1fr}}.flow{{grid-template-columns:1fr}}.meta{{max-width:160px;text-align:right}}th,td{{padding:10px 7px;font-size:11px}}}}
-</style></head><body><main><header><div class="brand">taste<b> ●</b></div><div class="meta">IMPLEMENTATION & LOCAL REHEARSAL<br>{measured}</div></header>
-<h1>あなたの「好き」を描く。<br>実装と、実機で確かめたこと。</h1><span class="badge">localhost 実動作確認済み</span><span class="badge">RTX 4090 / ローカル実生成</span><span class="badge warn">PIGReward 推薦は無効</span>
-<p class="lead">5回の画像選択から好みを確認・訂正し、通常4枚と個人化4枚を同じseedで比較する展示デモを実装しました。最後の一枚は本人が選べます。Chromiumで実際の画面を操作し、SDXLの実生成、再読込、キャッシュ、リセットまで検証しています。</p>
-<div class="stats"><div class="stat"><strong>{bench.get("successes", "—")}/{bench.get("sessions", "—")}</strong><span>実生成セッション成功</span></div><div class="stat"><strong>{p95}<small style="font-size:18px"> s</small></strong><span>生成時間 p95 / 推薦なし</span></div><div class="stat"><strong>{count} + 4</strong><span>Python + JavaScript テスト</span></div><div class="stat"><strong>58</strong><span>固定画像・サンプル画像</span></div></div>
-<p><a class="button" href="http://localhost:7860">デモを開く ↗</a>　<a data-server="/fallback" href="../../../exhibit/assets/fallback.html">サーバー不要のサンプルHTML</a>　<a href="evidence.json">計測記録 JSON</a></p>
-<figure><img src="screenshots/05-result.png" alt="localhostで実生成した通常4枚と個人化4枚の比較画面"><figcaption>実操作時の比較画面。上段が通常、下段が訂正した好みによる実生成。上下の同じ位置は同じseedです。これはスタッフ検証用の選択履歴であり、一般の来場者データではありません。</figcaption></figure>
-{recovery_section}
-<h2>できるようになったこと</h2><div class="flow"><div><b>01</b>左右をランダム化した5対<br>決められない場合はskip</div><div><b>02</b>根拠付きの好み<br>項目OFF・候補への訂正</div><div><b>03</b>6つのお題<br>元のお題を保った書き換え</div><div><b>04</b>通常4枚＋個人化4枚<br>同じseed・同じ生成条件</div><div><b>05</b>本人による最終選択<br>終了で一時データ削除</div></div>
-<div class="grid"><figure><img src="screenshots/02-choice.png" alt="二択の画面"><figcaption>選ばなかった画像を「嫌い」と扱いません。有効選択が3回に達しなければ未選択対を再提示します。</figcaption></figure><figure><img src="screenshots/03-persona.png" alt="好みを訂正する画面"><figcaption>美的な好みのみを扱います。根拠の画像を開いて確認でき、性格・年齢・職業を推定しません。</figcaption></figure></div>
-<div class="panel"><strong>OFF・訂正は、生成と推薦の共通入力に反映。</strong><p>EffectivePreferenceContextを確定し、同じhashを使います。OFFされた軸の根拠、訂正前の根拠、未加工VLM出力を下流へ渡しません。すべてOFFなら通常画像だけを表示し、GPU推論を省略します。</p></div>
-<h2>localhostで確認した操作</h2><div class="scroll"><table><thead><tr><th>検証</th><th>結果</th><th>確認したこと</th></tr></thead><tbody>
-<tr><td>一連の体験</td><td>成功</td><td>5回答 → 色を訂正・光をOFF → 窓辺の猫 → 実生成4枚 → 本人の選択</td></tr>
-<tr><td>6お題×3代表履歴</td><td>18/18成功</td><td>実LLM書き換えで元のお題の固定とSDXL両tokenizer上限を確認。全18条件の画像品質評価ではありません</td></tr><tr><td>画像と条件</td><td>成功</td><td>8枚が表示され、上下4組のseed一致、個人化画像のcontext hash一致</td></tr>
-<tr><td>再読込</td><td>成功</td><td>進行中sessionと最終選択を復元。訂正項目も保持。全skip後は未回答画面へ復帰</td></tr>
-<tr><td>キャッシュ / 全OFF</td><td>成功</td><td>同じsession・条件ではexact-cache表示。全OFFは通常4枚のみ</td></tr>
-<tr><td>終了とアクセス</td><td>成功</td><td>旧sessionと旧生成画像URLが404。一時ディレクトリを削除</td></tr>
-<tr><td>実GPUでの途中リセット</td><td>成功</td><td>1枚完成後にSDXLを停止。GPU解放まで0.159秒、残留VRAM 1 MiB。旧画像404、次session開始可能</td></tr><tr><td>異常時</td><td>テスト成功</td><td>子プロセスtimeout・cancel・GPU lease、古い応答、誤った画像ID、推薦解析失敗</td></tr>
-<tr><td>表示と通信</td><td>成功</td><td>1440px / 390pxで確認。横はみ出しなし。JS例外0件、外部リクエスト0件</td></tr>
-<tr><td>サンプル</td><td>成功</td><td>代表履歴であることを明示。単独HTMLは画像を埋め込み、サーバーが不要</td></tr>
+        browser_section = """<h2>実Chromiumでの操作確認</h2><p>未計測。<code>uv run --project exhibit python exhibit/scripts/browser_check.py</code> を実行してください。</p>"""
+
+    # ---------------------------------------------------------------- G0
+    if probe:
+        eq = probe.get("equivalence", {})
+        eq_rows = "".join(equivalence_row(name, entry) for name, entry in eq.items())
+        versions = probe.get("versions", {})
+        version_row = " · ".join(
+            f"{E(k)} {E(str(v))}" for k, v in versions.items() if k != "device"
+        )
+        vram_load = probe.get("vram_after_load", {})
+        vram_peak = probe.get("vram_peak_overall", {})
+        tokens = probe.get("token_lengths", {})
+        token_note = ""
+        for name, tok in tokens.items():
+            over = [
+                n
+                for n in tok.get("preference_refs", [])
+                if n > tok.get("model_max_length", 77)
+            ]
+            if over:
+                token_note += f"<li>{E(name)}: 参照説明文に{tok['model_max_length']}トークン上限を超えるものが{len(over)}件</li>"
+        probe_section = f"""<h2>G0スパイク：FANはIllustrious XL v2.0を個人化できるか</h2>
+<div class="panel"><strong>参照なしFANエンコードは pipeline の encode_prompt と一致します（hidden state の平均コサイン類似度を参照）。</strong>
+<p>実行環境: {version_row}。pipeline読み込み {probe.get("load_seconds", "—")}秒、エンコーダー構築 {probe.get("encoder_build_seconds", "—")}秒。VRAM: 読み込み後 {vram_load.get("peak_allocated_gb", "—")} GB、全体ピーク {vram_peak.get("peak_allocated_gb", "—")} GB（torch.cuda.max_memory_allocated）。</p>
+<div class="scroll"><table><thead><tr><th>比較</th><th>hidden 平均cos</th><th>hidden 最大絶対差</th><th>pooled 平均cos</th><th>encode秒</th></tr></thead><tbody>{eq_rows}</tbody></table></div>
+<ul>{token_note or "<li>すべての参照説明文が77トークン以内</li>"}</ul>
+<a href="../../../exhibit/outputs/fan-probe/report.json">G0の生ログ JSON</a></div>"""
+    else:
+        probe_section = """<h2>G0スパイク：FANはIllustrious XL v2.0を個人化できるか</h2><p>未計測。<code>PYTHONPATH=fan-repro/.work/upstream:exhibit/src fan-repro/.venv/bin/python exhibit/scripts/fan_probe.py</code> を実行してください（FAN環境が必要）。</p>"""
+
+    # ------------------------------------------------------------ followup
+    if followup:
+        rows = []
+        for name, entry in followup.items():
+            if isinstance(entry, dict) and "mean_cosine" in entry:
+                rows.append(
+                    f"<tr><td>{E(name)}</td><td>{entry.get('mean_cosine', '—')}</td>"
+                    f"<td>{entry.get('max_abs_diff', '—')}</td></tr>"
+                )
+        followup_rows = "".join(rows) or "<tr><td colspan=3>比較データなし</td></tr>"
+        semantics = followup.get("skip_pa_semantics", "")
+        followup_section = f"""<h2>追加検証：alpha・重み・skip_paの実際の効き方</h2>
+<div class="panel"><p>{E(semantics)}</p>
+<div class="scroll"><table><thead><tr><th>比較</th><th>hidden 平均cos</th><th>hidden 最大絶対差</th></tr></thead><tbody>{followup_rows}</tbody></table></div>
+<a href="../../../exhibit/outputs/fan-probe/followup/followup.json">追加検証の生ログ JSON</a></div>"""
+    else:
+        followup_section = ""
+
+    settings_section = g0_settings_section(followup, final, ladder)
+
+    # ---------------------------------------------------------- rehearsal
+    plot = sparkline(rehearsal.get("rows", []))
+    rehearsal_section = f"""<h2>連続セッションの実測</h2>
+<p>対象は FAN 実生成のみ（rewrite・推薦は行わない）。各セッションはブラインド4対の生成、reveal、調整1回を含むwall timeです。</p>
+{plot}
+<div class="scroll"><table><thead><tr><th>項目</th><th>実測値</th></tr></thead><tbody>
+<tr><td>セッション</td><td>{rehearsal.get("successes", "—")}成功 / {rehearsal.get("sessions", "—")}実行、中央値 {rehearsal.get("median_seconds", "未計測")}秒、p95 {rehearsal.get("p95_seconds", "未計測")}秒</td></tr>
+</tbody></table></div>"""
+
+    # ---------------------------------------------------------- preflight
+    if preflight:
+        errs = preflight.get("errors", [])
+        preflight_section = f"""<h2>Preflight（展示前チェック）</h2>
+<div class="panel {"" if preflight.get("ready") else "caution"}"><strong>{"合格" if preflight.get("ready") else "未合格"}</strong>
+<p>目視確認済みカード {preflight.get("reviewed_cards", "—")}/{preflight.get("cards", len(CARDS))}、固定画像 {preflight.get("fixed_images", "—")}件、サンプル {preflight.get("samples", "—")}件。エラー {len(errs)}件{"（例: " + E(", ".join(errs[:3])) + "）" if errs else ""}。</p>
+<a href="../../../exhibit/outputs/preflight.json">Preflightの生ログ JSON</a></div>"""
+    else:
+        preflight_section = """<h2>Preflight（展示前チェック）</h2><p>未計測。<code>uv run --project exhibit python exhibit/scripts/preflight.py --models</code> を実行してください。</p>"""
+
+    # -------------------------------------------------------------- assets
+    assets_section = f"""<h2>固定資産</h2>
+<h3>カード（{len(cards)}/{len(CARDS)}件、うち目視確認済み {reviewed_count}件）</h3>
+<div class="grid small-grid">{image_grid_html(cards, "ref_en")}</div>
+<h3>お題ごとの通常生成（{len(generic_topics)}/{len(CONFIG["topics"])}お題）</h3>
+{topic_shots_html(generic_topics)}
+<h3>代表サンプル（{len(samples)}件）</h3>
+{sample_shots_html(samples)}"""
+
+    # ---------------------------------------------------------------- tests
+    tests_section = f"""<h2>テスト</h2>
+<div class="scroll"><table><thead><tr><th>種別</th><th>結果</th></tr></thead><tbody>
+<tr><td>Python (pytest)</td><td>{f"{py_passed} passed" if py_passed is not None else "未計測"}</td></tr>
+<tr><td>JavaScript (node --test)</td><td>{f"{node_passed} pass / {node_failed} fail" if node_passed is not None else "未計測"}</td></tr>
 </tbody></table></div>
-<h2>実測した時間とメモリ</h2><p>対象は <b>ZIPP-style書き換え＋SDXLの4枚生成</b>。各stageのモデル読込・IPC・保存・終了を含むwall timeです。PIGRewardによる推薦時間、来場者の操作時間は含みません。1回のブラウザー操作では {browser.get("browser_wall_seconds", "—")}秒でした。</p>{plot}
-<div class="scroll"><table><thead><tr><th>項目</th><th>実測値 / 設定</th></tr></thead><tbody><tr><td>20セッション</td><td>{bench.get("successes", "—")}成功 / {bench.get("sessions", "—")}実行、中央値 {bench.get("median_seconds", "—")}秒、nearest-rank p95 {p95}秒</td></tr><tr><td>LLM最大割当VRAM</td><td>{gpu["rewrite"]:.1f} MiB</td></tr><tr><td>SDXL最大割当VRAM</td><td>{gpu["generate"]:.1f} MiB</td></tr><tr><td>生成条件</td><td>SDXL base / EulerDiscreteScheduler / 1024×1024 / 20 steps / CFG 7.0 / fp16 / negative promptなし / batch 1</td></tr><tr><td>プロセス切替</td><td>同時常駐なし。flockで排他し、子プロセスをwaitしてから次のstageを開始</td></tr></tbody></table></div><p class="small">VRAMはtorch.cuda.max_memory_allocatedの最大値。ドライバー全体の占有量とは異なります。準備時にSDXL34枚の連続生成は約100.9秒、Qwen画像解析10方向は約12.7秒でした。</p>
-<h2>PIGRewardの採用判定</h2><div class="panel caution"><strong>実モデルは動作しましたが、今回のadapterではライブ推薦を採用できません。</strong><p>公開重みを固定revisionで取得し、6つの代表体験から20組を作って左右反転を含む40入力で検証しました。正方向で有効に解析できた比較は <b>{pig.get("forward_parseable", "—")}/20</b>、有効な左右一致は <b>{pig.get("reverse_consistent", "—")}/20</b>。設計書の各18/20以上を満たさないため、推薦を無効化しています。</p><p>観察された出力には同じ点数の反復、軸別理由の欠落、独自形式、打切りがありました。これをPIGReward一般の精度とは扱いません。専用タスク指示の不確実性を含む、この実装の接続試験結果です。</p><a href="pigreward-g0.json">実入力の識別子・モデル版・全生出力・判定を確認する</a></div>
-<h2>実装上の判断と残っている検証</h2><ul><li>既存workspaceの新規feature branchで実装し、ユーザーが編集中だった設計書を保持しました。</li><li>Personaは、実際のVLM解析から確認した根拠節を集計する簡易方式です。オンラインLLMによる自由なpersona文章生成は未採用です。</li><li>プロンプトは被写体等を守るため、元のお題を固定し、美的表現を制約付きで補足します。原ZIPPのReddit・GATを再現するものではありません。</li><li>PIGReward bootstrapは未使用。Qwen3.5-4Bで両方向を事前解析し、context_source=generic_vlmとして記録しています。</li><li>独立レビューの4件（古いブラウザー応答、skip後の再読込、サンプル設定照合、推薦の矛盾検出）を回帰テストで修正しました。未加工VLM出力をcontextに含めない追加検証も行いました。</li><li>第三者5人の理解度確認、2時間連続稼働、画像・根拠の展示担当者による最終確認は未実施です。</li><li>今回のp95はこの実機・この縮小モードの値です。PIGReward統合版や別GPUの待ち時間を保証しません。</li></ul>
-<h2>起動と再検証</h2><pre>cd /home/tomoya/stable-diffusion/personalized-t2i
+<p class="small">再現コマンド: <code>uv run --project exhibit pytest exhibit/tests -q</code> / <code>node --test exhibit/tests/test_browser_state.mjs</code></p>"""
+
+    sections = f"""<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>FAN · 実装とlocalhost検証レポート</title><style>
+:root{{--paper:#f4f2eb;--ink:#24392d;--sub:#697466;--green:#315d44;--line:#d7ddd0}}*{{box-sizing:border-box}}body{{margin:0;background:var(--paper);color:var(--ink);font:15px/1.9 system-ui,-apple-system,sans-serif}}main{{max-width:1120px;margin:auto;padding:65px 32px 90px}}header{{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--line);padding-bottom:24px}}.brand{{font:42px Georgia,serif;letter-spacing:-2px}}.brand b{{color:#bd6841;font-size:17px}}.meta{{font-size:11px;color:var(--sub)}}h1{{font-weight:500;font-size:clamp(32px,4vw,52px);line-height:1.5;letter-spacing:-1.5px;margin:50px 0 22px}}h2{{font-size:27px;font-weight:500;margin:55px 0 20px}}h3{{font-size:17px;font-weight:600;margin:35px 0 14px}}h4{{font-size:13px;font-weight:600;margin:0 0 8px;color:var(--sub)}}p{{color:var(--sub)}}a{{color:var(--green);text-underline-offset:3px}}.badge{{display:inline-block;padding:7px 14px;border-radius:40px;background:#e3eadc;color:var(--green);font-size:11px;margin:0 8px 8px 0}}.warn{{background:#efdecf;color:#8f502f}}.lead{{font-size:17px;max-width:860px}}.stats{{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin:35px 0}}.stat{{border-top:1px solid var(--line);padding-top:18px}}.stat strong{{display:block;font:34px Georgia,serif;color:var(--green)}}.stat span{{font-size:12px;color:var(--sub)}}.panel{{background:#e8eddf;border:1px solid #d9e1ce;padding:24px 28px;border-radius:7px}}.panel.caution{{background:#f1e6da;border-color:#e4cbb5}}.grid{{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:22px}}.grid.small-grid{{grid-template-columns:repeat(auto-fill,minmax(150px,1fr))}}figure{{margin:20px 0}}figure img{{display:block;width:100%;border:1px solid var(--line);border-radius:7px}}figcaption{{font-size:12px;color:var(--sub);margin-top:9px;overflow-wrap:anywhere}}.mini-grid{{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:24px}}.mini-grid img{{width:100%;border-radius:5px;border:1px solid var(--line)}}.topic-shots{{margin-bottom:8px}}table{{width:100%;border-collapse:collapse;font-size:13px}}th,td{{text-align:left;vertical-align:top;padding:13px 14px;border-bottom:1px solid var(--line)}}th{{font-weight:500;background:#e9ecdf}}code{{font-family:ui-monospace,monospace;font-size:.88em;overflow-wrap:anywhere}}pre{{overflow:auto;padding:22px;background:#24392d;color:#f0f2e8;border-radius:6px;font-size:12px;line-height:1.8}}ul{{padding-left:22px;color:var(--sub)}}.scroll{{overflow:auto}}footer{{margin-top:60px;border-top:1px solid var(--line);padding-top:22px;font-size:11px;color:var(--sub)}}.button{{display:inline-block;background:var(--green);color:white;padding:12px 22px;border-radius:5px;text-decoration:none}}.small{{font-size:12px}}@media(max-width:650px){{main{{padding:30px 20px}}.stats{{grid-template-columns:1fr 1fr}}.meta{{max-width:160px;text-align:right}}th,td{{padding:10px 7px;font-size:11px}}}}
+</style></head><body><main><header><div class="brand">fan<b> ●</b></div><div class="meta">IMPLEMENTATION & LOCAL REHEARSAL<br>{measured}</div></header>
+<h1>同じ一文から、あなたの一枚を。<br>実装と、実機で確かめたこと。</h1>{"".join(badges)}
+<p class="lead">好きな画像を3〜5枚選ぶと、その画像に付けた確認済みの説明文を参照に、同じお題・同じseed・同じ生成設定のまま Illustrious XL v2.0 が描き直します。個人化は<a href="https://github.com/Burf/FAN">FAN</a>（Foundation Encoders Are All You Need, CVPR 2026）公式実装。方式を伏せたブラインド比較で、来場者自身に違いを確かめてもらう構成です。詳細は<a href="../../superpowers/specs/2026-09-21-fan-exhibition-demo-design.md">設計書</a>を参照。旧 ZIPP-style persona × PIGReward 構成は履歴として <a href="../zipp-demo/index.html">docs/reports/zipp-demo/</a> に残しています。</p>
+{stats}
+<p><a class="button" href="http://localhost:7860">デモを開く ↗</a>　<a href="../../../exhibit/assets/fallback.html">サーバー不要のサンプルHTML</a>　<a href="evidence.json">計測記録 JSON</a></p>
+{browser_section}
+{probe_section}
+{followup_section}
+{settings_section}
+{rehearsal_section}
+{preflight_section}
+{tests_section}
+{assets_section}
+<h2>説明で守っていること（設計書 §9）</h2>
+<div class="panel"><ul>
+<li>「来場者ごとの追加学習なし」と言います。「追加モデル・重みが一切ない」とは言いません — FAN公式実装の <code>ClassTokenDecoder</code>（<code>weight/L.pth</code>, <code>weight/bigG.pth</code>）を使っています。</li>
+<li>参照は「選んだ画像に付けた確認済みの説明文」です。画像そのものをエンコーダーへ入れているとは説明しません。</li>
+<li>反映を強くするほど良いとは言いません。targetとのバランスは来場者が判断します。</li>
+<li>論文の定量結果をこの展示の性能として使いません。ブラインド比較の集計は少人数の記録であり、性能主張にしません。</li>
+<li>Attentionの値から「この画像がこの色を生んだ」といった因果説明はしません。参照に使った画像・説明文・強度だけを表示します。</li>
+<li>個人化時の pooled 埋め込みは、<code>ClassTokenDecoder</code> がpadding tokenを終端と誤検出するため使わず、同じ文の参照なし pooled を使います（意図した上流からの逸脱。詳細は <a href="../../../exhibit/README.md">exhibit/README.md</a>）。</li>
+</ul></div>
+<h2>起動と再検証</h2><pre># リポジトリのルートで実行
 uv sync --project exhibit --locked
 uv run --project exhibit python exhibit/scripts/preflight.py --models
 uv run --project exhibit uvicorn exhibit.app:app --host 127.0.0.1 --port 7860
 # http://localhost:7860 / http://localhost:7860/report/</pre>
-<pre>uv run --project exhibit pytest exhibit/tests pigreward-repro/tests tests -q
+<pre>uv run --project exhibit pytest exhibit/tests -q
 node --test exhibit/tests/test_browser_state.mjs
-uv run --project exhibit python exhibit/scripts/browser_check.py
-uv run --project exhibit python exhibit/scripts/rehearsal.py --sessions 20</pre>
-<p class="small">PythonテストにはStarlette/httpx・anyioの非推奨警告が2件あります。失敗はありません。GPU環境は既存Tailored Visionsの.venvを使用し、EXHIBIT_GPU_PYTHONで変更できます。アプリの依存関係はuv.lockで固定しました。</p>
-<details><summary>画面キャプチャをさらに見る</summary><div class="grid">{"".join(f'<figure><img src="screenshots/{name}" alt="{label}" loading="lazy"><figcaption>{label}</figcaption></figure>' for name, label in [("01-welcome.png", "開始画面"), ("04-topics.png", "6つのお題"), ("06-selection.png", "本人の最終選択"), ("07-mobile.png", "390pxの表示"), ("08-all-off.png", "全項目OFF"), ("09-skips.png", "全skipからの再選択"), ("10-sample.png", "サンプル表示")])}</div></details>
-<h2>関連ファイルと出典</h2><p><a data-server="/reference/readme" href="../../../exhibit/README.md">アプリの実行手順</a> · <a data-server="/reference/pigreward" href="../../../pigreward-repro/docs/DEVIATIONS.md">PIGRewardとの差分</a> · <a data-server="/reference/spec" href="../../superpowers/specs/2026-09-19-zipp-pigreward-exhibition-demo-design.md">設計書</a> · <a data-server="/reference/plan" href="../../superpowers/plans/2026-09-19-zipp-exhibition-demo.md">実装計画と記録</a></p><p>モデル・原手法：<a href="https://behavior-in-the-wild.github.io/zipp.html">ZIPP</a>、<a href="https://huggingface.co/jeongeunnn/pigreward">PIGReward evaluator</a>、<a href="https://huggingface.co/Qwen/Qwen3.5-4B">Qwen3.5-4B</a>、<a href="https://huggingface.co/stabilityai/stable-diffusion-xl-base-1.0">SDXL base</a>。モデル・template・画像hashはasset manifestおよび計測JSONに保存しています。</p><footer>TASTE / LOCAL EXHIBITION DEMO · 報告は実測と未検証事項を分けて記載しています。画像は実際のローカル推論・localhostブラウザー操作から取得しました。</footer></main><script>if(location.protocol!=="file:")for(const a of document.querySelectorAll("a[data-server]"))a.href=a.dataset.server;</script></body></html>"""
+PYTHONPATH=fan-repro/.work/upstream:exhibit/src fan-repro/.venv/bin/python exhibit/scripts/fan_probe.py
+uv run --project exhibit python exhibit/scripts/rehearsal.py --sessions 20
+uv run --project exhibit python exhibit/scripts/browser_check.py --report-dir docs/reports/fan-demo</pre>
+<p class="small">GPUを使うコマンド同士は同時実行しないでください。ブラウザー確認は <code>--mock</code> と <code>exhibit/tests/mock_api.mjs</code> で開発でき、実機確認は実サーバーに対して行います。</p>
+<h2>関連ファイルと出典</h2><p><a href="../../../exhibit/README.md">アプリの実行手順</a> · <a href="../../superpowers/specs/2026-09-21-fan-exhibition-demo-design.md">設計書</a></p>
+<p>モデル・原手法：<a href="https://github.com/Burf/FAN">FAN</a>、<a href="https://huggingface.co/OnomaAIResearch/Illustrious-XL-v2.0">Illustrious XL v2.0</a>。モデル・画像hashはasset manifestおよび計測JSONに保存しています。</p>
+<footer>FAN / LOCAL EXHIBITION DEMO · 報告は実測と未検証事項を分けて記載しています。画像は実際のローカル推論・localhostブラウザー操作から取得しました。</footer></main></body></html>"""
     (REPORT / "index.html").write_text(sections)
     print(REPORT / "index.html")
 

@@ -1,110 +1,167 @@
+import copy
+
 import pytest
-from exhibit.domain import build_persona, cache_key, effective_context, validate_prompt
+from exhibit.config import CONFIG
+from exhibit.domain import (
+    CARDS,
+    build_cards,
+    build_personalization,
+    fan_settings,
+    normalize_selection,
+    personalization_hash,
+    ref_text,
+    variant_cache_key,
+)
+
+IDS = list(CARDS)
 
 
-def persona():
-    choices = [
-        {"pair_id": "p1", "chosen_id": "a"},
-        {"pair_id": "p2", "chosen_id": None},
-    ]
-    evidence = [
-        {
-            "id": "e1",
-            "pair_id": "p1",
-            "chosen_id": "a",
-            "dimensions": ["color"],
-            "values": {"color": "warm"},
-            "text": "Warm tones relative to the other image.",
-            "reviewed": True,
-        },
-        {
-            "id": "e2",
-            "pair_id": "p1",
-            "chosen_id": "a",
-            "dimensions": ["lighting", "mood"],
-            "values": {"lighting": "soft", "mood": "calm"},
-            "text": "Soft light with a quiet atmosphere.",
-            "reviewed": True,
-        },
-        {
-            "id": "e3",
-            "pair_id": "p2",
-            "chosen_id": "c",
-            "dimensions": ["color"],
-            "values": {"color": "cool"},
-            "text": "Cool tones.",
-            "reviewed": True,
-        },
-    ]
-    return build_persona(choices, evidence)
+def selection(count=3, aspects_off=()):
+    return [{"card_id": IDS[i], "aspects_off": list(aspects_off)} for i in range(count)]
 
 
-def test_skips_do_not_create_evidence():
-    p = persona()
-    assert p["axes"]["color"]["value"] == "warm"
-    assert p["axes"]["color"]["count"] == 1
-    assert {e["id"] for e in p["evidence"]} == {"e1", "e2"}
+def test_sixteen_cards_never_put_the_subject_into_the_reference():
+    cards = build_cards()
+    assert len(cards) == 16
+    for card in cards:
+        assert card["ref_en"] == ", ".join(card["aspects"].values())
+        subject = next(
+            s for s in CONFIG["card_subjects"] if s["id"] == card["subject_id"]
+        )
+        assert subject["basic_prompt_en"] not in card["ref_en"]
+        assert card["prompt"].startswith(subject["basic_prompt_en"])
+        assert card["ref_en"] in card["prompt"]
 
 
-def test_off_removes_whole_multi_axis_fragment_from_both_routes():
-    c = effective_context(persona(), {"lighting": None})
-    assert [e["id"] for e in c["evidence"]] == ["e1"]
-    assert "Soft light" not in c["text"]
-    assert "lighting" not in c["preferences"]
-    assert c["hash"] != effective_context(persona(), {})["hash"]
-
-
-def test_correction_removes_conflicting_raw_evidence():
-    c = effective_context(persona(), {"color": "cool"})
-    assert "Warm tones" not in c["text"]
-    assert c["preferences"]["color"] == "cool"
-    assert c["overrides"] == {"color": "cool"}
-    assert "User explicitly requests" in c["text"]
-
-
-def test_all_off_and_invalid_edits():
-    assert not effective_context(persona(), {k: None for k in persona()["axes"]})[
-        "preferences"
-    ]
+def test_aspects_off_removes_exactly_those_phrases():
+    card = CARDS[IDS[0]]
+    full = ref_text(card)
+    reduced = ref_text(card, ["mood", "texture"])
+    assert card["aspects"]["mood"] in full and card["aspects"]["mood"] not in reduced
+    assert card["aspects"]["texture"] not in reduced
+    assert card["aspects"]["color"] in reduced
     with pytest.raises(ValueError):
-        effective_context(persona(), {"age": "old"})
+        ref_text(card, ["color", "lighting", "texture", "mood"])
     with pytest.raises(ValueError):
-        effective_context(persona(), {"color": "<script>"})
+        ref_text(card, ["hairstyle"])
 
 
-def test_cache_changes_on_every_generation_input():
-    a = cache_key("cat", {"revision": "r1", "steps": 20}, 1)
-    assert a != cache_key("cat", {"revision": "r1", "steps": 21}, 1)
-    assert a != cache_key("cat", {"revision": "r2", "steps": 20}, 1)
-    assert a != cache_key("cat", {"revision": "r1", "steps": 20}, 2)
-    assert a != cache_key("cat", {"revision": "r1", "steps": 20}, 1, {"hash": "new"})
+def hash_with(refs, alpha, **overrides):
+    arguments = {
+        "commit": CONFIG["fan"]["commit"],
+        "generation": CONFIG["generation"],
+        "seeds": CONFIG["seeds"],
+        "fan": fan_settings(),
+        **overrides,
+    }
+    return personalization_hash(refs, alpha, **arguments)
 
 
-class Tokenizer:
-    model_max_length = 12
+def test_references_are_deduplicated_aspect_phrases_with_merged_weights():
+    base = build_personalization(selection(), {}, "mid")
+    calm = CARDS[IDS[0]]["aspects"]["mood"]
+    assert calm == CARDS[IDS[1]]["aspects"]["mood"]
+    phrases = [ref["text"] for ref in base["refs"]]
+    assert len(phrases) == len(set(phrases)) == 11
+    # First-seen order, subject phrases never included.
+    assert phrases[:4] == list(CARDS[IDS[0]]["aspects"].values())
+    assert phrases[3] == calm
+    merged = next(ref for ref in base["refs"] if ref["text"] == calm)
+    assert merged["weight"] == 2.0
+    assert merged["aspect"] == "mood"
+    assert merged["card_ids"] == [IDS[0], IDS[1]]
+    assert all("card_id" not in ref for ref in base["refs"])
 
-    def __call__(self, text, **kw):
-        return {"input_ids": text.split() + [0, 1]}
+    emphasised = build_personalization(selection(), {IDS[0]: "emphasis"}, "mid")
+    assert next(r for r in emphasised["refs"] if r["text"] == calm)["weight"] == 3.0
+    assert emphasised["hash"] != base["hash"]
 
 
-def test_rewrite_preserves_basic_prompt_and_both_tokenizer_limits():
-    topic = {"basic_prompt_en": "One red cat by a window."}
-    assert validate_prompt(
-        "One red cat by a window. Soft light.", topic, [Tokenizer(), Tokenizer()]
+def test_personalization_hash_changes_with_order_weight_alpha_and_settings():
+    base = build_personalization(selection(), {}, "mid")
+    swapped = build_personalization(
+        [selection()[1], selection()[0], selection()[2]], {}, "mid"
     )
-    assert not validate_prompt(
-        "One blue cat by a window.", topic, [Tokenizer(), Tokenizer()]
+    assert base["hash"] != swapped["hash"]
+    assert (
+        build_personalization(selection(), {IDS[0]: "emphasis"}, "mid")["hash"]
+        != (base["hash"])
     )
-    assert not validate_prompt(
-        "One red cat by a window. " + "bright " * 20, topic, [Tokenizer(), Tokenizer()]
+    assert build_personalization(selection(), {}, "strong")["hash"] != base["hash"]
+    assert build_personalization(selection(), {}, "mid")["hash"] == base["hash"]
+    assert base["alpha"] == CONFIG["alphas"]["mid"] == 0.5
+
+    refs, alpha = base["refs"], base["alpha"]
+    assert hash_with(refs, alpha) == base["hash"]
+    settings = copy.deepcopy(CONFIG["generation"])
+    settings["steps"] += 1
+    assert hash_with(refs, alpha, generation=settings) != base["hash"]
+    assert hash_with(refs, alpha, commit="other-commit") != base["hash"]
+    assert hash_with(refs, alpha, seeds=[1, 2, 3, 4]) != base["hash"]
+    for knob, value in (("skip_pa", [0, 1]), ("use_attn_mask", True), ("skip", -1)):
+        assert (
+            hash_with(refs, alpha, fan={**fan_settings(), knob: value})
+            != (base["hash"])
+        )
+
+
+def test_the_measured_fan_settings_are_the_ones_that_are_hashed():
+    assert fan_settings() == {
+        "skip": -2,
+        "sample_size": 0,
+        "skip_pa": [0, 1, 2, 3, 4, 5, 6, 7],
+        "use_attn_mask": False,
+    }
+
+
+def test_aspects_off_removes_only_that_phrase():
+    base = build_personalization(selection(), {}, "mid")
+    reduced = build_personalization(selection(aspects_off=["mood"]), {}, "mid")
+    assert base["hash"] != reduced["hash"]
+    moods = {CARDS[i]["aspects"]["mood"] for i in IDS[:3]}
+    assert not moods & {ref["text"] for ref in reduced["refs"]}
+    assert len(reduced["refs"]) == len(base["refs"]) - 2  # calm merged, serious alone
+
+
+def test_excluded_references_disappear_and_excluding_everything_is_rejected():
+    partial = build_personalization(selection(), {IDS[0]: "exclude"}, "mid")
+    excluded = set(CARDS[IDS[0]]["aspects"].values())
+    kept = {ref["text"] for ref in partial["refs"]}
+    assert not (excluded - {CARDS[IDS[1]]["aspects"]["mood"]}) & kept
+    assert all(IDS[0] not in ref["card_ids"] for ref in partial["refs"])
+    calm = next(
+        r for r in partial["refs"] if r["text"] == CARDS[IDS[1]]["aspects"]["mood"]
     )
+    assert calm["weight"] == 1.0 and calm["card_ids"] == [IDS[1]]
+    with pytest.raises(ValueError):
+        build_personalization(selection(), {i: "exclude" for i in IDS[:3]}, "mid")
+    with pytest.raises(ValueError):
+        build_personalization(selection(), {}, "extreme")
+    with pytest.raises(ValueError):
+        build_personalization(selection(), {IDS[0]: "double"}, "mid")
+    with pytest.raises(ValueError):
+        build_personalization(selection(), {IDS[9]: "normal"}, "mid")
 
 
-def test_effective_context_does_not_forward_unreviewed_raw_vlm_output():
-    import json
+def test_selection_enforces_min_max_and_known_cards():
+    assert len(normalize_selection(selection(5))) == 5
+    with pytest.raises(ValueError):
+        normalize_selection(selection(2))
+    with pytest.raises(ValueError):
+        normalize_selection(selection(3) + [{"card_id": IDS[3]}] * 3)
+    with pytest.raises(ValueError):
+        normalize_selection([{"card_id": "unknown-card"}] + selection(2))
+    with pytest.raises(ValueError):
+        normalize_selection([{"card_id": IDS[0]}] * 3)
+    with pytest.raises(ValueError):
+        normalize_selection(
+            selection(2) + [{"card_id": IDS[2], "aspects_off": ["subject"]}]
+        )
 
-    p = persona()
-    p["evidence"][0]["raw"] = "UNREVIEWED_RAW_OUTPUT: dramatic light and a loud mood"
-    context = effective_context(p, {"lighting": None})
-    assert "UNREVIEWED_RAW_OUTPUT" not in json.dumps(context)
-    assert context["evidence"][0]["text"] == "Warm tones relative to the other image."
+
+def test_cache_key_covers_topic_and_personalization():
+    base = build_personalization(selection(), {}, "mid")
+    other = build_personalization(selection(), {}, "strong")
+    assert variant_cache_key("cat", base) == variant_cache_key("cat", base)
+    assert variant_cache_key("cat", base) != variant_cache_key("tokyo", base)
+    assert variant_cache_key("cat", base) != variant_cache_key("cat", other)

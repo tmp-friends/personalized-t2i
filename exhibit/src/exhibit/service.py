@@ -1,23 +1,40 @@
-"""Session lifecycle, snapshot identity and single-GPU job orchestration."""
+"""Session lifecycle, blind comparison identity and single-GPU job orchestration."""
 
 from __future__ import annotations
 
 import copy
+import os
 import random
+import secrets
 import shutil
 import threading
 import time
 import uuid
 from pathlib import Path
 
-from .config import ASSETS, CONFIG, OUTPUTS, REPO, read_json, write_json
-from .domain import build_persona, digest, effective_context, file_hash
+from .config import ASSETS, CONFIG, FAN_UPSTREAM, OUTPUTS, read_json, write_json
+from .domain import (
+    build_cards,
+    build_personalization,
+    file_hash,
+    normalize_selection,
+    target_prompt,
+    variant_cache_key,
+)
 from .gpu import GPUError, run_stage
 from .preflight import sample_errors
 
 
 class Conflict(RuntimeError):
     pass
+
+
+def _link(source, destination):
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    try:
+        os.link(source, destination)
+    except OSError:
+        shutil.copyfile(source, destination)
 
 
 class Service:
@@ -30,15 +47,12 @@ class Service:
         self.cancel = threading.Event()
         self.runner = runner or self._execute
 
+    # ---------------------------------------------------------------- session
+
     def _current(self, sid):
         if not self.session or self.session["id"] != sid:
             raise KeyError("Session expired")
         return self.session
-
-    def _snapshot(self):
-        return copy.deepcopy(
-            {k: v for k, v in self.session.items() if k not in ("cache", "last_active")}
-        )
 
     def create_session(self):
         with self.lock:
@@ -47,14 +61,12 @@ class Service:
                 raise Conflict(
                     "この端末で体験中です。元の画面を再開するか、処理終了までお待ちください。"
                 )
-            pairs = copy.deepcopy(CONFIG["pairs"])
-            for pair in pairs:
-                random.SystemRandom().shuffle(pair["image_ids"])
+            order = [card["id"] for card in build_cards()]
+            random.SystemRandom().shuffle(order)
             self.session = {
                 "id": uuid.uuid4().hex,
-                "pairs": pairs,
-                "choices": [],
-                "persona": None,
+                "card_order": order,
+                "selection": [],
                 "run": None,
                 "cache": {},
                 "last_active": time.monotonic(),
@@ -71,394 +83,630 @@ class Service:
         with self.lock:
             self._current(sid)["last_active"] = time.monotonic()
 
-    def answer(self, sid, pair_id, chosen_id):
+    def set_selection(self, sid, cards):
         with self.lock:
             session = self._current(sid)
-            if self.busy or session["run"]:
+            # A cancelled worker may still be exiting; editing needs no GPU.
+            if session["run"]:
                 raise Conflict("選択をやり直すには終了してください。")
-            pair = next((p for p in session["pairs"] if p["id"] == pair_id), None)
-            if not pair or (
-                chosen_id is not None and chosen_id not in pair["image_ids"]
-            ):
-                raise ValueError("Invalid pair or image")
-            choice = {
-                "pair_id": pair_id,
-                "chosen_id": chosen_id,
-                "other_id": next((i for i in pair["image_ids"] if i != chosen_id), None)
-                if chosen_id
-                else None,
-                "skip": chosen_id is None,
-                "display_order": pair["image_ids"][:],
-            }
-            session["choices"] = [
-                c for c in session["choices"] if c["pair_id"] != pair_id
-            ] + [choice]
-            session["persona"] = build_persona(
-                session["choices"], read_json(ASSETS / "evidence.json", [])
-            )
+            session["selection"] = normalize_selection(cards)
             session["last_active"] = time.monotonic()
             return self._snapshot()
 
-    def start_run(self, sid, topic_id, edits, request_id):
+    # --------------------------------------------------------------- snapshot
+
+    def _snapshot(self):
+        session = self.session
+        return {
+            "id": session["id"],
+            "card_order": list(session["card_order"]),
+            "selection": copy.deepcopy(session["selection"]),
+            "run": self._public_run(session),
+        }
+
+    def _public_run(self, session):
+        run = session["run"]
+        if not run:
+            return None
+        revealed = run["blind"]["revealed"]
+        pairs = []
+        for pair in run["blind"]["pairs"]:
+            pairs.append(
+                {
+                    "index": pair["index"],
+                    "seed": pair["seed"],
+                    "ready": pair["ready"],
+                    "items": [
+                        {"token": i["token"], "url": i["url"]} for i in pair["items"]
+                    ]
+                    if pair["ready"]
+                    else [],
+                    "pick": pair["pick"],
+                }
+            )
+        answered = sum(1 for pair in run["blind"]["pairs"] if pair["pick"] is not None)
+        blind = {
+            "revealed": revealed,
+            "pairs": pairs,
+            "answered": answered,
+            "mapping": self._mapping(run) if revealed else None,
+            "score": self._score(run) if revealed else None,
+        }
+        variants = []
+        for index, variant in enumerate(run["variants"]):
+            hidden = index == 0 and not revealed
+            variants.append(
+                {
+                    "id": variant["id"],
+                    "request_id": variant["request_id"],
+                    "alpha_key": variant["alpha_key"],
+                    "weights": dict(variant["weights"]),
+                    "status": variant["status"],
+                    "mode": variant["mode"],
+                    "done_count": len(variant["images"]),
+                    "images": [] if hidden else copy.deepcopy(variant["images"]),
+                    "personalization": None
+                    if hidden
+                    else copy.deepcopy(variant["personalization"]),
+                    "prompt": variant["prompt"],
+                    "timings": copy.deepcopy(variant["timings"]),
+                    "error": variant["error"],
+                }
+            )
+        return {
+            "id": run["id"],
+            "topic_id": run["topic_id"],
+            "status": run["status"],
+            "message": run["message"],
+            "elapsed_seconds": run["elapsed_seconds"],
+            "error": run["error"],
+            "blind": blind,
+            "plain": copy.deepcopy(run["plain"]) if revealed else [],
+            "variants": variants,
+        }
+
+    @staticmethod
+    def _mapping(run):
+        return {
+            item["token"]: item["kind"]
+            for pair in run["blind"]["pairs"]
+            for item in pair["items"]
+        }
+
+    @staticmethod
+    def _score(run):
+        mapping = Service._mapping(run)
+        picks = [pair["pick"] for pair in run["blind"]["pairs"]]
+        return {
+            "personal": sum(1 for p in picks if mapping.get(p) == "personal"),
+            "plain": sum(1 for p in picks if mapping.get(p) == "plain"),
+            "tie": sum(1 for p in picks if p == "tie"),
+            "answered": sum(1 for p in picks if p is not None),
+        }
+
+    # ------------------------------------------------------------------- runs
+
+    def _plain(self, topic_id, directory, sid):
+        """Generic cache copied into the session so its URL reveals no method."""
+        manifest = read_json(ASSETS / "manifest.json", {}) or {}
+        if manifest.get("generation") != CONFIG["generation"]:
+            raise GPUError("Generic cache settings mismatch")
+        topic = next(t for t in CONFIG["topics"] if t["id"] == topic_id)
+        prompt = target_prompt(topic)
+        result = []
+        for index, seed in enumerate(CONFIG["seeds"]):
+            image = manifest.get("images", {}).get(f"{topic_id}-{index}")
+            if (
+                not image
+                or image.get("seed") != seed
+                or image.get("prompt") != prompt
+                or image.get("settings") != CONFIG["generation"]
+                or file_hash(ASSETS / image["path"]) != image["sha256"]
+            ):
+                raise GPUError("Generic cache missing or corrupt")
+            relative = f"{directory.name}/plain-{index}.png"
+            _link(ASSETS / image["path"], directory / f"plain-{index}.png")
+            result.append(
+                {
+                    "id": f"plain-{index}",
+                    "seed": seed,
+                    "prompt": prompt,
+                    "sha256": image["sha256"],
+                    "relative_path": relative,
+                    "url": f"/api/sessions/{sid}/images/{relative}",
+                }
+            )
+        return result
+
+    def _new_variant(
+        self, index, request_id, alpha_key, weights, personalization, prompt
+    ):
+        return {
+            "id": f"v{index}",
+            "request_id": request_id,
+            "alpha_key": alpha_key,
+            "weights": dict(weights),
+            "personalization": personalization,
+            "status": "queued",
+            "mode": "live",
+            "images": [],
+            "prompt": prompt,
+            "timings": {},
+            "metrics": [],
+            "error": None,
+            "cancelled": False,
+        }
+
+    def start_run(self, sid, topic_id, alpha_key, weights, request_id):
         with self.lock:
-            s = self._current(sid)
-            context = effective_context(s["persona"] or build_persona([], []), edits)
-            fingerprint = digest({"topic": topic_id, "context": context["hash"]})
-            if s["run"] and s["run"].get("request_id") == request_id:
-                if s["run"]["fingerprint"] != fingerprint:
-                    raise Conflict("Request ID was reused with different input")
-                return self._snapshot()
-            if self.busy:
-                raise Conflict("処理中です。")
-            if sum(c["chosen_id"] is not None for c in s["choices"]) < 3:
-                raise ValueError("3回以上の画像選択が必要です。")
-            if topic_id not in {t["id"] for t in CONFIG["topics"]}:
-                raise ValueError("Unknown topic")
+            session = self._current(sid)
             if not request_id or len(request_id) > 100:
                 raise ValueError("Invalid request ID")
-            job = {
-                "id": uuid.uuid4().hex,
-                "request_id": request_id,
-                "fingerprint": fingerprint,
-                "context": context,
-                "topic_id": topic_id,
-                "status": "queued",
-                "mode": "live",
-                "generic": [],
-                "personalized": [],
-                "winner_id": None,
-                "judgments": [],
-                "message": "描く準備をしています。",
-                "timings": {},
-                "elapsed_seconds": 0,
-                "selected_id": None,
-            }
-            s["run"] = job
-            s["last_active"] = time.monotonic()
+            if topic_id not in {t["id"] for t in CONFIG["topics"]}:
+                raise ValueError("Unknown topic")
+            selection = session["selection"]
+            if len(selection) < CONFIG["selection"]["min"]:
+                raise ValueError(
+                    f"{CONFIG['selection']['min']}枚以上の画像選択が必要です。"
+                )
+            personalization = build_personalization(selection, weights, alpha_key)
+            run = session["run"]
+            if run and run["topic_id"] == topic_id and run["mode"] != "sample":
+                existing = next(
+                    (v for v in run["variants"] if v["request_id"] == request_id), None
+                )
+                if existing:
+                    if existing["personalization"]["hash"] != personalization["hash"]:
+                        raise Conflict("Request ID was reused with different input")
+                    return self._snapshot()
+            if self.busy:
+                raise Conflict("処理中です。")
+            if run and (run["topic_id"] != topic_id or run["mode"] == "sample"):
+                # A new topic, or leaving the sample, starts a fresh comparison.
+                if run["status"] != "done":
+                    raise Conflict("処理中です。")
+                session["run"] = run = None
+            if run:
+                if run["status"] != "done":
+                    raise Conflict("処理中です。")
+                if not run["blind"]["revealed"]:
+                    raise Conflict("答えを見てから調整できます。")
+                if len(run["variants"]) >= CONFIG["max_variants"]:
+                    raise Conflict(f"描き直しは{CONFIG['max_variants']}回までです。")
+            else:
+                run = self._create_run(sid, topic_id)
+                session["run"] = run
+            variant = self._new_variant(
+                len(run["variants"]),
+                request_id,
+                alpha_key,
+                weights or {},
+                personalization,
+                run["prompt"],
+            )
+            run["variants"].append(variant)
+            run["status"] = "generating"
+            run["error"] = None
+            run["message"] = "描く準備をしています。"
+            session["last_active"] = time.monotonic()
             self.busy = True
             self.cancel = threading.Event()
             threading.Thread(
                 target=self._work,
-                args=(copy.deepcopy(s), copy.deepcopy(job), self.cancel),
+                args=(
+                    copy.deepcopy(session),
+                    run["id"],
+                    copy.deepcopy(variant),
+                    self.cancel,
+                ),
                 daemon=True,
             ).start()
             return self._snapshot()
 
-    def publish(self, sid, jid, context_hash, updates):
+    def _create_run(self, sid, topic_id):
+        run_id = uuid.uuid4().hex
+        directory = self.root / "sessions" / sid / run_id
+        directory.mkdir(parents=True, exist_ok=True)
+        topic = next(t for t in CONFIG["topics"] if t["id"] == topic_id)
+        try:
+            plain = self._plain(topic_id, directory, sid)
+        except GPUError as exc:
+            raise ValueError(f"通常画像のキャッシュを使えません: {exc}") from exc
+        random_source = random.SystemRandom()
+        pairs = []
+        for index, seed in enumerate(CONFIG["seeds"]):
+            personal = f"v0/v0-{index}.png"
+            items = [
+                {
+                    "token": secrets.token_urlsafe(12),
+                    "kind": "plain",
+                    "relative_path": plain[index]["relative_path"],
+                },
+                {
+                    "token": secrets.token_urlsafe(12),
+                    "kind": "personal",
+                    "relative_path": f"{run_id}/{personal}",
+                },
+            ]
+            random_source.shuffle(items)
+            for item in items:
+                item["url"] = f"/api/sessions/{sid}/images/blind/{item['token']}.png"
+            pairs.append(
+                {
+                    "index": index,
+                    "seed": seed,
+                    "ready": False,
+                    "items": items,
+                    "pick": None,
+                }
+            )
+        return {
+            "id": run_id,
+            "topic_id": topic_id,
+            "prompt": target_prompt(topic),
+            "status": "queued",
+            "mode": "live",
+            "message": "描く準備をしています。",
+            "elapsed_seconds": 0,
+            "error": None,
+            "plain": plain,
+            "variants": [],
+            "blind": {"revealed": False, "pairs": pairs},
+        }
+
+    # ------------------------------------------------------------- publishing
+
+    def publish(self, sid, run_id, variant_id, personalization_hash, updates):
+        """A result only reaches the screen if its session, run and preference match."""
         with self.lock:
             if not self.session or self.session["id"] != sid:
                 return False
             run = self.session["run"]
-            if not run or run["id"] != jid or run["context"]["hash"] != context_hash:
+            if not run or run["id"] != run_id:
                 return False
-            run.update(copy.deepcopy(updates))
+            variant = next((v for v in run["variants"] if v["id"] == variant_id), None)
+            if (
+                not variant
+                or variant["cancelled"]
+                or variant["personalization"]["hash"] != personalization_hash
+            ):
+                return False
+            variant.update(copy.deepcopy(updates))
+            if variant["id"] == "v0":
+                ready = {image["id"] for image in variant["images"]}
+                for pair in run["blind"]["pairs"]:
+                    pair["ready"] = f"v0-{pair['index']}" in ready
+            if "message" in updates:
+                run["message"] = updates["message"]
+            run["status"] = (
+                "generating"
+                if any(v["status"] != "done" for v in run["variants"])
+                else "done"
+            )
+            run["error"] = next(
+                (v["error"] for v in run["variants"] if v["error"]), None
+            )
             return True
 
-    def _work(self, session, job, cancel):
+    def _work(self, session, run_id, variant, cancel):
         started = time.monotonic()
+        sid, vid = session["id"], variant["id"]
+        key = variant["personalization"]["hash"]
         try:
-            self.runner(
-                session, job, cancel
-            ) if self.runner == self._execute else self.runner(self, session, job)
-        except Exception as exc:  # noqa: BLE001 - job boundary must publish failure and release lease
+            self.runner(session, run_id, variant, cancel) if self.runner == (
+                self._execute
+            ) else self.runner(self, session, run_id, variant)
+        except Exception as exc:  # noqa: BLE001 - job boundary publishes and releases
             self.publish(
-                session["id"],
-                job["id"],
-                job["context"]["hash"],
+                sid,
+                run_id,
+                vid,
+                key,
                 {
                     "status": "done",
-                    "winner_id": None,
                     "error": str(exc),
-                    "message": "処理を完了できませんでした。完成した画像から選べます。画像がない場合はサンプル体験をご利用ください。",
+                    "message": "処理を完了できませんでした。できた画像はそのまま見られます。",
                 },
             )
         finally:
             with self.lock:
-                self.publish(
-                    session["id"],
-                    job["id"],
-                    job["context"]["hash"],
-                    {"elapsed_seconds": round(time.monotonic() - started, 2)},
-                )
-                self.busy = False
-                if self.session and self.session["id"] == session["id"]:
+                # The run may have been dropped (cancel, topic change) while the
+                # worker was still exiting; only the session decides cleanup.
+                current = self.session["run"] if self.session else None
+                if self.session and self.session["id"] == sid:
+                    if current and current["id"] == run_id:
+                        current["elapsed_seconds"] = round(
+                            time.monotonic() - started, 2
+                        )
                     self.session["last_active"] = time.monotonic()
                 else:
-                    shutil.rmtree(
-                        self.root / "sessions" / session["id"], ignore_errors=True
-                    )
+                    shutil.rmtree(self.root / "sessions" / sid, ignore_errors=True)
+                self.busy = False
 
-    def _generic(self, topic_id):
-        manifest = read_json(ASSETS / "manifest.json", {})
-        if manifest.get("generation") != CONFIG["generation"]:
-            raise GPUError("Generic cache settings mismatch")
-        result = []
-        prompts = read_json(ASSETS / "generic-prompts.json", {})
-        for i, seed in enumerate(CONFIG["seeds"]):
-            image = manifest.get("images", {}).get(f"{topic_id}-{i}")
-            if (
-                not image
-                or image["seed"] != seed
-                or image["prompt"] != prompts[topic_id]["prompt"]
-                or file_hash(ASSETS / image["path"]) != image["sha256"]
-            ):
-                raise GPUError("Generic cache missing or corrupt")
-            result.append(
-                {**image, "id": f"generic-{i}", "url": "/assets/" + image["path"]}
-            )
-        return result
-
-    def _execute(self, s, job, cancel):
-        sid, jid, context = s["id"], job["id"], job["context"]
-        publish = lambda **u: self.publish(sid, jid, context["hash"], u)
+    def _execute(self, session, run_id, variant, cancel):
+        sid, vid = session["id"], variant["id"]
+        personalization = variant["personalization"]
+        key = personalization["hash"]
+        publish = lambda **updates: self.publish(sid, run_id, vid, key, updates)
         started = time.monotonic()
         deadline = started + CONFIG["timeout_seconds"]
-        directory = self.root / "sessions" / sid / jid
-        directory.mkdir(parents=True)
-        topic = next(t for t in CONFIG["topics"] if t["id"] == job["topic_id"])
-        generic = self._generic(topic["id"])
-        publish(generic=generic, generic_prompt=generic[0]["prompt"])
-        if not context["preferences"]:
-            publish(
-                status="done",
-                mode="generic",
-                message="好みを使わずに描いた4枚です。好きな1枚を選んでください。",
-            )
-            return
-        key = digest(
-            {
-                "context": context,
-                "topic": topic,
-                "llm": CONFIG["llm"],
-                "generation": CONFIG["generation"],
-                "seeds": CONFIG["seeds"],
-                "generic_prompt": generic[0]["prompt"],
-            }
-        )
-        cached = s["cache"].get(key)
+        session_root = self.root / "sessions" / sid
+        directory = session_root / run_id / vid
+        directory.mkdir(parents=True, exist_ok=True)
+        cache_key = variant_cache_key(session["run"]["topic_id"], personalization)
+        cached = session["cache"].get(cache_key)
         if cached and all(
-            (self.root / "sessions" / sid / x["relative_path"]).is_file()
-            and file_hash(self.root / "sessions" / sid / x["relative_path"])
-            == x["sha256"]
-            for x in cached["personalized"]
+            (session_root / image["relative_path"]).is_file()
+            and file_hash(session_root / image["relative_path"]) == image["sha256"]
+            for image in cached["images"]
         ):
             publish(
-                **cached,
+                images=copy.deepcopy(cached["images"]),
+                timings=copy.deepcopy(cached["timings"]),
                 status="done",
                 mode="exact-cache",
-                message="同じ好み・お題・設定で、この体験中に生成した結果です。",
+                message="同じ設定・同じお題で、この体験中に生成した結果です。",
             )
             return
-        write_json(directory / "context.json", context)
-        rewrites = []
+        write_json(directory / "personalization.json", personalization)
+        images = []
         timings = {}
         metrics = []
-        publish(
-            status="rewriting", message="あなたの好みを、描き方の言葉にしています。"
-        )
-
-        def rewrite_event(e):
-            if e["type"] == "rewrite":
-                rewrites.append(e)
-            elif e["type"] == "metrics":
-                metrics.append(e)
-
-        timings["rewrite"] = run_stage(
-            {
-                "stage": "rewrite",
-                "items": [{"id": jid, "topic": topic, "context": context}],
-            },
-            directory,
-            cancel,
-            deadline,
-            rewrite_event,
-        )
-        if not rewrites or not rewrites[-1]["valid"]:
-            publish(
-                status="done",
-                mode="generic",
-                error="rewrite_invalid",
-                message="今回は好みを反映できませんでした。通常の4枚から選んでください。",
-                timings=timings,
-            )
-            return
-        prompt = rewrites[-1]["prompt"]
-        images = []
-        publish(
-            status="generating",
-            personalized_prompt=prompt,
-            message="あなた向けの画像を1枚ずつ描いています。",
-            timings=timings,
-        )
+        publish(status="generating", message="1枚ずつ描いています。")
         items = [
             {
-                "id": f"personal-{i}",
-                "prompt": prompt,
+                "id": f"{vid}-{index}",
+                "prompt": variant["prompt"],
                 "seed": seed,
-                "path": str(directory / f"personal-{i}.png"),
+                "path": str(directory / f"{vid}-{index}.png"),
+                "personalization": personalization,
             }
-            for i, seed in enumerate(CONFIG["seeds"])
+            for index, seed in enumerate(CONFIG["seeds"])
         ]
 
-        def image_event(e):
-            if e["type"] == "image":
-                if e.get("context_hash") != context["hash"]:
-                    raise GPUError("Context mismatch")
-                relative = str(
-                    Path(e["path"]).relative_to(self.root / "sessions" / sid)
-                )
+        def image_event(event):
+            if event["type"] == "image":
+                if event.get("personalization_hash") != key:
+                    raise GPUError("Personalization mismatch")
+                relative = str(Path(event["path"]).relative_to(session_root))
                 images.append(
                     {
-                        **e,
+                        "id": event["id"],
+                        "seed": event["seed"],
+                        "sha256": event["sha256"],
                         "relative_path": relative,
                         "url": f"/api/sessions/{sid}/images/{relative}",
                     }
                 )
                 publish(
-                    personalized=images, message=f"{len(images)} / 4枚ができました。"
+                    images=images,
+                    message=f"{len(images)} / {len(items)}枚ができました。",
                 )
-            elif e["type"] == "metrics":
-                metrics.append(e)
+            elif event["type"] == "metrics":
+                metrics.append(event)
 
         try:
             timings["generation"] = run_stage(
-                {"stage": "generate", "items": items, "context_hash": context["hash"]},
+                {
+                    "stage": "generate",
+                    "items": items,
+                    "upstream": str(FAN_UPSTREAM),
+                    "personalization_hash": key,
+                },
                 directory,
                 cancel,
                 deadline,
                 image_event,
             )
-        except GPUError as e:
+        except GPUError as exc:
             publish(
                 status="done",
-                error=str(e),
-                message=f"{len(images)}枚のみ生成しました。自動推薦は行いません。",
-                personalized=images,
+                error=str(exc),
+                images=images,
                 timings=timings,
+                metrics=metrics,
+                message=f"{len(images)}枚のみ生成しました。",
             )
             return
-        recommendation = {"winner_id": None, "judgments": [], "reason": ""}
-        pig = read_json(REPO / "pigreward-repro/configs/model.json", {})
-        if (
-            CONFIG["recommendation_enabled"]
-            and pig.get("live_approved")
-            and len(images) == 4
-        ):
-            publish(status="evaluating", message="この4枚からおすすめを選んでいます。")
-
-            def judgment_event(e):
-                if e["type"] == "judgment":
-                    recommendation["judgments"].append(e)
-                    publish(judgments=recommendation["judgments"])
-                elif e["type"] == "recommendation":
-                    recommendation.update(e)
-                elif e["type"] == "metrics":
-                    metrics.append(e)
-
-            try:
-                timings["evaluation"] = run_stage(
-                    {
-                        "stage": "evaluate",
-                        "candidates": images,
-                        "context": context,
-                        "basic_prompt_en": topic["basic_prompt_en"],
-                        "shuffle_seed": int(jid[:8], 16),
-                    },
-                    directory,
-                    cancel,
-                    deadline,
-                    judgment_event,
-                )
-            except GPUError as e:
-                recommendation["winner_id"] = None
-                recommendation["error"] = str(e)
-        result = {
-            "generic": generic,
-            "personalized": images,
-            "generic_prompt": generic[0]["prompt"],
-            "personalized_prompt": prompt,
-            "winner_id": recommendation["winner_id"],
-            "judgments": recommendation["judgments"],
-            "reason": recommendation.get("reason", ""),
-            "timings": timings,
-            "metrics": metrics,
-        }
         publish(
-            **result,
+            images=images,
+            timings=timings,
+            metrics=metrics,
             status="done",
-            message="4枚ができました。最後は、あなた自身の好みで選んでください。"
-            if result["winner_id"]
-            else "4枚ができました。自動推薦は利用していません。好きな1枚を選んでください。",
+            message="4枚ができました。",
         )
-        write_json(directory / "run.json", {**job, **result, "rewrite": rewrites[-1]})
+        write_json(
+            directory / "variant.json",
+            {**variant, "images": images, "timings": timings, "metrics": metrics},
+        )
         with self.lock:
-            if self.session and self.session["id"] == sid:
-                self.session["cache"][key] = copy.deepcopy(result)
+            current = self.session["run"] if self.session else None
+            if self.session and self.session["id"] == sid and current:
+                self.session["cache"][cache_key] = copy.deepcopy(
+                    {"images": images, "timings": timings}
+                )
+
+    # ------------------------------------------------------- blind comparison
+
+    def pick_blind(self, sid, pair_index, pick):
+        with self.lock:
+            session = self._current(sid)
+            run = session["run"]
+            if not run:
+                raise Conflict("比較はまだ始まっていません。")
+            if run["blind"]["revealed"]:
+                raise Conflict("答えの表示後は変更できません。")
+            pair = next(
+                (p for p in run["blind"]["pairs"] if p["index"] == pair_index), None
+            )
+            if not pair:
+                raise ValueError("Unknown pair")
+            if not pair["ready"]:
+                raise Conflict("この対はまだ描けていません。")
+            if pick != "tie" and pick not in {i["token"] for i in pair["items"]}:
+                raise ValueError("Unknown image token")
+            pair["pick"] = pick
+            session["last_active"] = time.monotonic()
+            return self._snapshot()
+
+    def reveal(self, sid):
+        with self.lock:
+            session = self._current(sid)
+            run = session["run"]
+            if not run:
+                raise Conflict("比較はまだ始まっていません。")
+            run["blind"]["revealed"] = True
+            run["message"] = (
+                "左右の答えです。お題も生成モデルも同じで、違うのは参照と強さだけです。"
+            )
+            session["last_active"] = time.monotonic()
+            return self._snapshot()
+
+    # ---------------------------------------------------------------- samples
 
     def sample(self, sid, sample_id):
         with self.lock:
-            s = self._current(sid)
+            session = self._current(sid)
             if self.busy:
                 raise Conflict("処理中です。")
             item = next(
                 (
                     x
-                    for x in read_json(ASSETS / "samples.json", [])
-                    if x["id"] == sample_id
+                    for x in (read_json(ASSETS / "samples.json", []) or [])
+                    if x.get("id") == sample_id
                 ),
                 None,
             )
-            if not item or sample_errors(item):
+            if not item or sample_errors(item, ASSETS):
                 raise ValueError("Sample unavailable or inconsistent")
-            s["run"] = {
-                "id": uuid.uuid4().hex,
+            run_id = uuid.uuid4().hex
+            directory = self.root / "sessions" / sid / run_id
+            directory.mkdir(parents=True, exist_ok=True)
+            plain = self._plain(item["topic_id"], directory, sid)
+            images = []
+            for index, image in enumerate(item["images"]):
+                relative = f"{run_id}/v0/v0-{index}.png"
+                _link(ASSETS / image["path"], directory / "v0" / f"v0-{index}.png")
+                images.append(
+                    {
+                        "id": f"v0-{index}",
+                        "seed": image["seed"],
+                        "sha256": image["sha256"],
+                        "relative_path": relative,
+                        "url": f"/api/sessions/{sid}/images/{relative}",
+                    }
+                )
+            topic = next(t for t in CONFIG["topics"] if t["id"] == item["topic_id"])
+            pairs = []
+            for index, seed in enumerate(CONFIG["seeds"]):
+                entries = [
+                    {
+                        "token": secrets.token_urlsafe(12),
+                        "kind": "plain",
+                        "relative_path": plain[index]["relative_path"],
+                    },
+                    {
+                        "token": secrets.token_urlsafe(12),
+                        "kind": "personal",
+                        "relative_path": images[index]["relative_path"],
+                    },
+                ]
+                for entry in entries:
+                    entry["url"] = (
+                        f"/api/sessions/{sid}/images/blind/{entry['token']}.png"
+                    )
+                pairs.append(
+                    {
+                        "index": index,
+                        "seed": seed,
+                        "ready": True,
+                        "items": entries,
+                        "pick": None,
+                    }
+                )
+            session["selection"] = item["selection"]
+            session["run"] = {
+                "id": run_id,
+                "topic_id": item["topic_id"],
+                "prompt": target_prompt(topic),
                 "status": "done",
                 "mode": "sample",
-                "topic_id": item["topic_id"],
-                "context": item["context"],
-                "personalized": [
-                    {**x, "url": "/assets/" + x["path"]} for x in item["images"]
-                ],
-                "generic": self._generic(item["topic_id"]),
-                "generic_prompt": self._generic(item["topic_id"])[0]["prompt"],
-                "personalized_prompt": item["rewrite"]["prompt"],
-                "winner_id": None,
-                "judgments": [],
-                "message": "代表的な選択履歴から事前に生成したサンプルです。あなたの選択を反映した結果ではありません。",
-                "sample_choices": item["choices"],
+                "message": "代表的な選択から事前に生成したサンプルです。あなたの選択を反映した結果ではありません。",
                 "elapsed_seconds": 0,
-                "selected_id": None,
-                "timings": {},
+                "error": None,
+                "plain": plain,
+                "blind": {"revealed": True, "pairs": pairs},
+                "variants": [
+                    {
+                        "id": "v0",
+                        "request_id": f"sample-{sample_id}",
+                        "alpha_key": item.get("alpha_key", "mid"),
+                        "weights": {
+                            entry["card_id"]: "normal" for entry in item["selection"]
+                        },
+                        "personalization": item["personalization"],
+                        "status": "done",
+                        "mode": "sample",
+                        "images": images,
+                        "prompt": target_prompt(topic),
+                        "timings": {},
+                        "metrics": [],
+                        "error": None,
+                        "cancelled": False,
+                    }
+                ],
             }
-            s["last_active"] = time.monotonic()
+            session["last_active"] = time.monotonic()
             return self._snapshot()
+
+    # ------------------------------------------------------------- lifecycle
 
     def cancel_run(self, sid):
         with self.lock:
-            s = self._current(sid)
+            session = self._current(sid)
             self.cancel.set()
-            s["run"] = None
-            s["last_active"] = time.monotonic()
-            return self._snapshot()
-
-    def select(self, sid, image_id):
-        with self.lock:
-            s = self._current(sid)
-            run = s["run"]
-            if not run or run["status"] != "done":
-                raise Conflict("生成終了後に選べます。")
-            if image_id != "none" and image_id not in {
-                x["id"] for x in run["generic"] + run["personalized"]
-            }:
-                raise ValueError("Unknown image")
-            run["selected_id"] = image_id
-            s["last_active"] = time.monotonic()
+            run = session["run"]
+            if run:
+                running = [v for v in run["variants"] if v["status"] != "done"]
+                for variant in running:
+                    variant["cancelled"] = True
+                    variant["status"] = "done"
+                    variant["error"] = "cancelled"
+                if (
+                    any(v["id"] == "v0" for v in running)
+                    and not run["blind"]["revealed"]
+                ):
+                    # Nothing was ever shown, so drop the run and let the visitor
+                    # change their selection. The worker still owns its directory.
+                    session["run"] = None
+                else:
+                    run["status"] = "done"
+                    run["message"] = "中止しました。できた画像はそのまま見られます。"
+            session["last_active"] = time.monotonic()
             return self._snapshot()
 
     def artifact(self, sid, name):
         with self.lock:
-            self._current(sid)
+            session = self._current(sid)
             base = (self.root / "sessions" / sid).resolve()
+            run = session["run"]
+            if name.startswith("blind/"):
+                token = name[len("blind/") :].removesuffix(".png")
+                item = next(
+                    (
+                        entry
+                        for pair in (run["blind"]["pairs"] if run else [])
+                        for entry in pair["items"]
+                        if entry["token"] == token and pair["ready"]
+                    ),
+                    None,
+                )
+                if not item:
+                    raise FileNotFoundError(name)
+                name = item["relative_path"]
+            elif run and not run["blind"]["revealed"] and name.startswith(run["id"]):
+                # Direct paths would let a client de-blind a pair by comparing bytes.
+                raise FileNotFoundError(name)
             path = (base / name).resolve()
             if not path.is_relative_to(base) or path.suffix != ".png":
                 raise ValueError("Invalid image path")
