@@ -6,16 +6,17 @@
     "width": 1024,
     "height": 1024,
     "steps": 28,
-    "guidance_scale": 6.5,
-    "negative_prompt": "worst quality, bad quality, lowres, blurry, bad anatomy, bad hands, extra digits, fewer digits, multiple views, comic, text, watermark, signature, photo, photorealistic, 3d, monochrome, greyscale, sketch, unfinished, nsfw, nude, multiple people, chibi, 2girls, 2boys",
+    "guidance_scale": 5.0,
+    "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
     "precision": "fp16",
     "pipeline_config": {
       "model": "OnomaAIResearch/Illustrious-xl-early-release-v0",
       "revision": "dca0dac303e6dc4b0c31d8001bc685b89b5d0204"
     },
-    "checkpoint": "Illustrious-XL-v2.0.safetensors"
+    "checkpoint": "Illustrious-XL-v2.0.safetensors",
+    "positive_prompt_tail": "absurdres, highres"
   },
-  "created_at": "2026-09-20T03:09:09.603470",
+  "created_at": "2026-09-21T01:29:26.602591+09:00",
   "fixed_images": 58,
   "preflight": {
     "ready": true,
@@ -44,8 +45,9 @@
     }
   },
   "tests": {
-    "python": 46,
-    "javascript": 4
+    "python": 52,
+    "javascript": 4,
+    "warnings": 2
   },
   "browser": {
     "browser": "Chromium headless / actual localhost",
@@ -75,11 +77,18 @@
     "valid": 18,
     "timing": {
       "returncode": 0,
-      "wall_seconds": 11.68
+      "wall_seconds": 11.627
     },
     "scope": "Original prompt prefix and both SDXL tokenizer limits; not visual quality evaluation"
   },
   "visual_review": "Agent inspection of all 58 prepared images; not a user preference accuracy evaluation",
+  "clip_skip_diagnostic": {
+    "same_prompt_and_seed": true,
+    "diffusers_default": "normal character image; hidden_states[-2]",
+    "clip_skip_1": "repeating mesh texture; hidden_states[-3]",
+    "clip_skip_2": "low-contrast gray texture; hidden_states[-4]",
+    "decision": "Do not pass the optional Diffusers clip_skip argument."
+  },
   "limitations": [
     "Hand anatomy, background lettering, and scene details may vary.",
     "Faces and clothing are not identity-locked across seeds or preference variants.",

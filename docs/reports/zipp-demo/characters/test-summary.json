@@ -1,7 +1,5 @@
 {
-  "python_passed": 46,
+  "python_passed": 52,
   "javascript_passed": 4,
-  "python_command": "uv run --offline --project exhibit pytest exhibit/tests pigreward-repro/tests tests -q",
-  "javascript_command": "node --test exhibit/tests/test_browser_state.mjs",
-  "warnings": "2 pre-existing Starlette/httpx and anyio deprecations"
+  "warnings": 2
 }
