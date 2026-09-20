@@ -1,0 +1,685 @@
+{
+  "generated_at": "2026-09-21 02:56 JST",
+  "browser": {
+    "browser": "Chromium headless / actual localhost",
+    "url": "http://127.0.0.1:7860",
+    "mock": false,
+    "blind_wait_seconds": 19.13,
+    "checks": [
+      "welcome renders and offers to start",
+      "select 3 cards, toggle one aspect off on the first",
+      "proceed to topics and pick one",
+      "all 4 blind pairs ready within 150s (19.13s)",
+      "pre-reveal snapshot hides mapping/plain/variant images and 404s direct path",
+      "pick A on pairs 0-1, tie on pair 2, leave pair 3 unanswered",
+      "reveal: score, matched seeds, references merged by phrase with aspect-off honored, worker settings/pooled",
+      "mobile 390x844 has no horizontal scroll",
+      "adjust alpha=strong, emphasis+exclude: excluded card drops out, remaining weights match emphasis/normal exactly",
+      "same setting again reuses the exact-cache badge",
+      "reload keeps the result screen",
+      "another topic starts a fresh comparison",
+      "cancel mid-blind drops the run back to preselected cards",
+      "finish deletes the session and the old personal image URL 404s",
+      "sample picker shows 8 images with no adjust panel",
+      "reset"
+    ],
+    "page_errors": [],
+    "external_requests": []
+  },
+  "fan_probe": {
+    "probe": "fan-g0",
+    "topic": "cat",
+    "prompt": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1girl, solo, brown hair, green eyes, sweater, holding cat, window, upper body, detailed eyes, detailed illustration, absurdres, highres.",
+    "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
+    "seeds": [
+      230923,
+      230924,
+      230925,
+      230926
+    ],
+    "skip": -2,
+    "references": {
+      "preference": [
+        "cool color palette, blue and teal tones, soft lighting",
+        "dramatic lighting, strong shadows, rim light, night",
+        "watercolor painting, soft brushwork, painterly texture, muted colors"
+      ],
+      "opposite": [
+        "warm color palette, amber and orange tones, sunlight",
+        "cel shading, clean lineart, anime coloring, flat colors",
+        "open mouth, laughing, cheerful expression, lively atmosphere"
+      ]
+    },
+    "versions": {
+      "python": "3.10.16",
+      "torch": "2.14.0+cu130",
+      "diffusers": "0.39.0",
+      "transformers": "4.57.6",
+      "accelerate": "1.14.0",
+      "numpy": "2.2.6",
+      "cuda": "13.0",
+      "device": "NVIDIA GeForce RTX 4090"
+    },
+    "generation_settings": {
+      "model": "OnomaAIResearch/Illustrious-XL-v2.0",
+      "revision": "69459c1fe6f46db41ab31e6114f05acc0e06bcaa",
+      "checkpoint": "Illustrious-XL-v2.0.safetensors",
+      "width": 1024,
+      "height": 1024,
+      "steps": 28,
+      "guidance_scale": 5.0
+    },
+    "load_seconds": 1.587,
+    "vram_after_load": {
+      "allocated_gb": 6.567,
+      "peak_allocated_gb": 6.567,
+      "peak_reserved_gb": 6.838
+    },
+    "dtypes": {
+      "text_encoder": "torch.float16",
+      "text_encoder_2": "torch.float16",
+      "unet": "torch.float16",
+      "pipeline_name_or_path": "None",
+      "fan_decoder_L": "torch.float32",
+      "fan_decoder_bigG": "torch.float32"
+    },
+    "encoder_build_seconds": 0.006,
+    "token_lengths": {
+      "tokenizer": {
+        "model_max_length": 77,
+        "prompt": 50,
+        "negative_prompt": 72,
+        "preference_refs": [
+          13,
+          12,
+          16
+        ],
+        "opposite_refs": [
+          12,
+          14,
+          12
+        ]
+      },
+      "tokenizer_2": {
+        "model_max_length": 77,
+        "prompt": 50,
+        "negative_prompt": 72,
+        "preference_refs": [
+          13,
+          12,
+          16
+        ],
+        "opposite_refs": [
+          12,
+          14,
+          12
+        ]
+      }
+    },
+    "equivalence": {
+      "fan_plain_vs_pipeline": {
+        "hidden": {
+          "shape": [
+            1,
+            77,
+            2048
+          ],
+          "max_abs_diff": 0.0,
+          "mean_abs_diff": 0.0,
+          "rel_max_abs_diff": 0.0,
+          "mean_cosine": 1.0,
+          "min_cosine": 0.99999976
+        },
+        "pooled": {
+          "shape": [
+            1,
+            1280
+          ],
+          "max_abs_diff": 0.0,
+          "mean_abs_diff": 0.0,
+          "rel_max_abs_diff": 0.0,
+          "mean_cosine": 0.99999994,
+          "min_cosine": 0.99999994
+        },
+        "encode_seconds": 0.0121
+      },
+      "fan_alpha0_oneref_vs_pipeline": {
+        "hidden": {
+          "shape": [
+            1,
+            77,
+            2048
+          ],
+          "max_abs_diff": 0.07421875,
+          "mean_abs_diff": 0.0007043,
+          "rel_max_abs_diff": 0.0008281,
+          "mean_cosine": 0.99998432,
+          "min_cosine": 0.99981928
+        },
+        "pooled": {
+          "shape": [
+            1,
+            1280
+          ],
+          "max_abs_diff": 1.67089844,
+          "mean_abs_diff": 0.39886066,
+          "rel_max_abs_diff": 0.40545022,
+          "mean_cosine": 0.82036328,
+          "min_cosine": 0.82036328
+        },
+        "encode_seconds": 0.0762
+      },
+      "fan_alpha0_oneref_vs_fan_plain": {
+        "hidden": {
+          "shape": [
+            1,
+            77,
+            2048
+          ],
+          "max_abs_diff": 0.07421875,
+          "mean_abs_diff": 0.0007043,
+          "rel_max_abs_diff": 0.0008281,
+          "mean_cosine": 0.99998432,
+          "min_cosine": 0.99981928
+        },
+        "pooled": {
+          "shape": [
+            1,
+            1280
+          ],
+          "max_abs_diff": 1.67089844,
+          "mean_abs_diff": 0.39886066,
+          "rel_max_abs_diff": 0.40545022,
+          "mean_cosine": 0.82036328,
+          "min_cosine": 0.82036328
+        }
+      },
+      "fan_alpha0.4_vs_fan_plain": {
+        "hidden": {
+          "shape": [
+            1,
+            77,
+            2048
+          ],
+          "max_abs_diff": 17.01757812,
+          "mean_abs_diff": 0.09600447,
+          "rel_max_abs_diff": 0.18987535,
+          "mean_cosine": 0.80302447,
+          "min_cosine": -0.19505098
+        },
+        "pooled": {
+          "shape": [
+            1,
+            1280
+          ],
+          "max_abs_diff": 1.71777344,
+          "mean_abs_diff": 0.41146252,
+          "rel_max_abs_diff": 0.41682464,
+          "mean_cosine": 0.80989003,
+          "min_cosine": 0.80989003
+        },
+        "encode_seconds": 0.0372
+      },
+      "negative_fan_vs_pipeline": {
+        "hidden": {
+          "shape": [
+            1,
+            77,
+            2048
+          ],
+          "max_abs_diff": 0.0,
+          "mean_abs_diff": 0.0,
+          "rel_max_abs_diff": 0.0,
+          "mean_cosine": 1.0,
+          "min_cosine": 0.99999982
+        },
+        "pooled": {
+          "shape": [
+            1,
+            1280
+          ],
+          "max_abs_diff": 0.0,
+          "mean_abs_diff": 0.0,
+          "rel_max_abs_diff": 0.0,
+          "mean_cosine": 0.99999988,
+          "min_cosine": 0.99999988
+        },
+        "encode_seconds": 0.0114
+      }
+    },
+    "vram_after_encode": {
+      "allocated_gb": 6.579,
+      "peak_allocated_gb": 6.619,
+      "peak_reserved_gb": 6.9
+    },
+    "vram_peak_overall": {
+      "allocated_gb": 6.579,
+      "peak_allocated_gb": 10.491,
+      "peak_reserved_gb": 14.125
+    },
+    "patch_persistence": {
+      "description": "plain string call repeated after all FAN calls, same seed",
+      "pixel_mae_vs_first_baseline": 0.0,
+      "pipeline_encode_prompt_before_vs_after": {
+        "hidden": {
+          "shape": [
+            1,
+            77,
+            2048
+          ],
+          "max_abs_diff": 0.0,
+          "mean_abs_diff": 0.0,
+          "rel_max_abs_diff": 0.0,
+          "mean_cosine": 1.0,
+          "min_cosine": 0.99999976
+        },
+        "pooled": {
+          "shape": [
+            1,
+            1280
+          ],
+          "max_abs_diff": 0.0,
+          "mean_abs_diff": 0.0,
+          "rel_max_abs_diff": 0.0,
+          "mean_cosine": 0.99999994,
+          "min_cosine": 0.99999994
+        }
+      },
+      "fan_plain_before_vs_after": {
+        "hidden": {
+          "shape": [
+            1,
+            77,
+            2048
+          ],
+          "max_abs_diff": 0.0,
+          "mean_abs_diff": 0.0,
+          "rel_max_abs_diff": 0.0,
+          "mean_cosine": 1.0,
+          "min_cosine": 0.99999976
+        },
+        "pooled": {
+          "shape": [
+            1,
+            1280
+          ],
+          "max_abs_diff": 0.0,
+          "mean_abs_diff": 0.0,
+          "rel_max_abs_diff": 0.0,
+          "mean_cosine": 0.99999994,
+          "min_cosine": 0.99999994
+        }
+      }
+    }
+  },
+  "followup": {
+    "prompt": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1girl, solo, brown hair, green eyes, sweater, holding cat, window, upper body, detailed eyes, detailed illustration, absurdres, highres.",
+    "seeds": [
+      230923,
+      230924
+    ],
+    "layers": {
+      "text_encoder_L": 12,
+      "text_encoder_bigG": 32
+    },
+    "skip_pa_semantics": "fan.model.FAN.__call__ treats skip_pa as an index or list of indices into the encoder layer list (default 0 = skip layer 0 only), not a count. Skipping the first N layers means skip_pa=list(range(N)); skip_pa=None applies personalized attention in every layer.",
+    "alpha0_vs_plain_mask0": {
+      "shape": [
+        1,
+        77,
+        2048
+      ],
+      "max_abs_diff": 0.09375,
+      "mean_abs_diff": 0.00082136,
+      "rel_max_abs_diff": 0.00104603,
+      "mean_cosine": 0.9999792,
+      "min_cosine": 0.99981099
+    },
+    "alpha0_vs_plain_mask1": {
+      "shape": [
+        1,
+        77,
+        2048
+      ],
+      "max_abs_diff": 22.43786621,
+      "mean_abs_diff": 0.14435832,
+      "rel_max_abs_diff": 0.25035277,
+      "mean_cosine": 0.59048009,
+      "min_cosine": -0.27746993
+    },
+    "set_a_vs_set_b": {
+      "mask0_seed230923": 17.127,
+      "mask0_seed230924": 12.102,
+      "mask1_seed230923": 8.688,
+      "mask1_seed230924": 13.752
+    },
+    "bundled_vs_split": {
+      "conflict_seed230923": 24.123,
+      "conflict_seed230924": 13.819,
+      "coherent_seed230923": 22.742,
+      "coherent_seed230924": 12.581
+    },
+    "set_a_vs_set_b_skip8": {
+      "seed230923": 20.143,
+      "seed230924": 12.817
+    },
+    "fanpool_vs_plainpool_seed230923": 14.171
+  },
+  "final": {
+    "settings": {
+      "skip_pa": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "use_attn_mask": false,
+      "pooled": "plain",
+      "skip": -2,
+      "alpha_default": 0.45,
+      "steps": 28,
+      "guidance_scale": 5.0
+    },
+    "prompt": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1girl, solo, brown hair, green eyes, sweater, holding cat, window, upper body, detailed eyes, detailed illustration, absurdres, highres.",
+    "seeds": [
+      230923,
+      230924
+    ],
+    "cases": {
+      "A-3coherent-warm": {
+        "refs": [
+          "warm color palette, amber and orange tones",
+          "soft lighting, gentle shadows",
+          "watercolor painting, soft brushwork, painterly texture",
+          "calm atmosphere"
+        ],
+        "weights": [
+          3.0,
+          3.0,
+          3.0,
+          3.0
+        ],
+        "n_refs": 4,
+        "token_lengths": [
+          10,
+          7,
+          13,
+          4
+        ],
+        "alphas": [
+          0.45
+        ]
+      },
+      "B-2warm-1cool": {
+        "refs": [
+          "warm color palette, amber and orange tones",
+          "soft lighting, gentle shadows",
+          "watercolor painting, soft brushwork, painterly texture",
+          "calm atmosphere",
+          "cool color palette, blue and teal tones",
+          "soft diffused light",
+          "cel shading, clean lineart, anime coloring"
+        ],
+        "weights": [
+          2.0,
+          2.0,
+          2.0,
+          3.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "n_refs": 7,
+        "token_lengths": [
+          10,
+          7,
+          13,
+          4,
+          10,
+          6,
+          11
+        ],
+        "alphas": [
+          0.45
+        ]
+      },
+      "C-5cards-split": {
+        "refs": [
+          "warm color palette, amber and orange tones",
+          "soft lighting, gentle shadows",
+          "watercolor painting, soft brushwork, painterly texture",
+          "calm atmosphere",
+          "cool color palette, blue and teal tones",
+          "soft diffused light",
+          "cel shading, clean lineart, anime coloring",
+          "muted colors, dark background",
+          "dramatic lighting, strong shadows, rim light",
+          "detailed shading, painterly texture",
+          "serious atmosphere"
+        ],
+        "weights": [
+          2.0,
+          2.0,
+          2.0,
+          4.0,
+          2.0,
+          2.0,
+          2.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "n_refs": 11,
+        "token_lengths": [
+          10,
+          7,
+          13,
+          4,
+          10,
+          6,
+          11,
+          7,
+          10,
+          9,
+          4
+        ],
+        "alphas": [
+          0.45,
+          0.6
+        ]
+      },
+      "D-5cards-aspectmajor": {
+        "refs": [
+          "warm color palette, amber and orange tones, cool color palette, blue and teal tones, muted colors, dark background",
+          "soft lighting, gentle shadows, soft diffused light, dramatic lighting, strong shadows, rim light",
+          "watercolor painting, soft brushwork, painterly texture, cel shading, clean lineart, anime coloring, detailed shading, painterly texture",
+          "calm atmosphere, serious atmosphere"
+        ],
+        "weights": [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "n_refs": 4,
+        "token_lengths": [
+          25,
+          21,
+          31,
+          7
+        ],
+        "alphas": [
+          0.45,
+          0.6
+        ]
+      }
+    }
+  },
+  "ladder": {
+    "settings": {
+      "skip_pa": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "use_attn_mask": false,
+      "skip": -2,
+      "pooled": "plain",
+      "seed": 230923
+    },
+    "reference_sets": {
+      "s1": {
+        "refs": [
+          "warm color palette, amber and orange tones",
+          "soft lighting, gentle shadows",
+          "watercolor painting, soft brushwork, painterly texture",
+          "calm atmosphere"
+        ],
+        "weights": [
+          3.0,
+          3.0,
+          3.0,
+          3.0
+        ]
+      },
+      "s2": {
+        "refs": [
+          "cool color palette, blue and teal tones",
+          "soft diffused light",
+          "cel shading, clean lineart, anime coloring",
+          "calm atmosphere"
+        ],
+        "weights": [
+          3.0,
+          3.0,
+          3.0,
+          3.0
+        ]
+      },
+      "s1p": {
+        "refs": [
+          "warm color palette, amber and orange tones",
+          "warm golden hour light, gentle shadows",
+          "watercolor painting, soft brushwork, painterly texture",
+          "calm atmosphere"
+        ],
+        "weights": [
+          3.0,
+          3.0,
+          3.0,
+          3.0
+        ]
+      },
+      "s2p": {
+        "refs": [
+          "cool color palette, blue and teal tones",
+          "clear cool daylight, crisp highlights",
+          "cel shading, clean lineart, anime coloring",
+          "quiet atmosphere"
+        ],
+        "weights": [
+          3.0,
+          3.0,
+          3.0,
+          3.0
+        ]
+      }
+    },
+    "gaps": {
+      "cat_s1_vs_s2_a0.45": 12.263,
+      "cat_s1p_vs_s2p_a0.45": 11.227,
+      "cat_s1p_vs_s2_a0.45": 12.619,
+      "cat_s1_vs_s2p_a0.45": 8.048,
+      "cat_s1_vs_s2_a0.6": 17.338,
+      "cat_s1p_vs_s2p_a0.6": 13.151,
+      "cat_s1p_vs_s2_a0.6": 17.379,
+      "cat_s1_vs_s2p_a0.6": 13.998,
+      "cat_s1_vs_s2_a0.7": 20.09,
+      "cat_s1p_vs_s2p_a0.7": 19.027,
+      "cat_s1p_vs_s2_a0.7": 18.826,
+      "cat_s1_vs_s2p_a0.7": 20.658,
+      "cat_s1_vs_s2_a0.8": 14.257,
+      "tokyo_s1_vs_s2_a0.45": 11.793,
+      "tokyo_s1p_vs_s2p_a0.45": 12.721,
+      "tokyo_s1p_vs_s2_a0.45": 12.178,
+      "tokyo_s1_vs_s2p_a0.45": 12.845,
+      "tokyo_s1_vs_s2_a0.6": 13.558,
+      "tokyo_s1p_vs_s2p_a0.6": 14.418,
+      "tokyo_s1p_vs_s2_a0.6": 13.574,
+      "tokyo_s1_vs_s2p_a0.6": 14.287,
+      "tokyo_s1_vs_s2_a0.7": 11.679,
+      "tokyo_s1p_vs_s2p_a0.7": 16.347,
+      "tokyo_s1p_vs_s2_a0.7": 11.675,
+      "tokyo_s1_vs_s2p_a0.7": 21.313,
+      "tokyo_s1_vs_s2_a0.8": 12.337
+    }
+  },
+  "rehearsal": {
+    "sessions": 10,
+    "successes": 10,
+    "p95_seconds": 38.819,
+    "median_seconds": 38.776,
+    "scope": "FAN live generation only; every stage loads in a fresh subprocess"
+  },
+  "preflight": {
+    "ready": true,
+    "mode": "fan-live",
+    "errors": [],
+    "fixed_images": 40,
+    "reviewed_cards": 16,
+    "cards": 16,
+    "samples": 6,
+    "models": {
+      "ready": true,
+      "errors": [],
+      "models": [
+        {
+          "model": "OnomaAIResearch/Illustrious-XL-v2.0",
+          "revision": "69459c1fe6f46db41ab31e6114f05acc0e06bcaa",
+          "weight_files": 1
+        }
+      ],
+      "gpu_python": "/home/tomoya/stable-diffusion/personalized-t2i/.worktrees/fan-exhibit/fan-repro/.venv/bin/python",
+      "fan": {
+        "ready": true,
+        "errors": [],
+        "python": "/home/tomoya/stable-diffusion/personalized-t2i/.worktrees/fan-exhibit/fan-repro/.venv/bin/python",
+        "upstream": "/home/tomoya/stable-diffusion/personalized-t2i/.worktrees/fan-exhibit/fan-repro/.work/upstream",
+        "commit": "9d0b76843f6437718195accac9cf3f050a25d26b",
+        "decoders": {
+          "L.pth": "e35c04b57c42425ef0fcdc671254fb76dc6a5d580c742cecc1fcf2d5ac679807",
+          "bigG.pth": "35cc21f7e6bfab0c97ee0198e998bee4f7b41346cab24c26d380a96950ce4391"
+        }
+      }
+    }
+  },
+  "tests": {
+    "python_passed": 60,
+    "node_passed": 12,
+    "node_failed": 0
+  },
+  "assets": {
+    "cards_embedded": 16,
+    "cards_reviewed": 16,
+    "cards_total": 16,
+    "generic_topics_embedded": 6,
+    "samples_embedded": 6
+  },
+  "mode": "FAN実生成 + ブラインド比較",
+  "limitations": [
+    "第三者5人の理解度確認は未実施",
+    "2時間連続稼働の実接続確認は未実施",
+    "ブラインド比較の集計は少人数の記録であり、性能主張ではない",
+    "reveal前のブラインド画像はセッション内の見た目確認のみで、統計的優位性を主張しない"
+  ]
+}

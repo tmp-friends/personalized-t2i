@@ -1,0 +1,409 @@
+{
+  "browser": "Chromium headless / actual localhost",
+  "url": "http://127.0.0.1:7860",
+  "mock": false,
+  "blind_wait_seconds": 19.13,
+  "run": {
+    "id": "5e6f14a1a970462597fd7d8938daa0b8",
+    "topic_id": "tokyo",
+    "status": "done",
+    "message": "4枚ができました。",
+    "elapsed_seconds": 19.19,
+    "error": null,
+    "blind": {
+      "revealed": true,
+      "pairs": [
+        {
+          "index": 0,
+          "seed": 230923,
+          "ready": true,
+          "items": [
+            {
+              "token": "C0sbuwmLYYJVTaNV",
+              "url": "/api/sessions/0695190ec9f0485ab0007edc37be6127/images/blind/C0sbuwmLYYJVTaNV.png"
+            },
+            {
+              "token": "eOmkG6sATsmApZcv",
+              "url": "/api/sessions/0695190ec9f0485ab0007edc37be6127/images/blind/eOmkG6sATsmApZcv.png"
+            }
+          ],
+          "pick": "C0sbuwmLYYJVTaNV"
+        },
+        {
+          "index": 1,
+          "seed": 230924,
+          "ready": true,
+          "items": [
+            {
+              "token": "nVi9GC37IDUqTBiY",
+              "url": "/api/sessions/0695190ec9f0485ab0007edc37be6127/images/blind/nVi9GC37IDUqTBiY.png"
+            },
+            {
+              "token": "nEWt_RJpm76Fx9Ax",
+              "url": "/api/sessions/0695190ec9f0485ab0007edc37be6127/images/blind/nEWt_RJpm76Fx9Ax.png"
+            }
+          ],
+          "pick": "nVi9GC37IDUqTBiY"
+        },
+        {
+          "index": 2,
+          "seed": 230925,
+          "ready": true,
+          "items": [
+            {
+              "token": "FvRCa_i8B65MmV3Z",
+              "url": "/api/sessions/0695190ec9f0485ab0007edc37be6127/images/blind/FvRCa_i8B65MmV3Z.png"
+            },
+            {
+              "token": "7kod8gznLBAITKY4",
+              "url": "/api/sessions/0695190ec9f0485ab0007edc37be6127/images/blind/7kod8gznLBAITKY4.png"
+            }
+          ],
+          "pick": "tie"
+        },
+        {
+          "index": 3,
+          "seed": 230926,
+          "ready": true,
+          "items": [
+            {
+              "token": "kRpiV81STc6kmSAn",
+              "url": "/api/sessions/0695190ec9f0485ab0007edc37be6127/images/blind/kRpiV81STc6kmSAn.png"
+            },
+            {
+              "token": "izK99KjEJuVgKDug",
+              "url": "/api/sessions/0695190ec9f0485ab0007edc37be6127/images/blind/izK99KjEJuVgKDug.png"
+            }
+          ],
+          "pick": null
+        }
+      ],
+      "answered": 3,
+      "mapping": {
+        "C0sbuwmLYYJVTaNV": "plain",
+        "eOmkG6sATsmApZcv": "personal",
+        "nVi9GC37IDUqTBiY": "personal",
+        "nEWt_RJpm76Fx9Ax": "plain",
+        "FvRCa_i8B65MmV3Z": "personal",
+        "7kod8gznLBAITKY4": "plain",
+        "kRpiV81STc6kmSAn": "personal",
+        "izK99KjEJuVgKDug": "plain"
+      },
+      "score": {
+        "personal": 1,
+        "plain": 1,
+        "tie": 1,
+        "answered": 3
+      }
+    },
+    "plain": [
+      {
+        "id": "plain-0",
+        "seed": 230923,
+        "prompt": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1boy, solo, male focus, short black hair, jacket, Tokyo skyline, night, portrait, detailed eyes, detailed illustration, absurdres, highres.",
+        "sha256": "a5b968752332a82872a6000df8d9012ba925c082ef00a045ff5fab099588953a",
+        "relative_path": "5e6f14a1a970462597fd7d8938daa0b8/plain-0.png",
+        "url": "/api/sessions/0695190ec9f0485ab0007edc37be6127/images/5e6f14a1a970462597fd7d8938daa0b8/plain-0.png"
+      },
+      {
+        "id": "plain-1",
+        "seed": 230924,
+        "prompt": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1boy, solo, male focus, short black hair, jacket, Tokyo skyline, night, portrait, detailed eyes, detailed illustration, absurdres, highres.",
+        "sha256": "6b3300fee96b676ffe9bfc99905d92e9442538fcf640f4da860488e7a6b7df70",
+        "relative_path": "5e6f14a1a970462597fd7d8938daa0b8/plain-1.png",
+        "url": "/api/sessions/0695190ec9f0485ab0007edc37be6127/images/5e6f14a1a970462597fd7d8938daa0b8/plain-1.png"
+      },
+      {
+        "id": "plain-2",
+        "seed": 230925,
+        "prompt": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1boy, solo, male focus, short black hair, jacket, Tokyo skyline, night, portrait, detailed eyes, detailed illustration, absurdres, highres.",
+        "sha256": "af329944081ec0c2523df3132cfe4a04d92b1352d7268ff326aa950cb7433720",
+        "relative_path": "5e6f14a1a970462597fd7d8938daa0b8/plain-2.png",
+        "url": "/api/sessions/0695190ec9f0485ab0007edc37be6127/images/5e6f14a1a970462597fd7d8938daa0b8/plain-2.png"
+      },
+      {
+        "id": "plain-3",
+        "seed": 230926,
+        "prompt": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1boy, solo, male focus, short black hair, jacket, Tokyo skyline, night, portrait, detailed eyes, detailed illustration, absurdres, highres.",
+        "sha256": "4799ac722cc8ca64fa160d1dda29b2261cd1db715edc43b77a6d59e6c5a7cc02",
+        "relative_path": "5e6f14a1a970462597fd7d8938daa0b8/plain-3.png",
+        "url": "/api/sessions/0695190ec9f0485ab0007edc37be6127/images/5e6f14a1a970462597fd7d8938daa0b8/plain-3.png"
+      }
+    ],
+    "variants": [
+      {
+        "id": "v0",
+        "request_id": "b2f2a6c7-4030-444a-a3d2-d73b2e05abed",
+        "alpha_key": "mid",
+        "weights": {
+          "girl-dramatic": "normal",
+          "student-warm_soft": "normal",
+          "traveler-cool_clean": "normal"
+        },
+        "status": "done",
+        "mode": "live",
+        "done_count": 4,
+        "images": [
+          {
+            "id": "v0-0",
+            "seed": 230923,
+            "sha256": "e659cce9c22b0d075b01e73061bd1b701fd958ff47dbb6b37e6c14b348586674",
+            "relative_path": "5e6f14a1a970462597fd7d8938daa0b8/v0/v0-0.png",
+            "url": "/api/sessions/0695190ec9f0485ab0007edc37be6127/images/5e6f14a1a970462597fd7d8938daa0b8/v0/v0-0.png"
+          },
+          {
+            "id": "v0-1",
+            "seed": 230924,
+            "sha256": "00a950b705580de9e92046fe3cd6360543f0d48bca3c4770038c4ae7d168fa28",
+            "relative_path": "5e6f14a1a970462597fd7d8938daa0b8/v0/v0-1.png",
+            "url": "/api/sessions/0695190ec9f0485ab0007edc37be6127/images/5e6f14a1a970462597fd7d8938daa0b8/v0/v0-1.png"
+          },
+          {
+            "id": "v0-2",
+            "seed": 230925,
+            "sha256": "bd4748f421bf6f9dca5594852db9ccc840473189fcda5ce52f6eda75bf21ffb9",
+            "relative_path": "5e6f14a1a970462597fd7d8938daa0b8/v0/v0-2.png",
+            "url": "/api/sessions/0695190ec9f0485ab0007edc37be6127/images/5e6f14a1a970462597fd7d8938daa0b8/v0/v0-2.png"
+          },
+          {
+            "id": "v0-3",
+            "seed": 230926,
+            "sha256": "28d2da8da466cc6eb6b34b2e46b9d0af0ad09422325fad1613a6fe6a58eaddb6",
+            "relative_path": "5e6f14a1a970462597fd7d8938daa0b8/v0/v0-3.png",
+            "url": "/api/sessions/0695190ec9f0485ab0007edc37be6127/images/5e6f14a1a970462597fd7d8938daa0b8/v0/v0-3.png"
+          }
+        ],
+        "personalization": {
+          "refs": [
+            {
+              "text": "muted colors, dark background",
+              "weight": 1.0,
+              "aspect": "color",
+              "card_ids": [
+                "girl-dramatic"
+              ]
+            },
+            {
+              "text": "dramatic lighting, strong shadows, rim light",
+              "weight": 1.0,
+              "aspect": "lighting",
+              "card_ids": [
+                "girl-dramatic"
+              ]
+            },
+            {
+              "text": "detailed shading, painterly texture",
+              "weight": 1.0,
+              "aspect": "texture",
+              "card_ids": [
+                "girl-dramatic"
+              ]
+            },
+            {
+              "text": "warm color palette, amber and orange tones",
+              "weight": 1.0,
+              "aspect": "color",
+              "card_ids": [
+                "student-warm_soft"
+              ]
+            },
+            {
+              "text": "warm golden hour light, gentle shadows",
+              "weight": 1.0,
+              "aspect": "lighting",
+              "card_ids": [
+                "student-warm_soft"
+              ]
+            },
+            {
+              "text": "watercolor painting, soft brushwork, painterly texture",
+              "weight": 1.0,
+              "aspect": "texture",
+              "card_ids": [
+                "student-warm_soft"
+              ]
+            },
+            {
+              "text": "calm atmosphere",
+              "weight": 2.0,
+              "aspect": "mood",
+              "card_ids": [
+                "student-warm_soft",
+                "traveler-cool_clean"
+              ]
+            },
+            {
+              "text": "cool color palette, blue and teal tones",
+              "weight": 1.0,
+              "aspect": "color",
+              "card_ids": [
+                "traveler-cool_clean"
+              ]
+            },
+            {
+              "text": "soft diffused light",
+              "weight": 1.0,
+              "aspect": "lighting",
+              "card_ids": [
+                "traveler-cool_clean"
+              ]
+            },
+            {
+              "text": "cel shading, clean lineart, anime coloring",
+              "weight": 1.0,
+              "aspect": "texture",
+              "card_ids": [
+                "traveler-cool_clean"
+              ]
+            }
+          ],
+          "alpha": 0.5,
+          "sample_size": 0,
+          "hash": "75cfc8983bee4d7f0ead7856578aa724847ee8dcf2184579669a0345067ae0f6"
+        },
+        "prompt": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1boy, solo, male focus, short black hair, jacket, Tokyo skyline, night, portrait, detailed eyes, detailed illustration, absurdres, highres.",
+        "timings": {
+          "generation": {
+            "returncode": 0,
+            "wall_seconds": 19.195
+          }
+        },
+        "error": null
+      },
+      {
+        "id": "v1",
+        "request_id": "9abc39f2-ebd7-4440-9b6c-7e46c71a7f94",
+        "alpha_key": "strong",
+        "weights": {
+          "girl-dramatic": "emphasis",
+          "student-warm_soft": "exclude",
+          "traveler-cool_clean": "normal"
+        },
+        "status": "done",
+        "mode": "live",
+        "done_count": 4,
+        "images": [
+          {
+            "id": "v1-0",
+            "seed": 230923,
+            "sha256": "a19a83c919f3b4367551a7c68e12877ad29b1952eeb142b865007a2e33829d2a",
+            "relative_path": "5e6f14a1a970462597fd7d8938daa0b8/v1/v1-0.png",
+            "url": "/api/sessions/0695190ec9f0485ab0007edc37be6127/images/5e6f14a1a970462597fd7d8938daa0b8/v1/v1-0.png"
+          },
+          {
+            "id": "v1-1",
+            "seed": 230924,
+            "sha256": "74e033b9ce3b0036890acbde5cc0d25cf0d9005088b99b396afab852f24b6382",
+            "relative_path": "5e6f14a1a970462597fd7d8938daa0b8/v1/v1-1.png",
+            "url": "/api/sessions/0695190ec9f0485ab0007edc37be6127/images/5e6f14a1a970462597fd7d8938daa0b8/v1/v1-1.png"
+          },
+          {
+            "id": "v1-2",
+            "seed": 230925,
+            "sha256": "0e77a8467303b102f47b114144e6770d870f6045fc504bd84aaf1564b66d24eb",
+            "relative_path": "5e6f14a1a970462597fd7d8938daa0b8/v1/v1-2.png",
+            "url": "/api/sessions/0695190ec9f0485ab0007edc37be6127/images/5e6f14a1a970462597fd7d8938daa0b8/v1/v1-2.png"
+          },
+          {
+            "id": "v1-3",
+            "seed": 230926,
+            "sha256": "33e7e6665cd740dfa6341ff7bffd84a27d737a032648fca5593580cf46b07212",
+            "relative_path": "5e6f14a1a970462597fd7d8938daa0b8/v1/v1-3.png",
+            "url": "/api/sessions/0695190ec9f0485ab0007edc37be6127/images/5e6f14a1a970462597fd7d8938daa0b8/v1/v1-3.png"
+          }
+        ],
+        "personalization": {
+          "refs": [
+            {
+              "text": "muted colors, dark background",
+              "weight": 2.0,
+              "aspect": "color",
+              "card_ids": [
+                "girl-dramatic"
+              ]
+            },
+            {
+              "text": "dramatic lighting, strong shadows, rim light",
+              "weight": 2.0,
+              "aspect": "lighting",
+              "card_ids": [
+                "girl-dramatic"
+              ]
+            },
+            {
+              "text": "detailed shading, painterly texture",
+              "weight": 2.0,
+              "aspect": "texture",
+              "card_ids": [
+                "girl-dramatic"
+              ]
+            },
+            {
+              "text": "cool color palette, blue and teal tones",
+              "weight": 1.0,
+              "aspect": "color",
+              "card_ids": [
+                "traveler-cool_clean"
+              ]
+            },
+            {
+              "text": "soft diffused light",
+              "weight": 1.0,
+              "aspect": "lighting",
+              "card_ids": [
+                "traveler-cool_clean"
+              ]
+            },
+            {
+              "text": "cel shading, clean lineart, anime coloring",
+              "weight": 1.0,
+              "aspect": "texture",
+              "card_ids": [
+                "traveler-cool_clean"
+              ]
+            },
+            {
+              "text": "calm atmosphere",
+              "weight": 1.0,
+              "aspect": "mood",
+              "card_ids": [
+                "traveler-cool_clean"
+              ]
+            }
+          ],
+          "alpha": 0.6,
+          "sample_size": 0,
+          "hash": "44af1d5a09c5047e47921e109e70817f7a415c583390a734e55bf9836b940116"
+        },
+        "prompt": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1boy, solo, male focus, short black hair, jacket, Tokyo skyline, night, portrait, detailed eyes, detailed illustration, absurdres, highres.",
+        "timings": {
+          "generation": {
+            "returncode": 0,
+            "wall_seconds": 19.192
+          }
+        },
+        "error": null
+      }
+    ]
+  },
+  "checks": [
+    "welcome renders and offers to start",
+    "select 3 cards, toggle one aspect off on the first",
+    "proceed to topics and pick one",
+    "all 4 blind pairs ready within 150s (19.13s)",
+    "pre-reveal snapshot hides mapping/plain/variant images and 404s direct path",
+    "pick A on pairs 0-1, tie on pair 2, leave pair 3 unanswered",
+    "reveal: score, matched seeds, references merged by phrase with aspect-off honored, worker settings/pooled",
+    "mobile 390x844 has no horizontal scroll",
+    "adjust alpha=strong, emphasis+exclude: excluded card drops out, remaining weights match emphasis/normal exactly",
+    "same setting again reuses the exact-cache badge",
+    "reload keeps the result screen",
+    "another topic starts a fresh comparison",
+    "cancel mid-blind drops the run back to preselected cards",
+    "finish deletes the session and the old personal image URL 404s",
+    "sample picker shows 8 images with no adjust panel",
+    "reset"
+  ],
+  "page_errors": [],
+  "external_requests": []
+}
