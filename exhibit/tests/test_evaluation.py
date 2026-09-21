@@ -1342,8 +1342,8 @@ def test_heldout_requires_a_prepared_reviewed_v2_catalog(tmp_path):
         validate_heldout_catalog(heldout, catalog_loader=unavailable)
 
 
-def test_heldout_catalog_requires_all_cards_and_matches_frozen_refs():
-    heldout = _phase(
+def _heldout_phase():
+    return _phase(
         "heldout",
         parents={
             "refine": {
@@ -1353,42 +1353,84 @@ def test_heldout_catalog_requires_all_cards_and_matches_frozen_refs():
             }
         },
     )
-    aspect_by_id = {}
-    for history in heldout["histories"][:3]:
-        color, texture = history["aspects"]
-        texts = [ref["text"] for ref in history["refs"]]
-        for card_id in history["cards"]:
-            aspect_by_id[card_id] = {color: texts[0], texture: texts[1]}
-    cards = [
-        {"id": card_id, "aspects": aspects}
-        for card_id, aspects in sorted(aspect_by_id.items())
-    ]
-    cards.extend(
-        {"id": f"unused-{index}", "aspects": {"color": "unused", "texture": "unused"}}
-        for index in range(64 - len(cards))
-    )
+
+
+def _v2_cards():
+    from exhibit.catalog import build_catalog
+    from exhibit.config import ROOT as EXHIBIT_ROOT
+    from exhibit.config import read_json
+
+    return build_catalog(read_json(EXHIBIT_ROOT / "configs/catalog-v2.json"))
+
+
+def _loader_for(reviewed_ids):
+    cards = _v2_cards()
 
     def loader(catalog_id, *, reviewed_only):
         assert (catalog_id, reviewed_only) == ("catalog-v2", True)
         return {
             "catalog_id": catalog_id,
             "catalog_hash": "catalog-content-hash",
-            "cards": copy.deepcopy(cards),
+            "cards": [copy.deepcopy(c) for c in cards if c["id"] in reviewed_ids],
             "all_cards": copy.deepcopy(cards),
         }
 
-    identity = validate_heldout_catalog(heldout, catalog_loader=loader)
+    return loader
+
+
+def _referenced(heldout):
+    return {card for history in heldout["histories"] for card in history["cards"]}
+
+
+def test_heldout_catalog_binds_the_frozen_refs_to_the_real_v2_catalog():
+    """The fixture's nine cards must resolve, aspect for aspect, against v2."""
+    heldout = _heldout_phase()
+    every = {card["id"] for card in _v2_cards()}
+    identity = validate_heldout_catalog(heldout, catalog_loader=_loader_for(every))
+
     assert identity["catalog_hash"] == "catalog-content-hash"
     assert identity["reviewed_card_count"] == 64
+    assert identity["reviewed_card_ids_hash"] == digest(sorted(every))
+    assert identity["min_reviewed_per_level"] == 2
+    assert identity["min_reviewed_cards"] == 32
+    assert sorted(identity["card_ids"]) == sorted(_referenced(heldout))
     assert len(identity["card_ids"]) == 9
 
-    def incomplete(catalog_id, *, reviewed_only):
-        value = loader(catalog_id, reviewed_only=reviewed_only)
-        value["cards"].pop()
-        return value
 
-    with pytest.raises(ValueError, match="fully reviewed"):
-        validate_heldout_catalog(heldout, catalog_loader=incomplete)
+def test_heldout_runs_on_a_partly_reviewed_catalog_and_records_that_set():
+    """Design §6.1: the run is tied to the reviewed set it actually ran on."""
+    heldout = _heldout_phase()
+    reviewed = {
+        card["id"] for card in _v2_cards() if card["subject_id"] in ("girl", "student")
+    } | _referenced(heldout)
+    identity = validate_heldout_catalog(heldout, catalog_loader=_loader_for(reviewed))
+
+    assert identity["reviewed_card_count"] == len(reviewed) == 35
+    assert identity["reviewed_card_ids_hash"] == digest(sorted(reviewed))
+
+
+def test_heldout_names_the_gate_condition_that_failed():
+    heldout = _heldout_phase()
+    cards = _v2_cards()
+    referenced = _referenced(heldout)
+
+    missing_card = {card["id"] for card in cards} - {min(referenced)}
+    with pytest.raises(ValueError, match="heldout card is not reviewed"):
+        validate_heldout_catalog(heldout, catalog_loader=_loader_for(missing_card))
+
+    # One sketch card left reviewed: the texture axis can no longer be compared.
+    sketch = [card["id"] for card in cards if card["axis_levels"]["texture"] == 0]
+    thin_level = {card["id"] for card in cards} - set(sketch[1:])
+    with pytest.raises(ValueError, match="texture level 0 has 1 reviewed cards"):
+        validate_heldout_catalog(heldout, catalog_loader=_loader_for(thin_level))
+
+    reviewed = {
+        card["id"] for card in cards if card["subject_id"] in ("girl", "student")
+    } | referenced
+    raised = copy.deepcopy(heldout)
+    raised["catalog_gate"]["min_reviewed_cards"] = 40
+    with pytest.raises(ValueError, match="too few reviewed cards: 35 of 64"):
+        validate_heldout_catalog(raised, catalog_loader=_loader_for(reviewed))
 
 
 def test_runtime_model_provenance_hashes_only_consumed_pinned_files(tmp_path):

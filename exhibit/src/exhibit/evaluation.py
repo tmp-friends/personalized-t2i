@@ -11,7 +11,7 @@ import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
-from .domain import digest, file_hash
+from .domain import ASPECTS, digest, file_hash
 from .fan_adapter import freeze_policy, resolve_policy, thaw_policy
 
 EVALUATOR_FILES = {
@@ -327,6 +327,10 @@ def load_evaluation_config(path, phase, *, parents=None, study_kind=None):
             ),
             "seeds": copy.deepcopy(raw["heldout"]["seeds"]),
             "policies": copy.deepcopy(parent.get("selected_policies", [])),
+            "catalog_gate": {
+                key: raw["heldout"][key]
+                for key in ("min_reviewed_per_level", "min_reviewed_cards")
+            },
             "expected_jobs": 156,
         }
     if phase == "study":
@@ -1171,8 +1175,38 @@ def summarize_records(records, stage, rules):
     }
 
 
+def _reviewed_level_counts(cards):
+    """Reviewed cards per axis level; a level with none cannot be compared at all."""
+    counts = {axis: dict.fromkeys(range(4), 0) for axis in ASPECTS}
+    for card_id, card in cards.items():
+        levels = card.get("axis_levels")
+        if not isinstance(levels, dict) or set(levels) != set(ASPECTS):
+            raise TypeError(f"heldout card axis levels are missing: {card_id}")
+        for axis in ASPECTS:
+            level = levels[axis]
+            if type(level) is not int or not 0 <= level <= 3:
+                raise TypeError(f"heldout card axis levels are invalid: {card_id}")
+            counts[axis][level] += 1
+    return counts
+
+
 def validate_heldout_catalog(config, *, catalog_loader=None):
-    """Bind heldout refs to the authoritative, fully reviewed v2 catalog."""
+    """Bind heldout refs to the reviewed part of the authoritative v2 catalog.
+
+    The catalog need not be reviewed in full; design §6.1 accepts running on the
+    cards that passed. What it must still give is every card the fixtures name,
+    a floor of reviewed cards per axis level, and a floor overall.
+    """
+    gate = config.get("catalog_gate") or {}
+    min_per_level = gate.get("min_reviewed_per_level", 2)
+    min_cards = gate.get("min_reviewed_cards", 32)
+    if (
+        type(min_per_level) is not int
+        or type(min_cards) is not int
+        or min_per_level < 1
+        or min_cards < 1
+    ):
+        raise ValueError("heldout catalog gate thresholds must be positive integers")
     if catalog_loader is None:
         try:
             from .catalog import load_catalog
@@ -1194,11 +1228,8 @@ def validate_heldout_catalog(config, *, catalog_loader=None):
         not isinstance(eligible, list)
         or not isinstance(all_cards, list)
         or len(all_cards) != 64
-        or len(eligible) != len(all_cards)
     ):
-        raise ValueError(
-            "heldout catalog is not fully reviewed: expected 64 of 64 cards"
-        )
+        raise ValueError("heldout catalog is not the 64-card catalog-v2")
     if not isinstance(catalog.get("catalog_hash"), str) or not catalog["catalog_hash"]:
         raise ValueError("heldout catalog hash is missing")
     cards = {}
@@ -1233,10 +1264,25 @@ def validate_heldout_catalog(config, *, catalog_loader=None):
             raise ValueError(
                 f"heldout resolved refs do not match catalog: {history['id']}"
             )
+    for axis, counts in _reviewed_level_counts(cards).items():
+        for level, count in sorted(counts.items()):
+            if count < min_per_level:
+                raise ValueError(
+                    f"heldout catalog level is under-reviewed: {axis} level {level} "
+                    f"has {count} reviewed cards, {min_per_level} required"
+                )
+    if len(cards) < min_cards:
+        raise ValueError(
+            f"heldout catalog has too few reviewed cards: {len(cards)} of 64, "
+            f"{min_cards} required"
+        )
     identity = {
         "catalog_id": "catalog-v2",
         "catalog_hash": catalog["catalog_hash"],
-        "reviewed_card_count": len(eligible),
+        "reviewed_card_count": len(cards),
+        "reviewed_card_ids_hash": digest(sorted(cards)),
+        "min_reviewed_per_level": min_per_level,
+        "min_reviewed_cards": min_cards,
         "card_ids": sorted(used),
     }
     return {**identity, "identity_hash": digest(identity)}

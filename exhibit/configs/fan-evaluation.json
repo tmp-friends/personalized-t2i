@@ -30,8 +30,10 @@
   "refine": {"added_alpha": [0.3, 0.5]},
   "heldout": {
     "topics": ["cat", "tokyo", "forest", "lighthouse", "rain", "cafe"],
-    "histories": ["warm-cel", "cool-watercolor", "calm-flat", "mixed"],
-    "seeds": [230927, 230928]
+    "histories": ["warm-cel", "cool-oil", "calm-flat", "mixed"],
+    "seeds": [230927, 230928],
+    "min_reviewed_per_level": 2,
+    "min_reviewed_cards": 32
   },
   "study": {
     "study_kind": "encoder",
