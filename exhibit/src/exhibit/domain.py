@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import math
 
 from .config import CARDS_REVIEW, CONFIG, read_json
 
@@ -117,6 +118,7 @@ def fan_settings(config=CONFIG):
 
 
 def personalization_hash(refs, alpha, *, commit, generation, seeds, fan=None):
+    """The stable legacy cache identity used by current assets."""
     return digest(
         {
             "refs": refs,
@@ -129,32 +131,39 @@ def personalization_hash(refs, alpha, *, commit, generation, seeds, fan=None):
     )
 
 
-def build_personalization(selection, config=CONFIG):
-    """One reference per distinct aspect phrase; a phrase weighs as many cards as share it.
+def legacy_snapshot_from_selection(selection, config=CONFIG):
+    """Explicit v1 list conversion; the new public builder never accepts lists."""
+    return {
+        "revision": 0,
+        "catalog_id": "catalog-v1",
+        "catalog_hash": digest(build_cards(config)),
+        "selection": [
+            {
+                "card_id": entry["card_id"],
+                "strength": 1,
+                "aspects": [a for a in ASPECTS if a not in entry["aspects_off"]],
+            }
+            for entry in normalize_selection(selection, config)
+        ],
+        "aspect_gains": {aspect: 1 for aspect in ASPECTS},
+    }
 
-    A single bundled sentence per card was measured to swing composition, while
-    short aspect phrases keep the target framing.
-    """
-    alpha = config["alpha"]
-    weight = 1.0
-    merged = {}
+
+def build_legacy_personalization(selection, config=CONFIG):
+    """The byte-compatible builder retained until the service is migrated."""
+    alpha, merged = config["alpha"], {}
     for entry in selection:
         card = CARDS[entry["card_id"]]
-        off = set(entry["aspects_off"])
         for aspect in ASPECTS:
-            if aspect in off:
+            if aspect in set(entry["aspects_off"]):
                 continue
             phrase = card["aspects"][aspect]
-            if phrase in merged:
-                merged[phrase]["weight"] += weight
-                merged[phrase]["card_ids"].append(card["id"])
-            else:
-                merged[phrase] = {
-                    "text": phrase,
-                    "weight": weight,
-                    "aspect": aspect,
-                    "card_ids": [card["id"]],
-                }
+            item = merged.setdefault(
+                phrase,
+                {"text": phrase, "weight": 0.0, "aspect": aspect, "card_ids": []},
+            )
+            item["weight"] += 1.0
+            item["card_ids"].append(card["id"])
     refs = list(merged.values())
     if not refs:
         raise ValueError("参照を1つ以上残してください。")
@@ -170,6 +179,202 @@ def build_personalization(selection, config=CONFIG):
             seeds=config["seeds"],
             fan=fan_settings(config),
         ),
+    }
+
+
+def _normal_text(value):
+    if not isinstance(value, str) or not value.strip():
+        raise ValueError("Reference text must be non-empty")
+    return " ".join(value.split())
+
+
+def _ref_id(value):
+    return hashlib.sha256(_normal_text(value).encode()).hexdigest()
+
+
+def _finite_json(value, label):
+    if value is None or isinstance(value, (str, int, bool)):
+        return
+    if isinstance(value, float):
+        if not math.isfinite(value):
+            raise ValueError(f"{label} must not contain non-finite values")
+        return
+    if isinstance(value, dict):
+        for key, item in value.items():
+            _finite_json(item, f"{label}.{key}")
+        return
+    if isinstance(value, (list, tuple)):
+        for item in value:
+            _finite_json(item, label)
+        return
+    raise ValueError(f"{label} must be JSON-shaped")
+
+
+def _snapshot(snapshot):
+    if not isinstance(snapshot, dict):
+        raise TypeError("snapshot must be a PreferenceSnapshot object")
+    needed = {"revision", "catalog_id", "catalog_hash", "selection", "aspect_gains"}
+    if set(snapshot) != needed:
+        raise ValueError("Snapshot has unknown or missing fields")
+    if (
+        type(snapshot["revision"]) is not int
+        or snapshot["revision"] < 0
+        or not all(
+            isinstance(snapshot[key], str) and snapshot[key]
+            for key in ("catalog_id", "catalog_hash")
+        )
+    ):
+        raise ValueError("Invalid snapshot identity")
+    gains = snapshot["aspect_gains"]
+    if not isinstance(gains, dict) or set(gains) != set(ASPECTS):
+        raise ValueError("aspect_gains must name every aspect")
+    if any(
+        type(gain) not in (int, float) or gain not in (0.5, 1, 2)
+        for gain in gains.values()
+    ):
+        raise ValueError("Invalid aspect_gains")
+    if not isinstance(snapshot["selection"], list) or not snapshot["selection"]:
+        raise ValueError("Snapshot selection is required")
+    seen, selection = set(), []
+    for entry in snapshot["selection"]:
+        if not isinstance(entry, dict) or set(entry) != {
+            "card_id",
+            "strength",
+            "aspects",
+        }:
+            raise ValueError("Invalid selection entry")
+        card_id, aspects = entry["card_id"], entry["aspects"]
+        if card_id not in CARDS or card_id in seen:
+            raise ValueError("Unknown or duplicate card")
+        if type(entry["strength"]) is not int or entry["strength"] not in (1, 2):
+            raise ValueError("strength must be 1 or 2")
+        if (
+            not isinstance(aspects, list)
+            or not aspects
+            or set(aspects) - set(ASPECTS)
+            or len(aspects) != len(set(aspects))
+        ):
+            raise ValueError("Invalid aspects")
+        seen.add(card_id)
+        selection.append(
+            {
+                "card_id": card_id,
+                "strength": entry["strength"],
+                "aspects": sorted(aspects),
+            }
+        )
+    return {
+        "catalog_id": snapshot["catalog_id"],
+        "catalog_hash": snapshot["catalog_hash"],
+        "selection": sorted(selection, key=lambda item: item["card_id"]),
+        "aspect_gains": {key: float(gains[key]) for key in ASPECTS},
+    }
+
+
+def _provenance(provenance):
+    required = {
+        "fan_pin",
+        "adapter_hash",
+        "decoder_hash",
+        "tokenizer_hash",
+        "generation",
+        "seeds",
+    }
+    if not isinstance(provenance, dict) or not required <= set(provenance):
+        raise ValueError(
+            "provenance must include source, decoder, tokenizer, generation, and seeds"
+        )
+    if any(
+        not isinstance(provenance[key], str) or not provenance[key]
+        for key in ("fan_pin", "adapter_hash", "decoder_hash", "tokenizer_hash")
+    ):
+        raise ValueError("provenance source identities are required")
+    if (
+        not isinstance(provenance["generation"], dict)
+        or not provenance["generation"]
+        or not isinstance(provenance["seeds"], list)
+        or not provenance["seeds"]
+    ):
+        raise ValueError("provenance generation and seeds are required")
+    _finite_json(provenance, "provenance")
+    return json.loads(json.dumps(provenance, sort_keys=True))
+
+
+def _refs(snapshot, policy):
+    gains, unit, merged = snapshot["aspect_gains"], policy["reference_unit"], {}
+    if unit == "card_description" and any(gain != 1 for gain in gains.values()):
+        raise ValueError("card_description requires all aspect_gains to equal 1")
+    for entry in snapshot["selection"]:
+        card = CARDS[entry["card_id"]]
+        aspects = [aspect for aspect in ASPECTS if aspect in entry["aspects"]]
+        if unit == "aspect_phrase":
+            candidates = [
+                (card["aspects"][aspect], aspect, entry["strength"] * gains[aspect])
+                for aspect in aspects
+            ]
+        else:
+            candidates = [
+                (
+                    ", ".join(card["aspects"][aspect] for aspect in aspects),
+                    None,
+                    entry["strength"],
+                )
+            ]
+        for text, aspect, weight in candidates:
+            text = _normal_text(text)
+            item = merged.setdefault(
+                text, {"text": text, "weight": 0.0, "card_ids": [], "aspects": []}
+            )
+            item["weight"] += weight
+            item["card_ids"].append(card["id"])
+            if aspect is not None:
+                item["aspects"].append(aspect)
+    refs = [
+        {
+            "ref_id": _ref_id(text),
+            "text": text,
+            "weight": item["weight"],
+            "card_ids": sorted(item["card_ids"]),
+            "aspects": sorted(set(item["aspects"])),
+        }
+        for text, item in merged.items()
+        if item["weight"] > 0
+    ]
+    if not refs:
+        raise ValueError("参照を1つ以上残してください。")
+    return sorted(refs, key=lambda item: (item["text"], item["ref_id"]))
+
+
+def build_personalization(snapshot, *, prompt, policy, provenance):
+    """Build a policy-bound, content-addressed snapshot; implicit lists are invalid."""
+    from .fan_adapter import freeze_policy, profiling_argument, thaw_policy
+
+    if not isinstance(snapshot, dict):
+        raise TypeError("snapshot must be a PreferenceSnapshot object")
+    if not isinstance(prompt, str) or not prompt.strip():
+        raise ValueError("prompt is required")
+    snapshot, effective, source = (
+        _snapshot(snapshot),
+        freeze_policy(policy),
+        _provenance(provenance),
+    )
+    policy_value, refs = thaw_policy(effective), _refs(snapshot, thaw_policy(effective))
+    identity = {
+        "snapshot": snapshot,
+        "refs": refs,
+        "prompt": prompt,
+        "effective_policy": policy_value,
+        "provenance": source,
+    }
+    content_hash = digest(identity)
+    return {
+        "refs": refs,
+        "effective_policy": policy_value,
+        "policy_hash": digest(policy_value),
+        "provenance": source,
+        "sample_size": profiling_argument(effective),
+        "hash": content_hash,
+        "personalization_hash": content_hash,
     }
 
 

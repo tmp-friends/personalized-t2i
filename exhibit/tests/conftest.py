@@ -5,7 +5,7 @@ from pathlib import Path
 
 import pytest
 from exhibit.config import CONFIG, write_json
-from exhibit.domain import CARDS, build_personalization, file_hash, target_prompt
+from exhibit.domain import CARDS, build_legacy_personalization, file_hash, target_prompt
 
 
 def fake_png(path, payload):
@@ -57,7 +57,7 @@ def sample_records(root):
             {"card_id": ids[number * 3 + offset], "aspects_off": []}
             for offset in range(3)
         ]
-        personalization = build_personalization(selection)
+        personalization = build_legacy_personalization(selection)
         for topic in CONFIG["topics"][:2]:
             sample_id = f"s{number + 1}-{topic['id']}"
             images = []

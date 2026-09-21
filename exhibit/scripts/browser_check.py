@@ -165,7 +165,7 @@ def main():
             if "personalization_hash" in image:
                 assert image["personalization_hash"] == expected_hash
         # One reference per distinct aspect phrase, merged across the 3 selected
-        # cards (see exhibit.domain.build_personalization); not one ref per card.
+        # cards (see exhibit.domain.build_legacy_personalization); not one ref per card.
         refs = run["personalization"]["refs"]
         assert refs, "no references at all"
         contributing = {cid for ref in refs for cid in ref.get("card_ids", [])}

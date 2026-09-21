@@ -6,7 +6,7 @@ from pathlib import Path
 from .config import ASSETS, CARDS_REVIEW, CONFIG, FAN_UPSTREAM, GPU_PYTHON
 from .domain import (
     CARDS,
-    build_personalization,
+    build_legacy_personalization,
     file_hash,
     reviewed_ids,
     target_prompt,
@@ -227,7 +227,7 @@ def sample_errors(sample, root=ASSETS):
     selection = sample.get("selection")
     personalization = sample.get("personalization") or {}
     try:
-        rebuilt = build_personalization(selection)
+        rebuilt = build_legacy_personalization(selection)
     except (KeyError, TypeError, ValueError):
         rebuilt = None
         fail("selection is unusable")

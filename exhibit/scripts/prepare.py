@@ -7,7 +7,7 @@ import time
 from pathlib import Path
 
 from exhibit.config import ASSETS, CONFIG, FAN_UPSTREAM, OUTPUTS, read_json, write_json
-from exhibit.domain import CARDS, build_personalization, target_prompt
+from exhibit.domain import CARDS, build_legacy_personalization, target_prompt
 from exhibit.gpu import run_stage
 
 # Representative selections for the offline sample experiences (3 cards each).
@@ -136,7 +136,7 @@ def prepare_samples():
     items = []
     for prefix, label, card_ids in SAMPLE_SELECTIONS:
         selection = [{"card_id": card_id, "aspects_off": []} for card_id in card_ids]
-        personalization = build_personalization(selection)
+        personalization = build_legacy_personalization(selection)
         for topic in CONFIG["topics"][:2]:
             sample_id = f"{prefix}-{topic['id']}"
             samples.append(

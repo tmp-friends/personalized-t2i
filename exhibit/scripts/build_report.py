@@ -240,7 +240,7 @@ def g0_settings_section(followup, final, ladder):
         )
     split_line = (
         " ".join(split_line_bits)
-        + " 現在の実装（exhibit.domain.build_personalization）は側面ごとの短い句を"
+        + " 現在の実装（exhibit.domain.build_legacy_personalization）は側面ごとの短い句を"
         "カード横断でマージし、重みを合算する方式です。"
         if split_line_bits
         else "未計測。"

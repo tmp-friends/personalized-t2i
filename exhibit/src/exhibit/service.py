@@ -14,7 +14,7 @@ from pathlib import Path
 from .config import ASSETS, CONFIG, FAN_UPSTREAM, OUTPUTS, read_json, write_json
 from .domain import (
     build_cards,
-    build_personalization,
+    build_legacy_personalization,
     file_hash,
     normalize_selection,
     run_cache_key,
@@ -172,7 +172,7 @@ class Service:
                 raise ValueError(
                     f"{CONFIG['selection']['min']}枚以上の画像選択が必要です。"
                 )
-            personalization = build_personalization(selection)
+            personalization = build_legacy_personalization(selection)
             run = session["run"]
             if run and run["request_id"] == request_id:
                 if (

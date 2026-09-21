@@ -5,7 +5,7 @@ from exhibit.config import CONFIG
 from exhibit.domain import (
     CARDS,
     build_cards,
-    build_personalization,
+    build_legacy_personalization,
     fan_settings,
     normalize_selection,
     personalization_hash,
@@ -58,7 +58,7 @@ def hash_with(refs, alpha, **overrides):
 
 
 def test_references_are_deduplicated_aspect_phrases_with_merged_weights():
-    base = build_personalization(selection())
+    base = build_legacy_personalization(selection())
     calm = CARDS[IDS[0]]["aspects"]["mood"]
     assert calm == CARDS[IDS[1]]["aspects"]["mood"]
     phrases = [ref["text"] for ref in base["refs"]]
@@ -74,12 +74,14 @@ def test_references_are_deduplicated_aspect_phrases_with_merged_weights():
 
 
 def test_personalization_hash_changes_with_order_alpha_and_settings():
-    base = build_personalization(selection())
-    swapped = build_personalization([selection()[1], selection()[0], selection()[2]])
+    base = build_legacy_personalization(selection())
+    swapped = build_legacy_personalization(
+        [selection()[1], selection()[0], selection()[2]]
+    )
     assert base["hash"] != swapped["hash"]
-    stronger = build_personalization(selection(), {**CONFIG, "alpha": 0.6})
+    stronger = build_legacy_personalization(selection(), {**CONFIG, "alpha": 0.6})
     assert stronger["hash"] != base["hash"]
-    assert build_personalization(selection())["hash"] == base["hash"]
+    assert build_legacy_personalization(selection())["hash"] == base["hash"]
     assert base["alpha"] == CONFIG["alpha"] == 0.5
 
     refs, alpha = base["refs"], base["alpha"]
@@ -106,8 +108,8 @@ def test_the_measured_fan_settings_are_the_ones_that_are_hashed():
 
 
 def test_aspects_off_removes_only_that_phrase():
-    base = build_personalization(selection())
-    reduced = build_personalization(selection(aspects_off=["mood"]))
+    base = build_legacy_personalization(selection())
+    reduced = build_legacy_personalization(selection(aspects_off=["mood"]))
     assert base["hash"] != reduced["hash"]
     moods = {CARDS[i]["aspects"]["mood"] for i in IDS[:3]}
     assert not moods & {ref["text"] for ref in reduced["refs"]}
@@ -131,8 +133,8 @@ def test_selection_enforces_min_max_and_known_cards():
 
 
 def test_cache_key_covers_topic_and_personalization():
-    base = build_personalization(selection())
-    other = build_personalization(selection(aspects_off=["mood"]))
+    base = build_legacy_personalization(selection())
+    other = build_legacy_personalization(selection(aspects_off=["mood"]))
     assert run_cache_key("cat", base) == run_cache_key("cat", base)
     assert run_cache_key("cat", base) != run_cache_key("tokyo", base)
     assert run_cache_key("cat", base) != run_cache_key("cat", other)

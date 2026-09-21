@@ -5,6 +5,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 REPO = ROOT.parent
 CONFIG = json.loads((ROOT / "configs/demo.json").read_text())
+FAN_POLICIES = json.loads((ROOT / "configs/fan-policies.json").read_text())
 ASSETS = ROOT / "assets"
 CARDS_REVIEW = ROOT / "configs/cards-review.json"
 OUTPUTS = Path(os.environ.get("EXHIBIT_OUTPUTS", str(ROOT / "outputs"))).resolve()
