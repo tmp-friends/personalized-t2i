@@ -1,0 +1,1715 @@
+{
+ "disclaimer": "Hand-entered visual verdicts for the 64 shipped catalog-v2 cards.\n\nok        = a museum visitor would see the aspect unprompted AND could tell it\n            apart from the other three levels of that axis\nweak      = not met (either invisible, or indistinguishable from a sibling level)\nuncertain = could not be judged confidently from the sheets + full-size image\n\nThis is one reviewer's estimate. It is NOT the exhibit owner's review and must\nnot be written into exhibit/configs/cards-v2-review.json.",
+ "summary": {
+  "per_axis_ok": {
+   "color": 45,
+   "lighting": 51,
+   "texture": 27,
+   "mood": 60,
+   "subject": 60
+  },
+  "per_axis_uncertain": {
+   "color": 1,
+   "lighting": 5,
+   "texture": 9,
+   "mood": 2,
+   "subject": 1
+  },
+  "per_axis_weak": {
+   "color": 18,
+   "lighting": 8,
+   "texture": 28,
+   "mood": 2,
+   "subject": 3
+  },
+  "per_level_ok": {
+   "color": {
+    "0": 12,
+    "1": 16,
+    "2": 15,
+    "3": 2
+   },
+   "lighting": {
+    "0": 13,
+    "1": 16,
+    "2": 16,
+    "3": 6
+   },
+   "texture": {
+    "0": 0,
+    "1": 11,
+    "2": 6,
+    "3": 10
+   },
+   "mood": {
+    "0": 16,
+    "1": 16,
+    "2": 16,
+    "3": 12
+   }
+  },
+  "per_subject_ok": {
+   "girl": {
+    "color": 13,
+    "lighting": 12,
+    "texture": 6,
+    "mood": 15,
+    "subject": 13
+   },
+   "student": {
+    "color": 10,
+    "lighting": 14,
+    "texture": 6,
+    "mood": 16,
+    "subject": 16
+   },
+   "traveler": {
+    "color": 9,
+    "lighting": 13,
+    "texture": 9,
+    "mood": 14,
+    "subject": 16
+   },
+   "barista": {
+    "color": 13,
+    "lighting": 12,
+    "texture": 6,
+    "mood": 15,
+    "subject": 15
+   }
+  },
+  "per_subject_all_pass": {
+   "girl": 3,
+   "student": 3,
+   "traveler": 4,
+   "barista": 4
+  },
+  "all_pass": 14,
+  "all_pass_ids": [
+   "girl-c0-l0-t1-m1",
+   "girl-c0-l3-t3-m3",
+   "girl-c1-l1-t3-m0",
+   "student-c0-l3-t3-m3",
+   "student-c1-l1-t3-m0",
+   "student-c2-l3-t1-m0",
+   "traveler-c0-l2-t2-m2",
+   "traveler-c1-l1-t3-m0",
+   "traveler-c1-l3-t1-m2",
+   "traveler-c2-l0-t3-m2",
+   "barista-c0-l0-t1-m1",
+   "barista-c0-l3-t3-m3",
+   "barista-c1-l1-t3-m0",
+   "barista-c2-l0-t3-m2"
+  ],
+  "pilot_candidate5_estimate": {
+   "color": 45,
+   "lighting": 51,
+   "texture": 46,
+   "mood": 59,
+   "subject": 58,
+   "all": 26
+  }
+ },
+ "cards": [
+  {
+   "id": "girl-c0-l0-t0-m0",
+   "subject_id": "girl",
+   "axis_levels": {
+    "color": 0,
+    "lighting": 0,
+    "texture": 0,
+    "mood": 0
+   },
+   "aspects": {
+    "color": "warm color palette, amber tones",
+    "lighting": "overcast, diffused light, soft shadows",
+    "texture": "watercolor (medium), soft wash",
+    "mood": "calm, closed eyes, gentle smile"
+   },
+   "verdict": {
+    "color": "ok",
+    "lighting": "ok",
+    "texture": "weak",
+    "mood": "ok",
+    "subject": "ok"
+   },
+   "all_pass": false,
+   "note": "水彩の滲み・紙目が出ず通常のアニメ塗り"
+  },
+  {
+   "id": "girl-c0-l0-t1-m1",
+   "subject_id": "girl",
+   "axis_levels": {
+    "color": 0,
+    "lighting": 0,
+    "texture": 1,
+    "mood": 1
+   },
+   "aspects": {
+    "color": "warm color palette, amber tones",
+    "lighting": "overcast, diffused light, soft shadows",
+    "texture": "anime screencap, cel shading, crisp lineart",
+    "mood": "cheerful, open mouth smile, happy"
+   },
+   "verdict": {
+    "color": "ok",
+    "lighting": "ok",
+    "texture": "ok",
+    "mood": "ok",
+    "subject": "ok"
+   },
+   "all_pass": true,
+   "note": ""
+  },
+  {
+   "id": "girl-c0-l2-t2-m2",
+   "subject_id": "girl",
+   "axis_levels": {
+    "color": 0,
+    "lighting": 2,
+    "texture": 2,
+    "mood": 2
+   },
+   "aspects": {
+    "color": "warm color palette, amber tones",
+    "lighting": "backlighting, rim light, sun glare",
+    "texture": "flat color, minimal shading",
+    "mood": "serious, stern expression"
+   },
+   "verdict": {
+    "color": "ok",
+    "lighting": "ok",
+    "texture": "weak",
+    "mood": "ok",
+    "subject": "ok"
+   },
+   "all_pass": false,
+   "note": "顔と衣に階調があり平塗りに見えない（L2の逆光が階調を要求）"
+  },
+  {
+   "id": "girl-c0-l3-t3-m3",
+   "subject_id": "girl",
+   "axis_levels": {
+    "color": 0,
+    "lighting": 3,
+    "texture": 3,
+    "mood": 3
+   },
+   "aspects": {
+    "color": "warm color palette, amber tones",
+    "lighting": "harsh sunlight, cast shadow, high contrast",
+    "texture": "oil painting (medium), thick brushstrokes",
+    "mood": "dreamy, half-closed eyes, looking away"
+   },
+   "verdict": {
+    "color": "ok",
+    "lighting": "ok",
+    "texture": "ok",
+    "mood": "ok",
+    "subject": "ok"
+   },
+   "all_pass": true,
+   "note": "壁の落ち影は見えるが弱め。背景の広場は無地の壁に"
+  },
+  {
+   "id": "girl-c1-l0-t2-m3",
+   "subject_id": "girl",
+   "axis_levels": {
+    "color": 1,
+    "lighting": 0,
+    "texture": 2,
+    "mood": 3
+   },
+   "aspects": {
+    "color": "cool color palette, blue background",
+    "lighting": "overcast, diffused light, soft shadows",
+    "texture": "flat color, minimal shading",
+    "mood": "dreamy, half-closed eyes, looking away"
+   },
+   "verdict": {
+    "color": "ok",
+    "lighting": "uncertain",
+    "texture": "ok",
+    "mood": "ok",
+    "subject": "ok"
+   },
+   "all_pass": false,
+   "note": "青空一色で「曇り」とは読めない"
+  },
+  {
+   "id": "girl-c1-l1-t3-m0",
+   "subject_id": "girl",
+   "axis_levels": {
+    "color": 1,
+    "lighting": 1,
+    "texture": 3,
+    "mood": 0
+   },
+   "aspects": {
+    "color": "cool color palette, blue background",
+    "lighting": "night, dim lighting, lamplight, dark background",
+    "texture": "oil painting (medium), thick brushstrokes",
+    "mood": "calm, closed eyes, gentle smile"
+   },
+   "verdict": {
+    "color": "ok",
+    "lighting": "ok",
+    "texture": "ok",
+    "mood": "ok",
+    "subject": "ok"
+   },
+   "all_pass": true,
+   "note": ""
+  },
+  {
+   "id": "girl-c1-l2-t0-m1",
+   "subject_id": "girl",
+   "axis_levels": {
+    "color": 1,
+    "lighting": 2,
+    "texture": 0,
+    "mood": 1
+   },
+   "aspects": {
+    "color": "cool color palette, blue background",
+    "lighting": "backlighting, rim light, sun glare",
+    "texture": "watercolor (medium), soft wash",
+    "mood": "cheerful, open mouth smile, happy"
+   },
+   "verdict": {
+    "color": "ok",
+    "lighting": "ok",
+    "texture": "weak",
+    "mood": "ok",
+    "subject": "ok"
+   },
+   "all_pass": false,
+   "note": "水彩にならず通常のアニメ塗り＋光条"
+  },
+  {
+   "id": "girl-c1-l3-t1-m2",
+   "subject_id": "girl",
+   "axis_levels": {
+    "color": 1,
+    "lighting": 3,
+    "texture": 1,
+    "mood": 2
+   },
+   "aspects": {
+    "color": "cool color palette, blue background",
+    "lighting": "harsh sunlight, cast shadow, high contrast",
+    "texture": "anime screencap, cel shading, crisp lineart",
+    "mood": "serious, stern expression"
+   },
+   "verdict": {
+    "color": "ok",
+    "lighting": "weak",
+    "texture": "weak",
+    "mood": "ok",
+    "subject": "weak"
+   },
+   "all_pass": false,
+   "note": "彩色のない線画。光が一切なく広場も消失（c1×l3の破綻）"
+  },
+  {
+   "id": "girl-c2-l0-t3-m2",
+   "subject_id": "girl",
+   "axis_levels": {
+    "color": 2,
+    "lighting": 0,
+    "texture": 3,
+    "mood": 2
+   },
+   "aspects": {
+    "color": "muted colors, desaturated",
+    "lighting": "overcast, diffused light, soft shadows",
+    "texture": "oil painting (medium), thick brushstrokes",
+    "mood": "serious, stern expression"
+   },
+   "verdict": {
+    "color": "ok",
+    "lighting": "ok",
+    "texture": "weak",
+    "mood": "ok",
+    "subject": "ok"
+   },
+   "all_pass": false,
+   "note": "背景に筆致があるが人物は平滑で油彩と読みにくい"
+  },
+  {
+   "id": "girl-c2-l1-t2-m1",
+   "subject_id": "girl",
+   "axis_levels": {
+    "color": 2,
+    "lighting": 1,
+    "texture": 2,
+    "mood": 1
+   },
+   "aspects": {
+    "color": "muted colors, desaturated",
+    "lighting": "night, dim lighting, lamplight, dark background",
+    "texture": "flat color, minimal shading",
+    "mood": "cheerful, open mouth smile, happy"
+   },
+   "verdict": {
+    "color": "ok",
+    "lighting": "ok",
+    "texture": "ok",
+    "mood": "ok",
+    "subject": "weak"
+   },
+   "all_pass": false,
+   "note": "左手が崩れている（指が一体化）。来場者が気づく破綻"
+  },
+  {
+   "id": "girl-c2-l2-t0-m3",
+   "subject_id": "girl",
+   "axis_levels": {
+    "color": 2,
+    "lighting": 2,
+    "texture": 0,
+    "mood": 3
+   },
+   "aspects": {
+    "color": "muted colors, desaturated",
+    "lighting": "backlighting, rim light, sun glare",
+    "texture": "watercolor (medium), soft wash",
+    "mood": "dreamy, half-closed eyes, looking away"
+   },
+   "verdict": {
+    "color": "ok",
+    "lighting": "ok",
+    "texture": "uncertain",
+    "mood": "ok",
+    "subject": "ok"
+   },
+   "all_pass": false,
+   "note": "逆光で全体が白飛びし、水彩の滲みとも読めるが確信なし"
+  },
+  {
+   "id": "girl-c2-l3-t1-m0",
+   "subject_id": "girl",
+   "axis_levels": {
+    "color": 2,
+    "lighting": 3,
+    "texture": 1,
+    "mood": 0
+   },
+   "aspects": {
+    "color": "muted colors, desaturated",
+    "lighting": "harsh sunlight, cast shadow, high contrast",
+    "texture": "anime screencap, cel shading, crisp lineart",
+    "mood": "calm, closed eyes, gentle smile"
+   },
+   "verdict": {
+    "color": "ok",
+    "lighting": "weak",
+    "texture": "weak",
+    "mood": "ok",
+    "subject": "weak"
+   },
+   "all_pass": false,
+   "note": "淡い未完成の線画。強い光も落ち影もなく広場が線だけ"
+  },
+  {
+   "id": "girl-c3-l1-t0-m2",
+   "subject_id": "girl",
+   "axis_levels": {
+    "color": 3,
+    "lighting": 1,
+    "texture": 0,
+    "mood": 2
+   },
+   "aspects": {
+    "color": "vivid saturated colors",
+    "lighting": "night, dim lighting, lamplight, dark background",
+    "texture": "watercolor (medium), soft wash",
+    "mood": "serious, stern expression"
+   },
+   "verdict": {
+    "color": "weak",
+    "lighting": "ok",
+    "texture": "weak",
+    "mood": "ok",
+    "subject": "ok"
+   },
+   "all_pass": false,
+   "note": "夜で彩度が出ず、水彩にもならない"
+  },
+  {
+   "id": "girl-c3-l1-t1-m3",
+   "subject_id": "girl",
+   "axis_levels": {
+    "color": 3,
+    "lighting": 1,
+    "texture": 1,
+    "mood": 3
+   },
+   "aspects": {
+    "color": "vivid saturated colors",
+    "lighting": "night, dim lighting, lamplight, dark background",
+    "texture": "anime screencap, cel shading, crisp lineart",
+    "mood": "dreamy, half-closed eyes, looking away"
+   },
+   "verdict": {
+    "color": "ok",
+    "lighting": "ok",
+    "texture": "ok",
+    "mood": "uncertain",
+    "subject": "ok"
+   },
+   "all_pass": false,
+   "note": "横顔で目が開き気味、半眼と読めるか微妙"
+  },
+  {
+   "id": "girl-c3-l2-t2-m0",
+   "subject_id": "girl",
+   "axis_levels": {
+    "color": 3,
+    "lighting": 2,
+    "texture": 2,
+    "mood": 0
+   },
+   "aspects": {
+    "color": "vivid saturated colors",
+    "lighting": "backlighting, rim light, sun glare",
+    "texture": "flat color, minimal shading",
+    "mood": "calm, closed eyes, gentle smile"
+   },
+   "verdict": {
+    "color": "weak",
+    "lighting": "ok",
+    "texture": "weak",
+    "mood": "ok",
+    "subject": "ok"
+   },
+   "all_pass": false,
+   "note": "パステル調で鮮やかでない。階調もあり平塗りでない"
+  },
+  {
+   "id": "girl-c3-l3-t3-m1",
+   "subject_id": "girl",
+   "axis_levels": {
+    "color": 3,
+    "lighting": 3,
+    "texture": 3,
+    "mood": 1
+   },
+   "aspects": {
+    "color": "vivid saturated colors",
+    "lighting": "harsh sunlight, cast shadow, high contrast",
+    "texture": "oil painting (medium), thick brushstrokes",
+    "mood": "cheerful, open mouth smile, happy"
+   },
+   "verdict": {
+    "color": "weak",
+    "lighting": "weak",
+    "texture": "weak",
+    "mood": "ok",
+    "subject": "ok"
+   },
+   "all_pass": false,
+   "note": "晴天だが落ち影なし、油彩の筆致もなし、彩度も中程度"
+  },
+  {
+   "id": "student-c0-l0-t0-m0",
+   "subject_id": "student",
+   "axis_levels": {
+    "color": 0,
+    "lighting": 0,
+    "texture": 0,
+    "mood": 0
+   },
+   "aspects": {
+    "color": "warm color palette, amber tones",
+    "lighting": "overcast, diffused light, soft shadows",
+    "texture": "watercolor (medium), soft wash",
+    "mood": "calm, closed eyes, gentle smile"
+   },
+   "verdict": {
+    "color": "weak",
+    "lighting": "ok",
+    "texture": "weak",
+    "mood": "ok",
+    "subject": "ok"
+   },
+   "all_pass": false,
+   "note": "書架の木の色で中性的、琥珀色と読めない。水彩感なし"
+  },
+  {
+   "id": "student-c0-l0-t1-m1",
+   "subject_id": "student",
+   "axis_levels": {
+    "color": 0,
+    "lighting": 0,
+    "texture": 1,
+    "mood": 1
+   },
+   "aspects": {
+    "color": "warm color palette, amber tones",
+    "lighting": "overcast, diffused light, soft shadows",
+    "texture": "anime screencap, cel shading, crisp lineart",
+    "mood": "cheerful, open mouth smile, happy"
+   },
+   "verdict": {
+    "color": "weak",
+    "lighting": "ok",
+    "texture": "ok",
+    "mood": "ok",
+    "subject": "ok"
+   },
+   "all_pass": false,
+   "note": "灰緑の背景で暖色パレットに見えない"
+  },
+  {
+   "id": "student-c0-l2-t2-m2",
+   "subject_id": "student",
+   "axis_levels": {
+    "color": 0,
+    "lighting": 2,
+    "texture": 2,
+    "mood": 2
+   },
+   "aspects": {
+    "color": "warm color palette, amber tones",
+    "lighting": "backlighting, rim light, sun glare",
+    "texture": "flat color, minimal shading",
+    "mood": "serious, stern expression"
+   },
+   "verdict": {
+    "color": "ok",
+    "lighting": "ok",
+    "texture": "weak",
+    "mood": "ok",
+    "subject": "ok"
+   },
+   "all_pass": false,
+   "note": "逆光の階調が濃く平塗りでない"
+  },
+  {
+   "id": "student-c0-l3-t3-m3",
+   "subject_id": "student",
+   "axis_levels": {
+    "color": 0,
+    "lighting": 3,
+    "texture": 3,
+    "mood": 3
+   },
+   "aspects": {
+    "color": "warm color palette, amber tones",
+    "lighting": "harsh sunlight, cast shadow, high contrast",
+    "texture": "oil painting (medium), thick brushstrokes",
+    "mood": "dreamy, half-closed eyes, looking away"
+   },
+   "verdict": {
+    "color": "ok",
+    "lighting": "ok",
+    "texture": "ok",
+    "mood": "ok",
+    "subject": "ok"
+   },
+   "all_pass": true,
+   "note": ""
+  },
+  {
+   "id": "student-c1-l0-t2-m3",
+   "subject_id": "student",
+   "axis_levels": {
+    "color": 1,
+    "lighting": 0,
+    "texture": 2,
+    "mood": 3
+   },
+   "aspects": {
+    "color": "cool color palette, blue background",
+    "lighting": "overcast, diffused light, soft shadows",
+    "texture": "flat color, minimal shading",
+    "mood": "dreamy, half-closed eyes, looking away"
+   },
+   "verdict": {
+    "color": "ok",
+    "lighting": "uncertain",
+    "texture": "ok",
+    "mood": "ok",
+    "subject": "ok"
+   },
+   "all_pass": false,
+   "note": "青一色の室内で「曇り」と読めない"
+  },
+  {
+   "id": "student-c1-l1-t3-m0",
+   "subject_id": "student",
+   "axis_levels": {
+    "color": 1,
+    "lighting": 1,
+    "texture": 3,
+    "mood": 0
+   },
+   "aspects": {
+    "color": "cool color palette, blue background",
+    "lighting": "night, dim lighting, lamplight, dark background",
+    "texture": "oil painting (medium), thick brushstrokes",
+    "mood": "calm, closed eyes, gentle smile"
+   },
+   "verdict": {
+    "color": "ok",
+    "lighting": "ok",
+    "texture": "ok",
+    "mood": "ok",
+    "subject": "ok"
+   },
+   "all_pass": true,
+   "note": ""
+  },
+  {
+   "id": "student-c1-l2-t0-m1",
+   "subject_id": "student",
+   "axis_levels": {
+    "color": 1,
+    "lighting": 2,
+    "texture": 0,
+    "mood": 1
+   },
+   "aspects": {
+    "color": "cool color palette, blue background",
+    "lighting": "backlighting, rim light, sun glare",
+    "texture": "watercolor (medium), soft wash",
+    "mood": "cheerful, open mouth smile, happy"
+   },
+   "verdict": {
+    "color": "ok",
+    "lighting": "ok",
+    "texture": "weak",
+    "mood": "ok",
+    "subject": "ok"
+   },
+   "all_pass": false,
+   "note": "水彩にならず通常のアニメ塗り"
+  },
+  {
+   "id": "student-c1-l3-t1-m2",
+   "subject_id": "student",
+   "axis_levels": {
+    "color": 1,
+    "lighting": 3,
+    "texture": 1,
+    "mood": 2
+   },
+   "aspects": {
+    "color": "cool color palette, blue background",
+    "lighting": "harsh sunlight, cast shadow, high contrast",
+    "texture": "anime screencap, cel shading, crisp lineart",
+    "mood": "serious, stern expression"
+   },
+   "verdict": {
+    "color": "ok",
+    "lighting": "weak",
+    "texture": "weak",
+    "mood": "ok",
+    "subject": "ok"
+   },
+   "all_pass": false,
+   "note": "平坦な青緑、光も落ち影もない。塗りは線画寄り（c1×l3）"
+  },
+  {
+   "id": "student-c2-l0-t3-m2",
+   "subject_id": "student",
+   "axis_levels": {
+    "color": 2,
+    "lighting": 0,
+    "texture": 3,
+    "mood": 2
+   },
+   "aspects": {
+    "color": "muted colors, desaturated",
+    "lighting": "overcast, diffused light, soft shadows",
+    "texture": "oil painting (medium), thick brushstrokes",
+    "mood": "serious, stern expression"
+   },
+   "verdict": {
+    "color": "ok",
+    "lighting": "ok",
+    "texture": "weak",
+    "mood": "ok",
+    "subject": "ok"
+   },
+   "all_pass": false,
+   "note": "人物が平滑で厚塗りに見えない"
+  },
+  {
+   "id": "student-c2-l1-t2-m1",
+   "subject_id": "student",
+   "axis_levels": {
+    "color": 2,
+    "lighting": 1,
+    "texture": 2,
+    "mood": 1
+   },
+   "aspects": {
+    "color": "muted colors, desaturated",
+    "lighting": "night, dim lighting, lamplight, dark background",
+    "texture": "flat color, minimal shading",
+    "mood": "cheerful, open mouth smile, happy"
+   },
+   "verdict": {
+    "color": "ok",
+    "lighting": "ok",
+    "texture": "weak",
+    "mood": "ok",
+    "subject": "ok"
+   },
+   "all_pass": false,
+   "note": "陰影が豊かで平塗りに見えない"
+  },
+  {
+   "id": "student-c2-l2-t0-m3",
+   "subject_id": "student",
+   "axis_levels": {
+    "color": 2,
+    "lighting": 2,
+    "texture": 0,
+    "mood": 3
+   },
+   "aspects": {
+    "color": "muted colors, desaturated",
+    "lighting": "backlighting, rim light, sun glare",
+    "texture": "watercolor (medium), soft wash",
+    "mood": "dreamy, half-closed eyes, looking away"
+   },
+   "verdict": {
+    "color": "ok",
+    "lighting": "ok",
+    "texture": "uncertain",
+    "mood": "ok",
+    "subject": "ok"
+   },
+   "all_pass": false,
+   "note": "白飛びした柔らかさを水彩と読めるか微妙"
+  },
+  {
+   "id": "student-c2-l3-t1-m0",
+   "subject_id": "student",
+   "axis_levels": {
+    "color": 2,
+    "lighting": 3,
+    "texture": 1,
+    "mood": 0
+   },
+   "aspects": {
+    "color": "muted colors, desaturated",
+    "lighting": "harsh sunlight, cast shadow, high contrast",
+    "texture": "anime screencap, cel shading, crisp lineart",
+    "mood": "calm, closed eyes, gentle smile"
+   },
+   "verdict": {
+    "color": "ok",
+    "lighting": "ok",
+    "texture": "ok",
+    "mood": "ok",
+    "subject": "ok"
+   },
+   "all_pass": true,
+   "note": "壁の落ち影がはっきり出た好例"
+  },
+  {
+   "id": "student-c3-l1-t0-m2",
+   "subject_id": "student",
+   "axis_levels": {
+    "color": 3,
+    "lighting": 1,
+    "texture": 0,
+    "mood": 2
+   },
+   "aspects": {
+    "color": "vivid saturated colors",
+    "lighting": "night, dim lighting, lamplight, dark background",
+    "texture": "watercolor (medium), soft wash",
+    "mood": "serious, stern expression"
+   },
+   "verdict": {
+    "color": "weak",
+    "lighting": "ok",
+    "texture": "weak",
+    "mood": "ok",
+    "subject": "ok"
+   },
+   "all_pass": false,
+   "note": "夜で彩度が出ない。水彩感もなし"
+  },
+  {
+   "id": "student-c3-l1-t1-m3",
+   "subject_id": "student",
+   "axis_levels": {
+    "color": 3,
+    "lighting": 1,
+    "texture": 1,
+    "mood": 3
+   },
+   "aspects": {
+    "color": "vivid saturated colors",
+    "lighting": "night, dim lighting, lamplight, dark background",
+    "texture": "anime screencap, cel shading, crisp lineart",
+    "mood": "dreamy, half-closed eyes, looking away"
+   },
+   "verdict": {
+    "color": "weak",
+    "lighting": "ok",
+    "texture": "ok",
+    "mood": "ok",
+    "subject": "ok"
+   },
+   "all_pass": false,
+   "note": "ランプの暖色で彩度は中程度、鮮やかとは読めない"
+  },
+  {
+   "id": "student-c3-l2-t2-m0",
+   "subject_id": "student",
+   "axis_levels": {
+    "color": 3,
+    "lighting": 2,
+    "texture": 2,
+    "mood": 0
+   },
+   "aspects": {
+    "color": "vivid saturated colors",
+    "lighting": "backlighting, rim light, sun glare",
+    "texture": "flat color, minimal shading",
+    "mood": "calm, closed eyes, gentle smile"
+   },
+   "verdict": {
+    "color": "weak",
+    "lighting": "ok",
+    "texture": "weak",
+    "mood": "ok",
+    "subject": "ok"
+   },
+   "all_pass": false,
+   "note": "パステル調。階調もあり平塗りでない"
+  },
+  {
+   "id": "student-c3-l3-t3-m1",
+   "subject_id": "student",
+   "axis_levels": {
+    "color": 3,
+    "lighting": 3,
+    "texture": 3,
+    "mood": 1
+   },
+   "aspects": {
+    "color": "vivid saturated colors",
+    "lighting": "harsh sunlight, cast shadow, high contrast",
+    "texture": "oil painting (medium), thick brushstrokes",
+    "mood": "cheerful, open mouth smile, happy"
+   },
+   "verdict": {
+    "color": "weak",
+    "lighting": "ok",
+    "texture": "weak",
+    "mood": "ok",
+    "subject": "ok"
+   },
+   "all_pass": false,
+   "note": "落ち影は良いが油彩の筆致なし、彩度も中程度"
+  },
+  {
+   "id": "traveler-c0-l0-t0-m0",
+   "subject_id": "traveler",
+   "axis_levels": {
+    "color": 0,
+    "lighting": 0,
+    "texture": 0,
+    "mood": 0
+   },
+   "aspects": {
+    "color": "warm color palette, amber tones",
+    "lighting": "overcast, diffused light, soft shadows",
+    "texture": "watercolor (medium), soft wash",
+    "mood": "calm, closed eyes, gentle smile"
+   },
+   "verdict": {
+    "color": "weak",
+    "lighting": "ok",
+    "texture": "uncertain",
+    "mood": "ok",
+    "subject": "ok"
+   },
+   "all_pass": false,
+   "note": "背景に水彩の洗いがあるが人物は線画的。全体は灰色で暖色に読めない"
+  },
+  {
+   "id": "traveler-c0-l0-t1-m1",
+   "subject_id": "traveler",
+   "axis_levels": {
+    "color": 0,
+    "lighting": 0,
+    "texture": 1,
+    "mood": 1
+   },
+   "aspects": {
+    "color": "warm color palette, amber tones",
+    "lighting": "overcast, diffused light, soft shadows",
+    "texture": "anime screencap, cel shading, crisp lineart",
+    "mood": "cheerful, open mouth smile, happy"
+   },
+   "verdict": {
+    "color": "weak",
+    "lighting": "ok",
+    "texture": "ok",
+    "mood": "ok",
+    "subject": "ok"
+   },
+   "all_pass": false,
+   "note": "枯草の黄以外は中性色で暖色パレットと読めない"
+  },
+  {
+   "id": "traveler-c0-l2-t2-m2",
+   "subject_id": "traveler",
+   "axis_levels": {
+    "color": 0,
+    "lighting": 2,
+    "texture": 2,
+    "mood": 2
+   },
+   "aspects": {
+    "color": "warm color palette, amber tones",
+    "lighting": "backlighting, rim light, sun glare",
+    "texture": "flat color, minimal shading",
+    "mood": "serious, stern expression"
+   },
+   "verdict": {
+    "color": "ok",
+    "lighting": "ok",
+    "texture": "ok",
+    "mood": "ok",
+    "subject": "ok"
+   },
+   "all_pass": true,
+   "note": "草の様式化した平面が平塗りとして効いている"
+  },
+  {
+   "id": "traveler-c0-l3-t3-m3",
+   "subject_id": "traveler",
+   "axis_levels": {
+    "color": 0,
+    "lighting": 3,
+    "texture": 3,
+    "mood": 3
+   },
+   "aspects": {
+    "color": "warm color palette, amber tones",
+    "lighting": "harsh sunlight, cast shadow, high contrast",
+    "texture": "oil painting (medium), thick brushstrokes",
+    "mood": "dreamy, half-closed eyes, looking away"
+   },
+   "verdict": {
+    "color": "ok",
+    "lighting": "uncertain",
+    "texture": "ok",
+    "mood": "ok",
+    "subject": "ok"
+   },
+   "all_pass": false,
+   "note": "明暗は分かれるが落ち影の形が出ていない"
+  },
+  {
+   "id": "traveler-c1-l0-t2-m3",
+   "subject_id": "traveler",
+   "axis_levels": {
+    "color": 1,
+    "lighting": 0,
+    "texture": 2,
+    "mood": 3
+   },
+   "aspects": {
+    "color": "cool color palette, blue background",
+    "lighting": "overcast, diffused light, soft shadows",
+    "texture": "flat color, minimal shading",
+    "mood": "dreamy, half-closed eyes, looking away"
+   },
+   "verdict": {
+    "color": "ok",
+    "lighting": "ok",
+    "texture": "ok",
+    "mood": "weak",
+    "subject": "ok"
+   },
+   "all_pass": false,
+   "note": "目が開き気味で正面向き、半眼・視線外しに見えない"
+  },
+  {
+   "id": "traveler-c1-l1-t3-m0",
+   "subject_id": "traveler",
+   "axis_levels": {
+    "color": 1,
+    "lighting": 1,
+    "texture": 3,
+    "mood": 0
+   },
+   "aspects": {
+    "color": "cool color palette, blue background",
+    "lighting": "night, dim lighting, lamplight, dark background",
+    "texture": "oil painting (medium), thick brushstrokes",
+    "mood": "calm, closed eyes, gentle smile"
+   },
+   "verdict": {
+    "color": "ok",
+    "lighting": "ok",
+    "texture": "ok",
+    "mood": "ok",
+    "subject": "ok"
+   },
+   "all_pass": true,
+   "note": ""
+  },
+  {
+   "id": "traveler-c1-l2-t0-m1",
+   "subject_id": "traveler",
+   "axis_levels": {
+    "color": 1,
+    "lighting": 2,
+    "texture": 0,
+    "mood": 1
+   },
+   "aspects": {
+    "color": "cool color palette, blue background",
+    "lighting": "backlighting, rim light, sun glare",
+    "texture": "watercolor (medium), soft wash",
+    "mood": "cheerful, open mouth smile, happy"
+   },
+   "verdict": {
+    "color": "ok",
+    "lighting": "ok",
+    "texture": "uncertain",
+    "mood": "ok",
+    "subject": "ok"
+   },
+   "all_pass": false,
+   "note": "空の洗いが水彩的だが確信なし"
+  },
+  {
+   "id": "traveler-c1-l3-t1-m2",
+   "subject_id": "traveler",
+   "axis_levels": {
+    "color": 1,
+    "lighting": 3,
+    "texture": 1,
+    "mood": 2
+   },
+   "aspects": {
+    "color": "cool color palette, blue background",
+    "lighting": "harsh sunlight, cast shadow, high contrast",
+    "texture": "anime screencap, cel shading, crisp lineart",
+    "mood": "serious, stern expression"
+   },
+   "verdict": {
+    "color": "ok",
+    "lighting": "ok",
+    "texture": "ok",
+    "mood": "ok",
+    "subject": "ok"
+   },
+   "all_pass": true,
+   "note": "顔を斜めに切る硬い影。L3の最良例"
+  },
+  {
+   "id": "traveler-c2-l0-t3-m2",
+   "subject_id": "traveler",
+   "axis_levels": {
+    "color": 2,
+    "lighting": 0,
+    "texture": 3,
+    "mood": 2
+   },
+   "aspects": {
+    "color": "muted colors, desaturated",
+    "lighting": "overcast, diffused light, soft shadows",
+    "texture": "oil painting (medium), thick brushstrokes",
+    "mood": "serious, stern expression"
+   },
+   "verdict": {
+    "color": "ok",
+    "lighting": "ok",
+    "texture": "ok",
+    "mood": "ok",
+    "subject": "ok"
+   },
+   "all_pass": true,
+   "note": ""
+  },
+  {
+   "id": "traveler-c2-l1-t2-m1",
+   "subject_id": "traveler",
+   "axis_levels": {
+    "color": 2,
+    "lighting": 1,
+    "texture": 2,
+    "mood": 1
+   },
+   "aspects": {
+    "color": "muted colors, desaturated",
+    "lighting": "night, dim lighting, lamplight, dark background",
+    "texture": "flat color, minimal shading",
+    "mood": "cheerful, open mouth smile, happy"
+   },
+   "verdict": {
+    "color": "ok",
+    "lighting": "ok",
+    "texture": "uncertain",
+    "mood": "ok",
+    "subject": "ok"
+   },
+   "all_pass": false,
+   "note": "ランプは無いが夜は明確。平塗りかは中程度"
+  },
+  {
+   "id": "traveler-c2-l2-t0-m3",
+   "subject_id": "traveler",
+   "axis_levels": {
+    "color": 2,
+    "lighting": 2,
+    "texture": 0,
+    "mood": 3
+   },
+   "aspects": {
+    "color": "muted colors, desaturated",
+    "lighting": "backlighting, rim light, sun glare",
+    "texture": "watercolor (medium), soft wash",
+    "mood": "dreamy, half-closed eyes, looking away"
+   },
+   "verdict": {
+    "color": "ok",
+    "lighting": "ok",
+    "texture": "uncertain",
+    "mood": "ok",
+    "subject": "ok"
+   },
+   "all_pass": false,
+   "note": "逆光の白飛びを水彩と読めるか微妙"
+  },
+  {
+   "id": "traveler-c2-l3-t1-m0",
+   "subject_id": "traveler",
+   "axis_levels": {
+    "color": 2,
+    "lighting": 3,
+    "texture": 1,
+    "mood": 0
+   },
+   "aspects": {
+    "color": "muted colors, desaturated",
+    "lighting": "harsh sunlight, cast shadow, high contrast",
+    "texture": "anime screencap, cel shading, crisp lineart",
+    "mood": "calm, closed eyes, gentle smile"
+   },
+   "verdict": {
+    "color": "uncertain",
+    "lighting": "weak",
+    "texture": "ok",
+    "mood": "ok",
+    "subject": "ok"
+   },
+   "all_pass": false,
+   "note": "草の緑が低彩度と言い切れない。強い光も落ち影もない"
+  },
+  {
+   "id": "traveler-c3-l1-t0-m2",
+   "subject_id": "traveler",
+   "axis_levels": {
+    "color": 3,
+    "lighting": 1,
+    "texture": 0,
+    "mood": 2
+   },
+   "aspects": {
+    "color": "vivid saturated colors",
+    "lighting": "night, dim lighting, lamplight, dark background",
+    "texture": "watercolor (medium), soft wash",
+    "mood": "serious, stern expression"
+   },
+   "verdict": {
+    "color": "weak",
+    "lighting": "ok",
+    "texture": "weak",
+    "mood": "ok",
+    "subject": "ok"
+   },
+   "all_pass": false,
+   "note": "夜で彩度が出ない。水彩感もなし"
+  },
+  {
+   "id": "traveler-c3-l1-t1-m3",
+   "subject_id": "traveler",
+   "axis_levels": {
+    "color": 3,
+    "lighting": 1,
+    "texture": 1,
+    "mood": 3
+   },
+   "aspects": {
+    "color": "vivid saturated colors",
+    "lighting": "night, dim lighting, lamplight, dark background",
+    "texture": "anime screencap, cel shading, crisp lineart",
+    "mood": "dreamy, half-closed eyes, looking away"
+   },
+   "verdict": {
+    "color": "weak",
+    "lighting": "ok",
+    "texture": "ok",
+    "mood": "weak",
+    "subject": "ok"
+   },
+   "all_pass": false,
+   "note": "彩度中程度。横顔で目が開き半眼に見えない"
+  },
+  {
+   "id": "traveler-c3-l2-t2-m0",
+   "subject_id": "traveler",
+   "axis_levels": {
+    "color": 3,
+    "lighting": 2,
+    "texture": 2,
+    "mood": 0
+   },
+   "aspects": {
+    "color": "vivid saturated colors",
+    "lighting": "backlighting, rim light, sun glare",
+    "texture": "flat color, minimal shading",
+    "mood": "calm, closed eyes, gentle smile"
+   },
+   "verdict": {
+    "color": "weak",
+    "lighting": "ok",
+    "texture": "uncertain",
+    "mood": "ok",
+    "subject": "ok"
+   },
+   "all_pass": false,
+   "note": "緑が中程度の彩度。平塗りかも微妙"
+  },
+  {
+   "id": "traveler-c3-l3-t3-m1",
+   "subject_id": "traveler",
+   "axis_levels": {
+    "color": 3,
+    "lighting": 3,
+    "texture": 3,
+    "mood": 1
+   },
+   "aspects": {
+    "color": "vivid saturated colors",
+    "lighting": "harsh sunlight, cast shadow, high contrast",
+    "texture": "oil painting (medium), thick brushstrokes",
+    "mood": "cheerful, open mouth smile, happy"
+   },
+   "verdict": {
+    "color": "weak",
+    "lighting": "weak",
+    "texture": "weak",
+    "mood": "ok",
+    "subject": "ok"
+   },
+   "all_pass": false,
+   "note": "落ち影なし・筆致なし・彩度中程度（c3-l3-t3の三重の失敗）"
+  },
+  {
+   "id": "barista-c0-l0-t0-m0",
+   "subject_id": "barista",
+   "axis_levels": {
+    "color": 0,
+    "lighting": 0,
+    "texture": 0,
+    "mood": 0
+   },
+   "aspects": {
+    "color": "warm color palette, amber tones",
+    "lighting": "overcast, diffused light, soft shadows",
+    "texture": "watercolor (medium), soft wash",
+    "mood": "calm, closed eyes, gentle smile"
+   },
+   "verdict": {
+    "color": "ok",
+    "lighting": "ok",
+    "texture": "weak",
+    "mood": "ok",
+    "subject": "ok"
+   },
+   "all_pass": false,
+   "note": "クリーム色で暖色は通る。水彩感はなし"
+  },
+  {
+   "id": "barista-c0-l0-t1-m1",
+   "subject_id": "barista",
+   "axis_levels": {
+    "color": 0,
+    "lighting": 0,
+    "texture": 1,
+    "mood": 1
+   },
+   "aspects": {
+    "color": "warm color palette, amber tones",
+    "lighting": "overcast, diffused light, soft shadows",
+    "texture": "anime screencap, cel shading, crisp lineart",
+    "mood": "cheerful, open mouth smile, happy"
+   },
+   "verdict": {
+    "color": "ok",
+    "lighting": "ok",
+    "texture": "ok",
+    "mood": "ok",
+    "subject": "ok"
+   },
+   "all_pass": true,
+   "note": ""
+  },
+  {
+   "id": "barista-c0-l2-t2-m2",
+   "subject_id": "barista",
+   "axis_levels": {
+    "color": 0,
+    "lighting": 2,
+    "texture": 2,
+    "mood": 2
+   },
+   "aspects": {
+    "color": "warm color palette, amber tones",
+    "lighting": "backlighting, rim light, sun glare",
+    "texture": "flat color, minimal shading",
+    "mood": "serious, stern expression"
+   },
+   "verdict": {
+    "color": "ok",
+    "lighting": "ok",
+    "texture": "weak",
+    "mood": "ok",
+    "subject": "ok"
+   },
+   "all_pass": false,
+   "note": "逆光の階調が濃く平塗りでない"
+  },
+  {
+   "id": "barista-c0-l3-t3-m3",
+   "subject_id": "barista",
+   "axis_levels": {
+    "color": 0,
+    "lighting": 3,
+    "texture": 3,
+    "mood": 3
+   },
+   "aspects": {
+    "color": "warm color palette, amber tones",
+    "lighting": "harsh sunlight, cast shadow, high contrast",
+    "texture": "oil painting (medium), thick brushstrokes",
+    "mood": "dreamy, half-closed eyes, looking away"
+   },
+   "verdict": {
+    "color": "ok",
+    "lighting": "ok",
+    "texture": "ok",
+    "mood": "ok",
+    "subject": "ok"
+   },
+   "all_pass": true,
+   "note": "壁の光の帯と落ち影、キャンバスの筆致。64枚中で最良の1枚"
+  },
+  {
+   "id": "barista-c1-l0-t2-m3",
+   "subject_id": "barista",
+   "axis_levels": {
+    "color": 1,
+    "lighting": 0,
+    "texture": 2,
+    "mood": 3
+   },
+   "aspects": {
+    "color": "cool color palette, blue background",
+    "lighting": "overcast, diffused light, soft shadows",
+    "texture": "flat color, minimal shading",
+    "mood": "dreamy, half-closed eyes, looking away"
+   },
+   "verdict": {
+    "color": "ok",
+    "lighting": "uncertain",
+    "texture": "ok",
+    "mood": "uncertain",
+    "subject": "uncertain"
+   },
+   "all_pass": false,
+   "note": "青一色で光源が読めない。横顔で目が髪に隠れ、カフェも無地の壁に"
+  },
+  {
+   "id": "barista-c1-l1-t3-m0",
+   "subject_id": "barista",
+   "axis_levels": {
+    "color": 1,
+    "lighting": 1,
+    "texture": 3,
+    "mood": 0
+   },
+   "aspects": {
+    "color": "cool color palette, blue background",
+    "lighting": "night, dim lighting, lamplight, dark background",
+    "texture": "oil painting (medium), thick brushstrokes",
+    "mood": "calm, closed eyes, gentle smile"
+   },
+   "verdict": {
+    "color": "ok",
+    "lighting": "ok",
+    "texture": "ok",
+    "mood": "ok",
+    "subject": "ok"
+   },
+   "all_pass": true,
+   "note": ""
+  },
+  {
+   "id": "barista-c1-l2-t0-m1",
+   "subject_id": "barista",
+   "axis_levels": {
+    "color": 1,
+    "lighting": 2,
+    "texture": 0,
+    "mood": 1
+   },
+   "aspects": {
+    "color": "cool color palette, blue background",
+    "lighting": "backlighting, rim light, sun glare",
+    "texture": "watercolor (medium), soft wash",
+    "mood": "cheerful, open mouth smile, happy"
+   },
+   "verdict": {
+    "color": "ok",
+    "lighting": "ok",
+    "texture": "weak",
+    "mood": "ok",
+    "subject": "ok"
+   },
+   "all_pass": false,
+   "note": "水彩にならず通常のアニメ塗り"
+  },
+  {
+   "id": "barista-c1-l3-t1-m2",
+   "subject_id": "barista",
+   "axis_levels": {
+    "color": 1,
+    "lighting": 3,
+    "texture": 1,
+    "mood": 2
+   },
+   "aspects": {
+    "color": "cool color palette, blue background",
+    "lighting": "harsh sunlight, cast shadow, high contrast",
+    "texture": "anime screencap, cel shading, crisp lineart",
+    "mood": "serious, stern expression"
+   },
+   "verdict": {
+    "color": "ok",
+    "lighting": "uncertain",
+    "texture": "weak",
+    "mood": "ok",
+    "subject": "ok"
+   },
+   "all_pass": false,
+   "note": "硬い影の境界はあるが全体が淡く、塗りは未彩色の線画寄り"
+  },
+  {
+   "id": "barista-c2-l0-t3-m2",
+   "subject_id": "barista",
+   "axis_levels": {
+    "color": 2,
+    "lighting": 0,
+    "texture": 3,
+    "mood": 2
+   },
+   "aspects": {
+    "color": "muted colors, desaturated",
+    "lighting": "overcast, diffused light, soft shadows",
+    "texture": "oil painting (medium), thick brushstrokes",
+    "mood": "serious, stern expression"
+   },
+   "verdict": {
+    "color": "ok",
+    "lighting": "ok",
+    "texture": "ok",
+    "mood": "ok",
+    "subject": "ok"
+   },
+   "all_pass": true,
+   "note": ""
+  },
+  {
+   "id": "barista-c2-l1-t2-m1",
+   "subject_id": "barista",
+   "axis_levels": {
+    "color": 2,
+    "lighting": 1,
+    "texture": 2,
+    "mood": 1
+   },
+   "aspects": {
+    "color": "muted colors, desaturated",
+    "lighting": "night, dim lighting, lamplight, dark background",
+    "texture": "flat color, minimal shading",
+    "mood": "cheerful, open mouth smile, happy"
+   },
+   "verdict": {
+    "color": "ok",
+    "lighting": "ok",
+    "texture": "weak",
+    "mood": "ok",
+    "subject": "ok"
+   },
+   "all_pass": false,
+   "note": "陰影が豊かで平塗りに見えない"
+  },
+  {
+   "id": "barista-c2-l2-t0-m3",
+   "subject_id": "barista",
+   "axis_levels": {
+    "color": 2,
+    "lighting": 2,
+    "texture": 0,
+    "mood": 3
+   },
+   "aspects": {
+    "color": "muted colors, desaturated",
+    "lighting": "backlighting, rim light, sun glare",
+    "texture": "watercolor (medium), soft wash",
+    "mood": "dreamy, half-closed eyes, looking away"
+   },
+   "verdict": {
+    "color": "ok",
+    "lighting": "ok",
+    "texture": "uncertain",
+    "mood": "ok",
+    "subject": "ok"
+   },
+   "all_pass": false,
+   "note": "白飛びを水彩と読めるか微妙"
+  },
+  {
+   "id": "barista-c2-l3-t1-m0",
+   "subject_id": "barista",
+   "axis_levels": {
+    "color": 2,
+    "lighting": 3,
+    "texture": 1,
+    "mood": 0
+   },
+   "aspects": {
+    "color": "muted colors, desaturated",
+    "lighting": "harsh sunlight, cast shadow, high contrast",
+    "texture": "anime screencap, cel shading, crisp lineart",
+    "mood": "calm, closed eyes, gentle smile"
+   },
+   "verdict": {
+    "color": "ok",
+    "lighting": "weak",
+    "texture": "uncertain",
+    "mood": "ok",
+    "subject": "ok"
+   },
+   "all_pass": false,
+   "note": "明るい窓だけで落ち影がない。塗りも柔らかくセルに見えない"
+  },
+  {
+   "id": "barista-c3-l1-t0-m2",
+   "subject_id": "barista",
+   "axis_levels": {
+    "color": 3,
+    "lighting": 1,
+    "texture": 0,
+    "mood": 2
+   },
+   "aspects": {
+    "color": "vivid saturated colors",
+    "lighting": "night, dim lighting, lamplight, dark background",
+    "texture": "watercolor (medium), soft wash",
+    "mood": "serious, stern expression"
+   },
+   "verdict": {
+    "color": "weak",
+    "lighting": "ok",
+    "texture": "weak",
+    "mood": "ok",
+    "subject": "ok"
+   },
+   "all_pass": false,
+   "note": "赤エプロン以外は低彩度。水彩感もなし"
+  },
+  {
+   "id": "barista-c3-l1-t1-m3",
+   "subject_id": "barista",
+   "axis_levels": {
+    "color": 3,
+    "lighting": 1,
+    "texture": 1,
+    "mood": 3
+   },
+   "aspects": {
+    "color": "vivid saturated colors",
+    "lighting": "night, dim lighting, lamplight, dark background",
+    "texture": "anime screencap, cel shading, crisp lineart",
+    "mood": "dreamy, half-closed eyes, looking away"
+   },
+   "verdict": {
+    "color": "weak",
+    "lighting": "ok",
+    "texture": "ok",
+    "mood": "ok",
+    "subject": "ok"
+   },
+   "all_pass": false,
+   "note": "彩度中程度で鮮やかと読めない"
+  },
+  {
+   "id": "barista-c3-l2-t2-m0",
+   "subject_id": "barista",
+   "axis_levels": {
+    "color": 3,
+    "lighting": 2,
+    "texture": 2,
+    "mood": 0
+   },
+   "aspects": {
+    "color": "vivid saturated colors",
+    "lighting": "backlighting, rim light, sun glare",
+    "texture": "flat color, minimal shading",
+    "mood": "calm, closed eyes, gentle smile"
+   },
+   "verdict": {
+    "color": "weak",
+    "lighting": "ok",
+    "texture": "weak",
+    "mood": "ok",
+    "subject": "ok"
+   },
+   "all_pass": false,
+   "note": "パステル調。階調もあり平塗りでない"
+  },
+  {
+   "id": "barista-c3-l3-t3-m1",
+   "subject_id": "barista",
+   "axis_levels": {
+    "color": 3,
+    "lighting": 3,
+    "texture": 3,
+    "mood": 1
+   },
+   "aspects": {
+    "color": "vivid saturated colors",
+    "lighting": "harsh sunlight, cast shadow, high contrast",
+    "texture": "oil painting (medium), thick brushstrokes",
+    "mood": "cheerful, open mouth smile, happy"
+   },
+   "verdict": {
+    "color": "ok",
+    "lighting": "weak",
+    "texture": "weak",
+    "mood": "ok",
+    "subject": "ok"
+   },
+   "all_pass": false,
+   "note": "赤は鮮やかだが落ち影なし・油彩の筆致なし"
+  }
+ ]
+}

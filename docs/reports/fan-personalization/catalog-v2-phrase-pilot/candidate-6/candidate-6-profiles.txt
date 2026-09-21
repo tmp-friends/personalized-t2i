@@ -1,0 +1,14 @@
+coverage 84/96 (reachable ceiling 90/96), max multiplicity 3
+rows: 16  unique: 16
+balance: color=4/4/4/4, lighting=4/4/4/4, texture=4/4/4/4, mood=4/4/4/4
+  colorxlighting: 12/14 distinct  repeated=['c0-l2x2', 'c0-l3x2', 'c1-l1x2', 'c2-l0x2']  never=['c0-l0*', 'c0-l1*', 'c1-l3', 'c2-l2']
+  colorxtexture: 14/16 distinct  repeated=['c0-t0x2', 'c3-t2x2']  never=['c0-t2', 'c3-t0']
+  colorxmood: 16/16 distinct  repeated=[]  never=[]
+  lightingxtexture: 10/12 distinct  repeated=['l1-t2x3', 'l2-t0x3', 'l3-t1x2', 'l3-t3x2']  never=['l1-t0', 'l1-t1', 'l2-t2*', 'l2-t3*', 'l3-t0*', 'l3-t2*']
+  lightingxmood: 16/16 distinct  repeated=[]  never=[]
+  texturexmood: 16/16 distinct  repeated=[]  never=[]
+* = forbidden by design
+
+[{"color": 0, "lighting": 2, "texture": 0, "mood": 0}, {"color": 0, "lighting": 2, "texture": 0, "mood": 1}, {"color": 0, "lighting": 3, "texture": 1, "mood": 2}, {"color": 0, "lighting": 3, "texture": 3, "mood": 3}, {"color": 1, "lighting": 0, "texture": 1, "mood": 1}, {"color": 1, "lighting": 1, "texture": 2, "mood": 3}, {"color": 1, "lighting": 1, "texture": 3, "mood": 0}, {"color": 1, "lighting": 2, "texture": 0, "mood": 2}, {"color": 2, "lighting": 0, "texture": 0, "mood": 3}, {"color": 2, "lighting": 0, "texture": 3, "mood": 2}, {"color": 2, "lighting": 1, "texture": 2, "mood": 1}, {"color": 2, "lighting": 3, "texture": 1, "mood": 0}, {"color": 3, "lighting": 0, "texture": 2, "mood": 0}, {"color": 3, "lighting": 1, "texture": 2, "mood": 2}, {"color": 3, "lighting": 2, "texture": 1, "mood": 3}, {"color": 3, "lighting": 3, "texture": 3, "mood": 1}]
+
+["c0-l2-t0-m0", "c0-l2-t0-m1", "c0-l3-t1-m2", "c0-l3-t3-m3", "c1-l0-t1-m1", "c1-l1-t2-m3", "c1-l1-t3-m0", "c1-l2-t0-m2", "c2-l0-t0-m3", "c2-l0-t3-m2", "c2-l1-t2-m1", "c2-l3-t1-m0", "c3-l0-t2-m0", "c3-l1-t2-m2", "c3-l2-t1-m3", "c3-l3-t3-m1"]

@@ -1,0 +1,68 @@
+[
+ {
+  "axes": [
+   "color",
+   "lighting"
+  ],
+  "levels": [
+   0,
+   0
+  ],
+  "reason": "曇天の拡散光では琥珀色が抜けて中性色に見える（round-1 で 8枚中4枚が色で失敗）"
+ },
+ {
+  "axes": [
+   "color",
+   "lighting"
+  ],
+  "levels": [
+   0,
+   1
+  ],
+  "reason": "夜の暗さが暖色のパレットを打ち消す（v2から継続）"
+ },
+ {
+  "axes": [
+   "lighting",
+   "texture"
+  ],
+  "levels": [
+   2,
+   2
+  ],
+  "reason": "逆光は階調を要求し、線のない平塗りと両立しない（round-1 で 8枚中 描画 ok は1枚）"
+ },
+ {
+  "axes": [
+   "lighting",
+   "texture"
+  ],
+  "levels": [
+   2,
+   3
+  ],
+  "reason": "逆光のグレアが油彩の厚い筆致に埋もれて見えなくなる（v2から継続）"
+ },
+ {
+  "axes": [
+   "lighting",
+   "texture"
+  ],
+  "levels": [
+   3,
+   0
+  ],
+  "reason": "ラフスケッチは陰影を持たないので硬い落ち影が乗らない（v2の枠を新水準で再導出）"
+ },
+ {
+  "axes": [
+   "lighting",
+   "texture"
+  ],
+  "levels": [
+   3,
+   2
+  ],
+  "reason": "硬い直射光と落ち影は線のない平塗りと同じ絵で両立しない（v2から継続）"
+ }
+]

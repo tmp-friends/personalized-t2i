@@ -1,0 +1,483 @@
+{
+ "note": "frozen openai/clip-vit-large-patch14 top-1 of the claimed level among the axis's four phrases; diagnostic aid only, not a review",
+ "scope": "subjects girl+student x 16 profiles = 32 images per candidate; same seeds and generation settings as the 2026-09-21 phrase pilot",
+ "candidates": {
+  "candidate-2": {
+   "tag": "candidate-2",
+   "definition": "/tmp/claude-1000/-home-tomoya-stable-diffusion-personalized-t2i/662971ef-aadd-48cc-8f02-0e45eb7bff46/scratchpad/lighting-pilot/candidate-2.json",
+   "images": "/tmp/claude-1000/-home-tomoya-stable-diffusion-personalized-t2i/3a1b8989-d1fd-4313-b8e2-c59aefbce3ef/scratchpad/cards-pilot/out-2/images",
+   "n": 32,
+   "axes": {
+    "color": [
+     "warm color palette, amber tones",
+     "cool color palette, blue tones",
+     "muted colors, desaturated",
+     "vivid saturated colors, high saturation"
+    ],
+    "lighting": [
+     "soft lighting, overcast",
+     "dramatic lighting, high contrast, hard shadows",
+     "backlighting, rim light, bright background",
+     "flat lighting, no shadows"
+    ],
+    "texture": [
+     "watercolor (medium), soft wash",
+     "anime screencap, cel shading, crisp lineart",
+     "flat color, minimal shading",
+     "oil painting (medium), thick brushstrokes"
+    ],
+    "mood": [
+     "calm, closed eyes, gentle smile",
+     "cheerful, open mouth smile, happy",
+     "serious, stern expression",
+     "dreamy, light particles, soft glow"
+    ]
+   },
+   "top1": {
+    "color": 25,
+    "lighting": 8,
+    "texture": 19,
+    "mood": 27
+   },
+   "top1_per_level": {
+    "color": [
+     5,
+     7,
+     7,
+     6
+    ],
+    "lighting": [
+     4,
+     1,
+     3,
+     0
+    ],
+    "texture": [
+     0,
+     6,
+     7,
+     6
+    ],
+    "mood": [
+     8,
+     7,
+     8,
+     4
+    ]
+   },
+   "all_four_axes": 4,
+   "lighting_confusion": [
+    [
+     4,
+     0,
+     3,
+     1
+    ],
+    [
+     3,
+     1,
+     2,
+     2
+    ],
+    [
+     3,
+     0,
+     3,
+     2
+    ],
+    [
+     4,
+     2,
+     2,
+     0
+    ]
+   ]
+  },
+  "candidate-3a": {
+   "tag": "candidate-3a",
+   "definition": "/tmp/claude-1000/-home-tomoya-stable-diffusion-personalized-t2i/662971ef-aadd-48cc-8f02-0e45eb7bff46/scratchpad/lighting-pilot/candidate-3a.json",
+   "images": "/tmp/claude-1000/-home-tomoya-stable-diffusion-personalized-t2i/662971ef-aadd-48cc-8f02-0e45eb7bff46/scratchpad/lighting-pilot/out-3a/images",
+   "n": 32,
+   "axes": {
+    "color": [
+     "warm color palette, amber tones",
+     "cool color palette, blue tones",
+     "muted colors, desaturated",
+     "vivid saturated colors, high saturation"
+    ],
+    "lighting": [
+     "overcast, cloudy sky, soft diffused light",
+     "night, night sky, dark",
+     "sunset, evening, orange sky",
+     "day, blue sky, sunlight, hard shadows"
+    ],
+    "texture": [
+     "watercolor (medium), soft wash",
+     "anime screencap, cel shading, crisp lineart",
+     "flat color, minimal shading",
+     "oil painting (medium), thick brushstrokes"
+    ],
+    "mood": [
+     "calm, closed eyes, gentle smile",
+     "cheerful, open mouth smile, happy",
+     "serious, stern expression",
+     "dreamy, light particles, soft glow"
+    ]
+   },
+   "top1": {
+    "color": 18,
+    "lighting": 24,
+    "texture": 20,
+    "mood": 21
+   },
+   "top1_per_level": {
+    "color": [
+     4,
+     4,
+     5,
+     5
+    ],
+    "lighting": [
+     5,
+     7,
+     5,
+     7
+    ],
+    "texture": [
+     0,
+     8,
+     6,
+     6
+    ],
+    "mood": [
+     6,
+     5,
+     6,
+     4
+    ]
+   },
+   "all_four_axes": 6,
+   "lighting_confusion": [
+    [
+     5,
+     0,
+     0,
+     3
+    ],
+    [
+     0,
+     7,
+     1,
+     0
+    ],
+    [
+     0,
+     0,
+     5,
+     3
+    ],
+    [
+     1,
+     0,
+     0,
+     7
+    ]
+   ]
+  },
+  "candidate-3b": {
+   "tag": "candidate-3b",
+   "definition": "/tmp/claude-1000/-home-tomoya-stable-diffusion-personalized-t2i/662971ef-aadd-48cc-8f02-0e45eb7bff46/scratchpad/lighting-pilot/candidate-3b.json",
+   "images": "/tmp/claude-1000/-home-tomoya-stable-diffusion-personalized-t2i/662971ef-aadd-48cc-8f02-0e45eb7bff46/scratchpad/lighting-pilot/out-3b/images",
+   "n": 32,
+   "axes": {
+    "color": [
+     "warm color palette, amber tones",
+     "cool color palette, blue tones",
+     "muted colors, desaturated",
+     "vivid saturated colors, high saturation"
+    ],
+    "lighting": [
+     "overcast, diffused light, soft shadows",
+     "night, dim lighting, lamplight, dark background",
+     "backlighting, lens flare, sunlight behind",
+     "dappled sunlight, sunbeam, bright light"
+    ],
+    "texture": [
+     "watercolor (medium), soft wash",
+     "anime screencap, cel shading, crisp lineart",
+     "flat color, minimal shading",
+     "oil painting (medium), thick brushstrokes"
+    ],
+    "mood": [
+     "calm, closed eyes, gentle smile",
+     "cheerful, open mouth smile, happy",
+     "serious, stern expression",
+     "dreamy, light particles, soft glow"
+    ]
+   },
+   "top1": {
+    "color": 21,
+    "lighting": 19,
+    "texture": 19,
+    "mood": 21
+   },
+   "top1_per_level": {
+    "color": [
+     4,
+     6,
+     5,
+     6
+    ],
+    "lighting": [
+     2,
+     8,
+     8,
+     1
+    ],
+    "texture": [
+     0,
+     8,
+     3,
+     8
+    ],
+    "mood": [
+     5,
+     6,
+     5,
+     5
+    ]
+   },
+   "all_four_axes": 5,
+   "lighting_confusion": [
+    [
+     2,
+     4,
+     2,
+     0
+    ],
+    [
+     0,
+     8,
+     0,
+     0
+    ],
+    [
+     0,
+     0,
+     8,
+     0
+    ],
+    [
+     1,
+     0,
+     6,
+     1
+    ]
+   ]
+  },
+  "candidate-4": {
+   "tag": "candidate-4",
+   "definition": "/tmp/claude-1000/-home-tomoya-stable-diffusion-personalized-t2i/662971ef-aadd-48cc-8f02-0e45eb7bff46/scratchpad/lighting-pilot/candidate-4.json",
+   "images": "/tmp/claude-1000/-home-tomoya-stable-diffusion-personalized-t2i/662971ef-aadd-48cc-8f02-0e45eb7bff46/scratchpad/lighting-pilot/out-4/images",
+   "n": 32,
+   "axes": {
+    "color": [
+     "warm color palette, amber tones",
+     "cool color palette, blue tones",
+     "muted colors, desaturated",
+     "vivid saturated colors, high saturation"
+    ],
+    "lighting": [
+     "overcast, diffused light, soft shadows",
+     "night, dim lighting, lamplight, dark background",
+     "backlighting, lens flare, sunlight behind",
+     "harsh sunlight, cast shadow, high contrast"
+    ],
+    "texture": [
+     "watercolor (medium), soft wash",
+     "anime screencap, cel shading, crisp lineart",
+     "flat color, minimal shading",
+     "oil painting (medium), thick brushstrokes"
+    ],
+    "mood": [
+     "calm, closed eyes, gentle smile",
+     "cheerful, open mouth smile, happy",
+     "serious, stern expression",
+     "dreamy, light particles, soft glow"
+    ]
+   },
+   "top1": {
+    "color": 20,
+    "lighting": 20,
+    "texture": 22,
+    "mood": 18
+   },
+   "top1_per_level": {
+    "color": [
+     4,
+     7,
+     7,
+     2
+    ],
+    "lighting": [
+     4,
+     8,
+     6,
+     2
+    ],
+    "texture": [
+     2,
+     7,
+     6,
+     7
+    ],
+    "mood": [
+     7,
+     5,
+     5,
+     1
+    ]
+   },
+   "all_four_axes": 6,
+   "lighting_confusion": [
+    [
+     4,
+     1,
+     2,
+     1
+    ],
+    [
+     0,
+     8,
+     0,
+     0
+    ],
+    [
+     1,
+     1,
+     6,
+     0
+    ],
+    [
+     3,
+     0,
+     3,
+     2
+    ]
+   ],
+   "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, bad proportions, bad perspective, text, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude, from behind, facing away, back turned, faceless, scenery focus",
+   "negative_prompt_note": "pilot-only override passed through the generate request's `settings`; exhibit/configs/demo.json was NOT changed. 72/77 tokens before, 75/77 after; FAN tokenises with truncation=True at 77 so anything beyond would be silently dropped."
+  },
+  "candidate-5": {
+   "tag": "candidate-5",
+   "definition": "/tmp/claude-1000/-home-tomoya-stable-diffusion-personalized-t2i/662971ef-aadd-48cc-8f02-0e45eb7bff46/scratchpad/lighting-pilot/candidate-5.json",
+   "images": "/tmp/claude-1000/-home-tomoya-stable-diffusion-personalized-t2i/662971ef-aadd-48cc-8f02-0e45eb7bff46/scratchpad/lighting-pilot/out-5/images",
+   "n": 64,
+   "axes": {
+    "color": [
+     "warm color palette, amber tones",
+     "cool color palette, blue background",
+     "muted colors, desaturated",
+     "vivid saturated colors, high saturation"
+    ],
+    "lighting": [
+     "overcast, diffused light, soft shadows",
+     "night, dim lighting, lamplight, dark background",
+     "backlighting, rim light, sun glare",
+     "harsh sunlight, cast shadow, high contrast"
+    ],
+    "texture": [
+     "watercolor (medium), soft wash",
+     "anime screencap, cel shading, crisp lineart",
+     "flat color, minimal shading",
+     "oil painting (medium), thick brushstrokes"
+    ],
+    "mood": [
+     "calm, closed eyes, gentle smile",
+     "cheerful, open mouth smile, happy",
+     "serious, stern expression",
+     "dreamy, half-closed eyes, looking away"
+    ]
+   },
+   "top1": {
+    "color": 29,
+    "lighting": 41,
+    "texture": 40,
+    "mood": 44
+   },
+   "top1_per_level": {
+    "color": [
+     8,
+     4,
+     13,
+     4
+    ],
+    "lighting": [
+     12,
+     16,
+     9,
+     4
+    ],
+    "texture": [
+     3,
+     13,
+     11,
+     13
+    ],
+    "mood": [
+     13,
+     13,
+     9,
+     9
+    ]
+   },
+   "all_four_axes": 7,
+   "lighting_confusion": [
+    [
+     12,
+     2,
+     0,
+     2
+    ],
+    [
+     0,
+     16,
+     0,
+     0
+    ],
+    [
+     6,
+     0,
+     9,
+     1
+    ],
+    [
+     8,
+     1,
+     3,
+     4
+    ]
+   ],
+   "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, bad proportions, bad perspective, text, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude, from behind, facing away, back turned, faceless, scenery focus",
+   "scope": "all four subjects x 16 profiles = 64 cards (the other candidates are girl+student = 32)",
+   "rgb_stats_per_lighting_level": {
+    "L0": {
+     "R-B": -3.9,
+     "brightness": 139.9
+    },
+    "L1": {
+     "R-B": 1.1,
+     "brightness": 76.2
+    },
+    "L2": {
+     "R-B": 13.2,
+     "brightness": 143.2
+    },
+    "L3": {
+     "R-B": 9.6,
+     "brightness": 143.4
+    }
+   }
+  }
+ }
+}

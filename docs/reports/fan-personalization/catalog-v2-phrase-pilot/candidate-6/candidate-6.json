@@ -1,0 +1,273 @@
+{
+ "catalog_id": "catalog-v2",
+ "subjects": [
+  {
+   "id": "girl",
+   "label": "街角の少女",
+   "basic_prompt_en": "masterpiece, best quality, very aesthetic, newest, safe, 1girl, solo, brown hair, beret, coat, town square, upper body",
+   "seed": 601
+  },
+  {
+   "id": "student",
+   "label": "図書館の青年",
+   "basic_prompt_en": "masterpiece, best quality, very aesthetic, newest, safe, 1boy, solo, male focus, black hair, vest, white shirt, library, upper body",
+   "seed": 602
+  },
+  {
+   "id": "traveler",
+   "label": "草原の旅人",
+   "basic_prompt_en": "masterpiece, best quality, very aesthetic, newest, safe, 1girl, solo, silver hair, cloak, grassland, upper body",
+   "seed": 603
+  },
+  {
+   "id": "barista",
+   "label": "カフェの店員",
+   "basic_prompt_en": "masterpiece, best quality, very aesthetic, newest, safe, 1boy, solo, male focus, brown hair, apron, white shirt, cafe, upper body",
+   "seed": 604
+  }
+ ],
+ "axes": {
+  "color": [
+   "warm color palette, amber tones",
+   "cool color palette, blue background",
+   "muted colors, desaturated",
+   "pastel colors, soft pink and mint"
+  ],
+  "lighting": [
+   "overcast, diffused light, soft shadows",
+   "night, lamplight, dark background",
+   "backlighting, rim light, sun glare",
+   "harsh sunlight, hard cast shadow, high contrast"
+  ],
+  "texture": [
+   "sketch, visible pencil lines, rough drawing",
+   "anime screencap, cel shading",
+   "flat color, lineless, no lineart",
+   "oil painting, thick brushstrokes"
+  ],
+  "mood": [
+   "calm, closed eyes, gentle smile",
+   "cheerful, open mouth smile, happy",
+   "serious, stern expression",
+   "dreamy, half-closed eyes, looking away"
+  ]
+ },
+ "forbidden_level_pairs": [
+  {
+   "axes": [
+    "color",
+    "lighting"
+   ],
+   "levels": [
+    0,
+    0
+   ],
+   "reason": "曇天の拡散光では琥珀色が抜けて中性色に見える（round-1 で 8枚中4枚が色で失敗）"
+  },
+  {
+   "axes": [
+    "color",
+    "lighting"
+   ],
+   "levels": [
+    0,
+    1
+   ],
+   "reason": "夜の暗さが暖色のパレットを打ち消す（v2から継続）"
+  },
+  {
+   "axes": [
+    "lighting",
+    "texture"
+   ],
+   "levels": [
+    2,
+    2
+   ],
+   "reason": "逆光は階調を要求し、線のない平塗りと両立しない（round-1 で 8枚中 描画 ok は1枚）"
+  },
+  {
+   "axes": [
+    "lighting",
+    "texture"
+   ],
+   "levels": [
+    2,
+    3
+   ],
+   "reason": "逆光のグレアが油彩の厚い筆致に埋もれて見えなくなる（v2から継続）"
+  },
+  {
+   "axes": [
+    "lighting",
+    "texture"
+   ],
+   "levels": [
+    3,
+    0
+   ],
+   "reason": "ラフスケッチは陰影を持たないので硬い落ち影が乗らない（v2の枠を新水準で再導出）"
+  },
+  {
+   "axes": [
+    "lighting",
+    "texture"
+   ],
+   "levels": [
+    3,
+    2
+   ],
+   "reason": "硬い直射光と落ち影は線のない平塗りと同じ絵で両立しない（v2から継続）"
+  }
+ ],
+ "profiles": [
+  {
+   "color": 0,
+   "lighting": 2,
+   "texture": 0,
+   "mood": 0
+  },
+  {
+   "color": 0,
+   "lighting": 2,
+   "texture": 0,
+   "mood": 1
+  },
+  {
+   "color": 0,
+   "lighting": 3,
+   "texture": 1,
+   "mood": 2
+  },
+  {
+   "color": 0,
+   "lighting": 3,
+   "texture": 3,
+   "mood": 3
+  },
+  {
+   "color": 1,
+   "lighting": 0,
+   "texture": 1,
+   "mood": 1
+  },
+  {
+   "color": 1,
+   "lighting": 1,
+   "texture": 2,
+   "mood": 3
+  },
+  {
+   "color": 1,
+   "lighting": 1,
+   "texture": 3,
+   "mood": 0
+  },
+  {
+   "color": 1,
+   "lighting": 2,
+   "texture": 0,
+   "mood": 2
+  },
+  {
+   "color": 2,
+   "lighting": 0,
+   "texture": 0,
+   "mood": 3
+  },
+  {
+   "color": 2,
+   "lighting": 0,
+   "texture": 3,
+   "mood": 2
+  },
+  {
+   "color": 2,
+   "lighting": 1,
+   "texture": 2,
+   "mood": 1
+  },
+  {
+   "color": 2,
+   "lighting": 3,
+   "texture": 1,
+   "mood": 0
+  },
+  {
+   "color": 3,
+   "lighting": 0,
+   "texture": 2,
+   "mood": 0
+  },
+  {
+   "color": 3,
+   "lighting": 1,
+   "texture": 2,
+   "mood": 2
+  },
+  {
+   "color": 3,
+   "lighting": 2,
+   "texture": 1,
+   "mood": 3
+  },
+  {
+   "color": 3,
+   "lighting": 3,
+   "texture": 3,
+   "mood": 1
+  }
+ ],
+ "card_negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, bad proportions, bad perspective, text, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude, from behind, facing away, back turned, faceless, scenery focus",
+ "generation": {
+  "model": "OnomaAIResearch/Illustrious-XL-v2.0",
+  "revision": "69459c1fe6f46db41ab31e6114f05acc0e06bcaa",
+  "scheduler": "DPMSolverMultistepScheduler",
+  "scheduler_kwargs": {
+   "algorithm_type": "sde-dpmsolver++",
+   "use_karras_sigmas": true
+  },
+  "width": 1024,
+  "height": 1280,
+  "steps": 30,
+  "guidance_scale": 5.0,
+  "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
+  "precision": "fp16",
+  "pipeline_config": {
+   "model": "OnomaAIResearch/Illustrious-xl-early-release-v0",
+   "revision": "dca0dac303e6dc4b0c31d8001bc685b89b5d0204"
+  },
+  "vae": {
+   "model": "madebyollin/sdxl-vae-fp16-fix",
+   "revision": "207b116dae70ace3637169f1ddd2434b91b3a8cd"
+  },
+  "checkpoint": "Illustrious-XL-v2.0.safetensors",
+  "positive_prompt_tail": "absurdres, highres"
+ },
+ "axes_ja": {
+  "color": [
+   "暖かな琥珀色",
+   "青い背景の涼しい色",
+   "低彩度の落ち着いた色",
+   "淡いパステルの色"
+  ],
+  "lighting": [
+   "曇りの日のやわらかな光",
+   "夜のランプの灯り",
+   "逆光とまぶしい輪郭の光",
+   "強い日差しとくっきりした影"
+  ],
+  "texture": [
+   "鉛筆のラフスケッチ",
+   "セル塗りと均一な面",
+   "線のない平塗り",
+   "油彩の厚い筆致"
+  ],
+  "mood": [
+   "静かな雰囲気",
+   "明るく活発な表情",
+   "真剣な雰囲気",
+   "夢見るような半眼"
+  ]
+ }
+}
