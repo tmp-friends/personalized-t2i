@@ -212,6 +212,29 @@ def _finite_json(value, label):
     raise ValueError(f"{label} must be JSON-shaped")
 
 
+def valid_strength(value):
+    """The two explicit strengths; `True` is not the integer 1 here."""
+    return type(value) is int and value in (1, 2)
+
+
+def valid_gain(value):
+    """The three explicit gain steps; bool and non-finite values are not gains."""
+    return type(value) in (int, float) and value in (0.5, 1, 2)
+
+
+def canonical_aspects(aspects, *, allow_empty=False):
+    """Order-independent liked aspects; unanswered never becomes every aspect."""
+    if (
+        not isinstance(aspects, list)
+        or (not aspects and not allow_empty)
+        or any(not isinstance(aspect, str) for aspect in aspects)
+        or set(aspects) - set(ASPECTS)
+        or len(aspects) != len(set(aspects))
+    ):
+        raise ValueError("Invalid aspects")
+    return sorted(aspects)
+
+
 def _snapshot(snapshot, catalog=None):
     if not isinstance(snapshot, dict):
         raise TypeError("snapshot must be a PreferenceSnapshot object")
@@ -240,10 +263,7 @@ def _snapshot(snapshot, catalog=None):
     gains = snapshot["aspect_gains"]
     if not isinstance(gains, dict) or set(gains) != set(ASPECTS):
         raise ValueError("aspect_gains must name every aspect")
-    if any(
-        type(gain) not in (int, float) or gain not in (0.5, 1, 2)
-        for gain in gains.values()
-    ):
+    if any(not valid_gain(gain) for gain in gains.values()):
         raise ValueError("Invalid aspect_gains")
     if not isinstance(snapshot["selection"], list) or not snapshot["selection"]:
         raise ValueError("Snapshot selection is required")
@@ -255,24 +275,17 @@ def _snapshot(snapshot, catalog=None):
             "aspects",
         }:
             raise ValueError("Invalid selection entry")
-        card_id, aspects = entry["card_id"], entry["aspects"]
-        if card_id not in card_map or card_id in seen:
+        card_id = entry["card_id"]
+        if not isinstance(card_id, str) or card_id not in card_map or card_id in seen:
             raise ValueError("Unknown or duplicate card")
-        if type(entry["strength"]) is not int or entry["strength"] not in (1, 2):
+        if not valid_strength(entry["strength"]):
             raise ValueError("strength must be 1 or 2")
-        if (
-            not isinstance(aspects, list)
-            or not aspects
-            or set(aspects) - set(ASPECTS)
-            or len(aspects) != len(set(aspects))
-        ):
-            raise ValueError("Invalid aspects")
         seen.add(card_id)
         selection.append(
             {
                 "card_id": card_id,
                 "strength": entry["strength"],
-                "aspects": sorted(aspects),
+                "aspects": canonical_aspects(entry["aspects"]),
             }
         )
     return {
