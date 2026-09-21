@@ -50,3 +50,24 @@
   `c3-l1-t1-m3` の4語が最長で、student/barista が77を4トークン超えたため。`high saturation` は `saturated colors` と重複する語で、軸の意味は変わらない。
   短縮後の最長は77（student/barista の `c3-l1-t1-m3`）、超過は0枚。
 - 残る手順は提案時と同じ: 64枚を再生成 → 側面ごとに確認 → `evaluate_fan.py heldout`。
+
+## 決定（2026-09-22、所有者承認）
+
+`candidate-6/` の結論を採用した。**所有者承認 2026-09-22: 色3をパステル、描画0をラフスケッチに変更。
+64枚を厳密に揃えず、確認できたカードで運用する。**
+
+- 意味が変わった水準は2つ。色3 `pastel colors, soft pink and mint`（淡いパステルの色）、
+  描画0 `sketch, visible pencil lines, rough drawing`（鉛筆のラフスケッチ）。
+- 文言だけの変更は、描画1 `anime screencap, cel shading`、描画2 `flat color, lineless, no lineart`（線のない平塗り）、
+  描画3 `oil painting, thick brushstrokes`、光3 `harsh sunlight, hard cast shadow, high contrast`。
+  光1は短縮せず `night, dim lighting, lamplight, dark background` のまま使い、トークン超過は profile 探索の制約として扱う。
+- 禁止対は8対（c0×l1、c3×l3、c1×t0、c3×t3、l2×t0、l2×t3、l3×t0、l3×t2）。
+  `c0×l0`・`l2×t2`・`c3×l0` は禁止しない。前2つまで禁止すると光と描画が1本の軸になってしまうため、枚数の最小化だけにとどめた。
+- 16組を再探索した。到達値は **85/96対・最大重複2**（禁止8対を除く上限88対。最大重複2のもとでは85が最大で、これは証明済み）。
+  出現しない非禁止対は `c2×t1`・`l0×t1`・`l1×t1` の3つ。
+- 1枚だけの差し替え手段を足した。定義の `seed_overrides` と `prepare.py cards --catalog v2 --only <card_id>`。
+- heldout は64枚の確認を待たない。参照カードの確認済み・各水準2枚以上・合計32枚以上で実行でき、
+  結果には確認済み枚数と id 集合の hash を残す。
+- 「寒色水彩」履歴は水彩の廃止と寒色×スケッチの禁止により **「寒色油彩」** `c1-l1-t3` へ置き換えた。
+
+詳細は設計書§6.1「2026-09-22 改訂（現行）」と§9.2「2026-09-22 改訂（現行）」。
