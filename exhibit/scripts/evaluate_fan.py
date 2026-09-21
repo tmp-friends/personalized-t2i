@@ -22,6 +22,7 @@ from exhibit.domain import digest, file_hash
 from exhibit.evaluation import (
     attach_parent_pairs,
     build_experiment,
+    build_study_experiment,
     load_evaluation_config,
     register_experiment,
     runtime_file_provenance,
@@ -141,9 +142,9 @@ def _timestamp():
     return datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
 
 
-def execute_experiment(
+def run_image_matrix(
     config,
-    provenance,
+    experiment,
     *,
     resume,
     cancel,
@@ -151,8 +152,7 @@ def execute_experiment(
     on_event,
     runner=None,
 ):
-    """Register, run, checkpoint, score, and select one image experiment."""
-    experiment = build_experiment(config, provenance)
+    """Register, count, generate, and checkpoint one image matrix under one lease."""
     directory, checkpoint = register_experiment(
         config["output_root"], experiment, resume=resume
     )
@@ -308,6 +308,41 @@ def execute_experiment(
                 state["status"] = "failed"
                 finish_attempt(state, "failed", error="worker_missing_image_event")
         write_json(checkpoint_path, checkpoint)
+    return {
+        "directory": directory,
+        "checkpoint": checkpoint,
+        "checkpoint_path": checkpoint_path,
+        "run_entry": run_entry,
+        "embeddings_path": embeddings_path,
+    }
+
+
+def execute_experiment(
+    config,
+    provenance,
+    *,
+    resume,
+    cancel,
+    deadline,
+    on_event,
+    runner=None,
+):
+    """Register, run, checkpoint, score, and select one image experiment."""
+    experiment = build_experiment(config, provenance)
+    matrix = run_image_matrix(
+        config,
+        experiment,
+        resume=resume,
+        cancel=cancel,
+        deadline=deadline,
+        on_event=on_event,
+        runner=runner,
+    )
+    directory = matrix["directory"]
+    checkpoint = matrix["checkpoint"]
+    checkpoint_path = matrix["checkpoint_path"]
+    run_entry = matrix["run_entry"]
+    embeddings_path = matrix["embeddings_path"]
 
     embeddings = (
         json.loads(embeddings_path.read_text())
@@ -650,6 +685,95 @@ def run_phase(config_path, phase, *, resume, cancel, deadline, on_event):
     )
 
 
+def run_study(
+    config_path, *, study_kind, resume, cancel, deadline, on_event, runner=None
+):
+    """Generate the fixed study matrix; refuse before the GPU when it is not fixed."""
+    config = load_evaluation_config(config_path, "study", study_kind=study_kind)
+    study = config["study"]
+    directory = Path(study["study_dir"])
+    manifest_path = directory / "manifest.json"
+    if not manifest_path.is_file():
+        raise SystemExit(
+            f"study manifest is missing: {manifest_path}. Run build_preference_study.py "
+            "with enough participants first; no GPU work was started."
+        )
+    manifest = json.loads(manifest_path.read_text())
+    if (
+        manifest.get("study_id") != study["study_id"]
+        or manifest.get("study_kind") != study["study_kind"]
+    ):
+        raise SystemExit(
+            "the study manifest belongs to another study; kinds never share a manifest."
+        )
+    required = max(2, manifest["participants_required"]["pilot_minimum"])
+    if len(manifest.get("participants", [])) < required:
+        raise SystemExit(
+            f"study has {len(manifest.get('participants', []))} participants and needs "
+            f"{required}; no GPU work was started."
+        )
+    preparation = validate_evaluator_preparation(
+        config["preparation_manifest"],
+        expected={
+            "repo_id": config["evaluator"]["repo_id"],
+            "resolved_revision": config["evaluator"]["expected_revision"],
+            "weight_format": config["evaluator"]["weight_format"],
+        },
+    )
+    phase_config = {
+        **config,
+        # The study directory already holds its own manifest; generation keeps
+        # its immutable experiment beside it, never on top of it.
+        "output_root": str(directory / "generation"),
+        "evaluator_preparation": preparation,
+        "policies": list(study["policies"].values()),
+    }
+    report = ensure_diagnostics(
+        config_path, phase_config, preparation, cancel, deadline, on_event
+    )
+    provenance = experiment_provenance(report, preparation)
+    experiment = build_study_experiment(config, manifest, provenance)
+    on_event(
+        {
+            "type": "study_plan",
+            "study_id": study["study_id"],
+            "study_kind": study["study_kind"],
+            "participants": len(manifest["participants"]),
+            "total_images": len(experiment["jobs"]),
+        }
+    )
+    matrix = run_image_matrix(
+        phase_config,
+        experiment,
+        resume=resume,
+        cancel=cancel,
+        deadline=deadline,
+        on_event=on_event,
+        runner=runner,
+    )
+    images, missing = {}, []
+    for job in experiment["jobs"]:
+        state = matrix["checkpoint"]["jobs"][job["job_id"]]
+        key = f"{job['variant_id']}:{job['topic_id']}:{job['seed']}"
+        if state.get("status") == "done":
+            images[key] = str((matrix["directory"] / job["path"]).resolve())
+        else:
+            missing.append({"key": key, "status": state.get("status", "not_run")})
+    matrix["run_entry"].update({"status": "finished", "finished_at": _timestamp()})
+    write_json(matrix["checkpoint_path"], matrix["checkpoint"])
+    index = {
+        "schema_version": 1,
+        "study_id": study["study_id"],
+        "study_hash": manifest["study_hash"],
+        "experiment_hash": experiment["experiment_hash"],
+        "directory": str(matrix["directory"]),
+        "images": images,
+        "missing": missing,
+    }
+    write_json(directory / "images.json", index)
+    return index
+
+
 def parse_args(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     subparsers = parser.add_subparsers(dest="command", required=True)
@@ -659,6 +783,10 @@ def parse_args(argv=None):
         command.add_argument("--timeout", type=float, default=1800)
         if name != "encoding":
             command.add_argument("--resume", action="store_true")
+        if name == "study":
+            command.add_argument(
+                "--study-kind", choices=("encoder", "elicitation"), default=None
+            )
     return parser.parse_args(argv)
 
 
@@ -707,9 +835,29 @@ def main(argv=None):
         )
         return
     if args.command == "study":
-        raise SystemExit(
-            "study participant mapping is provided by Task 8; no participant data was fabricated"
+        index = run_study(
+            args.config,
+            study_kind=args.study_kind,
+            resume=args.resume,
+            cancel=cancel,
+            deadline=deadline,
+            on_event=show,
         )
+        print(
+            json.dumps(
+                {
+                    "type": "study_complete",
+                    "study_id": index["study_id"],
+                    "experiment_hash": index["experiment_hash"],
+                    "generated": len(index["images"]),
+                    "missing": len(index["missing"]),
+                    "directory": index["directory"],
+                },
+                ensure_ascii=False,
+            ),
+            flush=True,
+        )
+        return
     summary = run_phase(
         args.config,
         args.command,

@@ -33,6 +33,38 @@
     "histories": ["warm-cel", "cool-watercolor", "calm-flat", "mixed"],
     "seeds": [230927, 230928]
   },
+  "study": {
+    "study_kind": "encoder",
+    "topics": ["cat", "tokyo"],
+    "participants": {"pilot_minimum": 5, "main_minimum": 20},
+    "selection": {"min": 3, "max": 10, "round_size": 12, "max_rounds": 3},
+    "legacy_selection": {"min": 3, "max": 5, "round_size": 16, "max_rounds": 1},
+    "bootstrap": {"draws": 2000, "seed": 0, "confidence": 0.95},
+    "derangement_seed": 0,
+    "kinds": {
+      "encoder": {
+        "study_id": "encoder-preference-1",
+        "study_dir": "../outputs/fan-evaluation/study",
+        "catalog_id": "catalog-v2",
+        "candidate_policy_id": "official_encoder",
+        "baseline_policy_id": "legacy_exhibit",
+        "comparisons": {
+          "candidate_vs_legacy": {"seeds": [230923, 230924, 230925, 230926]},
+          "own_vs_other": {"seeds": [230927, 230928]}
+        }
+      },
+      "elicitation": {
+        "study_id": "elicitation-pool-1",
+        "study_dir": "../outputs/fan-elicitation-study",
+        "catalog_id": "catalog-v2",
+        "legacy_catalog_id": "catalog-v1",
+        "encoder_policy_id": "legacy_exhibit",
+        "comparisons": {
+          "new_pool_vs_legacy_pool": {"seeds": [230923, 230924, 230925, 230926]}
+        }
+      }
+    }
+  },
   "rules": {
     "target_non_degradation": -0.01,
     "history_improvement": 0.005,

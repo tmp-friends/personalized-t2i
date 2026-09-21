@@ -25,6 +25,11 @@ EVALUATOR_FILES = {
     "special_tokens_map.json",
 }
 
+STUDY_COMPARISONS = {
+    "encoder": ("candidate_vs_legacy", "own_vs_other"),
+    "elicitation": ("new_pool_vs_legacy_pool",),
+}
+
 PIPELINE_CONFIG_FILES = (
     "model_index.json",
     "scheduler/scheduler_config.json",
@@ -181,7 +186,60 @@ def _select(items, ids, label):
     return [copy.deepcopy(by_id[item_id]) for item_id in ids]
 
 
-def load_evaluation_config(path, phase, *, parents=None):
+def _study_phase(raw, base, topics, *, study_kind):
+    """Resolve one study kind; two kinds never share a directory or a manifest."""
+    study = copy.deepcopy(raw["study"])
+    kind = study_kind or study.get("study_kind")
+    if kind not in STUDY_COMPARISONS:
+        raise ValueError("study_kind must be encoder or elicitation")
+    if kind not in study.get("kinds", {}):
+        raise ValueError(f"evaluation config has no {kind} study section")
+    section = copy.deepcopy(study["kinds"][kind])
+    registry = _read(base / "fan-policies.json")
+    if kind == "encoder":
+        roles = {
+            "candidate": section["candidate_policy_id"],
+            "legacy": section["baseline_policy_id"],
+        }
+    else:
+        roles = {"encoder": section["encoder_policy_id"]}
+    policies = {
+        role: _policy_spec(policy_id, thaw_policy(resolve_policy(policy_id, registry)))
+        for role, policy_id in roles.items()
+    }
+    if set(section["comparisons"]) != set(STUDY_COMPARISONS[kind]):
+        raise ValueError(f"{kind} study requires exactly {STUDY_COMPARISONS[kind]}")
+    comparisons = {}
+    for name in STUDY_COMPARISONS[kind]:
+        value = section["comparisons"][name]
+        chosen = copy.deepcopy(value.get("topics", study["topics"]))
+        seeds = copy.deepcopy(value["seeds"])
+        if not chosen or not seeds:
+            raise ValueError(f"study comparison {name} needs topics and seeds")
+        comparisons[name] = {"topics": chosen, "seeds": seeds}
+    used = [
+        topic_id
+        for topic_id in study["topics"]
+        if any(topic_id in item["topics"] for item in comparisons.values())
+    ]
+    return {
+        "study_kind": kind,
+        "study_id": section["study_id"],
+        "study_dir": str((base / section["study_dir"]).resolve()),
+        "catalog_id": section["catalog_id"],
+        "legacy_catalog_id": section.get("legacy_catalog_id"),
+        "participants": copy.deepcopy(study["participants"]),
+        "selection": copy.deepcopy(study["selection"]),
+        "legacy_selection": copy.deepcopy(study["legacy_selection"]),
+        "bootstrap": copy.deepcopy(study["bootstrap"]),
+        "derangement_seed": study["derangement_seed"],
+        "comparisons": comparisons,
+        "policies": policies,
+        "topics": _select(topics, used, "topic"),
+    }
+
+
+def load_evaluation_config(path, phase, *, parents=None, study_kind=None):
     """Resolve one phase without consulting arbitrary prior output directories."""
     path = Path(path).resolve()
     raw = _read(path)
@@ -272,7 +330,10 @@ def load_evaluation_config(path, phase, *, parents=None):
             "expected_jobs": 156,
         }
     if phase == "study":
-        return {**common, "integration": "task8"}
+        return {
+            **common,
+            "study": _study_phase(raw, base, topics, study_kind=study_kind),
+        }
     raise ValueError(f"unknown evaluation phase: {phase}")
 
 
@@ -285,6 +346,112 @@ def _job(contract):
         "job_id": job_id,
         "contract_hash": contract_hash,
         "path": f"images/{job_id}.png",
+    }
+
+
+def build_image_job(contract):
+    """Content-address one image contract; the artifact name reveals nothing."""
+    return _job(contract)
+
+
+def study_manifest_hash(manifest):
+    """The immutable part of a study manifest, without its own bookkeeping."""
+    return digest(
+        {
+            key: value
+            for key, value in manifest.items()
+            if key not in {"study_hash", "created_at", "image_count"}
+        }
+    )
+
+
+def build_study_experiment(config, manifest, provenance, *, catalog_loader=None):
+    """One image per (participant profile, topic, seed); duplicates collapse."""
+    from .domain import build_personalization
+
+    study = config["study"]
+    if (
+        manifest.get("study_id") != study["study_id"]
+        or manifest.get("study_kind") != study["study_kind"]
+    ):
+        raise ValueError("study manifest does not match the configured study")
+    if manifest.get("study_hash") != study_manifest_hash(manifest):
+        raise ValueError("study manifest hash mismatch")
+    if not isinstance(provenance, dict) or not provenance:
+        raise ValueError("provenance is required")
+    if catalog_loader is None:
+        from .catalog import load_catalog
+
+        catalog_loader = load_catalog
+    topics = {topic["id"]: topic for topic in study["topics"]}
+    variants = {item["variant_id"]: item for item in manifest["variants"]}
+    catalogs = {}
+    labels = {}
+    jobs = []
+    for item in manifest["jobs"]:
+        variant = variants[item["variant_id"]]
+        topic = topics[item["topic_id"]]
+        catalog_id = variant["catalog_id"]
+        if catalog_id not in catalogs:
+            catalogs[catalog_id] = catalog_loader(catalog_id, reviewed_only=True)
+        personalization = build_personalization(
+            variant["snapshot"],
+            prompt=topic["generation_prompt"],
+            policy=variant["effective_policy"],
+            provenance=provenance,
+            catalog=catalogs[catalog_id],
+        )
+        effective = _policy(variant["effective_policy"])
+        policy_hash = digest(effective)
+        if policy_hash != variant["policy_hash"]:
+            raise ValueError("study manifest policy hash mismatch")
+        labels.setdefault(policy_hash, variant["policy_id"])
+        jobs.append(
+            build_image_job(
+                {
+                    "phase": "study",
+                    "role": "study",
+                    "study_id": study["study_id"],
+                    "variant_id": variant["variant_id"],
+                    "topic_id": topic["id"],
+                    "history_id": None,
+                    "seed": item["seed"],
+                    "prompt": topic["generation_prompt"],
+                    "target_text_id": "target:" + topic["id"],
+                    "target_text": topic["target_text"],
+                    "refs": copy.deepcopy(personalization["refs"]),
+                    "policy_hash": policy_hash,
+                    "effective_policy": effective,
+                    "personalization": copy.deepcopy(personalization),
+                }
+            )
+        )
+    maximum = config.get("limits", {}).get("max_images", 512)
+    if len(jobs) > maximum:
+        raise ValueError(f"experiment exceeds the {maximum} image limit")
+    ids = [item["job_id"] for item in jobs]
+    if len(ids) != len(set(ids)):
+        raise ValueError("duplicate job or artifact contract")
+    identity = {
+        "schema_version": 1,
+        "phase": "study",
+        "study_id": study["study_id"],
+        "study_kind": study["study_kind"],
+        "study_hash": manifest["study_hash"],
+        "generation": copy.deepcopy(config["generation"]),
+        "evaluator": copy.deepcopy(config["evaluator"]),
+        "limits": copy.deepcopy(config.get("limits", {})),
+        "topics": copy.deepcopy(study["topics"]),
+        "policies": copy.deepcopy(study["policies"]),
+        "provenance": copy.deepcopy(provenance),
+        "jobs": copy.deepcopy(jobs),
+    }
+    return {
+        "schema_version": 1,
+        "experiment_hash": digest(identity),
+        "identity": identity,
+        "jobs": jobs,
+        "policy_labels": labels,
     }
 
 
@@ -1072,15 +1239,10 @@ def validate_heldout_catalog(config, *, catalog_loader=None):
     return {**identity, "identity_hash": digest(identity)}
 
 
-def cluster_bootstrap_interval(values, *, draws=2000, seed=0, confidence=0.95):
-    """Paired-difference bootstrap clustered by synthetic history fixture."""
-    if not isinstance(values, dict) or not values or draws < 1:
+def _bootstrap(clusters, *, draws, seed, confidence):
+    """Resample whole clusters; one cluster is one independent unit, never one image."""
+    if draws < 1:
         raise ValueError("bootstrap clusters and draws are required")
-    clusters = []
-    for name, rows in sorted(values.items()):
-        if not rows or not all(math.isfinite(float(item)) for item in rows):
-            raise ValueError(f"invalid bootstrap cluster: {name}")
-        clusters.append(_mean([float(item) for item in rows]))
     generator = random.Random(seed)
     samples = []
     for _ in range(draws):
@@ -1092,14 +1254,45 @@ def cluster_bootstrap_interval(values, *, draws=2000, seed=0, confidence=0.95):
     lower_index = min(draws - 1, max(0, math.floor(tail * draws)))
     upper_index = min(draws - 1, max(0, math.ceil((1 - tail) * draws) - 1))
     return {
-        "unit": "synthetic_history",
         "draws": draws,
         "seed": seed,
         "confidence": confidence,
         "mean": _mean(clusters),
         "lower": samples[lower_index],
         "upper": samples[upper_index],
+    }
+
+
+def cluster_bootstrap_interval(values, *, draws=2000, seed=0, confidence=0.95):
+    """Paired-difference bootstrap clustered by synthetic history fixture."""
+    if not isinstance(values, dict) or not values or draws < 1:
+        raise ValueError("bootstrap clusters and draws are required")
+    clusters = []
+    for name, rows in sorted(values.items()):
+        if not rows or not all(math.isfinite(float(item)) for item in rows):
+            raise ValueError(f"invalid bootstrap cluster: {name}")
+        clusters.append(_mean([float(item) for item in rows]))
+    return {
+        "unit": "synthetic_history",
+        **_bootstrap(clusters, draws=draws, seed=seed, confidence=confidence),
         "diagnostic_only": True,
+    }
+
+
+def participant_bootstrap_interval(means, *, draws=2000, seed=0, confidence=0.95):
+    """Design §9.6: one participant is one unit, whatever their number of seeds."""
+    if not isinstance(means, dict) or not means or draws < 1:
+        raise ValueError("participant means and draws are required")
+    clusters = []
+    for name, value in sorted(means.items()):
+        value = float(value)
+        if not math.isfinite(value):
+            raise ValueError(f"invalid participant mean: {name}")
+        clusters.append(value)
+    return {
+        "unit": "participant",
+        "participants": len(clusters),
+        **_bootstrap(clusters, draws=draws, seed=seed, confidence=confidence),
     }
 
 
