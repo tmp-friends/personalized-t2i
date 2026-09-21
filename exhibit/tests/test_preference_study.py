@@ -729,7 +729,11 @@ def always_tie(pair, key):
     return "tie"
 
 
-def test_a_study_without_answers_reports_未実施(tmp_path, config, catalogs):
+def test_a_study_without_answers_reports_未実施(
+    tmp_path, config, catalogs, monkeypatch
+):
+    # The report prints its own timestamp; a clock reading like `…:50.5…` is not a rate.
+    monkeypatch.setattr(study_lib, "_now", lambda: "2026-01-01T00:00:00Z")
     participants = participants_for(config, catalogs, 3)
     directory = tmp_path / "study"
     write_study(directory, config, participants, catalogs)

@@ -642,8 +642,11 @@ def register_experiment(root, experiment, *, resume):
         directory = root / experiment["experiment_hash"]
     manifest_path = directory / "manifest.json"
     checkpoint_path = directory / "checkpoint.json"
-    if not resume:
-        if manifest_path.exists() or checkpoint_path.exists():
+    # The directory is addressed by the manifest hash, so `--resume` on a matrix
+    # that was never registered can only start it; it cannot adopt other results.
+    unregistered = not manifest_path.exists() and not checkpoint_path.exists()
+    if not resume or unregistered:
+        if not unregistered:
             raise ValueError("experiment already registered; use --resume")
         directory.mkdir(parents=True, exist_ok=True)
         manifest = {

@@ -127,6 +127,24 @@ def test_experiment_rejects_limits_above_fixed_budgets(provenance, name, value):
         build_experiment(config, provenance)
 
 
+def test_resume_on_an_unregistered_experiment_starts_it_and_stays_strict(
+    tmp_path, provenance
+):
+    experiment = build_experiment(_phase("screen"), provenance)
+
+    directory, checkpoint = register_experiment(tmp_path, experiment, resume=True)
+
+    assert directory == tmp_path / experiment["experiment_hash"]
+    assert {state["status"] for state in checkpoint["jobs"].values()} == {"not_run"}
+    # The documented command is always `--resume`; a second call resumes it.
+    again, _ = register_experiment(tmp_path, experiment, resume=True)
+    assert again == directory
+    # Half a registration is corruption, never a fresh start.
+    (directory / "checkpoint.json").unlink()
+    with pytest.raises(ValueError, match="registered manifest and checkpoint"):
+        register_experiment(tmp_path, experiment, resume=True)
+
+
 def test_effective_policy_change_changes_identity_and_refuses_resume(
     tmp_path, provenance
 ):
