@@ -96,11 +96,13 @@ def _link(source, destination):
 
 def active_catalog():
     """The reviewed catalog this exhibit serves; the client never names one."""
+    catalog_id = CONFIG["catalog_id"]
     return load_catalog(
-        CONFIG["catalog_id"],
+        catalog_id,
         reviewed_only=True,
         assets=ASSETS,
-        review_path=CARDS_REVIEW,
+        # Each catalog owns its review file; naming v1's would empty v2 entirely.
+        review_path=CARDS_REVIEW if catalog_id == "catalog-v1" else None,
     )
 
 

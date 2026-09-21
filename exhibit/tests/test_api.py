@@ -1,5 +1,6 @@
 import pytest
 from conftest import PROVENANCE
+from exhibit.catalog import build_catalog
 from exhibit.config import CONFIG
 from exhibit.service import Service
 from fastapi.testclient import TestClient
@@ -276,3 +277,49 @@ def test_config_only_offers_reviewed_cards(client, asset_tree):
     config = client.get("/api/config").json()
     assert [card["id"] for card in config["cards"]] == [kept]
     assert not config["ready"]
+
+
+def partly_reviewed_v2(root, review_path):
+    """40 of 64 v2 cards reviewed, leaning hard on `girl` and the lower levels."""
+    from exhibit.domain import ASPECTS
+    from test_catalog import definition, write_v2_bundle
+
+    cards = build_catalog(definition())
+    reviewed = set()
+    for subject, quota in (
+        ("girl", 16),
+        ("student", 12),
+        ("traveler", 8),
+        ("barista", 4),
+    ):
+        rows = sorted(
+            (card for card in cards if card["subject_id"] == subject),
+            key=lambda card: (sum(card["axis_levels"][a] for a in ASPECTS), card["id"]),
+        )
+        reviewed.update(card["id"] for card in rows[:quota])
+    write_v2_bundle(root, review_path, reviewed=reviewed)
+    return reviewed
+
+
+def test_a_partly_reviewed_v2_catalog_still_opens_and_serves_rounds(
+    client, assets, tmp_path, monkeypatch
+):
+    """Design §6.1 runs on the cards that passed, not on a complete 64."""
+    from exhibit import catalog as catalog_module
+    from exhibit import service as service_module
+
+    review = tmp_path / "cards-v2-review.json"
+    reviewed = partly_reviewed_v2(assets, review)
+    monkeypatch.setattr(catalog_module, "V2_REVIEW", review)
+    monkeypatch.setattr(
+        service_module, "CONFIG", {**CONFIG, "catalog_id": "catalog-v2"}
+    )
+
+    config = client.get("/api/config").json()
+    assert config["catalog_id"] == "catalog-v2"
+    assert len(config["cards"]) == len(reviewed) == 40
+    assert config["ready"] is True
+
+    session = client.post("/api/sessions").json()
+    assert set(session["shown_ids"]) <= reviewed
+    assert len(session["rounds"][0]["cards"]) == CONFIG["selection"]["round_size"]
