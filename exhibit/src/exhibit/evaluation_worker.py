@@ -800,7 +800,8 @@ def embed_evaluation(items, preparation, settings, seconds):
     return {"images": images, "texts": texts}
 
 
-def _conditioning_alignment(candidate, plain):
+def _conditioning_alignment(item_id, candidate, plain):
+    """The `conditioning_sink` contract of `workers.generate`; the id is unused."""
     result = {}
     for name in ("hidden", "pooled"):
         metrics = tensor_metrics(candidate[name], plain[name])

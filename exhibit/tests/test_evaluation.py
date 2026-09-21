@@ -988,18 +988,35 @@ def test_matrix_worker_reuses_generation_and_persists_embeddings(tmp_path, monke
     )
     calls = []
 
+    cosines = {"hidden": 0.9, "pooled": 0.8}
+    monkeypatch.setattr(
+        evaluation_worker,
+        "tensor_metrics",
+        lambda candidate, base: {
+            "finite": True,
+            "candidate_zero_vectors": 0,
+            "base_zero_vectors": 0,
+            "mean_cosine": cosines[candidate],
+            "shape": [1],
+        },
+    )
+
     def generator(request, *, event_sink, conditioning_sink):
         calls.append(request)
         Path(item["path"]).write_bytes(b"image")
+        # The same call `workers.generate` makes: item id, candidate, plain.
+        aligned = conditioning_sink(
+            "job",
+            {"hidden": "hidden", "pooled": "pooled"},
+            {"hidden": "plain-hidden", "pooled": "plain-pooled"},
+        )
+        assert {name: aligned[name]["cosine"] for name in aligned} == cosines
         event_sink(
             "image",
             id="job",
             path=item["path"],
             sha256=file_hash(Path(item["path"])),
-            conditioning_target_align={
-                "hidden": {"valid": True, "cosine": 0.9},
-                "pooled": {"valid": True, "cosine": 0.8},
-            },
+            conditioning_target_align=aligned,
             seconds=0.1,
         )
 
