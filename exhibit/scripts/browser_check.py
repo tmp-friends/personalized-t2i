@@ -196,7 +196,7 @@ def main():
 
         # --------------------------------------------------------- reload
         page.reload()
-        page.get_by_text("SAME PROMPT, SAME SEEDS").wait_for()
+        page.locator("#finish").wait_for()
         assert page.locator(".shot").count() == 8
         checks.append("reload keeps the comparison")
 

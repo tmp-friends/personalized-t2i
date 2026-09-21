@@ -111,12 +111,12 @@ function on(attr, fn) {
       el.addEventListener("click", () => act(() => fn(el.dataset))),
     );
 }
-const STEPS = ["01 好きな画像を選ぶ", "02 お題を選ぶ", "03 見比べる"];
+const STEPS = ["好きな画像を選ぶ", "お題を選ぶ", "見比べる"];
 function steps(n) {
-  return `<div class="stepbar">${STEPS.map(
+  return `<ol class="stepbar">${STEPS.map(
     (label, i) =>
-      `<span class="${i + 1 === n ? "active" : ""}">${esc(label)}</span>`,
-  ).join('<i class="line"></i>')}</div>`;
+      `<li class="${i + 1 === n ? "active" : ""}"${i + 1 === n ? ' aria-current="step"' : ""}><b>${two(i + 1)}</b>${esc(label)}</li>`,
+  ).join("")}</ol>`;
 }
 function render() {
   resetButton.hidden = !session;
@@ -133,7 +133,7 @@ function render() {
 /* ---------------------------------------------------------------- welcome */
 function sampleControl() {
   return cfg.samples?.length
-    ? `<div class="sample-picker"><select id="sample-id" aria-label="事前生成サンプル">${cfg.samples
+    ? `<div class="sample-picker"><span class="sample-lead">まずは結果だけ見る</span><select id="sample-id" aria-label="事前生成サンプル">${cfg.samples
         .map(
           (s) =>
             `<option value="${esc(s.id)}">${esc(s.label || `${s.id} · ${topicLabel(s.topic_id)}`)}</option>`,
@@ -154,17 +154,23 @@ function bindSample() {
     window.scrollTo(0, 0);
   });
 }
+/** Same prompt, same seed: the plain picture beside a sample's personalized one. */
+function heroArt() {
+  const sample = cfg.samples?.find((x) => x.preview_url && topicOf(x.topic_id));
+  const plain = sample ? topicOf(sample.topic_id) : cfg.topics?.[0];
+  if (!plain?.preview_url) return "";
+  return `<div class="hero-art ${sample ? "pair" : ""}"><figure class="plain"><img src="${esc(plain.preview_url)}" alt="${esc(plain.label)}のパーソナライズなしの生成画像"><figcaption>パーソナライズなし</figcaption></figure>${
+    sample
+      ? `<figure class="mine"><img src="${esc(sample.preview_url)}" alt="${esc(plain.label)}の、好みを反映した生成サンプル"><figcaption>好みを反映</figcaption></figure>`
+      : ""
+  }</div>`;
+}
 function welcome() {
-  const art = cfg.topics?.[0];
-  app.innerHTML = `<section class="hero"><div><div class="eyebrow">FOUNDATION ENCODERS · YOUR TASTE</div><h1>同じ一文から、<br>あなたの一枚を。</h1><p class="intro">好きな画像を選ぶ。同じお題で、パーソナライズなし・ありを見比べる。<br>入力文も生成モデルも変えずに、絵がどこまで変わるかを確かめてください。</p><button class="primary" id="start" ${cfg.ready ? "" : "disabled"}>体験をはじめる <span>↗</span></button><p class="note">約3分 · 登録不要 · この端末の中だけで動作します</p><div class="welcome-small">${sampleControl()}</div>${
+  app.innerHTML = `<section class="hero"><div class="hero-copy"><span class="pill">好みを反映する画像生成 · 体験展示</span><h1>同じ一文から、<br><em>あなたの一枚</em>を。</h1><p class="intro">好きな絵を数枚えらぶだけ。入力文も生成モデルも変えずに、絵がどこまで「あなた好み」に寄るのかを、その場で見比べられます。</p><button class="primary" id="start" ${cfg.ready ? "" : "disabled"}>体験をはじめる <span>→</span></button><ul class="facts"><li>約3分</li><li>登録不要</li><li>この端末の中だけで動作</li></ul>${
     cfg.ready
       ? ""
       : '<p class="note ready-note">画像を準備中です。準備が終わると体験できます。</p>'
-  }</div><div class="hero-art">${
-    art?.preview_url
-      ? `<img src="${esc(art.preview_url)}" alt="${esc(art.label)}の通常生成画像">`
-      : ""
-  }<div class="floating-note"><small>SAME PROMPT, SAME MODEL</small>変えるのは、好みを参照するかどうかだけ。</div><p class="image-caption">Illustrious XL v2.0 · 参照なしの事前生成画像</p></div></section><div class="journey"><div><b>01</b><span>好きな画像を選ぶ<small>16枚から3〜5枚</small></span></div><div><b>02</b><span>お題を選ぶ<small>一文は誰でも同じ</small></span></div><div><b>03</b><span>見比べる<small>パーソナライズなし・あり</small></span></div></div>`;
+  }${sampleControl()}</div>${heroArt()}</section><ol class="journey"><li><b>01</b><h3>好きな画像を選ぶ</h3><p>16枚から${cfg.selection.min}〜${cfg.selection.max}枚</p></li><li><b>02</b><h3>お題を選ぶ</h3><p>一文は誰でも同じ</p></li><li><b>03</b><h3>見比べる</h3><p>パーソナライズなし・あり</p></li></ol>`;
   bind("start", () => start(true));
   bindSample();
 }
@@ -200,7 +206,7 @@ function cardsScreen() {
   const order = session.card_order?.length
     ? session.card_order
     : cfg.cards.map((c) => c.id);
-  app.innerHTML = `${steps(1)}<div class="topline"><div><div class="eyebrow">PICK WHAT YOU LIKE</div><h2>好きな画像を選んでください。</h2><p>同じ人物が4つの描き方で並んでいます。人物ではなく、描き方の好みで選んでください。</p></div><div class="counter">${two(selection.length)}<small> / ${min}〜${max}枚</small></div></div><div class="card-grid">${order
+  app.innerHTML = `${steps(1)}<div class="topline"><div><h2>好きな画像を選んでください。</h2><p>同じ人物が4つの描き方で並んでいます。人物ではなく、描き方の好みで選んでください。</p></div><div class="counter" aria-label="選んだ枚数"><b>${selection.length}</b><small>/ ${min}〜${max}枚</small></div></div><div class="card-grid">${order
     .map((id) => {
       const card = cardOf(id);
       if (!card) return "";
@@ -221,7 +227,7 @@ function cardsScreen() {
               )
               .join(
                 "",
-              )}</div><code class="ref-en">${esc(refText(entry) || "（側面がすべて外れています）")}</code></div><button class="quiet" data-drop="${esc(entry.card_id)}">選択を外す ✕</button></div>`;
+              )}</div><code class="ref-en">${esc(refText(entry) || "（側面がすべて外れています）")}</code></div><button class="quiet" data-drop="${esc(entry.card_id)}">外す ✕</button></div>`;
           })
           .join("")}</div>`
       : `<p class="note">まだ選ばれていません。気になる描き方の画像を${min}枚以上えらんでください。</p>`
@@ -281,14 +287,14 @@ function refStrip() {
 }
 function topicsScreen() {
   if (!topic) topic = session.run?.topic_id || cfg.topics[0]?.id;
-  app.innerHTML = `${steps(2)}<div class="eyebrow">SAME PROMPT FOR EVERYONE</div><h2>お題を選んでください。</h2><p>お題の一文は誰でも同じです。渡すのは、下の英語の説明文だけです。</p>${refStrip()}<div class="topics">${cfg.topics
+  app.innerHTML = `${steps(2)}<h2>お題を選んでください。</h2><p>お題の一文は誰でも同じです。渡すのは、下の英語の説明文だけです。</p>${refStrip()}<div class="topics">${cfg.topics
     .map(
       (t) =>
         `<button class="topic ${t.id === topic ? "selected" : ""}" data-topic="${esc(t.id)}" aria-pressed="${t.id === topic}"><img src="${esc(t.preview_url)}" alt="${esc(t.label)}の参照なし生成サンプル" loading="lazy"><span>${esc(t.label)}</span></button>`,
     )
     .join(
       "",
-    )}</div><div class="action-row"><button id="back" class="quiet">← ${session.run ? "比較に戻る" : "好きな画像を選び直す"}</button><button id="generate" class="primary">この好みで描く <span>↗</span></button></div><p class="note">パーソナライズなしの4枚と、同じ入力文・同じseedで描いたあなた向けの4枚を並べます。</p>`;
+    )}</div><div class="action-row"><button id="back" class="quiet">← ${session.run ? "比較に戻る" : "好きな画像を選び直す"}</button><button id="generate" class="primary">この好みで描く <span>→</span></button></div><p class="note">パーソナライズなしの4枚と、同じ入力文・同じseedで描いたあなた向けの4枚を並べます。</p>`;
   on("topic", ({ topic: id }) => {
     topic = id;
     topicsScreen();
@@ -395,14 +401,14 @@ function compareScreen() {
   const sample = run.mode === "sample";
   const working = run.status !== "done";
   const canRetopic = ownSelection && selectionComplete(selection, cfg.selection);
-  app.innerHTML = `${steps(3)}<div class="eyebrow">SAME PROMPT, SAME SEEDS</div><h2>パーソナライズなし・ありを見比べてください。</h2><div class="callout">${esc(topicLabel(run.topic_id))}。入力文も生成モデルもseedも同じです。違うのは、あなたの好みを参照したかどうかだけです。</div>${
+  app.innerHTML = `${steps(3)}<h2>パーソナライズなし・ありを見比べてください。</h2><div class="callout"><b>${esc(topicLabel(run.topic_id))}</b><span>入力文も生成モデルも seed も同じです。違うのは、あなたの好みを参照したかどうかだけです。</span></div>${
     working ? statusbox(run) : ""
-  }<div class="comparison-label"><h3>パーソナライズなし</h3><span>好みを使わずに描いた4枚</span></div>${shots(
+  }<section class="row"><div class="comparison-label"><h3>パーソナライズなし</h3><span>好みを使わずに描いた4枚</span></div>${shots(
     run.plain,
     working,
-  )}<div class="comparison-label"><h3>パーソナライズあり</h3><span>選んだ画像の好みを参照して描いた4枚</span><span class="badge ${sample ? "sample" : ""}">${esc(MODES[run.mode] || run.mode)}</span>${
+  )}</section><section class="row mine"><div class="comparison-label"><h3>パーソナライズあり</h3><span>選んだ画像の好みを参照して描いた4枚</span><span class="badge ${sample ? "sample" : ""}">${esc(MODES[run.mode] || run.mode)}</span>${
     run.error ? `<span class="badge sample">${esc(run.error)}</span>` : ""
-  }</div>${shots(run.personal, working)}${inputsPanel(run)}${
+  }</div>${shots(run.personal, working)}${inputsPanel(run)}</section>${
     sample
       ? `<p class="error-message">事前生成のサンプルです。あなたの選択を反映した結果ではありません。${canRetopic ? "" : "ご自分の好みで試すには、最初から始めてください。"}</p>`
       : ""
@@ -410,7 +416,7 @@ function compareScreen() {
     canRetopic
       ? `<button id="another" class="secondary" ${working ? "disabled" : ""}>別のお題で描く</button>`
       : '<button id="restart" class="secondary">最初から始める</button>'
-  }${working ? '<button id="cancel" class="secondary">描くのを中止する</button>' : ""}<button id="finish" class="primary">体験を終了 <span>↗</span></button></div><p class="note">終了すると、この体験の選択・参照・生成画像は削除されます。${cfg.idle_seconds}秒の無操作でも終了します。${working ? "処理中は無操作リセットを止めています。" : ""}</p>`;
+  }${working ? '<button id="cancel" class="secondary">描くのを中止する</button>' : ""}<button id="finish" class="primary">体験を終了</button></div><p class="note">終了すると、この体験の選択・参照・生成画像は削除されます。${cfg.idle_seconds}秒の無操作でも終了します。${working ? "処理中は無操作リセットを止めています。" : ""}</p>`;
   bind("another", () => {
     topic = null;
     screen = "topics";
