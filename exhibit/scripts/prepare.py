@@ -8,7 +8,7 @@ import threading
 import time
 from pathlib import Path
 
-from exhibit.catalog import build_catalog
+from exhibit.catalog import build_catalog, validate_token_report
 from exhibit.config import (
     ASSETS,
     CONFIG,
@@ -101,16 +101,66 @@ def prepare_cards(catalog="v1"):
         definition = read_json(ROOT / "configs/catalog-v2.json")
         cards = {card["id"]: card for card in build_catalog(definition)}
         token_path = OUTPUTS / "preparation" / "catalog-v2" / "token-counts.json"
-        check = [str(ROOT.parent / CONFIG["fan"]["python"]), str(ROOT / "scripts/check_card_tokens.py"), "--catalog", "v2", "--output", str(token_path)]
+        check = [
+            str(ROOT.parent / CONFIG["fan"]["python"]),
+            str(ROOT / "scripts/check_card_tokens.py"),
+            "--catalog",
+            "v2",
+            "--output",
+            str(token_path),
+        ]
         token_env = {**os.environ, "PYTHONPATH": str(ROOT / "src")}
-        completed = subprocess.run(check, check=False, text=True, capture_output=True, env=token_env)
+        completed = subprocess.run(
+            check, check=False, text=True, capture_output=True, env=token_env
+        )
         if completed.returncode:
-            raise RuntimeError("v2 card token validation failed before generation: " + completed.stderr)
-        items = [{"id": card["id"], "prompt": card["prompt"], "seed": card["seed"], "path": str(ASSETS / card["path"])} for card in cards.values()]
+            raise RuntimeError(
+                "v2 card token validation failed before generation: " + completed.stderr
+            )
+        try:
+            token_report = validate_token_report(
+                read_json(token_path), list(cards.values())
+            )
+        except (OSError, TypeError, ValueError) as exc:
+            raise RuntimeError("v2 card token validation report is invalid") from exc
+        items = [
+            {
+                "id": card["id"],
+                "prompt": card["prompt"],
+                "seed": card["seed"],
+                "path": str(ASSETS / card["path"]),
+            }
+            for card in cards.values()
+        ]
         events = stage({"stage": "generate", "items": items}, "catalog-v2/card-images")
-        images = image_records(events, extra=lambda key: {k: cards[key][k] for k in ("ref_en", "aspects", "subject_id", "profile_id", "axis_levels")})
-        write_json(ASSETS / "catalog-v2.json", {"version": 1, "catalog_id": "catalog-v2", "generation": CONFIG["generation"], "token_counts": str(token_path.relative_to(OUTPUTS)), "images": images})
-        print("v2 cards prepared; review them in configs/cards-v2-review.json", flush=True)
+        fields = (
+            "ref_en",
+            "aspects",
+            "aspects_ja",
+            "label",
+            "profile_label",
+            "subject_id",
+            "profile_id",
+            "axis_levels",
+        )
+        images = image_records(
+            events,
+            extra=lambda key: {field: cards[key][field] for field in fields},
+        )
+        write_json(
+            ASSETS / "catalog-v2.json",
+            {
+                "version": 2,
+                "catalog_id": "catalog-v2",
+                "generation": CONFIG["generation"],
+                "token_validation": token_report,
+                "images": images,
+            },
+        )
+        print(
+            "v2 cards prepared; review them in configs/cards-v2-review.json",
+            flush=True,
+        )
         return
     items = [
         {

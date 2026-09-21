@@ -43,72 +43,78 @@ PIPELINE_CONFIG_FILES = (
 )
 
 
+def _offline_hub_file(repo_id, *, filename, revision, local_files_only):
+    if local_files_only is not True:
+        raise ValueError("runtime provenance must remain offline")
+    if (
+        not isinstance(revision, str)
+        or len(revision) != 40
+        or any(char not in "0123456789abcdef" for char in revision)
+    ):
+        raise ValueError("runtime provenance requires a pinned Hub commit")
+    cache = os.environ.get("HF_HUB_CACHE")
+    if cache is None:
+        home = Path(os.environ.get("HF_HOME", Path.home() / ".cache/huggingface"))
+        cache = home / "hub"
+    path = (
+        Path(cache)
+        / ("models--" + repo_id.replace("/", "--"))
+        / "snapshots"
+        / revision
+        / filename
+    )
+    if not path.is_file():
+        raise ValueError(f"pinned runtime file is not cached: {repo_id}/{filename}")
+    return str(path)
+
+
+def _runtime_record(label, spec, filenames, download):
+    if not isinstance(spec, dict) or not spec.get("model") or not spec.get("revision"):
+        raise ValueError(f"{label} model and pinned revision are required")
+    files = {}
+    for filename in filenames:
+        if not filename:
+            raise ValueError(f"{label} filename is required")
+        path = Path(
+            download(
+                spec["model"],
+                filename=filename,
+                revision=spec["revision"],
+                local_files_only=True,
+            )
+        )
+        files[filename] = file_hash(path)
+    return {"repo_id": spec["model"], "revision": spec["revision"], "files": files}
+
+
+def runtime_tokenizer_provenance(settings, *, download=None):
+    """Hash the pinned vocab, merges, config, and special-token files."""
+    downloader = download or _offline_hub_file
+    filenames = tuple(
+        name for name in PIPELINE_CONFIG_FILES if name.startswith("tokenizer")
+    )
+    return _runtime_record(
+        "pipeline tokenizers", settings.get("pipeline_config"), filenames, downloader
+    )
+
+
 def runtime_file_provenance(settings, *, download=None):
     """Hash every pinned Hub file consumed by ``workers.load_pipeline``."""
-    if download is None:
-
-        def download(repo_id, *, filename, revision, local_files_only):
-            if local_files_only is not True:
-                raise ValueError("runtime provenance must remain offline")
-            if (
-                not isinstance(revision, str)
-                or len(revision) != 40
-                or any(char not in "0123456789abcdef" for char in revision)
-            ):
-                raise ValueError("runtime provenance requires a pinned Hub commit")
-            cache = os.environ.get("HF_HUB_CACHE")
-            if cache is None:
-                home = Path(
-                    os.environ.get("HF_HOME", Path.home() / ".cache/huggingface")
-                )
-                cache = home / "hub"
-            path = (
-                Path(cache)
-                / ("models--" + repo_id.replace("/", "--"))
-                / "snapshots"
-                / revision
-                / filename
-            )
-            if not path.is_file():
-                raise ValueError(
-                    f"pinned runtime file is not cached: {repo_id}/{filename}"
-                )
-            return str(path)
-
-    def record(label, spec, filenames):
-        if (
-            not isinstance(spec, dict)
-            or not spec.get("model")
-            or not spec.get("revision")
-        ):
-            raise ValueError(f"{label} model and pinned revision are required")
-        files = {}
-        for filename in filenames:
-            if not filename:
-                raise ValueError(f"{label} filename is required")
-            path = Path(
-                download(
-                    spec["model"],
-                    filename=filename,
-                    revision=spec["revision"],
-                    local_files_only=True,
-                )
-            )
-            files[filename] = file_hash(path)
-        return {
-            "repo_id": spec["model"],
-            "revision": spec["revision"],
-            "files": files,
-        }
-
-    checkpoint = record("checkpoint", settings, (settings.get("checkpoint"),))
-    pipeline = record(
-        "pipeline_config", settings.get("pipeline_config"), PIPELINE_CONFIG_FILES
+    downloader = download or _offline_hub_file
+    checkpoint = _runtime_record(
+        "checkpoint", settings, (settings.get("checkpoint"),), downloader
     )
-    vae = record(
+    pipeline = _runtime_record(
+        "pipeline_config",
+        settings.get("pipeline_config"),
+        PIPELINE_CONFIG_FILES,
+        downloader,
+    )
+    vae = _runtime_record(
         "vae",
         settings.get("vae"),
         ("config.json", "diffusion_pytorch_model.safetensors"),
+        downloader,
     )
     return {"checkpoint": checkpoint, "pipeline_config": pipeline, "vae": vae}
 

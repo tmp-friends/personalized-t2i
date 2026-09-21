@@ -189,5 +189,17 @@
         "mood": "楽しくにぎやかな雰囲気"
       }
     }
-  ]
+  ],
+  "catalog_id": "catalog-v1",
+  "sample_manifest": {
+    "catalog_id": "catalog-v1",
+    "required_ids": [
+      "s1-cat",
+      "s1-tokyo",
+      "s2-cat",
+      "s2-tokyo",
+      "s3-cat",
+      "s3-tokyo"
+    ]
+  }
 }

@@ -134,6 +134,7 @@ def personalization_hash(refs, alpha, *, commit, generation, seeds, fan=None):
 def legacy_snapshot_from_selection(selection, config=CONFIG):
     """Explicit v1 list conversion; the new public builder never accepts lists."""
     from .catalog import load_catalog
+
     return {
         "revision": 0,
         "catalog_id": "catalog-v1",
@@ -228,8 +229,12 @@ def _snapshot(snapshot, catalog=None):
         raise ValueError("Invalid snapshot identity")
     if catalog is None:
         from .catalog import load_catalog
+
         catalog = load_catalog(snapshot["catalog_id"], reviewed_only=True)
-    if snapshot["catalog_id"] != catalog["catalog_id"] or snapshot["catalog_hash"] != catalog["catalog_hash"]:
+    if (
+        snapshot["catalog_id"] != catalog["catalog_id"]
+        or snapshot["catalog_hash"] != catalog["catalog_hash"]
+    ):
         raise ValueError("Stale catalog hash")
     card_map = {card["id"]: card for card in catalog["cards"]}
     gains = snapshot["aspect_gains"]
@@ -310,6 +315,7 @@ def _provenance(provenance):
 def _refs(snapshot, policy, catalog=None):
     if catalog is None:
         from .catalog import load_catalog
+
         catalog = load_catalog(snapshot["catalog_id"], reviewed_only=True)
     cards = {card["id"]: card for card in catalog["cards"]}
     gains, unit, merged = snapshot["aspect_gains"], policy["reference_unit"], {}
@@ -364,7 +370,11 @@ def build_personalization(snapshot, *, prompt, policy, provenance):
         raise TypeError("snapshot must be a PreferenceSnapshot object")
     if not isinstance(prompt, str) or not prompt.strip():
         raise ValueError("prompt is required")
+    needed = {"revision", "catalog_id", "catalog_hash", "selection", "aspect_gains"}
+    if set(snapshot) != needed:
+        raise ValueError("Snapshot has unknown or missing fields")
     from .catalog import load_catalog
+
     resolved_catalog = load_catalog(snapshot["catalog_id"], reviewed_only=True)
     snapshot, effective, source = (
         _snapshot(snapshot, resolved_catalog),

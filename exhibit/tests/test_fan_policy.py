@@ -335,3 +335,101 @@ def test_card_description_aggregates_cards_in_canonical_aspect_order():
         }
     ]
     assert CARDS[cards[0]]["subject_id"] not in built["refs"][0]["text"]
+
+
+def test_personalization_rejects_unreviewed_catalog_cards(monkeypatch):
+    from exhibit import catalog as catalog_module
+
+    card = copy.deepcopy(next(iter(CARDS.values())))
+    monkeypatch.setattr(
+        catalog_module,
+        "load_catalog",
+        lambda catalog_id, *, reviewed_only: {
+            "catalog_id": catalog_id,
+            "catalog_hash": "catalog-hash",
+            "all_cards": [card],
+            "cards": [] if reviewed_only else [card],
+        },
+    )
+    value = {
+        **snapshot(),
+        "catalog_id": "catalog-v2",
+        "catalog_hash": "catalog-hash",
+        "selection": [{"card_id": card["id"], "strength": 1, "aspects": ["color"]}],
+    }
+    with pytest.raises(ValueError, match="Unknown or duplicate card"):
+        build_personalization(
+            value,
+            prompt="a target",
+            policy=resolve_policy("legacy_exhibit", FAN_POLICIES),
+            provenance=provenance(),
+        )
+
+
+def test_personalization_rejects_stale_hash_and_cross_catalog_card(monkeypatch):
+    from exhibit import catalog as catalog_module
+
+    v2_card = copy.deepcopy(next(iter(CARDS.values())))
+    v2_card["id"] = "v2-card"
+    monkeypatch.setattr(
+        catalog_module,
+        "load_catalog",
+        lambda catalog_id, *, reviewed_only: {
+            "catalog_id": "catalog-v2",
+            "catalog_hash": "current-hash",
+            "all_cards": [v2_card],
+            "cards": [v2_card],
+        },
+    )
+    base = {
+        **snapshot(),
+        "catalog_id": "catalog-v2",
+        "catalog_hash": "stale-hash",
+        "selection": [{"card_id": v2_card["id"], "strength": 1, "aspects": ["color"]}],
+    }
+    with pytest.raises(ValueError, match="Stale catalog hash"):
+        build_personalization(
+            base,
+            prompt="a target",
+            policy=resolve_policy("legacy_exhibit", FAN_POLICIES),
+            provenance=provenance(),
+        )
+
+    cross_catalog = {
+        **base,
+        "catalog_hash": "current-hash",
+        "selection": [
+            {"card_id": next(iter(CARDS)), "strength": 1, "aspects": ["color"]}
+        ],
+    }
+    with pytest.raises(ValueError, match="Unknown or duplicate card"):
+        build_personalization(
+            cross_catalog,
+            prompt="a target",
+            policy=resolve_policy("legacy_exhibit", FAN_POLICIES),
+            provenance=provenance(),
+        )
+
+
+def test_snapshot_rejects_client_supplied_reference_text():
+    value = snapshot()
+    value["selection"][0]["ref_en"] = "client supplied"
+    with pytest.raises(ValueError, match="Invalid selection entry"):
+        build_personalization(
+            value,
+            prompt="a target",
+            policy=resolve_policy("legacy_exhibit", FAN_POLICIES),
+            provenance=provenance(),
+        )
+
+
+def test_personalization_rejects_snapshot_missing_catalog_id_without_key_error():
+    value = snapshot()
+    value.pop("catalog_id")
+    with pytest.raises(ValueError, match="unknown or missing fields"):
+        build_personalization(
+            value,
+            prompt="a target",
+            policy=resolve_policy("legacy_exhibit", FAN_POLICIES),
+            provenance=provenance(),
+        )

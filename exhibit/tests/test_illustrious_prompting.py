@@ -64,3 +64,18 @@ def test_generation_profile_matches_the_reviewed_illustrious_v2_contract():
     assert "clip_skip" not in g
     assert g["positive_prompt_tail"] == "absurdres, highres"
     assert "nsfw" in g["negative_prompt"] and "multiple people" in g["negative_prompt"]
+
+
+def test_v2_catalog_prompts_keep_all_four_reference_phrases_in_the_quality_envelope():
+    from exhibit.catalog import build_catalog
+    from exhibit.config import ROOT, read_json
+
+    cards = build_catalog(read_json(ROOT / "configs/catalog-v2.json"))
+    assert len(cards) == 64
+    for card in cards:
+        assert card["prompt"].startswith(QUALITY_PREFIX), card["id"]
+        assert card["prompt"].endswith(
+            CONFIG["generation"]["positive_prompt_tail"] + "."
+        )
+        assert card["ref_en"] == ", ".join(card["aspects"].values())
+        assert all(phrase in card["prompt"] for phrase in card["aspects"].values())

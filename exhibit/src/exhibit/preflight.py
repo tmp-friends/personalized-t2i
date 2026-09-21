@@ -5,17 +5,17 @@ from pathlib import Path
 
 from .config import ASSETS, CARDS_REVIEW, CONFIG, FAN_UPSTREAM, GPU_PYTHON
 from .domain import (
-    CARDS,
     build_legacy_personalization,
     file_hash,
-    reviewed_ids,
     target_prompt,
 )
 
 
-def check_assets(root=ASSETS, *, require_samples=True, review=CARDS_REVIEW, catalog_id="catalog-v1"):
-    from .catalog import load_catalog
+def check_assets(root=ASSETS, *, require_samples=True, review=None, catalog_id=None):
+    from .catalog import load_catalog, validate_token_report
+
     root = Path(root)
+    catalog_id = catalog_id or CONFIG.get("catalog_id")
     errors = []
 
     def read(name, default):
@@ -25,11 +25,40 @@ def check_assets(root=ASSETS, *, require_samples=True, review=CARDS_REVIEW, cata
             errors.append(f"Missing or invalid {name}")
             return default
 
-    manifest_name = "manifest.json" if catalog_id == "catalog-v1" else "catalog-v2.json"
-    manifest = read(manifest_name, {})
-    if manifest.get("generation") != CONFIG["generation"]:
+    def read_object(name):
+        value = read(name, {})
+        if not isinstance(value, dict):
+            errors.append(f"Invalid {name} structure")
+            return {}
+        return value
+
+    def image_map(manifest, name):
+        value = manifest.get("images", {})
+        if not isinstance(value, dict):
+            errors.append(f"Invalid {name} images")
+            return {}
+        return value
+
+    baseline_manifest = read_object("manifest.json")
+    baseline_images = image_map(baseline_manifest, "manifest.json")
+    if baseline_manifest.get("generation") != CONFIG["generation"]:
         errors.append("Generation settings mismatch")
-    images = manifest.get("images", {}) if isinstance(manifest, dict) else {}
+
+    if catalog_id == "catalog-v1":
+        card_manifest = baseline_manifest
+        card_images = baseline_images
+        review_path = review or CARDS_REVIEW
+    elif catalog_id == "catalog-v2":
+        card_manifest = read_object("catalog-v2.json")
+        card_images = image_map(card_manifest, "catalog-v2.json")
+        review_path = review
+        if card_manifest.get("generation") != CONFIG["generation"]:
+            errors.append("Generation settings mismatch: catalog-v2.json")
+    else:
+        errors.append(f"Unknown catalog: {catalog_id}")
+        card_manifest = {}
+        card_images = {}
+        review_path = review
 
     def check_image(key, image):
         try:
@@ -44,37 +73,53 @@ def check_assets(root=ASSETS, *, require_samples=True, review=CARDS_REVIEW, cata
             return False
         return True
 
-    if catalog_id == "catalog-v1":
-        catalog_cards = list(CARDS.values())
-        reviewed = reviewed_ids(review)
-    else:
-        catalog = load_catalog(catalog_id, reviewed_only=True, assets=root, review_path=review)
-        all_catalog = load_catalog(catalog_id, reviewed_only=False, assets=root, review_path=review)
-        catalog_cards = all_catalog["all_cards"]
-        reviewed = {card["id"] for card in catalog["cards"]}
+    try:
+        eligible = load_catalog(
+            catalog_id, reviewed_only=True, assets=root, review_path=review_path
+        )
+        complete = load_catalog(
+            catalog_id, reviewed_only=False, assets=root, review_path=review_path
+        )
+        catalog_cards = complete["all_cards"]
+        reviewed = {card["id"] for card in eligible["cards"]}
+    except (OSError, TypeError, ValueError) as exc:
+        errors.append(f"Invalid catalog: {exc}")
+        catalog_cards = []
+        reviewed = set()
+
+    if catalog_id == "catalog-v2" and catalog_cards:
+        try:
+            validate_token_report(card_manifest.get("token_validation"), catalog_cards)
+        except (TypeError, ValueError) as exc:
+            errors.append(f"Invalid token validation: {exc}")
+
+    card_fields = ["seed", "prompt", "ref_en", "aspects"]
+    if catalog_id == "catalog-v2":
+        card_fields.extend(("aspects_ja", "label", "profile_label"))
     for card in catalog_cards:
         card_id = card["id"]
-        image = images.get(card_id) or {}
-        if check_image(card_id, image) and (
-            image.get("seed") != card["seed"]
-            or image.get("prompt") != card["prompt"]
-            or image.get("ref_en") != card["ref_en"]
-            or image.get("aspects") != card["aspects"]
+        image = card_images.get(card_id) if isinstance(card_images, dict) else None
+        if check_image(card_id, image or {}) and (
+            image.get("path") != card["path"]
+            or any(image.get(field) != card[field] for field in card_fields)
             or image.get("settings") != CONFIG["generation"]
         ):
             errors.append(f"Card contract mismatch: {card_id}")
         if card_id not in reviewed:
             errors.append(f"Unreviewed card: {card_id}")
 
-    prompts = read("generic-prompts.json", {})
+    prompts = read_object("generic-prompts.json")
     for topic in CONFIG["topics"]:
         prompt = target_prompt(topic)
-        if (prompts.get(topic["id"]) or {}).get("prompt") != prompt:
+        prompt_record = prompts.get(topic["id"])
+        if not isinstance(prompt_record, dict) or prompt_record.get("prompt") != prompt:
             errors.append(f"Generic prompt mismatch: {topic['id']}")
         for index, seed in enumerate(CONFIG["seeds"]):
             key = f"{topic['id']}-{index}"
-            image = images.get(key) or {}
-            if check_image(key, image) and (
+            image = (
+                baseline_images.get(key) if isinstance(baseline_images, dict) else None
+            )
+            if check_image(key, image or {}) and (
                 image.get("seed") != seed
                 or image.get("prompt") != prompt
                 or image.get("personalization_hash") is not None
@@ -83,16 +128,53 @@ def check_assets(root=ASSETS, *, require_samples=True, review=CARDS_REVIEW, cata
                 errors.append(f"Generic contract mismatch: {key}")
 
     samples = read("samples.json", []) if require_samples else []
-    if require_samples and not isinstance(samples, list):
-        errors.append("Invalid samples manifest")
-        samples = []
+    if require_samples:
+        if not isinstance(samples, list):
+            errors.append("Invalid samples manifest")
+            samples = []
+        contract = CONFIG.get("sample_manifest")
+        required_ids = (
+            contract.get("required_ids") if isinstance(contract, dict) else None
+        )
+        if (
+            not isinstance(contract, dict)
+            or set(contract) != {"catalog_id", "required_ids"}
+            or contract.get("catalog_id") != "catalog-v1"
+            or not isinstance(required_ids, list)
+            or any(not isinstance(item, str) or not item for item in required_ids)
+            or len(required_ids) != len(set(required_ids or ()))
+        ):
+            errors.append("Invalid sample manifest contract")
+        else:
+            actual_ids = [
+                sample.get("id") if isinstance(sample, dict) else None
+                for sample in samples
+            ]
+            if any(not isinstance(item, str) or not item for item in actual_ids):
+                errors.append("Sample manifest has invalid id")
+            elif len(actual_ids) != len(set(actual_ids)) or set(actual_ids) != set(
+                required_ids
+            ):
+                errors.append("Sample manifest IDs mismatch")
     for sample in samples:
-        errors.extend(sample_errors(sample, root))
+        if isinstance(sample, dict):
+            errors.extend(sample_errors(sample, root))
+        else:
+            errors.append("Invalid sample record")
+
+    generic_count = sum(
+        1
+        for topic in CONFIG["topics"]
+        for index, _ in enumerate(CONFIG["seeds"])
+        if f"{topic['id']}-{index}" in baseline_images
+    )
     return {
         "ready": not errors,
         "mode": "fan-live",
+        "catalog_id": catalog_id,
         "errors": errors,
-        "fixed_images": len(images),
+        "fixed_images": len(card_images) if isinstance(card_images, dict) else 0,
+        "generic_images": generic_count,
         "reviewed_cards": len(reviewed),
         "cards": len(catalog_cards),
         "samples": len(samples),
@@ -210,9 +292,11 @@ def check_fan_env(upstream=None, gpu_python=None):
     }
 
 
-def write_preflight(path, *, include_models=False):
+def write_preflight(path, *, include_models=False, catalog_id=None):
     """Evaluate and persist the same fresh preflight result returned to callers."""
-    result = check_assets()
+    result = (
+        check_assets() if catalog_id is None else check_assets(catalog_id=catalog_id)
+    )
     if include_models:
         result["models"] = check_models()
         result["ready"] = result["ready"] and result["models"]["ready"]
@@ -225,30 +309,61 @@ def write_preflight(path, *, include_models=False):
 def sample_errors(sample, root=ASSETS):
     root = Path(root)
     errors = []
-    sid = sample.get("id", "unknown")
+    if not isinstance(sample, dict):
+        return ["Invalid sample record"]
+    raw_id = sample.get("id")
+    sid = raw_id if isinstance(raw_id, str) and raw_id else "unknown"
 
     def fail(message):
         errors.append(f"Sample {sid}: {message}")
 
+    if sid == "unknown":
+        fail("invalid id")
+    topic_id = sample.get("topic_id")
     topic = next(
-        (t for t in CONFIG["topics"] if t["id"] == sample.get("topic_id")), None
+        (
+            topic
+            for topic in CONFIG["topics"]
+            if isinstance(topic_id, str) and topic["id"] == topic_id
+        ),
+        None,
     )
     if not topic:
         fail("unknown topic")
+
     selection = sample.get("selection")
-    personalization = sample.get("personalization") or {}
+    raw_personalization = sample.get("personalization")
+    if not isinstance(raw_personalization, dict):
+        fail("invalid personalization")
+        personalization = {}
+    else:
+        personalization = raw_personalization
     try:
         rebuilt = build_legacy_personalization(selection)
-    except (KeyError, TypeError, ValueError):
+    except (AttributeError, KeyError, TypeError, ValueError):
         rebuilt = None
         fail("selection is unusable")
     if not rebuilt or rebuilt["hash"] != personalization.get("hash"):
         fail("personalization mismatch")
-    images = sample.get("images", [])
-    if len(images) != 4 or [x.get("seed") for x in images] != CONFIG["seeds"]:
-        fail("seed order or image count")
-    prompt = target_prompt(topic) if topic else None
+
+    images = sample.get("images")
+    if not isinstance(images, list):
+        fail("invalid images")
+        return errors
+    valid_images = []
     for image in images:
+        if not isinstance(image, dict):
+            fail("invalid image record")
+        else:
+            valid_images.append(image)
+    if (
+        len(images) != 4
+        or [image.get("seed") for image in valid_images] != CONFIG["seeds"]
+    ):
+        fail("seed order or image count")
+
+    prompt = target_prompt(topic) if topic else None
+    for image in valid_images:
         if (
             image.get("settings") != CONFIG["generation"]
             or image.get("prompt") != prompt
@@ -263,6 +378,6 @@ def sample_errors(sample, root=ASSETS):
                 or file_hash(path) != image["sha256"]
             ):
                 fail("image hash")
-        except (KeyError, OSError, TypeError):
+        except (KeyError, OSError, TypeError, ValueError):
             fail("image missing")
     return errors
