@@ -136,9 +136,7 @@ def prepare_samples():
     items = []
     for prefix, label, card_ids in SAMPLE_SELECTIONS:
         selection = [{"card_id": card_id, "aspects_off": []} for card_id in card_ids]
-        personalization = build_personalization(
-            selection, {card_id: "normal" for card_id in card_ids}, "mid"
-        )
+        personalization = build_personalization(selection)
         for topic in CONFIG["topics"][:2]:
             sample_id = f"{prefix}-{topic['id']}"
             samples.append(
@@ -146,7 +144,6 @@ def prepare_samples():
                     "id": sample_id,
                     "topic_id": topic["id"],
                     "label": f"{label} · {topic['label']}",
-                    "alpha_key": "mid",
                     "selection": selection,
                     "personalization": personalization,
                     "mode": "sample",

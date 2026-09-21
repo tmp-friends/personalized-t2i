@@ -10,7 +10,7 @@ from exhibit.domain import (
     normalize_selection,
     personalization_hash,
     ref_text,
-    variant_cache_key,
+    run_cache_key,
 )
 
 IDS = list(CARDS)
@@ -58,7 +58,7 @@ def hash_with(refs, alpha, **overrides):
 
 
 def test_references_are_deduplicated_aspect_phrases_with_merged_weights():
-    base = build_personalization(selection(), {}, "mid")
+    base = build_personalization(selection())
     calm = CARDS[IDS[0]]["aspects"]["mood"]
     assert calm == CARDS[IDS[1]]["aspects"]["mood"]
     phrases = [ref["text"] for ref in base["refs"]]
@@ -72,24 +72,15 @@ def test_references_are_deduplicated_aspect_phrases_with_merged_weights():
     assert merged["card_ids"] == [IDS[0], IDS[1]]
     assert all("card_id" not in ref for ref in base["refs"])
 
-    emphasised = build_personalization(selection(), {IDS[0]: "emphasis"}, "mid")
-    assert next(r for r in emphasised["refs"] if r["text"] == calm)["weight"] == 3.0
-    assert emphasised["hash"] != base["hash"]
 
-
-def test_personalization_hash_changes_with_order_weight_alpha_and_settings():
-    base = build_personalization(selection(), {}, "mid")
-    swapped = build_personalization(
-        [selection()[1], selection()[0], selection()[2]], {}, "mid"
-    )
+def test_personalization_hash_changes_with_order_alpha_and_settings():
+    base = build_personalization(selection())
+    swapped = build_personalization([selection()[1], selection()[0], selection()[2]])
     assert base["hash"] != swapped["hash"]
-    assert (
-        build_personalization(selection(), {IDS[0]: "emphasis"}, "mid")["hash"]
-        != (base["hash"])
-    )
-    assert build_personalization(selection(), {}, "strong")["hash"] != base["hash"]
-    assert build_personalization(selection(), {}, "mid")["hash"] == base["hash"]
-    assert base["alpha"] == CONFIG["alphas"]["mid"] == 0.5
+    stronger = build_personalization(selection(), {**CONFIG, "alpha": 0.6})
+    assert stronger["hash"] != base["hash"]
+    assert build_personalization(selection())["hash"] == base["hash"]
+    assert base["alpha"] == CONFIG["alpha"] == 0.5
 
     refs, alpha = base["refs"], base["alpha"]
     assert hash_with(refs, alpha) == base["hash"]
@@ -115,32 +106,12 @@ def test_the_measured_fan_settings_are_the_ones_that_are_hashed():
 
 
 def test_aspects_off_removes_only_that_phrase():
-    base = build_personalization(selection(), {}, "mid")
-    reduced = build_personalization(selection(aspects_off=["mood"]), {}, "mid")
+    base = build_personalization(selection())
+    reduced = build_personalization(selection(aspects_off=["mood"]))
     assert base["hash"] != reduced["hash"]
     moods = {CARDS[i]["aspects"]["mood"] for i in IDS[:3]}
     assert not moods & {ref["text"] for ref in reduced["refs"]}
     assert len(reduced["refs"]) == len(base["refs"]) - 2  # calm merged, serious alone
-
-
-def test_excluded_references_disappear_and_excluding_everything_is_rejected():
-    partial = build_personalization(selection(), {IDS[0]: "exclude"}, "mid")
-    excluded = set(CARDS[IDS[0]]["aspects"].values())
-    kept = {ref["text"] for ref in partial["refs"]}
-    assert not (excluded - {CARDS[IDS[1]]["aspects"]["mood"]}) & kept
-    assert all(IDS[0] not in ref["card_ids"] for ref in partial["refs"])
-    calm = next(
-        r for r in partial["refs"] if r["text"] == CARDS[IDS[1]]["aspects"]["mood"]
-    )
-    assert calm["weight"] == 1.0 and calm["card_ids"] == [IDS[1]]
-    with pytest.raises(ValueError):
-        build_personalization(selection(), {i: "exclude" for i in IDS[:3]}, "mid")
-    with pytest.raises(ValueError):
-        build_personalization(selection(), {}, "extreme")
-    with pytest.raises(ValueError):
-        build_personalization(selection(), {IDS[0]: "double"}, "mid")
-    with pytest.raises(ValueError):
-        build_personalization(selection(), {IDS[9]: "normal"}, "mid")
 
 
 def test_selection_enforces_min_max_and_known_cards():
@@ -160,8 +131,8 @@ def test_selection_enforces_min_max_and_known_cards():
 
 
 def test_cache_key_covers_topic_and_personalization():
-    base = build_personalization(selection(), {}, "mid")
-    other = build_personalization(selection(), {}, "strong")
-    assert variant_cache_key("cat", base) == variant_cache_key("cat", base)
-    assert variant_cache_key("cat", base) != variant_cache_key("tokyo", base)
-    assert variant_cache_key("cat", base) != variant_cache_key("cat", other)
+    base = build_personalization(selection())
+    other = build_personalization(selection(aspects_off=["mood"]))
+    assert run_cache_key("cat", base) == run_cache_key("cat", base)
+    assert run_cache_key("cat", base) != run_cache_key("tokyo", base)
+    assert run_cache_key("cat", base) != run_cache_key("cat", other)

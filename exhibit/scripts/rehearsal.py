@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Actual sequential localhost timings: selection, blind run, reveal, one adjustment."""
+"""Actual sequential localhost timings: selection, then one plain/personalized comparison."""
 
 import argparse
 import json
@@ -34,48 +34,18 @@ def drive(client, index, deadline_seconds):
             f"/api/sessions/{sid}/runs",
             json={
                 "topic_id": topic_id,
-                "alpha": "mid",
-                "weights": {entry["card_id"]: "normal" for entry in selection},
                 "request_id": f"rehearsal-{index}-0",
             },
         ).raise_for_status()
         snapshot = wait(client, sid, deadline_seconds)
-        row["blind_seconds"] = round(time.monotonic() - started, 3)
-        for pair in snapshot["run"]["blind"]["pairs"]:
-            if pair["ready"]:
-                client.post(
-                    f"/api/sessions/{sid}/blind",
-                    json={
-                        "pair_index": pair["index"],
-                        "pick": pair["items"][index % 2]["token"],
-                    },
-                ).raise_for_status()
-        revealed = client.post(f"/api/sessions/{sid}/reveal")
-        revealed.raise_for_status()
-        row["score"] = revealed.json()["run"]["blind"]["score"]
-        adjusted = time.monotonic()
-        client.post(
-            f"/api/sessions/{sid}/runs",
-            json={
-                "topic_id": topic_id,
-                "alpha": "strong",
-                "weights": {
-                    entry["card_id"]: ("emphasis" if n == 0 else "normal")
-                    for n, entry in enumerate(selection)
-                },
-                "request_id": f"rehearsal-{index}-1",
-            },
-        ).raise_for_status()
-        snapshot = wait(client, sid, deadline_seconds)
-        row["variant_seconds"] = round(time.monotonic() - adjusted, 3)
         row["seconds"] = round(time.monotonic() - started, 3)
         run = snapshot["run"]
         row.update(
             topic=run["topic_id"],
-            images=[len(v["images"]) for v in run["variants"]],
-            modes=[v["mode"] for v in run["variants"]],
+            images=len(run["personal"]),
+            mode=run["mode"],
             error=run.get("error"),
-            timings=[v["timings"] for v in run["variants"]],
+            timings=run["timings"],
         )
     finally:
         client.delete(f"/api/sessions/{sid}")
@@ -115,7 +85,7 @@ def main():
     result = {
         "sessions": len(rows),
         "successes": sum(
-            1 for row in rows if not row["error"] and row.get("images") == [4, 4]
+            1 for row in rows if not row["error"] and row.get("images") == 4
         ),
         "p95_seconds": times[math.ceil(0.95 * len(times)) - 1] if times else None,
         "median_seconds": times[len(times) // 2] if times else None,

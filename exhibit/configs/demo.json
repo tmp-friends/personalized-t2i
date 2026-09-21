@@ -33,31 +33,11 @@
   ],
   "timeout_seconds": 120,
   "idle_seconds": 90,
-  "alphas": {
-    "weak": 0.35,
-    "mid": 0.5,
-    "strong": 0.6
-  },
-  "alpha_labels": {
-    "weak": "弱",
-    "mid": "中",
-    "strong": "強"
-  },
-  "weights": {
-    "exclude": 0,
-    "normal": 1.0,
-    "emphasis": 2.0
-  },
-  "weight_labels": {
-    "exclude": "外す",
-    "normal": "通常",
-    "emphasis": "重視"
-  },
+  "alpha": 0.5,
   "selection": {
     "min": 3,
     "max": 5
   },
-  "max_variants": 3,
   "fan": {
     "python": "fan-repro/.venv/bin/python",
     "upstream": "fan-repro/.work/upstream",

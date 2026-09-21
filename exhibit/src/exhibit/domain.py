@@ -129,26 +129,16 @@ def personalization_hash(refs, alpha, *, commit, generation, seeds, fan=None):
     )
 
 
-def build_personalization(selection, weights, alpha_key, config=CONFIG):
-    """One reference per distinct aspect phrase; duplicates merge their weights.
+def build_personalization(selection, config=CONFIG):
+    """One reference per distinct aspect phrase; a phrase weighs as many cards as share it.
 
     A single bundled sentence per card was measured to swing composition, while
     short aspect phrases keep the target framing.
     """
-    if alpha_key not in config["alphas"]:
-        raise ValueError("Unknown alpha")
-    alpha = config["alphas"][alpha_key]
-    weights = weights or {}
-    if set(weights) - {entry["card_id"] for entry in selection}:
-        raise ValueError("Unknown card weight")
+    alpha = config["alpha"]
+    weight = 1.0
     merged = {}
     for entry in selection:
-        key = weights.get(entry["card_id"], "normal")
-        if key not in config["weights"]:
-            raise ValueError("Unknown weight")
-        weight = float(config["weights"][key])
-        if not weight:
-            continue
         card = CARDS[entry["card_id"]]
         off = set(entry["aspects_off"])
         for aspect in ASPECTS:
@@ -188,7 +178,7 @@ def target_prompt(topic, config=CONFIG):
     return compose_prompt(topic["basic_prompt_en"], [], config["generation"])
 
 
-def variant_cache_key(topic_id, personalization, config=CONFIG):
+def run_cache_key(topic_id, personalization, config=CONFIG):
     return digest(
         {
             "topic": topic_id,

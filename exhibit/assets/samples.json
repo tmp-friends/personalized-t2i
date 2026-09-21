@@ -3,7 +3,6 @@
     "id": "s1-cat",
     "topic_id": "cat",
     "label": "あたたかい表現を選んだ人 · 窓辺で猫と過ごす少女",
-    "alpha_key": "mid",
     "selection": [
       {
         "card_id": "girl-warm_soft",
@@ -289,7 +288,6 @@
     "id": "s1-tokyo",
     "topic_id": "tokyo",
     "label": "あたたかい表現を選んだ人 · 東京の夜景と青年",
-    "alpha_key": "mid",
     "selection": [
       {
         "card_id": "girl-warm_soft",
@@ -575,7 +573,6 @@
     "id": "s2-cat",
     "topic_id": "cat",
     "label": "涼しくくっきりした表現を選んだ人 · 窓辺で猫と過ごす少女",
-    "alpha_key": "mid",
     "selection": [
       {
         "card_id": "girl-cool_clean",
@@ -861,7 +858,6 @@
     "id": "s2-tokyo",
     "topic_id": "tokyo",
     "label": "涼しくくっきりした表現を選んだ人 · 東京の夜景と青年",
-    "alpha_key": "mid",
     "selection": [
       {
         "card_id": "girl-cool_clean",
@@ -1147,7 +1143,6 @@
     "id": "s3-cat",
     "topic_id": "cat",
     "label": "劇的な光と鮮やかさを選んだ人 · 窓辺で猫と過ごす少女",
-    "alpha_key": "mid",
     "selection": [
       {
         "card_id": "student-dramatic",
@@ -1461,7 +1456,6 @@
     "id": "s3-tokyo",
     "topic_id": "tokyo",
     "label": "劇的な光と鮮やかさを選んだ人 · 東京の夜景と青年",
-    "alpha_key": "mid",
     "selection": [
       {
         "card_id": "student-dramatic",

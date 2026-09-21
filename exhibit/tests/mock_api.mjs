@@ -2,7 +2,7 @@
 // frontend (exhibit/src/exhibit/static) in a browser without a GPU or the Python app.
 // It implements the API table of docs/superpowers/specs/2026-09-21-fan-exhibition-demo-design.md
 // §5 and the snapshot shapes of §4.1, holds one session in memory, fakes generation
-// progress (one blind pair per PAIR_MS) and draws every image as an SVG on the fly.
+// progress (one image per PAIR_MS) and draws every image as an SVG on the fly.
 //
 //   node exhibit/tests/mock_api.mjs [--port 8811] [--pair-ms 500] [--idle 90]
 import http from "node:http";
@@ -21,7 +21,7 @@ const PORT = Number(arg("port", 8811));
 const PAIR_MS = Number(arg("pair-ms", 500));
 const IDLE_SECONDS = Number(arg("idle", 90));
 const SEEDS = [230923, 230924, 230925, 230926];
-const MAX_VARIANTS = 3;
+const ALPHA = 0.5;
 const TAIL = "absurdres, highres.";
 
 const SUBJECTS = [
@@ -130,12 +130,8 @@ const CONFIG = {
     label: t.label,
     preview_url: `/assets/generic/${t.id}-0.png`,
   })),
-  alphas: { weak: 0.3, mid: 0.45, strong: 0.6 },
-  alpha_labels: { weak: "弱", mid: "中", strong: "強" },
-  weights: { exclude: 0, normal: 1.0, emphasis: 2.0 },
-  weight_labels: { exclude: "外す", normal: "通常", emphasis: "重視" },
+  alpha: ALPHA,
   selection: { min: 3, max: 5 },
-  max_variants: MAX_VARIANTS,
   idle_seconds: IDLE_SECONDS,
   timeout_seconds: 120,
   samples: [
@@ -181,21 +177,14 @@ const shuffle = (xs) => {
   }
   return a;
 };
-/** The selected cards that still carry weight. */
-const activeRefs = (selection, weights) =>
-  selection
-    .map((entry) => ({
-      entry,
-      weight: CONFIG.weights[weights?.[entry.card_id] || "normal"],
-    }))
-    .filter((x) => x.weight > 0);
 /**
  * One entry per distinct aspect phrase, merged across the selected cards:
- * weights accumulate when a phrase repeats, aspects turned off never appear.
+ * a phrase weighs as many cards as share it, aspects turned off never appear.
  */
-function mergedRefs(selection, weights) {
+function mergedRefs(selection) {
   const out = new Map();
-  for (const { entry, weight } of activeRefs(selection, weights)) {
+  const weight = 1;
+  for (const entry of selection) {
     const card = cardOf(entry.card_id);
     const off = entry.aspects_off || [];
     for (const aspect of ASPECT_KEYS) {
@@ -213,100 +202,34 @@ function mergedRefs(selection, weights) {
 }
 const hashOf = (obj) =>
   crypto.createHash("sha256").update(JSON.stringify(obj)).digest("hex").slice(0, 16);
-/** Personalised images get the mean hue of the active references; plain stays neutral. */
-function personalHue(variant) {
-  const active = activeRefs(session.selection, variant.weights);
-  if (!active.length) return 210;
-  const hues = active.map((x) => profileOf(x.entry.card_id).hue);
+/** Personalised images get the mean hue of the selected cards; plain stays neutral. */
+function personalHue() {
+  if (!session.selection.length) return 210;
+  const hues = session.selection.map((entry) => profileOf(entry.card_id).hue);
   return Math.round(hues.reduce((a, b) => a + b, 0) / hues.length);
 }
-function progress(v) {
-  if (v.mode === "exact-cache" || v.mode === "sample") return 4;
-  if (v.frozen !== undefined) return v.frozen;
-  return Math.max(0, Math.min(4, Math.floor((Date.now() - v.startedAt) / PAIR_MS)));
+function progress(run) {
+  if (run.mode === "sample") return 4;
+  return Math.max(0, Math.min(4, Math.floor((Date.now() - run.startedAt) / PAIR_MS)));
 }
-const runStatus = () => {
-  const v = session.run.variants;
-  if (v.some((x) => progress(x) < 4)) return progress(v[v.length - 1]) === 0 ? "queued" : "generating";
-  return "done";
-};
-function newVariant(index, alpha_key, weights, request_id, mode = "live") {
-  return {
-    id: `v${index}`,
-    request_id,
-    alpha_key,
-    weights: { ...weights },
-    startedAt: Date.now(),
-    mode,
-  };
-}
-function makeRun(topic_id, alpha_key, weights, request_id) {
-  const pairs = SEEDS.map((seed, index) => {
-    const tokens = [token(), token()];
-    const personalFirst = crypto.randomInt(2) === 0;
-    return {
-      index,
-      seed,
-      tokens,
-      mapping: {
-        [tokens[0]]: personalFirst ? "personal" : "plain",
-        [tokens[1]]: personalFirst ? "plain" : "personal",
-      },
-      pick: null,
-    };
-  });
+const runStatus = () => (progress(session.run) < 4 ? "generating" : "done");
+function makeRun(topic_id, request_id) {
   return {
     id: `run-${token().slice(0, 6)}`,
     topic_id,
-    pairs,
-    revealed: false,
-    variants: [newVariant(0, alpha_key, weights, request_id)],
+    request_id,
+    mode: "live",
+    startedAt: Date.now(),
   };
 }
-function variantImages(v) {
-  const hue = personalHue(v);
-  const n = progress(v);
-  return SEEDS.slice(0, n).map((seed, i) => ({
-    id: `${v.id}-${i}`,
+function personalImages(run) {
+  return SEEDS.slice(0, progress(run)).map((seed, i) => ({
+    id: `personal-${i}`,
     seed,
-    url: `/api/sessions/${session.id}/images/${v.id}/${v.id}-${i}.png`,
-    relative_path: `runs/${session.run.id}/${v.id}/${v.id}-${i}.png`,
-    sha256: hashOf([v.id, i]),
+    url: `/api/sessions/${session.id}/images/personal/personal-${i}.png`,
+    relative_path: `runs/${run.id}/personal/personal-${i}.png`,
+    sha256: hashOf([run.id, i]),
   }));
-}
-function serializeVariant(v, revealed) {
-  const done = progress(v);
-  const refs = mergedRefs(session.selection, v.weights);
-  const personalization = {
-    alpha: CONFIG.alphas[v.alpha_key],
-    sample_size: 0,
-    hash: hashOf([refs, v.alpha_key]),
-    refs,
-  };
-  return {
-    id: v.id,
-    request_id: v.request_id,
-    alpha_key: v.alpha_key,
-    weights: v.weights,
-    status: done >= 4 ? "done" : done === 0 ? "queued" : "generating",
-    mode: v.mode,
-    done_count: done,
-    images: revealed ? variantImages(v) : [],
-    personalization: revealed ? personalization : null,
-    prompt: targetPrompt(session.run.topic_id),
-    timings: revealed ? { generation: { wall_seconds: 25.1 } } : {},
-    error: v.error ?? null,
-  };
-}
-function score(run) {
-  const out = { personal: 0, plain: 0, tie: 0, answered: 0 };
-  for (const pair of run.pairs) {
-    if (pair.pick == null) continue;
-    out.answered++;
-    if (pair.pick === "tie") out.tie++;
-    else out[pair.mapping[pair.pick] ?? "plain"]++;
-  }
-  return out;
 }
 function snapshot() {
   const base = {
@@ -317,10 +240,8 @@ function snapshot() {
   };
   const run = session.run;
   if (!run) return base;
-  const revealed = run.revealed;
-  const v0 = run.variants[0];
-  const ready = progress(v0);
   const status = runStatus();
+  const refs = mergedRefs(session.selection);
   base.run = {
     id: run.id,
     topic_id: run.topic_id,
@@ -328,43 +249,21 @@ function snapshot() {
     status,
     message:
       status === "done"
-        ? run.cancelled
-          ? "中止しました。できあがった分だけ残しています。"
-          : "4枚できました。"
-        : `${Math.max(progress(run.variants[run.variants.length - 1]), 0)} / 4枚ができました。`,
-    elapsed_seconds: Math.round((Date.now() - v0.startedAt) / 1000),
+        ? "4枚できました。"
+        : `${progress(run)} / 4枚ができました。`,
+    elapsed_seconds: Math.round((Date.now() - run.startedAt) / 1000),
     error: null,
-    blind: {
-      revealed,
-      pairs: run.pairs.map((pair) => ({
-        index: pair.index,
-        seed: pair.seed,
-        ready: pair.index < ready,
-        items:
-          pair.index < ready
-            ? pair.tokens.map((t) => ({
-                token: t,
-                url: `/api/sessions/${session.id}/images/blind/${t}.png`,
-              }))
-            : [],
-        pick: pair.pick,
-      })),
-      answered: run.pairs.filter((p) => p.pick != null).length,
-      mapping: revealed
-        ? Object.assign({}, ...run.pairs.map((p) => p.mapping))
-        : null,
-      score: revealed ? score(run) : null,
-    },
-    plain: revealed
-      ? SEEDS.map((seed, i) => ({
-          id: `plain-${i}`,
-          seed,
-          url: `/api/sessions/${session.id}/images/plain-${i}.png`,
-          relative_path: `runs/${run.id}/plain-${i}.png`,
-          prompt: targetPrompt(run.topic_id),
-        }))
-      : [],
-    variants: run.variants.map((v) => serializeVariant(v, revealed)),
+    prompt: targetPrompt(run.topic_id),
+    plain: SEEDS.map((seed, i) => ({
+      id: `plain-${i}`,
+      seed,
+      url: `/api/sessions/${session.id}/images/plain-${i}.png`,
+      relative_path: `runs/${run.id}/plain-${i}.png`,
+      prompt: targetPrompt(run.topic_id),
+    })),
+    personal: personalImages(run),
+    personalization: { alpha: ALPHA, sample_size: 0, hash: hashOf([refs, ALPHA]), refs },
+    timings: { generation: { wall_seconds: 25.1 } },
   };
   return base;
 }
@@ -481,32 +380,12 @@ const server = http.createServer(async (req, res) => {
     if (tail[0] === "images") {
       const run = session.run;
       if (!run) return fail(res, 404, "no run");
-      if (tail[1] === "blind") {
-        const t = path.basename(tail[2], ".png");
-        const pair = run.pairs.find((x) => x.tokens.includes(t));
-        if (!pair || pair.index >= progress(run.variants[0]))
-          return fail(res, 404, "not ready");
-        const kind = pair.mapping[t];
-        return image(
-          res,
-          kind === "plain"
-            ? { hue: 205, sat: 14, light: 40, top: "", bottom: "", seed: pair.index + 3 }
-            : {
-                hue: personalHue(run.variants[0]),
-                top: "",
-                bottom: "",
-                seed: pair.index + 9,
-              },
-        );
-      }
-      if (!run.revealed) return fail(res, 404, "hidden");
       if (tail.length === 3) {
-        const v = run.variants.find((x) => x.id === tail[1]);
-        if (!v) return fail(res, 404, "no variant");
+        if (tail[1] !== "personal") return fail(res, 404, "no image");
         const i = Number(path.basename(tail[2], ".png").split("-").pop());
         return image(res, {
-          hue: personalHue(v),
-          top: `FAN · ${v.alpha_key}`,
+          hue: personalHue(),
+          top: `FAN · alpha ${ALPHA}`,
           bottom: `seed ${SEEDS[i]}`,
           seed: i + 9,
         });
@@ -541,73 +420,19 @@ const server = http.createServer(async (req, res) => {
       return ok(res);
     }
     if (tail[0] === "runs" && m === "POST") {
-      const { topic_id, alpha, weights, request_id } = body;
+      const { topic_id, request_id } = body;
       if (!topicOf(topic_id)) return fail(res, 409, "不明なお題です。");
       if (!session.selection.length) return fail(res, 409, "先に画像を選んでください。");
-      if (!activeRefs(session.selection, weights).length)
-        return fail(res, 409, "参照をすべて外すことはできません。");
       const run = session.run;
-      if (!run) {
-        session.run = makeRun(topic_id, alpha, weights, request_id);
-        return ok(res);
-      }
-      if (run.mode === "sample" && run.topic_id === topic_id)
-        return fail(res, 409, "サンプルは調整できません。");
-      if (run.variants.some((v) => v.request_id === request_id)) return ok(res);
-      if (runStatus() !== "done") return fail(res, 409, "いま描いています。");
-      if (run.topic_id !== topic_id) {
-        // A finished run plus a new topic means a fresh blind comparison.
-        session.run = makeRun(topic_id, alpha, weights, request_id);
-        return ok(res);
-      }
-      if (run.variants.length >= MAX_VARIANTS)
-        return fail(res, 409, `描き直しは${MAX_VARIANTS}回までです。`);
-      const same = run.variants.find(
-        (v) =>
-          v.alpha_key === alpha &&
-          JSON.stringify(v.weights) === JSON.stringify(weights),
-      );
-      run.variants.push(
-        newVariant(
-          run.variants.length,
-          alpha,
-          weights,
-          request_id,
-          same ? "exact-cache" : "live",
-        ),
-      );
-      return ok(res);
-    }
-    if (tail[0] === "blind" && m === "POST") {
-      const run = session.run;
-      if (!run) return fail(res, 404, "no run");
-      if (run.revealed) return fail(res, 409, "すでに答えを見ています。");
-      const pair = run.pairs[body.pair_index];
-      if (!pair || pair.index >= progress(run.variants[0]))
-        return fail(res, 409, "まだ描けていません。");
-      if (body.pick !== "tie" && !pair.tokens.includes(body.pick))
-        return fail(res, 409, "不明な選択です。");
-      pair.pick = body.pick;
-      return ok(res);
-    }
-    if (tail[0] === "reveal" && m === "POST") {
-      if (!session.run) return fail(res, 404, "no run");
-      session.run.revealed = true;
+      if (run?.request_id === request_id) return ok(res);
+      if (run && runStatus() !== "done") return fail(res, 409, "いま描いています。");
+      // Every request is a fresh comparison; the finished one is replaced.
+      session.run = makeRun(topic_id, request_id);
       return ok(res);
     }
     if (tail[0] === "cancel" && m === "POST") {
-      const run = session.run;
-      if (run && progress(run.variants[0]) < 4) {
-        session.run = null; // cancelling the blind comparison drops the whole run
-        return ok(res);
-      }
-      if (run)
-        for (const v of run.variants)
-          if (progress(v) < 4) {
-            v.frozen = 4; // the partial variant is kept and marked cancelled
-            v.error = "cancelled";
-          }
-      if (run) run.cancelled = true;
+      // Cancelling an unfinished comparison drops the whole run.
+      if (session.run && runStatus() !== "done") session.run = null;
       return ok(res);
     }
     if (tail[0] === "sample" && m === "POST") {
@@ -616,14 +441,8 @@ const server = http.createServer(async (req, res) => {
       session.selection = ["girl-warm_soft", "student-cool_clean", "traveler-warm_soft"].map(
         (card_id) => ({ card_id, aspects_off: [] }),
       );
-      const weights = Object.fromEntries(
-        session.selection.map((s) => [s.card_id, "normal"]),
-      );
-      session.run = makeRun(sample.topic_id, "mid", weights, sample.id);
-      session.run.revealed = true;
+      session.run = makeRun(sample.topic_id, sample.id);
       session.run.mode = "sample";
-      session.run.variants[0].mode = "sample";
-      for (const pair of session.run.pairs) pair.pick = null;
       return ok(res);
     }
     return fail(res, 404, "not found");

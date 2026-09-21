@@ -247,7 +247,7 @@ def g0_settings_section(followup, final, ladder):
     )
 
     # alpha ladder.
-    alphas = CONFIG.get("alphas", {})
+    alpha = CONFIG.get("alpha", "未計測")
     ladder_runs = ladder.get("runs") or []
     tokyo_baseline = avg(
         [
@@ -268,14 +268,12 @@ def g0_settings_section(followup, final, ladder):
         else ""
     )
     ladder_line = (
-        f"weak={alphas.get('weak', '未計測')} / mid={alphas.get('mid', '未計測')} / "
-        f"strong={alphas.get('strong', '未計測')} を採用しています。目視の確認では、alpha=0.7でtokyoのお題の"
+        f"alpha={alpha} を採用しています。目視の確認では、alpha=0.7でtokyoのお題の"
         f"1boyという被写体の指定が崩れ始め、alpha=0.8では緑の瞳の指定が失われました。{lap_note}"
-        "そのため0.6を上限にしています。崩れの判定自体は目視によるもので、性能の定量主張ではありません。"
+        "そのため上限0.6の内側の値を使っています。崩れの判定自体は目視によるもので、性能の定量主張ではありません。"
     )
 
     fan_conf = json.dumps(CONFIG.get("fan", {}), ensure_ascii=False, indent=2)
-    alphas_conf = json.dumps(alphas, ensure_ascii=False, indent=2)
 
     return f"""<h2>G0 で確定した設定と根拠</h2>
 <div class="panel"><ul>
@@ -291,8 +289,7 @@ def g0_settings_section(followup, final, ladder):
 <p class="small">いずれも少数seed・少数条件の記録であり、性能を主張するものではありません（設計書 §9）。</p>
 <p><b>configs/demo.json の fan ブロック</b></p>
 <pre>{E(fan_conf)}</pre>
-<p><b>configs/demo.json の alphas</b></p>
-<pre>{E(alphas_conf)}</pre>
+<p><b>configs/demo.json の alpha</b>：<code>{E(str(alpha))}</code></p>
 <a href="../../../exhibit/outputs/fan-probe/followup/followup.json">追加検証 JSON</a> ·
 <a href="../../../exhibit/outputs/fan-probe/final/final.json">最終確認 JSON</a> ·
 <a href="../../../exhibit/outputs/fan-probe/ladder/ladder.json">alpha ladder JSON</a></div>"""
@@ -376,12 +373,11 @@ def main():
             "generic_topics_embedded": len(generic_topics),
             "samples_embedded": len(samples),
         },
-        "mode": "FAN実生成 + ブラインド比較",
+        "mode": "FAN実生成 + パーソナライズなし・ありの比較表示",
         "limitations": [
             "第三者5人の理解度確認は未実施",
             "2時間連続稼働の実接続確認は未実施",
-            "ブラインド比較の集計は少人数の記録であり、性能主張ではない",
-            "reveal前のブラインド画像はセッション内の見た目確認のみで、統計的優位性を主張しない",
+            "比較表示はセッション内の見た目確認のみで、統計的優位性を主張しない",
         ],
     }
     write_json(REPORT / "evidence.json", evidence)
@@ -428,7 +424,7 @@ def main():
             for p in shot_files
         )
         browser_section = f"""<h2>実Chromiumでの操作確認 · {E(browser.get("url", "—"))}</h2>
-<div class="panel"><strong>4対のブラインド生成完了まで {E(str(browser.get("blind_wait_seconds", "—")))}秒。JS例外 {len(browser.get("page_errors", []))}件、外部通信 {len(browser.get("external_requests", []))}件。</strong>
+<div class="panel"><strong>パーソナライズあり4枚の生成完了まで {E(str(browser.get("generate_wait_seconds", "—")))}秒。JS例外 {len(browser.get("page_errors", []))}件、外部通信 {len(browser.get("external_requests", []))}件。</strong>
 <ul>{checks_html}</ul>
 <a href="browser-evidence.json">今回の確認記録 JSON</a></div>
 <div class="grid">{shots_html}</div>"""
@@ -487,7 +483,7 @@ def main():
     # ---------------------------------------------------------- rehearsal
     plot = sparkline(rehearsal.get("rows", []))
     rehearsal_section = f"""<h2>連続セッションの実測</h2>
-<p>対象は FAN 実生成のみ（rewrite・推薦は行わない）。各セッションはブラインド4対の生成、reveal、調整1回を含むwall timeです。</p>
+<p>対象は FAN 実生成のみ（rewrite・推薦は行わない）。各セッションは画像選択からパーソナライズあり4枚の生成完了までのwall timeです。</p>
 {plot}
 <div class="scroll"><table><thead><tr><th>項目</th><th>実測値</th></tr></thead><tbody>
 <tr><td>セッション</td><td>{rehearsal.get("successes", "—")}成功 / {rehearsal.get("sessions", "—")}実行、中央値 {rehearsal.get("median_seconds", "未計測")}秒、p95 {rehearsal.get("p95_seconds", "未計測")}秒</td></tr>
@@ -524,7 +520,7 @@ def main():
 :root{{--paper:#f4f2eb;--ink:#24392d;--sub:#697466;--green:#315d44;--line:#d7ddd0}}*{{box-sizing:border-box}}body{{margin:0;background:var(--paper);color:var(--ink);font:15px/1.9 system-ui,-apple-system,sans-serif}}main{{max-width:1120px;margin:auto;padding:65px 32px 90px}}header{{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--line);padding-bottom:24px}}.brand{{font:42px Georgia,serif;letter-spacing:-2px}}.brand b{{color:#bd6841;font-size:17px}}.meta{{font-size:11px;color:var(--sub)}}h1{{font-weight:500;font-size:clamp(32px,4vw,52px);line-height:1.5;letter-spacing:-1.5px;margin:50px 0 22px}}h2{{font-size:27px;font-weight:500;margin:55px 0 20px}}h3{{font-size:17px;font-weight:600;margin:35px 0 14px}}h4{{font-size:13px;font-weight:600;margin:0 0 8px;color:var(--sub)}}p{{color:var(--sub)}}a{{color:var(--green);text-underline-offset:3px}}.badge{{display:inline-block;padding:7px 14px;border-radius:40px;background:#e3eadc;color:var(--green);font-size:11px;margin:0 8px 8px 0}}.warn{{background:#efdecf;color:#8f502f}}.lead{{font-size:17px;max-width:860px}}.stats{{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin:35px 0}}.stat{{border-top:1px solid var(--line);padding-top:18px}}.stat strong{{display:block;font:34px Georgia,serif;color:var(--green)}}.stat span{{font-size:12px;color:var(--sub)}}.panel{{background:#e8eddf;border:1px solid #d9e1ce;padding:24px 28px;border-radius:7px}}.panel.caution{{background:#f1e6da;border-color:#e4cbb5}}.grid{{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:22px}}.grid.small-grid{{grid-template-columns:repeat(auto-fill,minmax(150px,1fr))}}figure{{margin:20px 0}}figure img{{display:block;width:100%;border:1px solid var(--line);border-radius:7px}}figcaption{{font-size:12px;color:var(--sub);margin-top:9px;overflow-wrap:anywhere}}.mini-grid{{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:24px}}.mini-grid img{{width:100%;border-radius:5px;border:1px solid var(--line)}}.topic-shots{{margin-bottom:8px}}table{{width:100%;border-collapse:collapse;font-size:13px}}th,td{{text-align:left;vertical-align:top;padding:13px 14px;border-bottom:1px solid var(--line)}}th{{font-weight:500;background:#e9ecdf}}code{{font-family:ui-monospace,monospace;font-size:.88em;overflow-wrap:anywhere}}pre{{overflow:auto;padding:22px;background:#24392d;color:#f0f2e8;border-radius:6px;font-size:12px;line-height:1.8}}ul{{padding-left:22px;color:var(--sub)}}.scroll{{overflow:auto}}footer{{margin-top:60px;border-top:1px solid var(--line);padding-top:22px;font-size:11px;color:var(--sub)}}.button{{display:inline-block;background:var(--green);color:white;padding:12px 22px;border-radius:5px;text-decoration:none}}.small{{font-size:12px}}@media(max-width:650px){{main{{padding:30px 20px}}.stats{{grid-template-columns:1fr 1fr}}.meta{{max-width:160px;text-align:right}}th,td{{padding:10px 7px;font-size:11px}}}}
 </style></head><body><main><header><div class="brand">fan<b> ●</b></div><div class="meta">IMPLEMENTATION & LOCAL REHEARSAL<br>{measured}</div></header>
 <h1>同じ一文から、あなたの一枚を。<br>実装と、実機で確かめたこと。</h1>{"".join(badges)}
-<p class="lead">好きな画像を3〜5枚選ぶと、その画像に付けた確認済みの説明文を参照に、同じお題・同じseed・同じ生成設定のまま Illustrious XL v2.0 が描き直します。個人化は<a href="https://github.com/Burf/FAN">FAN</a>（Foundation Encoders Are All You Need, CVPR 2026）公式実装。方式を伏せたブラインド比較で、来場者自身に違いを確かめてもらう構成です。詳細は<a href="../../superpowers/specs/2026-09-21-fan-exhibition-demo-design.md">設計書</a>を参照。旧 ZIPP-style persona × PIGReward 構成は履歴として <a href="../zipp-demo/index.html">docs/reports/zipp-demo/</a> に残しています。</p>
+<p class="lead">好きな画像を3〜5枚選ぶと、その画像に付けた確認済みの説明文を参照に、同じお題・同じseed・同じ生成設定のまま Illustrious XL v2.0 が描き直します。個人化は<a href="https://github.com/Burf/FAN">FAN</a>（Foundation Encoders Are All You Need, CVPR 2026）公式実装。パーソナライズなし・ありの4枚ずつを同じseedで並べ、来場者自身に違いを確かめてもらう構成です。詳細は<a href="../../superpowers/specs/2026-09-21-fan-exhibition-demo-design.md">設計書</a>を参照。旧 ZIPP-style persona × PIGReward 構成は履歴として <a href="../zipp-demo/index.html">docs/reports/zipp-demo/</a> に残しています。</p>
 {stats}
 <p><a class="button" href="http://localhost:7860">デモを開く ↗</a>　<a href="../../../exhibit/assets/fallback.html">サーバー不要のサンプルHTML</a>　<a href="evidence.json">計測記録 JSON</a></p>
 {browser_section}
@@ -540,7 +536,7 @@ def main():
 <li>「来場者ごとの追加学習なし」と言います。「追加モデル・重みが一切ない」とは言いません — FAN公式実装の <code>ClassTokenDecoder</code>（<code>weight/L.pth</code>, <code>weight/bigG.pth</code>）を使っています。</li>
 <li>参照は「選んだ画像に付けた確認済みの説明文」です。画像そのものをエンコーダーへ入れているとは説明しません。</li>
 <li>反映を強くするほど良いとは言いません。targetとのバランスは来場者が判断します。</li>
-<li>論文の定量結果をこの展示の性能として使いません。ブラインド比較の集計は少人数の記録であり、性能主張にしません。</li>
+<li>論文の定量結果をこの展示の性能として使いません。比較表示は見た目の確認であり、性能主張にしません。</li>
 <li>Attentionの値から「この画像がこの色を生んだ」といった因果説明はしません。参照に使った画像・説明文・強度だけを表示します。</li>
 <li>個人化時の pooled 埋め込みは、<code>ClassTokenDecoder</code> がpadding tokenを終端と誤検出するため使わず、同じ文の参照なし pooled を使います（意図した上流からの逸脱。詳細は <a href="../../../exhibit/README.md">exhibit/README.md</a>）。</li>
 </ul></div>

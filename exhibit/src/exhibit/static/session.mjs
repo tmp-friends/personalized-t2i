@@ -15,26 +15,19 @@ export function selectionComplete(selection, limits = DEFAULT_SELECTION) {
 /** Which screen a restored (sessionStorage) session should resume on. */
 export function initialScreen(session, limits = DEFAULT_SELECTION) {
   if (!session) return "welcome";
-  const run = session.run;
-  if (run) return run.blind?.revealed ? "result" : "blind";
+  if (session.run) return "compare";
   return selectionComplete(session.selection, limits) ? "topics" : "cards";
 }
 
 /**
  * The identity a poll request is tied to. A response is only accepted while all
- * of these still hold: same session, same run, same newest variant, same reveal
- * state. Anything the visitor does in the meantime invalidates in-flight polls.
+ * of these still hold: same session, same run. Anything the visitor does in the
+ * meantime invalidates in-flight polls.
  */
 export function pollIdentity(session) {
   const run = session?.run;
   if (!session?.id || !run) return null;
-  const variants = Array.isArray(run.variants) ? run.variants : [];
-  return {
-    sid: session.id,
-    run: run.id ?? null,
-    variant: variants.length ? (variants[variants.length - 1].id ?? null) : null,
-    revealed: Boolean(run.blind?.revealed),
-  };
+  return { sid: session.id, run: run.id ?? null };
 }
 
 export function createPoller({
@@ -52,16 +45,12 @@ export function createPoller({
     Boolean(a) &&
     Boolean(b) &&
     a.sid === b.sid &&
-    a.run === b.run &&
-    a.variant === b.variant &&
-    a.revealed === b.revealed;
-  // A snapshot from another session/run, or one that has forgotten a reveal we
-  // already saw, is older than what the screen shows.
+    a.run === b.run;
+  // A snapshot from another session/run is older than what the screen shows.
   const fresh = (requested, result) =>
     Boolean(result) &&
     result.id === requested.sid &&
-    (result.run?.id ?? null) === requested.run &&
-    !(requested.revealed && result.run?.blind && !result.run.blind.revealed);
+    (result.run?.id ?? null) === requested.run;
   function stop() {
     generation++;
     if (timer !== null) unschedule(timer);

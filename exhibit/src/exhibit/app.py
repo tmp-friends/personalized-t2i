@@ -86,14 +86,7 @@ class Selection(Body):
 
 class Generate(Body):
     topic_id: str = Field(max_length=30)
-    alpha: str = Field(default="mid", max_length=20)
-    weights: dict[str, str] = Field(default_factory=dict)
     request_id: str = Field(min_length=1, max_length=100)
-
-
-class Blind(Body):
-    pair_index: int = Field(ge=0, le=15)
-    pick: str = Field(max_length=100)
 
 
 class Sample(Body):
@@ -130,12 +123,8 @@ def config():
             }
             for topic in CONFIG["topics"]
         ],
-        "alphas": CONFIG["alphas"],
-        "alpha_labels": CONFIG["alpha_labels"],
-        "weights": CONFIG["weights"],
-        "weight_labels": CONFIG["weight_labels"],
+        "alpha": CONFIG["alpha"],
         "selection": CONFIG["selection"],
-        "max_variants": CONFIG["max_variants"],
         "idle_seconds": CONFIG["idle_seconds"],
         "timeout_seconds": CONFIG["timeout_seconds"],
         "samples": [
@@ -180,19 +169,7 @@ def selection(sid: str, body: Selection):
 
 @app.post("/api/sessions/{sid}/runs")
 def generate(sid: str, body: Generate):
-    return service.start_run(
-        sid, body.topic_id, body.alpha, body.weights, body.request_id
-    )
-
-
-@app.post("/api/sessions/{sid}/blind")
-def blind(sid: str, body: Blind):
-    return service.pick_blind(sid, body.pair_index, body.pick)
-
-
-@app.post("/api/sessions/{sid}/reveal")
-def reveal(sid: str):
-    return service.reveal(sid)
+    return service.start_run(sid, body.topic_id, body.request_id)
 
 
 @app.post("/api/sessions/{sid}/sample")

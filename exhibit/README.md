@@ -28,39 +28,36 @@ cd fan-repro && uv sync --locked && uv run python scripts/prepare_upstream.py
 ## 操作
 
 1. 4被写体 × 4表現の16枚から好きなカードを3〜5枚選びます。任意で「どこが好き？」から色・光・描画・雰囲気の側面を外せます（外した句は参照から消えます）。
-2. 6お題から1つ選び「描く」を押すと、通常生成（参照なし）と個人化生成（`alpha=0.5`）をseedごとに1対ずつ表示します。**どちらがどちらかは伏せたまま**、好きな方か「決められない」を選びます。
-3. 4対に答えるか「答えを見る」で reveal。使った参照・説明文・`alpha`、そしてお題の文が変わっていないことを表示します。
-4. reveal 後に `alpha`（弱0.35/中0.5/強0.6）と参照ごとの重み（通常1.0/重視2.0/外す）を変えて描き直せます。1 run につき variant は最大3、同じ設定は「同一条件のキャッシュ」として再利用します。
-5. 終了／90秒の無操作で一時データを削除します。処理中は無操作リセットを停止し、120秒の処理期限を適用します。
-6. 「中止」はワーカーを終了させます。ブラインド比較（v0）を答え合わせ前に中止した場合は、何も見せていないので run ごと破棄し、選び直しへ戻ります。reveal 後の描き直し（v1以降）を中止した場合は、その variant だけを中止扱いにし、run と完成済みの画像は残します。
-7. 答え合わせ後（またはサンプル表示中）は、別のお題を選ぶと新しい run として最初から比較し直します。生成中のお題変更は受け付けません。
-
-参照が0件になる操作（全部「外す」）は受け付けません。最低1件です。
+2. 6お題から1つ選び「描く」を押すと、パーソナライズなし（参照なしの通常生成）の4枚と、パーソナライズあり（`alpha=0.5`）の4枚を、同じseedの順で上下に並べて表示します。「パーソナライズに渡したもの」を開くと、使った参照・説明文・`alpha`、そしてお題の文が変わっていないことを確認できます。
+3. 終了／90秒の無操作で一時データを削除します。処理中は無操作リセットを停止し、120秒の処理期限を適用します。
+4. 「中止」はワーカーを終了させます。比較が成立しないので run ごと破棄し、お題選択へ戻ります。
+5. 別のお題を選ぶと新しい run として最初から比較し直します。同じお題をもう一度選んだ場合は、完成済みの比較をそのまま表示します。生成中のお題変更は受け付けません。
 
 ## 現在の採用モード
 
-**FAN実生成 + ブラインド比較**。来場者ごとの追加学習はしません。
+**FAN実生成 + パーソナライズなし・ありの比較表示**。来場者ごとの追加学習はしません。
 
 - 参照は「選んだ画像に付けた確認済みの説明文」です。画像そのものをエンコーダーへ入れてはいません。参照には被写体語を含めず、表現の句だけを使います。
 - FAN 公式実装の `ClassTokenDecoder`（`weight/L.pth` / `weight/bigG.pth`）を使います。「追加モデル・重みが一切ない」とは説明しません。
 - 通常も個人化も同じ `prompt_embeds` 経路です。参照なしのFANエンコードは `pipe.encode_prompt` と一致することをG0スパイクで確認しました。負のプロンプトは常に参照なしで1回だけエンコードし、全画像で使い回します。
 - **上流からの意図的な逸脱**: 個人化時の pooled 埋め込みは、`ClassTokenDecoder` がpadding tokenを終端と誤検出するため使わず、同じ文の参照なし pooled を使います（hidden states は個人化、pooled は plain）。画像イベントに `pooled: "plain"` として記録します。
 - 「外す」は重み0ではなく参照リストからの除去として実装しています。
-- 参照は**側面ごとの短い句**を重複排除して渡します。同じ句が複数のカードから来た場合は1件にまとめ、weightを合算します（例: `calm atmosphere` が2枚から選ばれれば weight 2.0、片方が「重視」なら 3.0）。
+- 参照は**側面ごとの短い句**を重複排除して渡します。同じ句が複数のカードから来た場合は1件にまとめ、weightを合算します（例: `calm atmosphere` が2枚から選ばれれば weight 2.0）。
 
 ### 検証で決めた設定
 
-G0の追試で次を確定しました。`skip_pa=[0,1,2,3,4,5,6,7]`（personalized attentionを前半8層で行わない）にすると、参照全体に掛かっていた一般的な「もや」が消え、α=0.6まで被写体・構図・衣装などの指定が保たれます。`use_attn_mask=true` はα=0（参照の影響ゼロのはず）でも target のエンコードを変えてしまい（plainとのcos類似 0.59）、無効のまま固定します。参照は1枚1文の長い束ね方をやめ、側面ごとの短い句を重複排除・weight合算で渡します（長い束ね方は構図が大きく振られました）。pooled は個人化せず plain を使います（上流のClassTokenDecoderがpadding tokenを終端と誤検出するため）。追試では α=0.7 で「東京の夜景と青年」の人物指定（1boy）が崩れ、0.8 では緑の瞳が失われたため、強は 0.6 を上限にしています。warm_soft の光の句は `warm golden hour light, gentle shadows` にすると暖色と線の鮮明さが保たれたため採用しました。これらは `alphas`（弱0.35/中0.5/強0.6）とともに `configs/demo.json` の `fan` に固定し、personalization hash に含めています。
+G0の追試で次を確定しました。`skip_pa=[0,1,2,3,4,5,6,7]`（personalized attentionを前半8層で行わない）にすると、参照全体に掛かっていた一般的な「もや」が消え、α=0.6まで被写体・構図・衣装などの指定が保たれます。`use_attn_mask=true` はα=0（参照の影響ゼロのはず）でも target のエンコードを変えてしまい（plainとのcos類似 0.59）、無効のまま固定します。参照は1枚1文の長い束ね方をやめ、側面ごとの短い句を重複排除・weight合算で渡します（長い束ね方は構図が大きく振られました）。pooled は個人化せず plain を使います（上流のClassTokenDecoderがpadding tokenを終端と誤検出するため）。追試では α=0.7 で「東京の夜景と青年」の人物指定（1boy）が崩れ、0.8 では緑の瞳が失われたため、上限 0.6 の内側の 0.5 を使っています。warm_soft の光の句は `warm golden hour light, gentle shadows` にすると暖色と線の鮮明さが保たれたため採用しました。これらは `alpha`（0.5）とともに `configs/demo.json` に固定し、personalization hash に含めています。
 
 実測は `exhibit/outputs/fan-probe/followup/followup.json`（`outputs/` はGit管理外）。確定した数値とサンプル画像はHTMLレポート `docs/reports/fan-demo/` に転記します。
 - Attentionの値から「この色はこの画像由来」といった因果説明はしません。表示するのは参照画像・説明文・強度だけです。
-- ブラインド比較の集計は少人数の記録であり、性能主張には使いません。論文の定量結果をこの展示の性能として扱いません。
+- 比較表示は見た目の確認であり、性能主張には使いません。論文の定量結果をこの展示の性能として扱いません。
 
 ## APIメモ
 
-- `run.mode` は `live | sample` で、`run.blind.revealed` とは独立です。`variants[].mode` は `live | exact-cache | sample`。サンプルは `revealed: true` で始まりますが、`mode` はいずれも `sample` のままです。実生成の run は reveal の前後で `mode` が変わりません。
-- reveal 前のスナップショットは `blind.mapping` / `blind.score` / `plain` / `variants[0].images` / `variants[0].personalization` を含みません。ブラインド画像は `/api/sessions/{sid}/images/blind/<token>.png` だけで配信し、同じ run の `…/plain-N.png` や `…/v0/v0-N.png` を直接叩くと reveal 前は404です（バイト比較での種明かしを防ぐため）。
-- `variants[].mode` が `exact-cache` の場合、同じ体験中に同一条件で生成済みの画像を再利用しています。
+- 1 run = `run.plain`（パーソナライズなし4枚）+ `run.personal`（あり4枚）です。`POST /api/sessions/{sid}/runs` が受け取るのは `topic_id` と `request_id` だけで、`alpha` は `configs/demo.json` の単一値（0.5）、参照の重みは同じ説明文を持つカードの枚数です。
+- `run.mode` は `live | exact-cache | sample` です。
+- `run.plain` は run の開始時点から4枚そろっています（事前生成キャッシュ）。`run.personal` は生成できた順に増えます。画像はすべて `/api/sessions/{sid}/images/<relative_path>` で配信します。
+- `run.mode` が `exact-cache` の場合、同じ体験中に同じ好み・同じお題で生成済みの画像を再利用しています（別のお題を見てから元のお題へ戻ったときなど）。
 
 ## 生成モデルとモチーフ
 
@@ -115,6 +112,6 @@ uv run --project exhibit python exhibit/scripts/rehearsal.py --sessions 20
 uv run --project exhibit python exhibit/scripts/browser_check.py --report-dir docs/reports/fan-demo
 ```
 
-`fan_probe.py`（G0）は参照なしFANエンコードの一致・速度・VRAMを、`rehearsal.py` は連続セッションのwall/p95を、`browser_check.py` は実Chromiumで「3枚選択→お題→ブラインド4対→reveal→調整→再生成→終了」を確認します。ブラウザー試験のChromiumは `EXHIBIT_CHROMIUM` で指定できます。GPUを使うコマンド同士は同時実行しないでください。
+`fan_probe.py`（G0）は参照なしFANエンコードの一致・速度・VRAMを、`rehearsal.py` は連続セッションのwall/p95を、`browser_check.py` は実Chromiumで「3枚選択→お題→なし・ありの比較表示→別のお題→中止→終了」を確認します。ブラウザー試験のChromiumは `EXHIBIT_CHROMIUM` で指定できます。GPUを使うコマンド同士は同時実行しないでください。
 
 第三者5人での理解度確認と2時間連続稼働は別の展示受入作業です。実施済みの内容・計測範囲・残項目はHTMLレポートに記載します。

@@ -57,9 +57,7 @@ def sample_records(root):
             {"card_id": ids[number * 3 + offset], "aspects_off": []}
             for offset in range(3)
         ]
-        personalization = build_personalization(
-            selection, {entry["card_id"]: "normal" for entry in selection}, "mid"
-        )
+        personalization = build_personalization(selection)
         for topic in CONFIG["topics"][:2]:
             sample_id = f"s{number + 1}-{topic['id']}"
             images = []
@@ -83,7 +81,6 @@ def sample_records(root):
                     "id": sample_id,
                     "topic_id": topic["id"],
                     "label": f"サンプル{number + 1} · {topic['label']}",
-                    "alpha_key": "mid",
                     "selection": selection,
                     "personalization": personalization,
                     "mode": "sample",

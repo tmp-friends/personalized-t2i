@@ -1,10 +1,9 @@
 #!/usr/bin/env python3
-"""Real Chromium rehearsal of the FAN blind-comparison flow; never mocks the API.
+"""Real Chromium rehearsal of the FAN comparison flow; never mocks the API.
 
-Drives: welcome -> pick 3 cards (one aspect toggled off) -> topics -> blind (4
-pairs) -> answer 3 of 4 -> reveal -> mobile check -> adjust alpha/refs and
-regenerate -> repeat the same setting (exact-cache) -> reload -> another topic
--> cancel mid-blind -> finish -> sample -> reset.
+Drives: welcome -> pick 3 cards (one aspect toggled off) -> topics -> compare
+(4 plain + 4 personalized) -> mobile check -> reload -> same topic again ->
+another topic -> cancel mid-generation -> finish -> sample -> reset.
 
 Against the real server (``--url http://127.0.0.1:7860``, no ``--mock``) two
 checks read the GPU worker's own event log from disk (``OUTPUTS/sessions/...``)
@@ -28,9 +27,9 @@ DEFAULT_CHROMIUM = (
 )
 
 
-def worker_image_events(sid, run_id, variant_id):
-    """Parse the GPU worker's ``events.jsonl`` for one variant, if it ran locally."""
-    base = OUTPUTS / "sessions" / sid / run_id / variant_id
+def worker_image_events(sid, run_id):
+    """Parse the GPU worker's ``events.jsonl`` for one run, if it ran locally."""
+    base = OUTPUTS / "sessions" / sid / run_id / "personal"
     events = []
     for path in sorted(base.glob("generate-*/events.jsonl")):
         for line in path.read_text().splitlines():
@@ -47,10 +46,9 @@ def image_records(run):
     """Every image dict the snapshot exposes, for a generic personalization-hash check."""
     for image in run.get("plain") or []:
         yield None, image
-    for variant in run.get("variants") or []:
-        hash_ = (variant.get("personalization") or {}).get("hash")
-        for image in variant.get("images") or []:
-            yield hash_, image
+    hash_ = (run.get("personalization") or {}).get("hash")
+    for image in run.get("personal") or []:
+        yield hash_, image
 
 
 def main():
@@ -136,71 +134,39 @@ def main():
         page.screenshot(path=shots / "03-topics.png", full_page=True)
         checks.append("proceed to topics and pick one")
 
-        # ------------------------------------------------- 03 blind (4 pairs)
+        # --------------------------------------------------------- 03 compare
         started = time.monotonic()
         with page.expect_response(lambda r: "/runs" in r.url):
             page.locator("#generate").click()
-        page.wait_for_selector(".pair-row")
-        page.screenshot(path=shots / "04-blind-generating.png", full_page=True)
+        page.wait_for_selector(".image-grid")
+        page.screenshot(path=shots / "04-compare-generating.png", full_page=True)
         page.wait_for_function(
-            "() => document.querySelectorAll('.pair-row').length === 4 &&"
-            " document.querySelectorAll('.pair-grid .placeholder').length === 0",
+            "() => document.querySelectorAll('.shot').length === 8 &&"
+            " document.querySelectorAll('.image-grid .placeholder').length === 0",
             timeout=150000,
         )
-        blind_wait_seconds = round(time.monotonic() - started, 2)
-        checks.append(f"all 4 blind pairs ready within 150s ({blind_wait_seconds}s)")
+        generate_wait_seconds = round(time.monotonic() - started, 2)
+        checks.append(
+            f"4 plain + 4 personalized images shown within 150s ({generate_wait_seconds}s)"
+        )
+        page.screenshot(path=shots / "05-compare.png", full_page=True)
 
         sid = page.evaluate('sessionStorage.getItem("fan-session")')
-        pre_reveal = page.request.get(f"{base_url}/api/sessions/{sid}").json()
-        pre_run = pre_reveal["run"]
-        run_id = pre_run["id"]
-        assert pre_run["blind"]["mapping"] is None, "mapping leaked before reveal"
-        assert pre_run["plain"] == [], "plain images leaked before reveal"
-        assert pre_run["variants"][0]["images"] == [], (
-            "variant images leaked before reveal"
-        )
-        direct = page.request.get(
-            f"{base_url}/api/sessions/{sid}/images/{run_id}/plain-0.png"
-        )
-        assert direct.status == 404, "direct plain image path must 404 before reveal"
-        checks.append(
-            "pre-reveal snapshot hides mapping/plain/variant images and 404s direct path"
-        )
-
-        page.locator(".pair-row").nth(0).locator(".pair").nth(0).click()
-        page.locator(".pair-row").nth(1).locator(".pair").nth(0).click()
-        page.wait_for_function(
-            "() => document.querySelectorAll('.pair-row.answered').length === 2"
-        )
-        page.locator(".pair-row").nth(2).locator(".tie").click()
-        page.wait_for_function(
-            "() => document.querySelectorAll('.pair-row.answered').length === 3"
-        )
-        checks.append("pick A on pairs 0-1, tie on pair 2, leave pair 3 unanswered")
-
-        # -------------------------------------------------------- 04 reveal
-        with page.expect_response(lambda r: "/reveal" in r.url):
-            page.locator("#reveal").click()
-        page.wait_for_selector(".adjust, .error-message")
-        page.screenshot(path=shots / "05-result.png", full_page=True)
-
         data = page.request.get(f"{base_url}/api/sessions/{sid}").json()
         run = data["run"]
-        assert run["blind"]["revealed"] is True
-        score = run["blind"]["score"]
-        assert score["answered"] == 3, score
-        assert score["tie"] == 1, score
+        run_id = run["id"]
+        assert "blind" not in run, "the blind comparison is gone"
         assert len(run["plain"]) == 4
-        v0 = run["variants"][0]
-        assert len(v0["images"]) == 4
-        assert [x["seed"] for x in run["plain"]] == [x["seed"] for x in v0["images"]]
+        assert "variants" not in run
+        assert len(run["personal"]) == 4
+        assert [x["seed"] for x in run["plain"]] == [x["seed"] for x in run["personal"]]
         assert [x["seed"] for x in run["plain"]] == CONFIG["seeds"]
         for expected_hash, image in image_records(run):
             if "personalization_hash" in image:
                 assert image["personalization_hash"] == expected_hash
         # One reference per distinct aspect phrase, merged across the 3 selected
         # cards (see exhibit.domain.build_personalization); not one ref per card.
-        refs = v0["personalization"]["refs"]
+        refs = run["personalization"]["refs"]
         assert refs, "no references at all"
         contributing = {cid for ref in refs for cid in ref.get("card_ids", [])}
         assert set(card_ids) <= contributing, (card_ids, contributing)
@@ -211,13 +177,13 @@ def main():
             )
         assert all(r["weight"] == len(r["card_ids"]) for r in refs), refs
         if not args.mock:
-            events = worker_image_events(sid, run_id, "v0")
-            assert events, "no worker image events found for v0 (real generation only)"
+            events = worker_image_events(sid, run_id)
+            assert events, "no worker image events found (real generation only)"
             assert all(e["settings"] == CONFIG["generation"] for e in events)
             assert all(e["pooled"] == "plain" for e in events)
-        personal_image_url = v0["images"][0]["url"]
+        personal_image_url = run["personal"][0]["url"]
         checks.append(
-            "reveal: score, matched seeds, references merged by phrase with aspect-off honored"
+            "compare: matched seeds, references merged by phrase with aspect-off honored"
             + ("" if args.mock else ", worker settings/pooled")
         )
 
@@ -228,57 +194,21 @@ def main():
         page.set_viewport_size({"width": 1440, "height": 1100})
         checks.append("mobile 390x844 has no horizontal scroll")
 
-        # ------------------------------------------------------------ adjust
-        page.locator('[data-alpha="strong"]').click()
-        page.locator(f'[data-weight="emphasis"][data-card="{card_ids[0]}"]').click()
-        page.locator(f'[data-weight="exclude"][data-card="{card_ids[1]}"]').click()
-        with page.expect_response(lambda r: "/runs" in r.url):
-            page.locator("#regen").click()
-        page.wait_for_function(
-            "(n) => document.querySelectorAll('.variant').length === n &&"
-            " document.querySelectorAll('.variant')[0].querySelectorAll('.placeholder').length === 0",
-            arg=2,
-            timeout=150000,
-        )
-        page.screenshot(path=shots / "07-adjusted.png", full_page=True)
-        data = page.request.get(f"{base_url}/api/sessions/{sid}").json()
-        run = data["run"]
-        assert len(run["variants"]) == 2, run["variants"]
-        v1 = run["variants"][1]
-        v1_refs = v1["personalization"]["refs"]
-        assert v1_refs, "no references after adjusting weights"
-        weight_of = {card_ids[0]: 2.0, card_ids[2]: 1.0}  # card_ids[1] excluded
-        for ref in v1_refs:
-            assert card_ids[1] not in ref["card_ids"], (
-                "the excluded card must not contribute any reference",
-                ref,
-            )
-            expected = sum(weight_of[cid] for cid in ref["card_ids"])
-            assert ref["weight"] == expected, (ref, expected)
-        contributing = {cid for ref in v1_refs for cid in ref["card_ids"]}
-        assert contributing == {card_ids[0], card_ids[2]}, contributing
-        checks.append(
-            "adjust alpha=strong, emphasis+exclude: excluded card drops out, "
-            "remaining weights match emphasis/normal exactly"
-        )
-
-        # ------------------------------------------------- same setting again
-        with page.expect_response(lambda r: "/runs" in r.url):
-            page.locator("#regen").click()
-        page.wait_for_function(
-            "(n) => document.querySelectorAll('.variant').length === n",
-            arg=3,
-            timeout=150000,
-        )
-        page.get_by_text("同一条件のキャッシュ", exact=True).wait_for(timeout=15000)
-        page.screenshot(path=shots / "08-cache.png", full_page=True)
-        checks.append("same setting again reuses the exact-cache badge")
-
         # --------------------------------------------------------- reload
         page.reload()
-        page.get_by_text("THE ANSWER").wait_for()
-        page.wait_for_selector(".adjust, .error-message")
-        checks.append("reload keeps the result screen")
+        page.get_by_text("SAME PROMPT, SAME SEEDS").wait_for()
+        assert page.locator(".shot").count() == 8
+        checks.append("reload keeps the comparison")
+
+        # ------------------------------------------- same topic again: no rerun
+        page.locator("#another").click()
+        page.wait_for_selector(".topic")
+        page.locator(f'.topic[data-topic="{topic_id}"]').click()
+        page.locator("#generate").click()
+        page.wait_for_selector(".image-grid")
+        again = page.request.get(f"{base_url}/api/sessions/{sid}").json()["run"]
+        assert again["id"] == run_id
+        checks.append("the same topic again shows the finished comparison as is")
 
         # ---------------------------------------------------- another topic
         page.locator("#another").click()
@@ -287,19 +217,16 @@ def main():
         page.locator(f'.topic[data-topic="{other_topic}"]').click()
         with page.expect_response(lambda r: "/runs" in r.url):
             page.locator("#generate").click()
-        page.wait_for_selector(".pair-row")
+        page.wait_for_selector("#cancel")
         checks.append("another topic starts a fresh comparison")
 
-        # ------------------------------------------------- cancel mid-blind
+        # ---------------------------------------------- cancel mid-generation
         with page.expect_response(lambda r: "/cancel" in r.url):
             page.locator("#cancel").click()
-        page.wait_for_function(
-            "(n) => document.querySelectorAll('.card.selected').length === n",
-            arg=len(card_ids),
-        )
-        page.screenshot(path=shots / "09-cards-preselected.png", full_page=True)
-        assert page.locator(".card.selected").count() == len(card_ids)
-        checks.append("cancel mid-blind drops the run back to preselected cards")
+        page.wait_for_selector(".topic")
+        page.screenshot(path=shots / "07-topics-after-cancel.png", full_page=True)
+        assert page.request.get(f"{base_url}/api/sessions/{sid}").json()["run"] is None
+        checks.append("cancel mid-generation drops the run back to the topic picker")
 
         # -------------------------------------------------------------- finish
         with page.expect_response(lambda r: r.url.endswith(f"/sessions/{sid}")):
@@ -315,9 +242,8 @@ def main():
                 page.locator("#sample").click()
             page.wait_for_selector(".shot")
             assert page.locator(".shot").count() == 8, "expected 4 plain + 4 personal"
-            assert page.locator(".adjust").count() == 0, "sample must not offer adjust"
-            page.screenshot(path=shots / "10-sample.png", full_page=True)
-            checks.append("sample picker shows 8 images with no adjust panel")
+            page.screenshot(path=shots / "08-sample.png", full_page=True)
+            checks.append("sample picker shows 4 plain + 4 personalized images")
             page.locator("#reset").click()
             page.get_by_role("button", name="体験をはじめる").wait_for()
 
@@ -327,7 +253,7 @@ def main():
             "browser": "Chromium headless / actual localhost",
             "url": base_url,
             "mock": args.mock,
-            "blind_wait_seconds": blind_wait_seconds,
+            "generate_wait_seconds": generate_wait_seconds,
             "run": run,
             "checks": checks,
             "page_errors": errors,
@@ -341,7 +267,7 @@ def main():
         print(
             json.dumps(
                 {
-                    "blind_wait_seconds": blind_wait_seconds,
+                    "generate_wait_seconds": generate_wait_seconds,
                     "checks": checks,
                     "errors": errors,
                     "external_requests": external,

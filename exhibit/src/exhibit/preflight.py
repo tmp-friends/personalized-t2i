@@ -227,11 +227,7 @@ def sample_errors(sample, root=ASSETS):
     selection = sample.get("selection")
     personalization = sample.get("personalization") or {}
     try:
-        rebuilt = build_personalization(
-            selection,
-            {entry["card_id"]: "normal" for entry in selection},
-            sample.get("alpha_key", "mid"),
-        )
+        rebuilt = build_personalization(selection)
     except (KeyError, TypeError, ValueError):
         rebuilt = None
         fail("selection is unusable")

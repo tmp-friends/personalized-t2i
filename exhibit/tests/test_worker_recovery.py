@@ -77,32 +77,21 @@ def test_worker_death_preserves_image_and_next_session_can_generate(
         service.set_selection(
             sid, [{"card_id": IDS[i], "aspects_off": []} for i in range(3)]
         )
-        service.start_run(sid, "cat", "mid", {}, request_id)
+        service.start_run(sid, "cat", request_id)
         deadline = time.monotonic() + 15
         while service.busy and time.monotonic() < deadline:
             time.sleep(0.01)
         assert not service.busy, "Coordinator did not release the failed worker"
-        return sid, service.reveal(sid)["run"]
+        return sid, service.snapshot(sid)["run"]
 
     sid, run = generate("recovery")
     assert run["status"] == "done"
     assert run["error"] == expected_error
     assert len(run["plain"]) == 4
-    variant = run["variants"][0]
-    assert len(variant["images"]) == 1
-    assert variant["error"] == expected_error
-    # The partial result is still a usable blind pair; the rest never became ready.
-    assert [pair["ready"] for pair in run["blind"]["pairs"]] == [
-        True,
-        False,
-        False,
-        False,
-    ]
-    completed = variant["images"][0]
+    assert len(run["personal"]) == 1
+    completed = run["personal"][0]
     artifact = service.artifact(sid, completed["relative_path"])
-    assert artifact.read_bytes() == b"v0-0"
-    token = run["blind"]["pairs"][0]["items"][0]["token"]
-    assert service.artifact(sid, f"blind/{token}.png").is_file()
+    assert artifact.read_bytes() == b"personal-0"
     with pytest.raises(ProcessLookupError):
         os.kill(int(marker.read_text()), 0)
     if failure == "memory":
@@ -118,5 +107,5 @@ def test_worker_death_preserves_image_and_next_session_can_generate(
     next_sid, next_run = generate("recovery-2")
     assert next_run["status"] == "done"
     assert next_run["error"] is None
-    assert len(next_run["variants"][0]["images"]) == 4
+    assert len(next_run["personal"]) == 4
     service.reset(next_sid)
