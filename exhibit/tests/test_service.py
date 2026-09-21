@@ -575,6 +575,10 @@ def test_feedback_answers_only_the_current_finished_run_once(
     sid = prepared(service)
     run_id = start(service, sid)["run"]["id"]
     settle(service)
+    # The record on disk is written before `done` is published, yet must say so.
+    finished = run_json(service, sid, run_id)
+    assert finished["status"] == "done" and finished["error"] is None
+    assert len(finished["personal"]) == 4
     with pytest.raises(ValueError):
         service.set_feedback(sid, run_id, 1, "best")
     with pytest.raises(Conflict):

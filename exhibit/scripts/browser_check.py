@@ -390,7 +390,9 @@ def run_checks(base_url, args, mock):
         )
 
         # ------------------------------------------------- 07 optional answer
+        # A real worker exits a moment after its last image; the panel follows `done`.
         feedback = page.locator(".feedback")
+        feedback.wait_for()
         assert feedback.count() == 1
         body = feedback.inner_text()
         for banned in ("ブラインド", "評価実験", "当てて"):

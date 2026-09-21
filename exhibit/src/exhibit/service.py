@@ -558,7 +558,16 @@ class Service:
         if self._usable_cache(cached, run, session_root):
             images = copy.deepcopy(cached["images"])
             timings = copy.deepcopy(cached["timings"])
-            self._run_json(sid, {**run, "personal": images, "timings": timings})
+            self._run_json(
+                sid,
+                {
+                    **run,
+                    "personal": images,
+                    "timings": timings,
+                    "status": "done",
+                    "mode": "exact-cache",
+                },
+            )
             publish(
                 personal=images,
                 timings=timings,
@@ -634,6 +643,7 @@ class Service:
                     "personal": images,
                     "timings": timings,
                     "metrics": metrics,
+                    "status": "done",
                     "error": str(exc),
                 },
             )
@@ -648,7 +658,13 @@ class Service:
             return
         self._run_json(
             sid,
-            {**run, "personal": images, "timings": timings, "metrics": metrics},
+            {
+                **run,
+                "personal": images,
+                "timings": timings,
+                "metrics": metrics,
+                "status": "done",
+            },
         )
         publish(
             personal=images,
