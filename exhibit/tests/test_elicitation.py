@@ -323,6 +323,76 @@ def test_unreviewed_cards_are_never_offered_or_selectable():
         )
 
 
+def uneven_reviewed_ids(cards, quotas):
+    """A lopsided reviewed set: `girl` nearly complete, `barista` barely started."""
+    reviewed = set()
+    for subject, quota in quotas.items():
+        rows = sorted(
+            (card for card in cards if card["subject_id"] == subject),
+            # lowest levels first, so the axes are unevenly covered too
+            key=lambda card: (sum(card["axis_levels"][a] for a in ASPECTS), card["id"]),
+        )
+        reviewed.update(card["id"] for card in rows[:quota])
+    return reviewed
+
+
+def test_rounds_survive_an_unevenly_reviewed_catalog():
+    """Design §6.1 runs on the cards that passed; the rounds must still hold."""
+    cards = build_catalog(read_json(ROOT / "configs/catalog-v2.json"))
+    quotas = {"girl": 16, "student": 12, "traveler": 8, "barista": 4}
+    reviewed = uneven_reviewed_ids(cards, quotas)
+    catalog = catalog_of(cards, reviewed=reviewed, catalog_id="catalog-v2")
+    assert len(catalog["cards"]) == 40
+
+    shown, rounds = [], []
+    for index in range(SELECTION["max_rounds"]):
+        value = next_round(
+            catalog,
+            empty(catalog),
+            shown_ids=list(shown),
+            round_index=index,
+            session_seed="seed-a",
+        )
+        assert set(value["card_ids"]) <= reviewed
+        assert not set(value["card_ids"]) & set(shown)
+        assert len(value["card_ids"]) <= ROUND_SIZE
+        assert (value["shortfall_reason"] is None) is (
+            len(value["card_ids"]) == ROUND_SIZE
+        )
+        rounds.append(value)
+        shown.extend(value["card_ids"])
+    assert len(shown) == len(set(shown)) == 34
+    # The last round runs out of subjects, not of cards, and says so.
+    assert [value["shortfall_reason"] for value in rounds] == [
+        None,
+        None,
+        "subject_cap_limit",
+    ]
+
+
+def test_an_unevenly_reviewed_catalog_reports_its_shortfall():
+    """A thin, lopsided reviewed set reports the existing reason, and never crashes."""
+    cards = build_catalog(read_json(ROOT / "configs/catalog-v2.json"))
+    quotas = {"girl": 10, "student": 6, "traveler": 3, "barista": 1}
+    reviewed = uneven_reviewed_ids(cards, quotas)
+    catalog = catalog_of(cards, reviewed=reviewed, catalog_id="catalog-v2")
+    first = first_round(catalog)
+    assert len(first["card_ids"]) == ROUND_SIZE
+    assert first["subject_cap_relaxed"] is True
+    assert first["shortfall_reason"] is None
+
+    later = next_round(
+        catalog,
+        empty(catalog),
+        shown_ids=list(first["card_ids"]),
+        round_index=1,
+        session_seed="seed-a",
+    )
+    assert len(later["card_ids"]) == 6
+    assert not set(later["card_ids"]) & set(first["card_ids"])
+    assert later["shortfall_reason"] == "insufficient_unseen_cards"
+
+
 def test_a_stale_catalog_hash_is_refused():
     catalog = v2_catalog()
     stale = {**empty(catalog), "catalog_hash": "stale"}

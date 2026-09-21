@@ -225,3 +225,62 @@ def test_prepare_v2_writes_only_v2_manifest_with_bound_token_report(
         manifest["generation"]["negative_prompt"]
         != CONFIG["generation"]["negative_prompt"]
     )
+
+
+def _recording_stage(module, monkeypatch, generated):
+    def stage(request, name):
+        generated.append((name, [item["id"] for item in request["items"]]))
+        events = []
+        for item in request["items"]:
+            path = Path(item["path"])
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_bytes(f"{item['id']}:run{len(generated)}".encode())
+            events.append(
+                {
+                    "type": "image",
+                    "id": item["id"],
+                    "path": str(path),
+                    "sha256": file_hash(path),
+                    "seed": item["seed"],
+                    "prompt": item["prompt"],
+                    "settings": request["settings"],
+                }
+            )
+        return events
+
+    monkeypatch.setattr(module, "stage", stage)
+
+
+def test_prepare_v2_only_regenerates_the_named_cards_and_keeps_the_manifest(
+    tmp_path, monkeypatch
+):
+    """Swapping one card costs one generation, and leaves every other entry alone."""
+    module = load_script("prepare")
+    assets, _, _, cards = _configure_prepare(
+        module, tmp_path, monkeypatch, overflow=False
+    )
+    generated = []
+    _recording_stage(module, monkeypatch, generated)
+    module.prepare_cards("v2")
+    before = json.loads((assets / "catalog-v2.json").read_text())["images"]
+
+    target = cards[3]["id"]
+    module.prepare_cards("v2", only=[target, target])
+    after = json.loads((assets / "catalog-v2.json").read_text())["images"]
+
+    assert generated[1] == ("catalog-v2/card-images-partial", [target])
+    assert list(after) == list(before) == [card["id"] for card in cards]
+    assert after[target]["sha256"] != before[target]["sha256"]
+    assert all(after[key] == before[key] for key in before if key != target)
+
+
+def test_prepare_v2_only_rejects_an_unknown_card(tmp_path, monkeypatch):
+    module = load_script("prepare")
+    _configure_prepare(module, tmp_path, monkeypatch, overflow=False)
+    calls = []
+    monkeypatch.setattr(
+        module, "stage", lambda *args, **kwargs: calls.append(args) or []
+    )
+    with pytest.raises(RuntimeError, match="Unknown catalog-v2 card: girl-nope"):
+        module.prepare_cards("v2", only=["girl-nope"])
+    assert calls == []

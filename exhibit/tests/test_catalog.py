@@ -19,11 +19,14 @@ from exhibit import catalog as catalog_module
 
 # The pairs the phrase pilot found contradictory; catalog-v2.json states why.
 FORBIDDEN_PAIRS = (
+    ("color", "lighting", 0, 1),
+    ("color", "lighting", 3, 3),
+    ("color", "texture", 1, 0),
+    ("color", "texture", 3, 3),
+    ("lighting", "texture", 2, 0),
+    ("lighting", "texture", 2, 3),
     ("lighting", "texture", 3, 0),
     ("lighting", "texture", 3, 2),
-    ("lighting", "texture", 2, 3),
-    ("color", "lighting", 0, 1),
-    ("color", "lighting", 3, 0),
 )
 
 
@@ -141,7 +144,10 @@ def write_v2_bundle(root, review_path, *, reviewed=True):
             "settings": settings,
         }
         reviews[card["id"]] = {
-            "reviewed": reviewed,
+            # `reviewed` is a flag for every card, or the set that passed.
+            "reviewed": reviewed
+            if isinstance(reviewed, bool)
+            else card["id"] in reviewed,
             "image_sha256": images[card["id"]]["sha256"],
             "description_hash": description_hash(card),
             "aspects": {aspect: True for aspect in ASPECTS},
@@ -180,8 +186,8 @@ def test_v2_build_has_a_balanced_explicit_16_profile_design():
     """The 16 profiles are listed, not derived; the list is balanced and legal."""
     cards = build_catalog(definition())
     assert len(cards) == 64
-    assert cards[0]["id"] == "girl-c0-l0-t0-m0"
-    assert cards[-1]["id"] == "barista-c3-l3-t3-m1"
+    assert cards[0]["id"] == "girl-c0-l0-t0-m2"
+    assert cards[-1]["id"] == "barista-c3-l2-t1-m3"
     assert len({card["id"] for card in cards}) == 64
     assert len({card["profile_id"] for card in cards}) == 16
     for subject in ("girl", "student", "traveler", "barista"):
@@ -198,13 +204,13 @@ def test_v2_build_has_a_balanced_explicit_16_profile_design():
                 != (first, second)
                 for card in rows
             ), (left, right, first, second)
-        # 90 of the 96 level pairs occur, five of the six gaps being forbidden.
+        # 85 of the 96 level pairs occur; eight of the eleven gaps are forbidden.
         pairs = Counter(
             (left, right, card["axis_levels"][left], card["axis_levels"][right])
             for left, right in combinations(ASPECTS, 2)
             for card in rows
         )
-        assert len(pairs) == 90
+        assert len(pairs) == 85
         assert max(pairs.values()) == 2
         assert all("c" not in card["profile_label"] for card in rows)
         assert all(card["label"].startswith(card["subject_label"]) for card in rows)
@@ -237,6 +243,10 @@ def test_v2_build_has_a_balanced_explicit_16_profile_design():
         lambda value: value.update(forbidden_level_pairs=[]),
         lambda value: value["forbidden_level_pairs"][0].pop("reason"),
         lambda value: value["forbidden_level_pairs"][0].update(axes=["color", "color"]),
+        lambda value: value.update(seed_overrides=[]),
+        lambda value: value.update(seed_overrides={"girl-nope": 11}),
+        lambda value: value.update(seed_overrides={"girl-c0-l0-t0-m2": "11"}),
+        lambda value: value.update(seed_overrides={"girl-c0-l0-t0-m2": 601}),
     ],
 )
 def test_build_catalog_rejects_malformed_or_noncanonical_definitions(mutate):
@@ -244,6 +254,37 @@ def test_build_catalog_rejects_malformed_or_noncanonical_definitions(mutate):
     mutate(value)
     with pytest.raises(ValueError):
         build_catalog(value)
+
+
+def test_seed_overrides_reroll_one_card_and_invalidate_only_its_review(reviewed_v2):
+    """A per-card seed changes that card's contract; the other 63 stay reviewed."""
+    value = definition()
+    assert value["seed_overrides"] == {}
+    target = "girl-c0-l0-t0-m2"
+    value["seed_overrides"] = {target: 9601}
+    cards = {card["id"]: card for card in build_catalog(value)}
+    assert cards[target]["seed"] == 9601
+    assert all(
+        card["seed"] == 601
+        for card_id, card in cards.items()
+        if card_id.startswith("girl-") and card_id != target
+    )
+    assert cards["student-c0-l0-t0-m2"]["seed"] == 602
+
+
+def test_a_seed_override_invalidates_only_that_card(reviewed_v2, tmp_path, monkeypatch):
+    value = definition()
+    target = "girl-c0-l0-t0-m2"
+    value["seed_overrides"] = {target: 9601}
+    changed = tmp_path / "catalog-definition.json"
+    changed.write_text(json.dumps(value))
+    monkeypatch.setattr(catalog_module, "V2", changed)
+    loaded = load_catalog(
+        "catalog-v2", assets=reviewed_v2["root"], review_path=reviewed_v2["review"]
+    )
+    assert {item["id"] for item in loaded["cards"]} == {
+        card["id"] for card in reviewed_v2["cards"]
+    } - {target}
 
 
 def test_v2_cards_are_generated_with_the_catalog_only_negative_prompt():
@@ -282,7 +323,7 @@ def test_v2_loader_accepts_a_fully_reviewed_synthetic_catalog(reviewed_v2):
         review_path=reviewed_v2["review"],
     )
     assert len(loaded["cards"]) == len(loaded["all_cards"]) == 64
-    assert loaded["cards"][0]["id"] == "girl-c0-l0-t0-m0"
+    assert loaded["cards"][0]["id"] == "girl-c0-l0-t0-m2"
 
 
 @pytest.mark.parametrize("tamper", ["bytes", "sha"])
@@ -316,7 +357,7 @@ def test_v2_review_is_invalidated_by_description_changes(
     loaded = load_catalog(
         "catalog-v2", assets=reviewed_v2["root"], review_path=reviewed_v2["review"]
     )
-    assert "girl-c0-l0-t0-m0" not in {item["id"] for item in loaded["cards"]}
+    assert "girl-c0-l0-t0-m2" not in {item["id"] for item in loaded["cards"]}
 
 
 @pytest.mark.parametrize(

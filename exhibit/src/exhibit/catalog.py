@@ -132,6 +132,23 @@ def _profiles(definition):
     return levels
 
 
+def _seed_overrides(definition, seeds):
+    """Per-card seeds, so one bad card can be re-rolled without touching the rest."""
+    value = definition["seed_overrides"]
+    if not isinstance(value, dict) or any(
+        not isinstance(card_id, str) for card_id in value
+    ):
+        raise ValueError("seed_overrides must map card IDs to seeds")
+    for card_id, seed in value.items():
+        if card_id not in seeds:
+            raise ValueError(f"seed_overrides names an unknown card: {card_id}")
+        if type(seed) is not int:
+            raise ValueError(f"seed_overrides must hold integers: {card_id}")
+        if seed == seeds[card_id]:
+            raise ValueError(f"seed_overrides repeats the subject seed: {card_id}")
+    return value
+
+
 def card_negative_prompt(definition):
     """The card-only negative prompt; the exhibit's own negative never changes."""
     value = (
@@ -163,6 +180,7 @@ def build_catalog(definition):
         "axes_ja",
         "forbidden_level_pairs",
         "profiles",
+        "seed_overrides",
         "card_negative_prompt",
         "generation",
     }
@@ -201,6 +219,14 @@ def build_catalog(definition):
 
     cards = []
     profiles = _profiles(definition)
+    seeds = {
+        "{}-c{color}-l{lighting}-t{texture}-m{mood}".format(
+            subject["id"], **levels
+        ): subject["seed"]
+        for subject in subjects
+        for levels in profiles
+    }
+    overrides = _seed_overrides(definition, seeds)
     for subject in subjects:
         for levels in profiles:
             profile_id = "c{color}-l{lighting}-t{texture}-m{mood}".format(**levels)
@@ -225,7 +251,7 @@ def build_catalog(definition):
                         list(aspects.values()),
                         definition["generation"],
                     ),
-                    "seed": subject["seed"],
+                    "seed": overrides.get(card_id, subject["seed"]),
                     "path": f"cards-v2/{card_id}.png",
                 }
             )

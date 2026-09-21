@@ -103,7 +103,8 @@ def image_records(events, extra=None):
     }
 
 
-def prepare_cards(catalog="v1"):
+def prepare_cards(catalog="v1", only=None):
+    """Generate the card images; `only` re-rolls named v2 cards and keeps the rest."""
     if catalog == "v2":
         definition = read_json(ROOT / "configs/catalog-v2.json")
         cards = {card["id"]: card for card in build_catalog(definition)}
@@ -132,18 +133,26 @@ def prepare_cards(catalog="v1"):
             )
         except (OSError, TypeError, ValueError) as exc:
             raise RuntimeError("v2 card token validation report is invalid") from exc
+        selected = list(cards)
+        if only is not None:
+            unknown = [card_id for card_id in only if card_id not in cards]
+            if unknown:
+                raise RuntimeError("Unknown catalog-v2 card: " + ", ".join(unknown))
+            selected = list(dict.fromkeys(only))
+            if not selected:
+                raise RuntimeError("--only needs at least one card id")
         items = [
             {
-                "id": card["id"],
-                "prompt": card["prompt"],
-                "seed": card["seed"],
-                "path": str(ASSETS / card["path"]),
+                "id": card_id,
+                "prompt": cards[card_id]["prompt"],
+                "seed": cards[card_id]["seed"],
+                "path": str(ASSETS / cards[card_id]["path"]),
             }
-            for card in cards.values()
+            for card_id in selected
         ]
         events = stage(
             {"stage": "generate", "items": items, "settings": settings},
-            "catalog-v2/card-images",
+            "catalog-v2/card-images" + ("-partial" if only is not None else ""),
         )
         fields = (
             "ref_en",
@@ -159,6 +168,11 @@ def prepare_cards(catalog="v1"):
             events,
             extra=lambda key: {field: cards[key][field] for field in fields},
         )
+        if only is not None:
+            # Untouched cards keep the manifest entry their own review is bound to.
+            previous = (read_json(ASSETS / "catalog-v2.json", {}) or {}).get("images")
+            images = {**(previous if isinstance(previous, dict) else {}), **images}
+        images = {card_id: images[card_id] for card_id in cards if card_id in images}
         write_json(
             ASSETS / "catalog-v2.json",
             {
@@ -170,7 +184,8 @@ def prepare_cards(catalog="v1"):
             },
         )
         print(
-            "v2 cards prepared; review them in configs/cards-v2-review.json",
+            f"v2 cards prepared ({len(items)} generated, {len(images)} in the "
+            "manifest); review them in configs/cards-v2-review.json",
             flush=True,
         )
         return
@@ -262,9 +277,17 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("step", choices=["cards", "generic", "samples"])
     parser.add_argument("--catalog", choices=["v1", "v2"], default="v1")
+    parser.add_argument(
+        "--only",
+        nargs="+",
+        metavar="CARD_ID",
+        help="regenerate just these catalog-v2 cards and keep the rest of the manifest",
+    )
     args = parser.parse_args()
+    if args.only is not None and (args.step != "cards" or args.catalog != "v2"):
+        parser.error("--only applies to `cards --catalog v2`")
     if args.step == "cards":
-        prepare_cards(args.catalog)
+        prepare_cards(args.catalog, only=args.only)
     else:
         {"generic": prepare_generic, "samples": prepare_samples}[args.step]()
 
