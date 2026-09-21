@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <meta name="theme-color" content="#0b0d0c" />
+    <meta name="theme-color" content="#100d0c" />
     <title>FAN — 同じ一文から、あなたの一枚を。</title>
     <link rel="stylesheet" href="/static/style.css" />
     <script type="module" src="/static/app.js"></script>
@@ -11,17 +11,19 @@
   <body>
     <header>
       <a class="brand" href="/" aria-label="FAN ホーム"
-        >fan<span class="brand-dot">●</span></a
-      ><span class="exhibit-label"
-        >SAME PROMPT <i>YOUR PICTURE</i></span
-      ><button id="reset" class="quiet" hidden>体験を終了 ↗</button>
+        ><span class="brand-mark" aria-hidden="true"
+          ><svg viewBox="0 0 24 24" fill="none" stroke-linecap="round">
+            <path d="M6 19V6M6 19l9.2-9.2M6 19h13" stroke-width="2.4" />
+            <path d="M6 6a13 13 0 0 1 13 13" stroke-width="1.6" /></svg></span
+        >FAN</a
+      ><span class="exhibit-label">同じ一文から、あなたの一枚を</span
+      ><button id="reset" class="ghost" hidden>体験を終了</button>
     </header>
     <main id="app" aria-live="polite"></main>
     <div id="error" role="alert" hidden></div>
     <footer>
       <span>入力文も生成モデルも変えていません。</span
-      ><a href="/fallback">サンプルと手法の説明 ↗</a
-      ><span>LOCAL EXHIBITION · FAN</span>
+      ><a href="/fallback">サンプルと手法の説明</a>
     </footer>
   </body>
 </html>

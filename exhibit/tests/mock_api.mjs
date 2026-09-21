@@ -135,8 +135,13 @@ const CONFIG = {
   idle_seconds: IDLE_SECONDS,
   timeout_seconds: 120,
   samples: [
-    { id: "s1-cat", topic_id: "cat", label: "S1 · 窓辺で猫と過ごす少女" },
-    { id: "s2-tokyo", topic_id: "tokyo", label: "S2 · 夜の街を歩く" },
+    {
+      id: "s1-cat",
+      topic_id: "cat",
+      label: "S1 · 窓辺で猫と過ごす少女",
+      preview_url: "/assets/cards/girl-warm_soft.png",
+    },
+    { id: "s2-tokyo", topic_id: "tokyo", label: "S2 · 夜の街を歩く", preview_url: null },
   ],
   ready: true,
 };
@@ -274,6 +279,7 @@ const TYPES = {
   ".js": "text/javascript; charset=utf-8",
   ".mjs": "text/javascript; charset=utf-8",
   ".css": "text/css; charset=utf-8",
+  ".woff2": "font/woff2",
 };
 function send(res, status, body, type = "application/json") {
   const payload = type.startsWith("application/json") ? JSON.stringify(body) : body;
@@ -305,7 +311,8 @@ function readBody(req) {
 function serveStatic(res, name) {
   const file = path.join(STATIC, path.basename(name));
   if (!fs.existsSync(file)) return fail(res, 404, "not found");
-  send(res, 200, fs.readFileSync(file, "utf8"), TYPES[path.extname(file)] || "text/plain");
+  const binary = path.extname(file) === ".woff2";
+  send(res, 200, fs.readFileSync(file, binary ? null : "utf8"), TYPES[path.extname(file)] || "text/plain");
 }
 
 const server = http.createServer(async (req, res) => {

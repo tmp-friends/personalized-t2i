@@ -128,7 +128,12 @@ def config():
         "idle_seconds": CONFIG["idle_seconds"],
         "timeout_seconds": CONFIG["timeout_seconds"],
         "samples": [
-            {"id": s["id"], "topic_id": s["topic_id"], "label": s.get("label", s["id"])}
+            {
+                "id": s["id"],
+                "topic_id": s["topic_id"],
+                "label": s.get("label", s["id"]),
+                "preview_url": "/assets/" + s["images"][0]["path"],
+            }
             for s in samples
             if not sample_errors(s, ASSETS)
         ],
