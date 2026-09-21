@@ -1,19 +1,28 @@
 import copy
+import json
 
 import pytest
-from exhibit.config import CONFIG
+from exhibit.config import ASSETS, CONFIG
 from exhibit.domain import (
     CARDS,
+    FAN_SETTINGS,
     build_cards,
     build_legacy_personalization,
     fan_settings,
+    legacy_fan_manifest_block,
+    legacy_policy,
     normalize_selection,
     personalization_hash,
     ref_text,
     run_cache_key,
 )
+from exhibit.fan_adapter import profiling_argument
 
 IDS = list(CARDS)
+# Captured from the pre-migration configs/demo.json, whose root `alpha` and
+# `fan` encoder keys now live only in configs/fan-policies.json.
+LEGACY_SAMPLE_SELECTION = ("girl-warm_soft", "student-warm_soft", "barista-warm_soft")
+LEGACY_SAMPLE_HASH = "468e0bb1687af30c9d158da3bce8b94783cb0f7d6e7767d65a7cfee84dee4ed0"
 
 
 def selection(count=3, aspects_off=()):
@@ -79,10 +88,12 @@ def test_personalization_hash_changes_with_order_alpha_and_settings():
         [selection()[1], selection()[0], selection()[2]]
     )
     assert base["hash"] != swapped["hash"]
-    stronger = build_legacy_personalization(selection(), {**CONFIG, "alpha": 0.6})
+    stronger = build_legacy_personalization(
+        selection(), policy={**legacy_policy(), "alpha": 0.6}
+    )
     assert stronger["hash"] != base["hash"]
     assert build_legacy_personalization(selection())["hash"] == base["hash"]
-    assert base["alpha"] == CONFIG["alpha"] == 0.5
+    assert base["alpha"] == legacy_policy()["alpha"] == 0.5
 
     refs, alpha = base["refs"], base["alpha"]
     assert hash_with(refs, alpha) == base["hash"]
@@ -105,6 +116,32 @@ def test_the_measured_fan_settings_are_the_ones_that_are_hashed():
         "skip_pa": [0, 1, 2, 3, 4, 5, 6, 7],
         "use_attn_mask": False,
     }
+
+
+def test_the_legacy_hash_is_derived_from_the_policy_and_did_not_move():
+    """The v1 samples on disk stay valid: the same bytes, now from the policy."""
+    assert "alpha" not in CONFIG
+    assert not set(FAN_SETTINGS) & set(CONFIG["fan"])
+    entries = [
+        {"card_id": card_id, "aspects_off": []} for card_id in LEGACY_SAMPLE_SELECTION
+    ]
+    built = build_legacy_personalization(entries)
+    assert built["hash"] == LEGACY_SAMPLE_HASH
+    policy = legacy_policy()
+    assert built["alpha"] == policy["alpha"]
+    assert built["sample_size"] == profiling_argument(policy) == 0
+    # The asset manifest's inline encoder block is rebuilt from the same policy.
+    manifest = json.loads((ASSETS / "manifest.json").read_text())
+    assert legacy_fan_manifest_block() == manifest["fan"]
+    for knob, value in (
+        ("alpha", 0.6),
+        ("skip", -1),
+        ("skip_pa", [0]),
+        ("use_attn_mask", True),
+        ("profiling", {"mode": "count", "value": 2}),
+    ):
+        changed = build_legacy_personalization(entries, policy={**policy, knob: value})
+        assert changed["hash"] != LEGACY_SAMPLE_HASH
 
 
 def test_aspects_off_removes_only_that_phrase():

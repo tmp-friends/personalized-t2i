@@ -18,7 +18,7 @@ from .service import Conflict, Service, active_catalog, default_policy
 
 service = Service()
 STATIC = Path(__file__).parent / "static"
-REPORT = REPO / "docs/reports/fan-demo"
+REPORT = REPO / "docs/reports/fan-personalization"
 
 
 @asynccontextmanager
@@ -283,7 +283,7 @@ def reference(name: str):
         "readme": REPO / "exhibit/README.md",
         "fan": REPO / "fan-repro/README.md",
         "spec": REPO
-        / "docs/superpowers/specs/2026-09-21-fan-exhibition-demo-design.md",
+        / "docs/superpowers/specs/2026-09-21-fan-personalization-improvement-design.md",
     }
     if name not in references:
         raise HTTPException(404)

@@ -8,7 +8,7 @@ from types import ModuleType, SimpleNamespace
 
 import pytest
 from exhibit.config import CONFIG, FAN_POLICIES
-from exhibit.fan_adapter import resolve_policy, thaw_policy
+from exhibit.fan_adapter import profiling_argument, resolve_policy, thaw_policy
 
 from exhibit import workers
 
@@ -250,9 +250,12 @@ def test_the_encoder_is_built_once_and_only_references_differ(stubs, tmp_path):
     assert personal["alpha"] == 0.5
     assert personal_plain["prompt"] == personal["prompt"]
     assert personal_plain["refs"] is None and personal_plain["alpha"] is None
+    # The encoder settings come from the legacy policy, never from demo.json.
+    legacy = thaw_policy(resolve_policy("legacy_exhibit", FAN_POLICIES))
+    assert not {"skip", "sample_size", "skip_pa", "use_attn_mask"} & set(CONFIG["fan"])
     for call in stubs["encode"]:
-        assert call["skip"] == CONFIG["fan"]["skip"] == -2
-        assert call["sample_size"] == CONFIG["fan"]["sample_size"] == 0
+        assert call["skip"] == legacy["skip"] == -2
+        assert call["sample_size"] == profiling_argument(legacy) == 0
         # Measured settings: personalized attention is skipped in layers 0-7 and
         # the attention mask stays off, for the target and every reference alike.
         assert call["skip_pa"] == [0, 1, 2, 3, 4, 5, 6, 7]
@@ -388,6 +391,36 @@ def test_the_scheduler_comes_from_the_configuration(stubs, tmp_path):
     assert loaded["name"] == "DPMSolverMultistepScheduler"
     assert loaded["kwargs"] == SETTINGS["scheduler_kwargs"]
     assert loaded["config"]["name"] == "DPMSolverMultistepScheduler"
+
+
+def test_the_loaded_event_survives_a_strict_json_sink(stubs, tmp_path, monkeypatch):
+    """The real Karras SDE scheduler reports `lambda_min_clipped = -inf`."""
+    import json
+
+    original = sys.modules["diffusers"].DPMSolverMultistepScheduler.from_config
+
+    def with_infinity(config, **kwargs):
+        scheduler = original(config, **kwargs)
+        scheduler.config["lambda_min_clipped"] = float("-inf")
+        scheduler.config["nested"] = {"values": [float("nan"), 1.5]}
+        return scheduler
+
+    monkeypatch.setattr(
+        sys.modules["diffusers"].DPMSolverMultistepScheduler,
+        "from_config",
+        with_infinity,
+    )
+    events = []
+    workers.generate(
+        {**request_for(tmp_path, stubs["upstream"]), "items": []},
+        event_sink=lambda kind, **data: events.append(
+            json.dumps({"type": kind, **data}, allow_nan=False)
+        ),
+    )
+
+    config = json.loads(events[0])["scheduler"]["config"]
+    assert config["lambda_min_clipped"] == "-inf"
+    assert config["nested"] == {"values": ["nan", 1.5]}
 
 
 def test_settings_without_scheduler_kwargs_still_load(stubs, tmp_path):

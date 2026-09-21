@@ -1,146 +1,103 @@
 #!/usr/bin/env python3
-"""Build the FAN exhibition handoff HTML from actual local measurement artifacts.
+"""Assemble docs/reports/fan-personalization/ from what is actually on disk.
 
-Every section reads one on-disk artifact and degrades to "未計測" / "未準備"
-when that artifact is missing -- nothing here is invented. See
-docs/superpowers/specs/2026-09-21-fan-exhibition-demo-design.md for the design
-this implements and section 8/9 for the verification and wording rules quoted
-below.
+The three completion states of spec §0/§11 stay separate: 実装完了 / 実機検証 /
+精度実証. Every block is rendered as 未実施 / 不合格 / 合格 from exactly one
+artifact, with its missing rate and its reasons. A missing artifact is never a
+success, and nothing from the old ``outputs/fan-probe`` or
+``docs/reports/fan-demo`` is quoted as a current result.
+
+    PYTHONPATH=exhibit/src exhibit/.venv/bin/python exhibit/scripts/build_report.py
 """
 
+import argparse
 import base64
 import html
 import io
 import json
 import re
 from datetime import datetime
+from pathlib import Path
 from zoneinfo import ZoneInfo
 
+from exhibit.catalog import load_catalog
 from exhibit.config import (
     ASSETS,
-    CARDS_REVIEW,
     CONFIG,
+    FAN_POLICIES,
     OUTPUTS,
     REPO,
     read_json,
     write_json,
 )
-from exhibit.domain import CARDS, reviewed_ids
+from exhibit.domain import (
+    LEGACY_POLICY_ID,
+    build_legacy_personalization,
+    digest,
+    file_hash,
+    legacy_policy,
+)
 from PIL import Image
 
-REPORT = REPO / "docs/reports/fan-demo"
+REPORT = REPO / "docs/reports/fan-personalization"
+EVALUATION = OUTPUTS / "fan-evaluation"
+V2_REVIEW = REPO / "exhibit/configs/cards-v2-review.json"
+EXPERIMENT_DIR = re.compile(r"^[0-9a-f]{64}$")
+NOT_RUN, FAILED, PASSED = "未実施", "不合格", "合格"
+ORDER = {PASSED: 0, NOT_RUN: 1, FAILED: 2}
+PHASES = ("screen", "refine", "heldout")
 E = html.escape
 
 
-def thumb(path, size=160, quality=72):
-    """A small base64 JPEG data URI, or None if the file is missing/unreadable."""
+def block(state, *, reasons=(), detail=None, missing_rate=None, source=None):
+    """One judged artifact. `missing_rate` is None when nothing was measurable."""
+    return {
+        "state": state,
+        "reasons": list(reasons),
+        "detail": detail or {},
+        "missing_rate": missing_rate,
+        "source": str(source) if source else None,
+    }
+
+
+def combine(blocks):
+    """A section is only as complete as its weakest block; failure outranks all."""
+    states = [item["state"] for item in blocks.values()]
+    if not states:
+        return NOT_RUN
+    return max(states, key=lambda state: ORDER[state])
+
+
+def read_text(path):
     try:
-        image = Image.open(path).convert("RGB")
-    except (OSError, ValueError):
+        return Path(path).read_text()
+    except OSError:
         return None
-    image.thumbnail((size, size))
-    buf = io.BytesIO()
-    image.save(buf, format="JPEG", quality=quality)
-    return "data:image/jpeg;base64," + base64.b64encode(buf.getvalue()).decode()
 
 
-def card_grid():
-    reviewed = reviewed_ids(CARDS_REVIEW)
-    cards = []
-    for card_id, card in CARDS.items():
-        src = thumb(ASSETS / card["path"])
-        if not src:
-            continue
-        cards.append(
-            {
-                "id": card_id,
-                "label": card["label"],
-                "ref_en": card["ref_en"],
-                "reviewed": card_id in reviewed,
-                "src": src,
-            }
-        )
-    return cards
+def relative(path):
+    try:
+        return str(Path(path).relative_to(REPO))
+    except ValueError:
+        return str(path)
 
 
-def generic_grid():
-    topics = []
-    for topic in CONFIG["topics"]:
-        shots = [
-            thumb(ASSETS / "generic" / f"{topic['id']}-{i}.png")
-            for i in range(len(CONFIG["seeds"]))
-        ]
-        shots = [s for s in shots if s]
-        if shots:
-            topics.append({"id": topic["id"], "label": topic["label"], "shots": shots})
-    return topics
+# --------------------------------------------------------------------- 実装完了
 
 
-def sample_grid():
-    out = []
-    for sample in read_json(ASSETS / "samples.json", []) or []:
-        images = sample.get("images") or []
-        shots = [
-            thumb(ASSETS / image["path"])
-            for image in images
-            if isinstance(image, dict) and image.get("path")
-        ]
-        shots = [s for s in shots if s]
-        if shots:
-            out.append(
-                {
-                    "id": sample.get("id", "?"),
-                    "topic_id": sample.get("topic_id", "?"),
-                    "shots": shots,
-                }
-            )
-    return out
-
-
-def image_grid_html(items, caption_key="label"):
-    if not items:
-        return "<p>未準備。</p>"
-    return "".join(
-        f'<figure><img src="{item["src"]}" alt="{E(item.get("label", item.get("id", "")))}" loading="lazy">'
-        f"<figcaption>{E(item.get(caption_key, item.get('id', '')))}"
-        f"{' · 未確認' if caption_key == 'label' and not item.get('reviewed', True) else ''}"
-        f"</figcaption></figure>"
-        for item in items
-    )
-
-
-def topic_shots_html(topics):
-    if not topics:
-        return "<p>未準備。</p>"
-    return "".join(
-        f'<div class="topic-shots"><h4>{E(t["label"])}</h4><div class="mini-grid">'
-        + "".join(f'<img src="{s}" alt="{E(t["label"])}">' for s in t["shots"])
-        + "</div></div>"
-        for t in topics
-    )
-
-
-def sample_shots_html(samples):
-    if not samples:
-        return "<p>未準備。</p>"
-    return "".join(
-        f'<div class="topic-shots"><h4>{E(s["id"])} · {E(s["topic_id"])}</h4><div class="mini-grid">'
-        + "".join(f'<img src="{shot}" alt="{E(s["id"])}">' for shot in s["shots"])
-        + "</div></div>"
-        for s in samples
-    )
-
-
-def parse_pytest_count(log):
+def parse_pytest(log):
     if not log:
-        return None
-    m = re.search(r"(\d+) passed", log)
-    return int(m.group(1)) if m else None
+        return None, None
+    passed = re.search(r"(\d+) passed", log)
+    failed = re.search(r"(\d+) failed", log)
+    return (
+        int(passed.group(1)) if passed else None,
+        int(failed.group(1)) if failed else 0,
+    )
 
 
-def parse_node_test(log):
-    """node --test's default "spec" reporter prints "ℹ pass N" / "ℹ fail N";
-    the TAP reporter prints "# pass N" / "# fail N". Accept either."""
+def parse_node(log):
+    """node --test prints "ℹ pass N" (spec) or "# pass N" (TAP)."""
     if not log:
         return None, None
     passed = re.search(r"[ℹ#]\s*pass\s+(\d+)", log)
@@ -151,411 +108,891 @@ def parse_node_test(log):
     )
 
 
-def equivalence_row(name, entry):
-    hidden = entry.get("hidden", {})
-    pooled = entry.get("pooled", {})
-    return (
-        f"<tr><td>{E(name)}</td>"
-        f"<td>{hidden.get('mean_cosine', '—')}</td>"
-        f"<td>{hidden.get('max_abs_diff', '—')}</td>"
-        f"<td>{pooled.get('mean_cosine', '—')}</td>"
-        f"<td>{entry.get('encode_seconds', '—')}</td></tr>"
-    )
-
-
-def avg(values):
-    values = [v for v in values if v is not None]
-    return round(sum(values) / len(values), 1) if values else None
-
-
-def runs_by_key(container, key, value):
-    return [r for r in (container or []) if r.get(key) == value]
-
-
-def g0_settings_section(followup, final, ladder):
-    """The concrete settings G0/follow-up spikes settled on, and the evidence
-    for each -- 未計測 wherever a probe output is missing, never invented."""
-    followup = followup or {}
-    final = final or {}
-    ladder = ladder or {}
-    followup_runs = followup.get("runs") or []
-    final_runs = final.get("runs") or []
-
-    # skip_pa=[0..7] vs no personalized-attention skip at all.
-    skip_none = runs_by_key(followup_runs, "name", "04-setA-skipnone")
-    skip_07 = runs_by_key(followup_runs, "name", "04-setA-skip0to7")
-    lap_before = avg([r.get("laplacian_var") for r in skip_none])
-    lap_after = avg([r.get("laplacian_var") for r in skip_07])
-    sat_before = avg([r.get("saturation") for r in skip_none])
-    sat_after = avg([r.get("saturation") for r in skip_07])
-    skip_pa_line = (
-        f"skip_pa未指定（平均 laplacian_var {lap_before} → 平均 saturation {sat_before}）から "
-        f"skip_pa=[0..7]（平均 laplacian_var {lap_after} → 平均 saturation {sat_after}）で、"
-        f"ぼやけ（laplacian_var低下）と彩度低下が改善しました（{len(skip_none)}枚 vs {len(skip_07)}枚の記録）。"
-        if lap_before is not None and lap_after is not None
-        else "未計測。"
-    )
-
-    # use_attn_mask: alpha=0 でも参照なしと一致すべき pooled が崩れる。
-    mask1_cos = (
-        (followup.get("alpha0_vs_plain_mask1") or {}).get("mean_cosine")
-        if followup
-        else None
-    )
-    mask0_cos = (
-        (followup.get("alpha0_vs_plain_mask0") or {}).get("mean_cosine")
-        if followup
-        else None
-    )
-    mask_line = (
-        f"use_attn_mask=True では alpha=0（参照ゼロ相当）でも hidden state の平均コサイン類似度が "
-        f"{round(mask1_cos, 2)}まで下がり、参照なしのFANエンコードと一致しません"
-        f"（use_attn_mask=False では{round(mask0_cos, 4)}）。そのため use_attn_mask は無効のまま採用しています。"
-        if mask1_cos is not None
-        else "未計測。"
-    )
-
-    # split (aspect単位の短い句) vs bundled (カードごとの結合文) vs aspect-major (側面ごとにカードを束ねた1文)。
-    bundled_vs_split = followup.get("bundled_vs_split") or {}
-    split_line_bits = []
-    if bundled_vs_split:
-        mae_values = [
-            v for v in bundled_vs_split.values() if isinstance(v, (int, float))
-        ]
-        if mae_values:
-            split_line_bits.append(
-                f"one-long-ref-per-card（結合文）とsplit（側面ごとの短い句）は同じ参照でも "
-                f"画素MAEで{min(mae_values)}〜{max(mae_values)}の差が出ます"
-                f"（bundled_vs_split, {len(mae_values)}条件）。"
-            )
-    split6 = runs_by_key(final_runs, "case", "C-5cards-split-a0.6")
-    major6 = runs_by_key(final_runs, "case", "D-5cards-aspectmajor-a0.6")
-    if split6 and major6:
-        split_lap = [r.get("laplacian_var") for r in split6]
-        major_lap = [r.get("laplacian_var") for r in major6]
-        split_line_bits.append(
-            f"alpha=0.6でsplitとaspect-major（側面ごとにカードをまとめた1文）を比べると、"
-            f"laplacian_varはsplitが{split_lap}、aspect-majorが{major_lap}で、"
-            f"記録した{len(split6)}枚ともsplitが上回りました。"
+def tests_block():
+    python_log = read_text(OUTPUTS / "all-tests.log")
+    node_log = read_text(OUTPUTS / "js-tests.log")
+    py_passed, py_failed = parse_pytest(python_log)
+    node_passed, node_failed = parse_node(node_log)
+    detail = {
+        "python_passed": py_passed,
+        "python_failed": py_failed,
+        "node_passed": node_passed,
+        "node_failed": node_failed,
+    }
+    if py_passed is None and node_passed is None:
+        return block(
+            NOT_RUN,
+            reasons=["test_logs_missing"],
+            detail=detail,
+            source=OUTPUTS / "all-tests.log",
         )
-    split_line = (
-        " ".join(split_line_bits)
-        + " 現在の実装（exhibit.domain.build_legacy_personalization）は側面ごとの短い句を"
-        "カード横断でマージし、重みを合算する方式です。"
-        if split_line_bits
-        else "未計測。"
+    reasons = []
+    if py_passed is None:
+        reasons.append("python_log_missing")
+    if node_passed is None:
+        reasons.append("node_log_missing")
+    if py_failed:
+        reasons.append(f"python_failed:{py_failed}")
+    if node_failed:
+        reasons.append(f"node_failed:{node_failed}")
+    state = PASSED if not reasons else (FAILED if py_failed or node_failed else NOT_RUN)
+    return block(state, reasons=reasons, detail=detail, source=OUTPUTS)
+
+
+def preflight_block():
+    data = read_json(OUTPUTS / "preflight.json", None)
+    if not isinstance(data, dict):
+        return block(
+            NOT_RUN,
+            reasons=["preflight_not_run"],
+            source=OUTPUTS / "preflight.json",
+        )
+    models = data.get("models")
+    detail = {
+        "catalog_id": data.get("catalog_id"),
+        "reviewed_cards": data.get("reviewed_cards"),
+        "cards": data.get("cards"),
+        "fixed_images": data.get("fixed_images"),
+        "generic_images": data.get("generic_images"),
+        "samples": data.get("samples"),
+        "models_checked": bool(models),
+        "models_ready": models.get("ready") if isinstance(models, dict) else None,
+    }
+    errors = list(data.get("errors") or [])
+    if isinstance(models, dict):
+        errors.extend(models.get("errors") or [])
+    state = PASSED if data.get("ready") and not errors else FAILED
+    return block(
+        state, reasons=errors, detail=detail, source=OUTPUTS / "preflight.json"
     )
 
-    # alpha ladder.
-    alpha = CONFIG.get("alpha", "未計測")
-    ladder_runs = ladder.get("runs") or []
-    tokyo_baseline = avg(
-        [
-            r.get("laplacian_var")
-            for r in ladder_runs
-            if r.get("topic") == "tokyo" and r.get("set") == "baseline"
-        ]
+
+def legacy_invariant_block():
+    """The v1 samples must still rebuild to the hash stored beside their images."""
+    samples = read_json(ASSETS / "samples.json", None)
+    if not isinstance(samples, list) or not samples:
+        return block(
+            NOT_RUN, reasons=["samples_missing"], source=ASSETS / "samples.json"
+        )
+    mismatched, rebuilt = [], {}
+    for sample in samples:
+        sample_id = sample.get("id") if isinstance(sample, dict) else None
+        try:
+            value = build_legacy_personalization(sample["selection"])["hash"]
+        except (KeyError, TypeError, ValueError) as error:
+            mismatched.append(f"{sample_id}:{type(error).__name__}")
+            continue
+        rebuilt[sample_id] = value
+        if value != (sample.get("personalization") or {}).get("hash"):
+            mismatched.append(f"{sample_id}:hash_changed")
+    baseline = read_json(OUTPUTS / "preparation/legacy-baseline/baseline.json", None)
+    frozen = []
+    if isinstance(baseline, dict):
+        # The frozen v1 assets must be untouched; demo.json itself moved on purpose.
+        for path, expected in sorted((baseline.get("images") or {}).items()):
+            target = REPO / path
+            if not target.is_file() or file_hash(target) != expected:
+                frozen.append(path)
+        for path, expected in sorted((baseline.get("files") or {}).items()):
+            if path.startswith("exhibit/configs/"):
+                continue
+            target = REPO / path
+            if not target.is_file() or file_hash(target) != expected:
+                frozen.append(path)
+    detail = {
+        "samples": len(samples),
+        "sample_hashes": rebuilt,
+        "policy_id": LEGACY_POLICY_ID,
+        "effective_policy": legacy_policy(),
+        "frozen_assets_checked": bool(baseline),
+        "frozen_assets_changed": frozen,
+    }
+    reasons = mismatched + [f"changed:{path}" for path in frozen]
+    return block(
+        PASSED if not reasons else FAILED,
+        reasons=reasons,
+        detail=detail,
+        source=ASSETS / "samples.json",
     )
-    tokyo_07 = [
-        r.get("laplacian_var")
-        for r in ladder_runs
-        if r.get("topic") == "tokyo" and r.get("alpha") == 0.7
+
+
+# --------------------------------------------------------------------- 実機検証
+
+
+def encoding_block():
+    """The newest exact-policy encoding diagnostic, per policy."""
+    reports = sorted(
+        (EVALUATION / "diagnostics").glob("*/report.json"),
+        key=lambda path: path.stat().st_mtime,
+    )
+    if not reports:
+        return block(NOT_RUN, reasons=["encoding_not_run"], source=EVALUATION)
+    path = reports[-1]
+    report = read_json(path, None)
+    if not isinstance(report, dict) or not isinstance(report.get("policies"), dict):
+        return block(NOT_RUN, reasons=["encoding_report_unreadable"], source=path)
+    policies, failing = {}, []
+    for policy_hash, value in report["policies"].items():
+        eligibility = value.get("eligibility") or {}
+        name = value.get("policy_id") or policy_hash[:12]
+        policies[policy_hash] = {
+            "policy_id": name,
+            "passed": bool(eligibility.get("passed")),
+            "failed_checks": sorted(
+                {
+                    check
+                    for topics in (eligibility.get("failures") or {}).values()
+                    for checks in topics.values()
+                    for check in checks
+                }
+            ),
+        }
+        if not eligibility.get("passed"):
+            failing.append(name)
+    restoration = report.get("exception_restoration") or {}
+    detail = {
+        "policies": policies,
+        "policy_count": len(policies),
+        "passed_count": sum(1 for item in policies.values() if item["passed"]),
+        "fan_restored_after_exception": restoration.get("fan_restored_saved_forward"),
+        "versions": report.get("versions"),
+        "seconds": report.get("seconds"),
+    }
+    # §11 B asks whether the comparison ran, not whether every candidate passed.
+    # A candidate that fails the numerical gate is a recorded result; it blocks
+    # adoption in 精度実証, not the diagnostic itself. The exhibit's own policy
+    # failing, or a patch left in place, is a broken run.
+    reasons = [f"detected_numerical_failure:{name}" for name in sorted(failing)]
+    broken = [
+        f"exhibit_policy_failed:{name}"
+        for name in sorted(failing)
+        if name == LEGACY_POLICY_ID
     ]
-    lap_note = (
-        f"（傍証: tokyoのbaseline laplacian_varは約{tokyo_baseline}に対し、"
-        f"alpha=0.7では{tokyo_07}まで跳ね上がる記録があり、崩れと符合します）"
-        if tokyo_baseline is not None and tokyo_07
-        else ""
-    )
-    ladder_line = (
-        f"alpha={alpha} を採用しています。目視の確認では、alpha=0.7でtokyoのお題の"
-        f"1boyという被写体の指定が崩れ始め、alpha=0.8では緑の瞳の指定が失われました。{lap_note}"
-        "そのため上限0.6の内側の値を使っています。崩れの判定自体は目視によるもので、性能の定量主張ではありません。"
-    )
-
-    fan_conf = json.dumps(CONFIG.get("fan", {}), ensure_ascii=False, indent=2)
-
-    return f"""<h2>G0 で確定した設定と根拠</h2>
-<div class="panel"><ul>
-<li><b>skip_pa</b>：{skip_pa_line}</li>
-<li><b>use_attn_mask</b>：{mask_line}</li>
-<li><b>参照の分け方</b>：{split_line}</li>
-<li><b>alpha ladder</b>：{ladder_line}</li>
-<li><b>warm_soft の lighting</b>：既定の "soft lighting, gentle shadows" から
-"warm golden hour light, gentle shadows" に変更しました（ladder.json の reference_sets s1 → s1p）。
-現在の <code>configs/demo.json</code> にもこの文言が入っています。</li>
-<li><b>pooled</b>：常に参照なし（plain）の pooled embedding を使います。個人化するのは hidden state だけです。</li>
-</ul>
-<p class="small">いずれも少数seed・少数条件の記録であり、性能を主張するものではありません（設計書 §9）。</p>
-<p><b>configs/demo.json の fan ブロック</b></p>
-<pre>{E(fan_conf)}</pre>
-<p><b>configs/demo.json の alpha</b>：<code>{E(str(alpha))}</code></p>
-<a href="../../../exhibit/outputs/fan-probe/followup/followup.json">追加検証 JSON</a> ·
-<a href="../../../exhibit/outputs/fan-probe/final/final.json">最終確認 JSON</a> ·
-<a href="../../../exhibit/outputs/fan-probe/ladder/ladder.json">alpha ladder JSON</a></div>"""
-
-
-def sparkline(rows):
-    if not rows:
-        return "<p>セッション計測中。</p>"
-    points = " ".join(
-        f"{30 + i * 34},{150 - min(r.get('seconds', 0), 35) * 4}"
-        for i, r in enumerate(rows)
-    )
-    dots = "".join(
-        f'<circle cx="{30 + i * 34}" cy="{150 - min(r.get("seconds", 0), 35) * 4}" r="3" fill="#346347"/>'
-        for i, r in enumerate(rows)
-    )
-    return (
-        f'<svg viewBox="0 0 740 180" role="img" aria-label="セッションごとの実生成時間">'
-        f'<path d="M25 10V155H725" fill="none" stroke="#c6cdbf"/>'
-        f'<path d="M25 70H725" stroke="#d9ded1"/>'
-        f'<text x="27" y="66" fill="#6e796a" font-size="10">20秒</text>'
-        f'<polyline points="{points}" fill="none" stroke="#346347" stroke-width="3"/>{dots}'
-        f'<text x="27" y="177" font-size="10" fill="#6e796a">SESSION 01</text>'
-        f'<text x="642" y="177" font-size="10" fill="#6e796a">SESSION {len(rows):02d}</text></svg>'
+    if restoration and not restoration.get("fan_restored_saved_forward"):
+        broken.append("patch_not_restored_after_exception")
+    return block(
+        FAILED if broken else PASSED,
+        reasons=broken + reasons,
+        detail=detail,
+        missing_rate=0.0 if policies else None,
+        source=path,
     )
 
 
-def main():
-    REPORT.mkdir(parents=True, exist_ok=True)
-    browser = read_json(REPORT / "browser-evidence.json", {}) or {}
-    probe = read_json(OUTPUTS / "fan-probe/report.json", {}) or {}
-    followup = read_json(OUTPUTS / "fan-probe/followup/followup.json", {}) or {}
-    final = read_json(OUTPUTS / "fan-probe/final/final.json", {}) or {}
-    ladder = read_json(OUTPUTS / "fan-probe/ladder/ladder.json", {}) or {}
-    rehearsal = read_json(OUTPUTS / "rehearsal.json", {}) or {}
-    preflight = read_json(OUTPUTS / "preflight.json", {}) or {}
-    all_tests_log = (
-        (OUTPUTS / "all-tests.log").read_text()
-        if (OUTPUTS / "all-tests.log").is_file()
-        else None
+def browser_block(report_dir):
+    path = Path(report_dir) / "browser-evidence.json"
+    data = read_json(path, None)
+    if not isinstance(data, dict) or not data:
+        return block(NOT_RUN, reasons=["browser_check_not_run"], source=path)
+    summary = data.get("summary") if isinstance(data.get("summary"), dict) else data
+    errors = list(summary.get("errors") or [])
+    console = list(summary.get("console") or [])
+    external = list(summary.get("external_requests") or [])
+    failed = list(summary.get("failed_requests") or [])
+    detail = {
+        "url": data.get("url"),
+        "mock": data.get("mock"),
+        "checks": len(summary.get("checks") or []),
+        "page_errors": len(errors),
+        "console_messages": len(console),
+        "external_requests": len(external),
+        "failed_requests": len(failed),
+        "generate_wait_seconds": summary.get("generate_wait_seconds"),
+    }
+    reasons = []
+    if errors:
+        reasons.append(f"page_errors:{len(errors)}")
+    if console:
+        reasons.append(f"console_messages:{len(console)}")
+    if external:
+        reasons.append(f"external_requests:{len(external)}")
+    if failed:
+        reasons.append(f"failed_requests:{len(failed)}")
+    if data.get("mock"):
+        # A mock run proves the screen, not the machine; §11 B wants the server.
+        reasons.append("mock_api_only")
+    state = PASSED if not reasons else (NOT_RUN if data.get("mock") else FAILED)
+    return block(state, reasons=reasons, detail=detail, source=path)
+
+
+def rehearsal_block():
+    path = OUTPUTS / "rehearsal.json"
+    data = read_json(path, None)
+    if not isinstance(data, dict) or not data.get("sessions"):
+        return block(NOT_RUN, reasons=["rehearsal_not_run"], source=path)
+    sessions = data["sessions"]
+    successes = data.get("successes", 0)
+    over = data.get("runs_over_deadline") or []
+    detail = {
+        "sessions": sessions,
+        "successes": successes,
+        "runs": data.get("runs"),
+        "runs_measured": data.get("runs_measured"),
+        "median_seconds": data.get("median_seconds"),
+        "p95_seconds": data.get("p95_seconds"),
+        "max_seconds": data.get("max_seconds"),
+        "deadline_seconds": data.get("deadline_seconds"),
+        "peak_vram_mib": data.get("peak_vram_mib"),
+        "exact_cache_runs": data.get("exact_cache_runs"),
+        "cancelled_runs": data.get("cancelled_runs"),
+    }
+    reasons = []
+    if successes != sessions:
+        reasons.append(f"failed_sessions:{sessions - successes}")
+    reasons.extend(
+        f"session_{item.get('index')}:{item.get('failed_step')}"
+        for item in (data.get("failures") or [])
     )
-    js_tests_log = (
-        (OUTPUTS / "js-tests.log").read_text()
-        if (OUTPUTS / "js-tests.log").is_file()
-        else None
+    if over:
+        reasons.append(f"runs_over_deadline:{len(over)}")
+    missing = (sessions - successes) / sessions if sessions else None
+    return block(
+        PASSED if not reasons else FAILED,
+        reasons=reasons,
+        detail=detail,
+        missing_rate=missing,
+        source=path,
     )
-    py_passed = parse_pytest_count(all_tests_log)
-    node_passed, node_failed = parse_node_test(js_tests_log)
 
-    cards = card_grid()
-    reviewed_count = sum(1 for c in cards if c["reviewed"])
-    generic_topics = generic_grid()
-    samples = sample_grid()
 
-    measured = datetime.now(ZoneInfo("Asia/Tokyo")).strftime("%Y-%m-%d %H:%M JST")
+def catalog_v2_block():
+    """Generated, reviewed and why; the review file is the only proof of review."""
+    findings = read_json(OUTPUTS / "preparation/catalog-v2/review-findings.json", None)
+    manifest = read_json(ASSETS / "catalog-v2.json", None)
+    generated = len((manifest or {}).get("images") or {}) if manifest else 0
+    review = read_json(V2_REVIEW, {}) or {}
+    reviewed_entries = sum(
+        1
+        for value in review.values()
+        if isinstance(value, dict) and value.get("reviewed")
+    )
+    total, eligible = None, None
+    try:
+        catalog = load_catalog("catalog-v2", reviewed_only=True)
+        total = len(catalog["all_cards"])
+        eligible = len(catalog["cards"])
+    except (OSError, TypeError, ValueError) as error:
+        total, eligible = None, None
+        catalog_error = f"catalog_unreadable:{error}"
+    else:
+        catalog_error = None
+    detail = {
+        "generated": generated,
+        "expected": total,
+        "reviewed_entries": reviewed_entries,
+        "usable_cards": eligible,
+        "findings_present": isinstance(findings, dict),
+        "decision": (findings or {}).get("decision"),
+        "visual_findings": (findings or {}).get("visual_findings"),
+        "clip_probe": (findings or {}).get("clip_probe"),
+        "checked_by": (findings or {}).get("checked_by"),
+        "checked_at": (findings or {}).get("checked_at"),
+    }
+    reasons = []
+    if catalog_error:
+        reasons.append(catalog_error)
+    if not generated:
+        return block(
+            NOT_RUN,
+            reasons=reasons + ["catalog_v2_not_generated"],
+            detail=detail,
+            source=ASSETS / "catalog-v2.json",
+        )
+    if total and eligible == total:
+        return block(PASSED, reasons=reasons, detail=detail, source=V2_REVIEW)
+    if isinstance(findings, dict) and findings.get("decision"):
+        # A recorded, failed visual check is a result, not a missing measurement.
+        reasons.append(str(findings["decision"]))
+        state = FAILED
+    else:
+        reasons.append("未確認: review-findings.json がありません")
+        state = NOT_RUN
+    missing = None
+    if total:
+        missing = (total - (eligible or 0)) / total
+    return block(
+        state,
+        reasons=reasons,
+        detail=detail,
+        missing_rate=missing,
+        source=OUTPUTS / "preparation/catalog-v2/review-findings.json",
+    )
 
-    evidence = {
-        "generated_at": measured,
-        "browser": {k: v for k, v in browser.items() if k != "run"},
-        "fan_probe": {
-            k: v
-            for k, v in probe.items()
-            if k not in ("images", "class_token_detector")
-        },
-        "followup": {
-            k: v for k, v in followup.items() if k not in ("reference_sets", "runs")
-        },
-        "final": {k: v for k, v in final.items() if k != "runs"},
-        "ladder": {k: v for k, v in ladder.items() if k != "runs"},
-        "rehearsal": {k: v for k, v in rehearsal.items() if k != "rows"},
-        "preflight": preflight,
-        "tests": {
-            "python_passed": py_passed,
-            "node_passed": node_passed,
-            "node_failed": node_failed,
-        },
-        "assets": {
-            "cards_embedded": len(cards),
-            "cards_reviewed": reviewed_count,
-            "cards_total": len(CARDS),
-            "generic_topics_embedded": len(generic_topics),
-            "samples_embedded": len(samples),
-        },
-        "mode": "FAN実生成 + パーソナライズなし・ありの比較表示",
-        "limitations": [
-            "第三者5人の理解度確認は未実施",
-            "2時間連続稼働の実接続確認は未実施",
-            "比較表示はセッション内の見た目確認のみで、統計的優位性を主張しない",
+
+# --------------------------------------------------------------------- 精度実証
+
+
+def experiment_summaries():
+    """The newest summary.json per phase, keyed by phase name."""
+    found = {}
+    if not EVALUATION.is_dir():
+        return found
+    for directory in sorted(EVALUATION.iterdir()):
+        if not directory.is_dir() or not EXPERIMENT_DIR.match(directory.name):
+            continue
+        path = directory / "summary.json"
+        summary = read_json(path, None)
+        if not isinstance(summary, dict) or summary.get("phase") not in PHASES:
+            continue
+        phase = summary["phase"]
+        previous = found.get(phase)
+        if previous is None or path.stat().st_mtime > previous[0].stat().st_mtime:
+            found[phase] = (path, summary)
+    return found
+
+
+def experiment_block(phase, found):
+    entry = found.get(phase)
+    if entry is None:
+        return block(NOT_RUN, reasons=[f"{phase}_not_run"], source=EVALUATION)
+    path, summary = entry
+    decision = summary.get("decision") or {}
+    metrics = summary.get("metrics") or {}
+    counts = metrics.get("status_counts") or {}
+    total = metrics.get("record_count") or sum(counts.values()) or 0
+    measured = counts.get("measured", 0)
+    missing = (total - measured) / total if total else None
+    detail = {
+        "experiment_hash": summary.get("experiment_hash"),
+        "directory": relative(path.parent),
+        "decision_status": decision.get("status"),
+        "decision_hash": decision.get("decision_hash"),
+        "status_counts": counts,
+        "record_count": total,
+        "selected": [
+            {
+                "policy_id": item.get("policy_id"),
+                "policy_hash": item.get("policy_hash"),
+                "mean_history_delta_vs_legacy": item.get(
+                    "mean_history_delta_vs_legacy"
+                ),
+                "mean_target_delta_vs_legacy": item.get("mean_target_delta_vs_legacy"),
+            }
+            for item in decision.get("selected") or []
+        ],
+        "candidates": [
+            {
+                "policy_hash": item.get("policy_hash"),
+                "status": item.get("status"),
+                "reasons": item.get("reasons"),
+                "mean_history_delta_vs_legacy": item.get(
+                    "mean_history_delta_vs_legacy"
+                ),
+                "mean_target_delta_vs_legacy": item.get("mean_target_delta_vs_legacy"),
+            }
+            for item in decision.get("candidates") or []
         ],
     }
-    write_json(REPORT / "evidence.json", evidence)
-
-    # ---------------------------------------------------------------- badges
-    badges = ['<span class="badge">localhost 実装確認</span>']
-    if rehearsal.get("successes"):
-        badges.append(
-            f'<span class="badge">実GPU生成 {rehearsal["successes"]}/{rehearsal.get("sessions", "—")}セッション</span>'
-        )
-    if probe:
-        plain_cos = (
-            probe.get("equivalence", {})
-            .get("fan_plain_vs_pipeline", {})
-            .get("hidden", {})
-            .get("mean_cosine")
-        )
-        if plain_cos is not None:
-            badges.append(f'<span class="badge">G0一致 cos={plain_cos}</span>')
-    badges.append(
-        '<span class="badge warn">pooled は参照なしの値を使用（意図的な逸脱）</span>'
+    reasons = []
+    unmeasured = total - measured
+    if unmeasured:
+        reasons.append(f"unmeasured_images:{unmeasured}/{total}")
+    for item in decision.get("candidates") or []:
+        if item.get("status") != "pass":
+            reasons.extend(
+                f"{item.get('policy_hash', '?')[:12]}:{reason}"
+                for reason in item.get("reasons") or [item.get("status")]
+            )
+    if decision.get("status") == "selected" and not unmeasured:
+        state = PASSED
+    elif decision.get("status"):
+        state = FAILED
+    else:
+        state = NOT_RUN
+        reasons.append("decision_missing")
+    return block(
+        state, reasons=reasons, detail=detail, missing_rate=missing, source=path
     )
-    if browser:
-        ok = not browser.get("page_errors") and not browser.get("external_requests")
-        badges.append(
-            f'<span class="badge{"" if ok else " warn"}">ブラウザー確認 {"JS例外0・外部通信0" if ok else "要確認"}</span>'
+
+
+def study_block():
+    directory = EVALUATION / "study"
+    status = read_json(directory / "status.json", None)
+    summary = read_json(directory / "summary.json", None)
+    if not isinstance(status, dict) and not isinstance(summary, dict):
+        return block(NOT_RUN, reasons=["study_not_built"], source=directory)
+    if not isinstance(summary, dict):
+        return block(
+            NOT_RUN,
+            reasons=["study_summary_missing", str(status.get("comparison_images"))],
+            detail={"status": status},
+            source=directory / "status.json",
         )
-
-    # ------------------------------------------------------------ statistics
-    stats = f"""<div class="stats">
-<div class="stat"><strong>{rehearsal.get("successes", "—")}/{rehearsal.get("sessions", "—")}</strong><span>実生成セッション成功</span></div>
-<div class="stat"><strong>{rehearsal.get("p95_seconds", "未計測")}</strong><span>生成時間 p95（秒）</span></div>
-<div class="stat"><strong>{py_passed if py_passed is not None else "未計測"}{f" / {node_passed}" if node_passed is not None else ""}</strong><span>Python / JavaScript テスト成功数</span></div>
-<div class="stat"><strong>{reviewed_count}/{len(CARDS)}</strong><span>目視確認済みカード</span></div>
-</div>"""
-
-    # -------------------------------------------------------------- browser
-    shot_dir = REPORT / "screenshots"
-    shot_files = sorted(shot_dir.glob("*.png")) if shot_dir.is_dir() else []
-    if browser:
-        checks_html = "".join(f"<li>{E(c)}</li>" for c in browser.get("checks", []))
-        shots_html = "".join(
-            f'<figure><img src="screenshots/{p.name}" alt="{E(p.stem)}" loading="lazy"><figcaption>{E(p.stem)}</figcaption></figure>'
-            for p in shot_files
+    comparisons = summary.get("comparisons") or {}
+    detail = {
+        "study_id": summary.get("study_id"),
+        "study_kind": summary.get("study_kind"),
+        "status": summary.get("status"),
+        "participants_in_manifest": summary.get("participants_in_manifest"),
+        "participants_with_answers": summary.get("participants_with_answers"),
+        "participants_required": summary.get("participants_required"),
+        "comparisons": {
+            name: {
+                "conclusion": item.get("conclusion"),
+                "mean": item.get("mean"),
+                "interval": item.get("interval"),
+                "participants_scored": item.get("participants_scored"),
+                "answered_pairs": item.get("answered_pairs"),
+                "pair_count": item.get("pair_count"),
+                "reasons": item.get("reasons"),
+            }
+            for name, item in comparisons.items()
+        },
+        "default_policy_change_eligible": (
+            summary.get("default_policy_change") or {}
+        ).get("eligible"),
+    }
+    answered = sum(item.get("answered_pairs") or 0 for item in comparisons.values())
+    pairs = sum(item.get("pair_count") or 0 for item in comparisons.values())
+    missing = (pairs - answered) / pairs if pairs else None
+    if not summary.get("participants_with_answers"):
+        return block(
+            NOT_RUN,
+            reasons=["no_answers"] + list(summary.get("reasons") or []),
+            detail=detail,
+            missing_rate=missing,
+            source=directory / "summary.json",
         )
-        browser_section = f"""<h2>実Chromiumでの操作確認 · {E(browser.get("url", "—"))}</h2>
-<div class="panel"><strong>パーソナライズあり4枚の生成完了まで {E(str(browser.get("generate_wait_seconds", "—")))}秒。JS例外 {len(browser.get("page_errors", []))}件、外部通信 {len(browser.get("external_requests", []))}件。</strong>
-<ul>{checks_html}</ul>
-<a href="browser-evidence.json">今回の確認記録 JSON</a></div>
-<div class="grid">{shots_html}</div>"""
-    else:
-        browser_section = """<h2>実Chromiumでの操作確認</h2><p>未計測。<code>uv run --project exhibit python exhibit/scripts/browser_check.py</code> を実行してください。</p>"""
+    reasons = [
+        f"{name}:{reason}"
+        for name, item in comparisons.items()
+        for reason in item.get("reasons") or []
+    ]
+    eligible = (summary.get("default_policy_change") or {}).get("eligible")
+    return block(
+        PASSED if eligible else FAILED,
+        reasons=reasons,
+        detail=detail,
+        missing_rate=missing,
+        source=directory / "summary.json",
+    )
 
-    # ---------------------------------------------------------------- G0
-    if probe:
-        eq = probe.get("equivalence", {})
-        eq_rows = "".join(equivalence_row(name, entry) for name, entry in eq.items())
-        versions = probe.get("versions", {})
-        version_row = " · ".join(
-            f"{E(k)} {E(str(v))}" for k, v in versions.items() if k != "device"
+
+# ----------------------------------------------------------------- collection
+
+
+def collect(report_dir):
+    found = experiment_summaries()
+    implementation = {
+        "自動テスト": tests_block(),
+        "Preflight（資産・モデル）": preflight_block(),
+        "v1資産と個人化ハッシュの不変": legacy_invariant_block(),
+    }
+    verification = {
+        "encoding 数値検査": encoding_block(),
+        "実ブラウザーの一連操作": browser_block(report_dir),
+        "連続セッション実測": rehearsal_block(),
+        "catalog v2 の確認": catalog_v2_block(),
+    }
+    accuracy = {
+        "screen（8条件の絞り込み）": experiment_block("screen", found),
+        "refine（alpha 追加比較）": experiment_block("refine", found),
+        "heldout（事前基準の判定）": experiment_block("heldout", found),
+        "本人によるブラインド評価": study_block(),
+    }
+    sections = {
+        "実装完了": {"state": combine(implementation), "blocks": implementation},
+        "実機検証": {"state": combine(verification), "blocks": verification},
+        "精度実証": {"state": combine(accuracy), "blocks": accuracy},
+    }
+    policy_id = FAN_POLICIES["default_policy_id"]
+    configuration = {
+        "default_policy_id": policy_id,
+        "policies": sorted(FAN_POLICIES.get("policies", {})),
+        "effective_default_policy": legacy_policy()
+        if policy_id == LEGACY_POLICY_ID
+        else None,
+        "catalog_id": CONFIG["catalog_id"],
+        "sample_manifest_catalog_id": (CONFIG.get("sample_manifest") or {}).get(
+            "catalog_id"
+        ),
+        "selection": CONFIG["selection"],
+        "seeds": CONFIG["seeds"],
+        "timeout_seconds": CONFIG["timeout_seconds"],
+        "fan_pin": CONFIG["fan"]["commit"],
+        "settings_source": "exhibit/configs/fan-policies.json",
+    }
+    evidence = {
+        "schema_version": 1,
+        "generated_at": datetime.now(ZoneInfo("Asia/Tokyo")).strftime(
+            "%Y-%m-%d %H:%M JST"
+        ),
+        "configuration": configuration,
+        "sections": sections,
+        "statements": [
+            "未実施の評価を成功として扱わない。欠損は欠損として数える。",
+            "旧 outputs/fan-probe と docs/reports/fan-demo の数値は現行設定の結果として引用しない。",
+            "論文の定量結果をこの展示の性能として記載しない。",
+            "人の回答は収集していない。代答もしない。",
+        ],
+    }
+    evidence["inputs_hash"] = digest(
+        {"configuration": configuration, "sections": sections}
+    )
+    return evidence
+
+
+# ----------------------------------------------------------------------- HTML
+
+STYLE = """
+:root{color-scheme:dark;--bg:#100d0c;--panel:#191514;--raise:#221c1a;--line:#30282a;
+--ink:#f8f1eb;--sub:#ab9f97;--mute:#75695f;--a1:#ff9a6b;--a2:#ff6f93;--on:#1a0e0a;
+--ok:#8fd6a4;--warn:#ffd089;--bad:#ff8c8c;
+--sans:"Noto Sans CJK JP","Noto Sans JP","Hiragino Kaku Gothic ProN","Yu Gothic",system-ui,sans-serif;
+--mono:ui-monospace,"SFMono-Regular",Consolas,"Liberation Mono",monospace}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.85;font-size:15px}
+main{max-width:1060px;margin:auto;padding:56px 24px 96px}
+header{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;
+border-bottom:1px solid var(--line);padding-bottom:20px;flex-wrap:wrap}
+.brand{font-size:26px;font-weight:800;letter-spacing:-.5px;
+background:linear-gradient(135deg,var(--a1),var(--a2));-webkit-background-clip:text;
+background-clip:text;color:transparent}
+.meta{font-family:var(--mono);font-size:11px;color:var(--mute);text-align:right}
+h1{font-size:clamp(26px,4vw,40px);font-weight:800;letter-spacing:-1px;margin:40px 0 14px}
+h2{font-size:22px;font-weight:700;margin:56px 0 8px}
+h3{font-size:15px;font-weight:700;margin:26px 0 6px}
+p{color:var(--sub);margin:10px 0}
+a{color:var(--a1);text-underline-offset:3px}
+code,pre{font-family:var(--mono)}
+pre{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px;
+overflow:auto;font-size:12px;color:var(--ink)}
+.chips{display:flex;gap:10px;flex-wrap:wrap;margin:18px 0 30px}
+.chip{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);
+background:var(--panel);border-radius:999px;padding:9px 16px;font-size:12px;color:var(--sub)}
+.chip b{color:var(--ink);font-weight:700}
+.badge{display:inline-block;border-radius:999px;padding:3px 11px;font-size:12px;font-weight:700;
+border:1px solid transparent}
+.s-pass{background:rgba(143,214,164,.14);color:var(--ok);border-color:rgba(143,214,164,.35)}
+.s-none{background:rgba(255,208,137,.12);color:var(--warn);border-color:rgba(255,208,137,.32)}
+.s-fail{background:rgba(255,140,140,.12);color:var(--bad);border-color:rgba(255,140,140,.32)}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:20px 22px;margin:14px 0}
+.panel h3{margin-top:0;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.kv{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin:14px 0 4px}
+.kv div{background:var(--raise);border-radius:10px;padding:10px 12px}
+.kv span{display:block;font-size:11px;color:var(--mute)}
+.kv b{font-size:15px;font-weight:700;overflow-wrap:anywhere}
+ul{margin:10px 0;padding-left:20px;color:var(--sub)}
+li{margin:3px 0;overflow-wrap:anywhere}
+.reasons li{font-family:var(--mono);font-size:12px}
+.src{font-family:var(--mono);font-size:11px;color:var(--mute);margin-top:10px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:12px;margin:14px 0}
+figure{margin:0}
+figure img{width:100%;border-radius:10px;border:1px solid var(--line);display:block}
+figcaption{font-size:10px;font-family:var(--mono);color:var(--mute);margin-top:6px;overflow-wrap:anywhere}
+table{width:100%;border-collapse:collapse;font-size:13px;margin:12px 0}
+th,td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{color:var(--mute);font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.06em}
+.scroll{overflow:auto}
+footer{margin-top:64px;border-top:1px solid var(--line);padding-top:20px;
+font-size:11px;font-family:var(--mono);color:var(--mute)}
+@media(max-width:640px){main{padding:32px 16px 64px}.meta{text-align:left}}
+"""
+
+BADGE = {PASSED: "s-pass", NOT_RUN: "s-none", FAILED: "s-fail"}
+
+
+def badge(state):
+    return f'<span class="badge {BADGE[state]}">{E(state)}</span>'
+
+
+def thumb(path, size=200, quality=70):
+    try:
+        image = Image.open(path).convert("RGB")
+    except (OSError, ValueError):
+        return None
+    image.thumbnail((size, size))
+    buffer = io.BytesIO()
+    image.save(buffer, format="JPEG", quality=quality)
+    return "data:image/jpeg;base64," + base64.b64encode(buffer.getvalue()).decode()
+
+
+def figures(items):
+    if not items:
+        return "<p>未準備。</p>"
+    return '<div class="grid">' + "".join(items) + "</div>"
+
+
+def gallery():
+    """Only images that exist: reviewed v1 cards, generic shots, v1 samples."""
+    parts = {}
+    try:
+        catalog = load_catalog(CONFIG["catalog_id"], reviewed_only=False)
+    except (OSError, TypeError, ValueError):
+        catalog = {"cards": [], "all_cards": []}
+    reviewed = {
+        card["id"]
+        for card in load_catalog(CONFIG["catalog_id"], reviewed_only=True)["cards"]
+    }
+    cards = []
+    for card in catalog["all_cards"]:
+        src = thumb(ASSETS / card["path"], size=150)
+        if not src:
+            continue
+        mark = "" if card["id"] in reviewed else " · 未確認"
+        cards.append(
+            f'<figure><img alt="{E(card["id"])}" loading="lazy" src="{src}">'
+            f"<figcaption>{E(card['id'])}{mark}</figcaption></figure>"
         )
-        vram_load = probe.get("vram_after_load", {})
-        vram_peak = probe.get("vram_peak_overall", {})
-        tokens = probe.get("token_lengths", {})
-        token_note = ""
-        for name, tok in tokens.items():
-            over = [
-                n
-                for n in tok.get("preference_refs", [])
-                if n > tok.get("model_max_length", 77)
-            ]
-            if over:
-                token_note += f"<li>{E(name)}: 参照説明文に{tok['model_max_length']}トークン上限を超えるものが{len(over)}件</li>"
-        probe_section = f"""<h2>G0スパイク：FANはIllustrious XL v2.0を個人化できるか</h2>
-<div class="panel"><strong>参照なしFANエンコードは pipeline の encode_prompt と一致します（hidden state の平均コサイン類似度を参照）。</strong>
-<p>実行環境: {version_row}。pipeline読み込み {probe.get("load_seconds", "—")}秒、エンコーダー構築 {probe.get("encoder_build_seconds", "—")}秒。VRAM: 読み込み後 {vram_load.get("peak_allocated_gb", "—")} GB、全体ピーク {vram_peak.get("peak_allocated_gb", "—")} GB（torch.cuda.max_memory_allocated）。</p>
-<div class="scroll"><table><thead><tr><th>比較</th><th>hidden 平均cos</th><th>hidden 最大絶対差</th><th>pooled 平均cos</th><th>encode秒</th></tr></thead><tbody>{eq_rows}</tbody></table></div>
-<ul>{token_note or "<li>すべての参照説明文が77トークン以内</li>"}</ul>
-<a href="../../../exhibit/outputs/fan-probe/report.json">G0の生ログ JSON</a></div>"""
-    else:
-        probe_section = """<h2>G0スパイク：FANはIllustrious XL v2.0を個人化できるか</h2><p>未計測。<code>PYTHONPATH=fan-repro/.work/upstream:exhibit/src fan-repro/.venv/bin/python exhibit/scripts/fan_probe.py</code> を実行してください（FAN環境が必要）。</p>"""
+    parts["cards"] = cards
+    generic = []
+    for topic in CONFIG["topics"]:
+        src = thumb(ASSETS / "generic" / f"{topic['id']}-0.png", size=150)
+        if src:
+            generic.append(
+                f'<figure><img alt="{E(topic["id"])}" loading="lazy" src="{src}">'
+                f"<figcaption>{E(topic['id'])} · seed {CONFIG['seeds'][0]}</figcaption></figure>"
+            )
+    parts["generic"] = generic
+    samples = []
+    for sample in read_json(ASSETS / "samples.json", []) or []:
+        images = sample.get("images") or []
+        if not images:
+            continue
+        src = thumb(ASSETS / images[0]["path"], size=150)
+        if src:
+            samples.append(
+                f'<figure><img alt="{E(sample["id"])}" loading="lazy" src="{src}">'
+                f"<figcaption>{E(sample['id'])}</figcaption></figure>"
+            )
+    parts["samples"] = samples
+    v2 = []
+    catalog_v2 = read_json(ASSETS / "catalog-v2.json", None)
+    for key, image in sorted(((catalog_v2 or {}).get("images") or {}).items()):
+        if not key.startswith("girl-"):
+            continue
+        src = thumb(ASSETS / image["path"], size=150)
+        if src:
+            v2.append(
+                f'<figure><img alt="{E(key)}" loading="lazy" src="{src}">'
+                f"<figcaption>{E(key)} · 未確認</figcaption></figure>"
+            )
+    parts["catalog_v2"] = v2
+    return parts
 
-    # ------------------------------------------------------------ followup
-    if followup:
-        rows = []
-        for name, entry in followup.items():
-            if isinstance(entry, dict) and "mean_cosine" in entry:
-                rows.append(
-                    f"<tr><td>{E(name)}</td><td>{entry.get('mean_cosine', '—')}</td>"
-                    f"<td>{entry.get('max_abs_diff', '—')}</td></tr>"
-                )
-        followup_rows = "".join(rows) or "<tr><td colspan=3>比較データなし</td></tr>"
-        semantics = followup.get("skip_pa_semantics", "")
-        followup_section = f"""<h2>追加検証：alpha・重み・skip_paの実際の効き方</h2>
-<div class="panel"><p>{E(semantics)}</p>
-<div class="scroll"><table><thead><tr><th>比較</th><th>hidden 平均cos</th><th>hidden 最大絶対差</th></tr></thead><tbody>{followup_rows}</tbody></table></div>
-<a href="../../../exhibit/outputs/fan-probe/followup/followup.json">追加検証の生ログ JSON</a></div>"""
-    else:
-        followup_section = ""
 
-    settings_section = g0_settings_section(followup, final, ladder)
+def block_html(name, item):
+    reasons = (
+        '<ul class="reasons">'
+        + "".join(f"<li>{E(str(reason))}</li>" for reason in item["reasons"])
+        + "</ul>"
+        if item["reasons"]
+        else "<p>指摘なし。</p>"
+    )
+    missing = (
+        f"{item['missing_rate'] * 100:.1f}%"
+        if isinstance(item["missing_rate"], (int, float))
+        else "—"
+    )
+    cells = "".join(
+        f"<div><span>{E(str(key))}</span><b>{E(str(value))}</b></div>"
+        for key, value in item["detail"].items()
+        if not isinstance(value, (dict, list)) and value is not None
+    )
+    source = (
+        f'<p class="src">artifact: {E(relative(item["source"]))}</p>'
+        if item["source"]
+        else ""
+    )
+    return f"""<div class="panel"><h3>{E(name)} {badge(item["state"])}
+<span class="src">欠損率 {E(missing)}</span></h3>
+<div class="kv">{cells}</div>{reasons}{source}</div>"""
 
-    # ---------------------------------------------------------- rehearsal
-    plot = sparkline(rehearsal.get("rows", []))
-    rehearsal_section = f"""<h2>連続セッションの実測</h2>
-<p>対象は FAN 実生成のみ（rewrite・推薦は行わない）。各セッションは画像選択からパーソナライズあり4枚の生成完了までのwall timeです。</p>
-{plot}
-<div class="scroll"><table><thead><tr><th>項目</th><th>実測値</th></tr></thead><tbody>
-<tr><td>セッション</td><td>{rehearsal.get("successes", "—")}成功 / {rehearsal.get("sessions", "—")}実行、中央値 {rehearsal.get("median_seconds", "未計測")}秒、p95 {rehearsal.get("p95_seconds", "未計測")}秒</td></tr>
-</tbody></table></div>"""
 
-    # ---------------------------------------------------------- preflight
-    if preflight:
-        errs = preflight.get("errors", [])
-        preflight_section = f"""<h2>Preflight（展示前チェック）</h2>
-<div class="panel {"" if preflight.get("ready") else "caution"}"><strong>{"合格" if preflight.get("ready") else "未合格"}</strong>
-<p>目視確認済みカード {preflight.get("reviewed_cards", "—")}/{preflight.get("cards", len(CARDS))}、固定画像 {preflight.get("fixed_images", "—")}件、サンプル {preflight.get("samples", "—")}件。エラー {len(errs)}件{"（例: " + E(", ".join(errs[:3])) + "）" if errs else ""}。</p>
-<a href="../../../exhibit/outputs/preflight.json">Preflightの生ログ JSON</a></div>"""
-    else:
-        preflight_section = """<h2>Preflight（展示前チェック）</h2><p>未計測。<code>uv run --project exhibit python exhibit/scripts/preflight.py --models</code> を実行してください。</p>"""
+def section_html(title, section, lead):
+    blocks = "".join(block_html(name, item) for name, item in section["blocks"].items())
+    return f"""<h2>{E(title)} {badge(section["state"])}</h2>
+<p>{lead}</p>{blocks}"""
 
-    # -------------------------------------------------------------- assets
-    assets_section = f"""<h2>固定資産</h2>
-<h3>カード（{len(cards)}/{len(CARDS)}件、うち目視確認済み {reviewed_count}件）</h3>
-<div class="grid small-grid">{image_grid_html(cards, "ref_en")}</div>
-<h3>お題ごとの通常生成（{len(generic_topics)}/{len(CONFIG["topics"])}お題）</h3>
-{topic_shots_html(generic_topics)}
-<h3>代表サンプル（{len(samples)}件）</h3>
-{sample_shots_html(samples)}"""
 
-    # ---------------------------------------------------------------- tests
-    tests_section = f"""<h2>テスト</h2>
-<div class="scroll"><table><thead><tr><th>種別</th><th>結果</th></tr></thead><tbody>
-<tr><td>Python (pytest)</td><td>{f"{py_passed} passed" if py_passed is not None else "未計測"}</td></tr>
-<tr><td>JavaScript (node --test)</td><td>{f"{node_passed} pass / {node_failed} fail" if node_passed is not None else "未計測"}</td></tr>
-</tbody></table></div>
-<p class="small">再現コマンド: <code>uv run --project exhibit pytest exhibit/tests -q</code> / <code>node --test exhibit/tests/test_browser_state.mjs</code></p>"""
+def catalog_v2_html(item):
+    findings = item["detail"].get("visual_findings") or {}
+    probe = item["detail"].get("clip_probe") or {}
+    if not findings and not probe:
+        return ""
+    rows = "".join(
+        f"<tr><td>{E(axis)}</td><td>{E(str(text))}</td>"
+        f"<td>{E(str((probe.get('top1') or {}).get(axis, '—')))}"
+        f" / {E(str(probe.get('of', '—')))}</td></tr>"
+        for axis, text in findings.items()
+    )
+    note = f"<p>{E(str(probe['note']))}</p>" if probe.get("note") else ""
+    return f"""<h3>catalog v2 の所見</h3>
+<div class="scroll"><table><thead><tr><th>軸</th><th>目視の所見</th>
+<th>凍結CLIPで水準が1位</th></tr></thead><tbody>{rows}</tbody></table></div>
+<p>4軸すべてが1位だったカードは {E(str(probe.get("all_four_axes", "—")))} / {E(str(probe.get("of", "—")))}。
+これは診断補助であり、確認（review）そのものではありません。</p>{note}"""
 
-    sections = f"""<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>FAN · 実装とlocalhost検証レポート</title><style>
-:root{{--paper:#f4f2eb;--ink:#24392d;--sub:#697466;--green:#315d44;--line:#d7ddd0}}*{{box-sizing:border-box}}body{{margin:0;background:var(--paper);color:var(--ink);font:15px/1.9 system-ui,-apple-system,sans-serif}}main{{max-width:1120px;margin:auto;padding:65px 32px 90px}}header{{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--line);padding-bottom:24px}}.brand{{font:42px Georgia,serif;letter-spacing:-2px}}.brand b{{color:#bd6841;font-size:17px}}.meta{{font-size:11px;color:var(--sub)}}h1{{font-weight:500;font-size:clamp(32px,4vw,52px);line-height:1.5;letter-spacing:-1.5px;margin:50px 0 22px}}h2{{font-size:27px;font-weight:500;margin:55px 0 20px}}h3{{font-size:17px;font-weight:600;margin:35px 0 14px}}h4{{font-size:13px;font-weight:600;margin:0 0 8px;color:var(--sub)}}p{{color:var(--sub)}}a{{color:var(--green);text-underline-offset:3px}}.badge{{display:inline-block;padding:7px 14px;border-radius:40px;background:#e3eadc;color:var(--green);font-size:11px;margin:0 8px 8px 0}}.warn{{background:#efdecf;color:#8f502f}}.lead{{font-size:17px;max-width:860px}}.stats{{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin:35px 0}}.stat{{border-top:1px solid var(--line);padding-top:18px}}.stat strong{{display:block;font:34px Georgia,serif;color:var(--green)}}.stat span{{font-size:12px;color:var(--sub)}}.panel{{background:#e8eddf;border:1px solid #d9e1ce;padding:24px 28px;border-radius:7px}}.panel.caution{{background:#f1e6da;border-color:#e4cbb5}}.grid{{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:22px}}.grid.small-grid{{grid-template-columns:repeat(auto-fill,minmax(150px,1fr))}}figure{{margin:20px 0}}figure img{{display:block;width:100%;border:1px solid var(--line);border-radius:7px}}figcaption{{font-size:12px;color:var(--sub);margin-top:9px;overflow-wrap:anywhere}}.mini-grid{{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:24px}}.mini-grid img{{width:100%;border-radius:5px;border:1px solid var(--line)}}.topic-shots{{margin-bottom:8px}}table{{width:100%;border-collapse:collapse;font-size:13px}}th,td{{text-align:left;vertical-align:top;padding:13px 14px;border-bottom:1px solid var(--line)}}th{{font-weight:500;background:#e9ecdf}}code{{font-family:ui-monospace,monospace;font-size:.88em;overflow-wrap:anywhere}}pre{{overflow:auto;padding:22px;background:#24392d;color:#f0f2e8;border-radius:6px;font-size:12px;line-height:1.8}}ul{{padding-left:22px;color:var(--sub)}}.scroll{{overflow:auto}}footer{{margin-top:60px;border-top:1px solid var(--line);padding-top:22px;font-size:11px;color:var(--sub)}}.button{{display:inline-block;background:var(--green);color:white;padding:12px 22px;border-radius:5px;text-decoration:none}}.small{{font-size:12px}}@media(max-width:650px){{main{{padding:30px 20px}}.stats{{grid-template-columns:1fr 1fr}}.meta{{max-width:160px;text-align:right}}th,td{{padding:10px 7px;font-size:11px}}}}
-</style></head><body><main><header><div class="brand">fan<b> ●</b></div><div class="meta">IMPLEMENTATION & LOCAL REHEARSAL<br>{measured}</div></header>
-<h1>同じ一文から、あなたの一枚を。<br>実装と、実機で確かめたこと。</h1>{"".join(badges)}
-<p class="lead">好きな画像を3〜5枚選ぶと、その画像に付けた確認済みの説明文を参照に、同じお題・同じseed・同じ生成設定のまま Illustrious XL v2.0 が描き直します。個人化は<a href="https://github.com/Burf/FAN">FAN</a>（Foundation Encoders Are All You Need, CVPR 2026）公式実装。パーソナライズなし・ありの4枚ずつを同じseedで並べ、来場者自身に違いを確かめてもらう構成です。詳細は<a href="../../superpowers/specs/2026-09-21-fan-exhibition-demo-design.md">設計書</a>を参照。旧 ZIPP-style persona × PIGReward 構成は履歴として <a href="../zipp-demo/index.html">docs/reports/zipp-demo/</a> に残しています。</p>
-{stats}
-<p><a class="button" href="http://localhost:7860">デモを開く ↗</a>　<a href="../../../exhibit/assets/fallback.html">サーバー不要のサンプルHTML</a>　<a href="evidence.json">計測記録 JSON</a></p>
-{browser_section}
-{probe_section}
-{followup_section}
-{settings_section}
-{rehearsal_section}
-{preflight_section}
-{tests_section}
-{assets_section}
-<h2>説明で守っていること（設計書 §9）</h2>
-<div class="panel"><ul>
-<li>「来場者ごとの追加学習なし」と言います。「追加モデル・重みが一切ない」とは言いません — FAN公式実装の <code>ClassTokenDecoder</code>（<code>weight/L.pth</code>, <code>weight/bigG.pth</code>）を使っています。</li>
-<li>参照は「選んだ画像に付けた確認済みの説明文」です。画像そのものをエンコーダーへ入れているとは説明しません。</li>
-<li>反映を強くするほど良いとは言いません。targetとのバランスは来場者が判断します。</li>
-<li>論文の定量結果をこの展示の性能として使いません。比較表示は見た目の確認であり、性能主張にしません。</li>
-<li>Attentionの値から「この画像がこの色を生んだ」といった因果説明はしません。参照に使った画像・説明文・強度だけを表示します。</li>
-<li>個人化時の pooled 埋め込みは、<code>ClassTokenDecoder</code> がpadding tokenを終端と誤検出するため使わず、同じ文の参照なし pooled を使います（意図した上流からの逸脱。詳細は <a href="../../../exhibit/README.md">exhibit/README.md</a>）。</li>
-</ul></div>
-<h2>起動と再検証</h2><pre># リポジトリのルートで実行
-uv sync --project exhibit --locked
-uv run --project exhibit python exhibit/scripts/preflight.py --models
-uv run --project exhibit uvicorn exhibit.app:app --host 127.0.0.1 --port 7860
-# http://localhost:7860 / http://localhost:7860/report/</pre>
-<pre>uv run --project exhibit pytest exhibit/tests -q
+
+def render(evidence, parts):
+    configuration = evidence["configuration"]
+    sections = evidence["sections"]
+    chips = "".join(
+        f'<span class="chip">{E(title)} <b>{E(section["state"])}</b></span>'
+        for title, section in sections.items()
+    )
+    statements = "".join(f"<li>{E(text)}</li>" for text in evidence["statements"])
+    config_rows = "".join(
+        f"<tr><td>{E(key)}</td><td><code>{E(json.dumps(value, ensure_ascii=False))}</code></td></tr>"
+        for key, value in configuration.items()
+    )
+    return f"""<!doctype html><html lang="ja"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>FAN 個人化改善 · 実装と検証の状態</title><style>{STYLE}</style></head>
+<body><main>
+<header><div class="brand">fan personalization</div>
+<div class="meta">IMPLEMENTATION / ON-DEVICE / ACCURACY<br>{E(evidence["generated_at"])}<br>
+inputs {E(evidence["inputs_hash"][:16])}</div></header>
+<h1>実装・実機検証・精度実証を<br>別々に判定した状態。</h1>
+<div class="chips">{chips}</div>
+<p>このページはディスク上の成果物だけから生成しています。成果物がない項目は
+<b>未実施</b>であり、成功とは扱いません。基準を満たさなかった項目は<b>不合格</b>として
+理由を残します。過去の <code>outputs/fan-probe</code> や <code>docs/reports/fan-demo</code>
+の数値は現行設定の結果として引用していません。</p>
+<h2>現在の設定</h2>
+<p>エンコーダー設定の正は <code>exhibit/configs/fan-policies.json</code> の一箇所です。
+<code>configs/demo.json</code> にはパス・pin・decoder hash だけが残り、alpha や skip_pa は
+持ちません。評価が揃うまで既定 policy は <code>legacy_exhibit</code>、展示の catalog は
+<code>catalog-v1</code> のままです。</p>
+<div class="scroll"><table><thead><tr><th>項目</th><th>値</th></tr></thead>
+<tbody>{config_rows}</tbody></table></div>
+{section_html("実装完了", sections["実装完了"], "設計 §11 A。コードと資産の整合が取れているか。")}
+{section_html("実機検証", sections["実機検証"], "設計 §11 B。実際のGPU・実ブラウザー・実カタログで確かめたか。")}
+{catalog_v2_html(sections["実機検証"]["blocks"]["catalog v2 の確認"])}
+{section_html("精度実証", sections["精度実証"], "設計 §11 C。事前に固定した基準と本人の回答で、改善を示せたか。")}
+<h2>固定資産</h2>
+<h3>カード（{E(CONFIG["catalog_id"])}）</h3>
+{figures(parts["cards"])}
+<h3>お題ごとの通常生成（seed {E(str(CONFIG["seeds"][0]))}）</h3>
+{figures(parts["generic"])}
+<h3>代表サンプル（v1の選択から事前生成）</h3>
+{figures(parts["samples"])}
+<h3>catalog v2 の生成画像（girl のみ抜粋・すべて未確認）</h3>
+{figures(parts["catalog_v2"])}
+<h2>説明で守っていること</h2>
+<div class="panel"><ul>{statements}</ul></div>
+<h2>再開コマンド</h2>
+<pre>PYTHONPATH=exhibit/src exhibit/.venv/bin/python -m pytest exhibit/tests -q
 node --test exhibit/tests/test_browser_state.mjs
-PYTHONPATH=fan-repro/.work/upstream:exhibit/src fan-repro/.venv/bin/python exhibit/scripts/fan_probe.py
-uv run --project exhibit python exhibit/scripts/rehearsal.py --sessions 20
-uv run --project exhibit python exhibit/scripts/browser_check.py --report-dir docs/reports/fan-demo</pre>
-<p class="small">GPUを使うコマンド同士は同時実行しないでください。ブラウザー確認は <code>--mock</code> と <code>exhibit/tests/mock_api.mjs</code> で開発でき、実機確認は実サーバーに対して行います。</p>
-<h2>関連ファイルと出典</h2><p><a href="../../../exhibit/README.md">アプリの実行手順</a> · <a href="../../superpowers/specs/2026-09-21-fan-exhibition-demo-design.md">設計書</a></p>
-<p>モデル・原手法：<a href="https://github.com/Burf/FAN">FAN</a>、<a href="https://huggingface.co/OnomaAIResearch/Illustrious-XL-v2.0">Illustrious XL v2.0</a>。モデル・画像hashはasset manifestおよび計測JSONに保存しています。</p>
-<footer>FAN / LOCAL EXHIBITION DEMO · 報告は実測と未検証事項を分けて記載しています。画像は実際のローカル推論・localhostブラウザー操作から取得しました。</footer></main></body></html>"""
-    (REPORT / "index.html").write_text(sections)
-    print(REPORT / "index.html")
+PYTHONPATH=exhibit/src exhibit/.venv/bin/python exhibit/scripts/preflight.py --models
+PYTHONPATH=exhibit/src exhibit/.venv/bin/python exhibit/scripts/evaluate_fan.py encoding --config exhibit/configs/fan-evaluation.json
+PYTHONPATH=exhibit/src exhibit/.venv/bin/python exhibit/scripts/evaluate_fan.py screen  --config exhibit/configs/fan-evaluation.json --resume
+PYTHONPATH=exhibit/src exhibit/.venv/bin/python exhibit/scripts/evaluate_fan.py refine  --config exhibit/configs/fan-evaluation.json --resume
+PYTHONPATH=exhibit/src exhibit/.venv/bin/python exhibit/scripts/evaluate_fan.py heldout --config exhibit/configs/fan-evaluation.json --resume
+PYTHONPATH=exhibit/src exhibit/.venv/bin/python exhibit/scripts/build_preference_study.py --config exhibit/configs/fan-evaluation.json
+PYTHONPATH=exhibit/src exhibit/.venv/bin/python exhibit/scripts/evaluate_fan.py study   --config exhibit/configs/fan-evaluation.json --resume
+PYTHONPATH=exhibit/src exhibit/.venv/bin/python exhibit/scripts/summarize_preference_study.py --study exhibit/outputs/fan-evaluation/study
+PYTHONPATH=exhibit/src exhibit/.venv/bin/python exhibit/scripts/rehearsal.py --sessions 20 --url http://127.0.0.1:7860
+PYTHONPATH=exhibit/src exhibit/.venv/bin/python exhibit/scripts/browser_check.py --url http://127.0.0.1:7860 --report-dir docs/reports/fan-personalization
+PYTHONPATH=exhibit/src exhibit/.venv/bin/python exhibit/scripts/build_report.py</pre>
+<p>GPU を使うコマンドは同時に実行しないでください。再実行するとこのページと
+<a href="evidence.json">evidence.json</a> は、そのときのディスクの内容から作り直されます。</p>
+<footer>FAN PERSONALIZATION · 実測と未実施を分けて記載しています ·
+<a href="README.md">README.md</a> · <a href="evidence.json">evidence.json</a></footer>
+</main></body></html>"""
+
+
+def readme(evidence):
+    sections = evidence["sections"]
+    configuration = evidence["configuration"]
+    lines = [
+        "# FAN 個人化改善 · 検証レポート",
+        "",
+        f"生成日時: {evidence['generated_at']}　入力hash: `{evidence['inputs_hash']}`",
+        "",
+        "`build_report.py` がディスク上の成果物だけから作ります。成果物がない項目は",
+        "**未実施**であり、成功として扱いません。再実行すると同じ入力からは同じ判定になります。",
+        "",
+        "## 3つの完了状態",
+        "",
+        "| 状態 | 判定 | 内訳 |",
+        "|---|---|---|",
+    ]
+    for title, section in sections.items():
+        inner = " / ".join(
+            f"{name}: {item['state']}" for name, item in section["blocks"].items()
+        )
+        lines.append(f"| {title} | **{section['state']}** | {inner} |")
+    lines += [
+        "",
+        "## 現在の設定",
+        "",
+        (
+            f"- 既定 policy: `{configuration['default_policy_id']}`"
+            "（評価が揃うまで変更しない）"
+        ),
+        (
+            f"- 展示の catalog: `{configuration['catalog_id']}`"
+            f"（サンプルの catalog: `{configuration['sample_manifest_catalog_id']}`）"
+        ),
+        (
+            "- エンコーダー設定の正: `exhibit/configs/fan-policies.json`。"
+            "`configs/demo.json` はパス・pin・decoder hash のみ。"
+        ),
+        f"- FAN pin: `{configuration['fan_pin']}`",
+        "",
+        "## 残っている作業",
+        "",
+    ]
+    remaining = [
+        f"- {title} / {name}: {item['state']}"
+        + (
+            f"（{', '.join(str(r) for r in item['reasons'][:3])}）"
+            if item["reasons"]
+            else ""
+        )
+        for title, section in sections.items()
+        for name, item in section["blocks"].items()
+        if item["state"] != PASSED
+    ]
+    lines += remaining or ["- なし"]
+    lines += [
+        "",
+        "## 再実行",
+        "",
+        "```bash",
+        "PYTHONPATH=exhibit/src exhibit/.venv/bin/python exhibit/scripts/build_report.py",
+        "```",
+        "",
+        "人の回答は収集していません。代わりの回答を作ることはしません。",
+        "",
+    ]
+    return "\n".join(lines)
+
+
+def main(argv=None):
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--report-dir", type=Path, default=REPORT)
+    parser.add_argument(
+        "--no-images", action="store_true", help="skip the embedded thumbnails"
+    )
+    args = parser.parse_args(argv)
+
+    report_dir = args.report_dir
+    report_dir.mkdir(parents=True, exist_ok=True)
+    evidence = collect(report_dir)
+    parts = (
+        {"cards": [], "generic": [], "samples": [], "catalog_v2": []}
+        if args.no_images
+        else gallery()
+    )
+    write_json(report_dir / "evidence.json", evidence)
+    (report_dir / "index.html").write_text(render(evidence, parts))
+    (report_dir / "README.md").write_text(readme(evidence))
+    print(
+        json.dumps(
+            {
+                "report": str(report_dir / "index.html"),
+                "inputs_hash": evidence["inputs_hash"],
+                "states": {
+                    title: section["state"]
+                    for title, section in evidence["sections"].items()
+                },
+            },
+            ensure_ascii=False,
+        )
+    )
+    return evidence
 
 
 if __name__ == "__main__":

@@ -18,7 +18,12 @@ from exhibit.config import (
     read_json,
     write_json,
 )
-from exhibit.domain import CARDS, build_legacy_personalization, target_prompt
+from exhibit.domain import (
+    CARDS,
+    build_legacy_personalization,
+    legacy_fan_manifest_block,
+    target_prompt,
+)
 from exhibit.gpu import run_stage
 
 # Representative selections for the offline sample experiences (3 cards each).
@@ -74,7 +79,9 @@ def merge_manifest(new_images, metrics):
         {
             "version": 5,
             "generation": CONFIG["generation"],
-            "fan": CONFIG["fan"],
+            # The v1 asset contract keeps the encoder settings inline; they are
+            # derived from the policy so the file stays byte-identical.
+            "fan": legacy_fan_manifest_block(),
             "images": images,
             "metrics": (manifest.get("metrics", []) or []) + metrics,
         },

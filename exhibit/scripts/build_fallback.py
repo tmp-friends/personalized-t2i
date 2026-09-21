@@ -5,8 +5,9 @@ import base64
 import html
 import io
 
+from exhibit.catalog import load_catalog
 from exhibit.config import ASSETS, CONFIG, read_json
-from exhibit.domain import CARDS
+from exhibit.domain import LEGACY_POLICY_ID, legacy_policy
 from exhibit.preflight import sample_errors
 from PIL import Image
 
@@ -49,6 +50,10 @@ def main():
     ]
     manifest = read_json(ASSETS / "manifest.json", {}) or {}
     images = manifest.get("images", {})
+    # The configured catalog decides which reviewed cards exist at all.
+    catalog = load_catalog(CONFIG["catalog_id"], reviewed_only=True)
+    limits = CONFIG["selection"]
+    policy = legacy_policy()
     parts = [
         (
             '<!doctype html><html lang="ja"><meta charset="utf-8">'
@@ -59,17 +64,28 @@ def main():
             "<h1>同じ一文から、あなたの一枚を。</h1>"
             "<p>このページは代表的な選択から事前に生成したサンプルです。いま選んだ内容を反映した結果ではありません。"
             "画像はすべてローカルの Illustrious XL v2.0 で生成しています。</p>"
-            "<p>好きな画像を3〜5枚選ぶ → 選んだ画像に付けた確認済みの説明文を参照にする → "
+            f"<p>好きな画像を{limits['min']}〜{limits['max']}枚選ぶ"
+            f"（1画面{limits['round_size']}枚・最大{limits['max_rounds']}回）→ "
+            "選んだ画像の好きな側面（色・光・描画・雰囲気）を指定する → "
+            "その側面に付いた確認済みの説明文を参照にする → "
             "同じお題・同じ seed・同じ生成設定で、参照なしの通常生成と FAN 個人化生成を並べる。"
             "来場者ごとの追加学習はありません。ただし FAN 公式実装の ClassTokenDecoder"
             "（<code>weight/L.pth</code> / <code>weight/bigG.pth</code>）を使います。</p>"
             "<p>変わるのは参照の内容・重み <code>weight</code>・反映の強さ <code>alpha</code> だけで、"
             "お題の文も負のプロンプトも生成モデルも同じです。強く反映するほど良いとは限りません。</p>"
+            f"<p>エンコーダー設定は <code>configs/fan-policies.json</code> の "
+            f"<code>{html.escape(LEGACY_POLICY_ID)}</code>（alpha {policy['alpha']} / "
+            f"pooled {html.escape(policy['pooled_mode'])} / "
+            f"参照単位 {html.escape(policy['reference_unit'])} / "
+            f"profiling {html.escape(policy['profiling']['mode'])}）です。</p>"
         )
     ]
-    prepared = [card for card in CARDS.values() if card["id"] in images]
+    prepared = [card for card in catalog["cards"] if card["id"] in images]
     if prepared:
-        parts.append("<h2>選べるカード（4被写体 × 4表現）</h2>")
+        parts.append(
+            f"<h2>選べるカード（確認済み {len(prepared)}枚 / "
+            f"{html.escape(catalog['catalog_id'])}）</h2>"
+        )
         parts.append('<div class="cards">')
         for card in prepared:
             parts.append(
@@ -92,6 +108,7 @@ def main():
         parts.append(
             f"<h2>{html.escape(sample.get('label', sample['id']))}</h2>"
             f"<p>お題：{html.escape(topic['label'])} / "
+            f"policy {html.escape(LEGACY_POLICY_ID)} / "
             f"alpha {sample['personalization']['alpha']} / 参照 {len(refs)}件</p>"
         )
         for label, entries in [

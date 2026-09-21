@@ -1,6 +1,7 @@
 """Offline inference entry point. No model is loaded into the web process."""
 
 import json
+import math
 import resource
 import sys
 import time
@@ -19,6 +20,17 @@ from .fan_adapter import (
 
 def emit(kind, **data):
     print(json.dumps({"type": kind, **data}, ensure_ascii=False), flush=True)
+
+
+def _json_safe(value):
+    """Schedulers report `-inf`/`nan`; strict JSON sinks need them spelled out."""
+    if isinstance(value, float) and not math.isfinite(value):
+        return str(value)
+    if isinstance(value, dict):
+        return {key: _json_safe(item) for key, item in value.items()}
+    if isinstance(value, (list, tuple)):
+        return [_json_safe(item) for item in value]
+    return value
 
 
 def load_pipeline(settings):
@@ -119,16 +131,19 @@ def fan_block(fan=None, policy=None):
     }
 
 
-def effective_policy(personalization=None, fan=None):
-    """Resolve a JSON policy, including the temporary legacy service payload."""
+def effective_policy(personalization=None):
+    """Resolve a JSON policy, including the temporary legacy service payload.
+
+    Encoder settings come from the registered policy only; a legacy payload can
+    still name the alpha and the profiling argument it was built with.
+    """
     if personalization and personalization.get("effective_policy") is not None:
         return thaw_policy(freeze_policy(personalization["effective_policy"]))
     policy = thaw_policy(resolve_policy("legacy_exhibit", FAN_POLICIES))
     if not personalization:
         return policy
 
-    fan = fan or CONFIG["fan"]
-    sample_size = personalization.get("sample_size", fan.get("sample_size", 0))
+    sample_size = personalization.get("sample_size", profiling_argument(policy))
     if sample_size == 0:
         profiling = {"mode": "all"}
     elif type(sample_size) is int:
@@ -138,9 +153,6 @@ def effective_policy(personalization=None, fan=None):
     legacy = {
         **policy,
         "alpha": personalization.get("alpha", policy["alpha"]),
-        "skip": fan.get("skip", policy["skip"]),
-        "skip_pa": fan.get("skip_pa", policy["skip_pa"]),
-        "use_attn_mask": fan.get("use_attn_mask", policy["use_attn_mask"]),
         "profiling": profiling,
     }
     return thaw_policy(freeze_policy(legacy))
@@ -175,7 +187,7 @@ def generate(request, *, event_sink=None, conditioning_sink=None):
     resolved_items = []
     for item in request["items"]:
         personalization = item.get("personalization")
-        policy = effective_policy(personalization, fan)
+        policy = effective_policy(personalization)
         policy_hash = digest(policy)
         supplied_hash = personalization.get("policy_hash") if personalization else None
         if supplied_hash is not None and supplied_hash != policy_hash:
@@ -191,7 +203,7 @@ def generate(request, *, event_sink=None, conditioning_sink=None):
         scheduler={
             "name": settings.get("scheduler", "EulerAncestralDiscreteScheduler"),
             "kwargs": settings.get("scheduler_kwargs", {}),
-            "config": dict(pipe.scheduler.config),
+            "config": _json_safe(dict(pipe.scheduler.config)),
         },
         vae=settings.get("vae"),
         fan=fan_block(fan),

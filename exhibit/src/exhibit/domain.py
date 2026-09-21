@@ -6,7 +6,13 @@ import hashlib
 import json
 import math
 
-from .config import CARDS_REVIEW, CONFIG, read_json
+from .config import CARDS_REVIEW, CONFIG, FAN_POLICIES, read_json
+from .fan_adapter import (
+    freeze_policy,
+    profiling_argument,
+    resolve_policy,
+    thaw_policy,
+)
 
 ASPECTS = ("color", "lighting", "texture", "mood")
 
@@ -114,11 +120,30 @@ def normalize_selection(entries, config=CONFIG, *, limits=None):
 
 
 # Everything that changes the encoding and therefore the identity of a result.
+# The values themselves live only in configs/fan-policies.json.
 FAN_SETTINGS = ("skip", "sample_size", "skip_pa", "use_attn_mask")
+LEGACY_POLICY_ID = "legacy_exhibit"
 
 
-def fan_settings(config=CONFIG):
-    return {key: config["fan"][key] for key in FAN_SETTINGS if key in config["fan"]}
+def legacy_policy(policies=FAN_POLICIES):
+    """The registered policy the v1 assets and samples were generated with."""
+    return thaw_policy(resolve_policy(LEGACY_POLICY_ID, policies))
+
+
+def fan_settings(policy=None):
+    """The v1 encoder block, derived from the policy that now owns these values."""
+    policy = policy or legacy_policy()
+    return {
+        "skip": policy["skip"],
+        "sample_size": profiling_argument(policy),
+        "skip_pa": list(policy["skip_pa"]),
+        "use_attn_mask": policy["use_attn_mask"],
+    }
+
+
+def legacy_fan_manifest_block(config=CONFIG, policy=None):
+    """The v1 asset manifest's `fan` block: the pinned sources plus the settings."""
+    return {**config["fan"], **fan_settings(policy)}
 
 
 def personalization_hash(refs, alpha, *, commit, generation, seeds, fan=None):
@@ -155,9 +180,11 @@ def legacy_snapshot_from_selection(selection, config=CONFIG):
     }
 
 
-def build_legacy_personalization(selection, config=CONFIG):
+def build_legacy_personalization(selection, config=CONFIG, *, policy=None):
     """The byte-compatible builder retained until the service is migrated."""
-    alpha, merged = config["alpha"], {}
+    policy = policy or legacy_policy()
+    settings = fan_settings(policy)
+    alpha, merged = policy["alpha"], {}
     for entry in selection:
         card = CARDS[entry["card_id"]]
         for aspect in ASPECTS:
@@ -176,14 +203,14 @@ def build_legacy_personalization(selection, config=CONFIG):
     return {
         "refs": refs,
         "alpha": alpha,
-        "sample_size": config["fan"]["sample_size"],
+        "sample_size": settings["sample_size"],
         "hash": personalization_hash(
             refs,
             alpha,
             commit=config["fan"]["commit"],
             generation=config["generation"],
             seeds=config["seeds"],
-            fan=fan_settings(config),
+            fan=settings,
         ),
     }
 
@@ -381,8 +408,6 @@ def _refs(snapshot, policy, catalog=None):
 
 def build_personalization(snapshot, *, prompt, policy, provenance, catalog=None):
     """Build a policy-bound, content-addressed snapshot; implicit lists are invalid."""
-    from .fan_adapter import freeze_policy, profiling_argument, thaw_policy
-
     if not isinstance(snapshot, dict):
         raise TypeError("snapshot must be a PreferenceSnapshot object")
     if not isinstance(prompt, str) or not prompt.strip():

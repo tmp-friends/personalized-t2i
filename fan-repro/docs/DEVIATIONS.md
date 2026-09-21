@@ -18,6 +18,10 @@
 - `scripts/smoke_clip.py` は拡散 model を使わず、CLIP-L encoder と FAN decoder の数値経路を確認する。
 - 公式の attention monkey patch と互換性を保つため `transformers>=4.57,<5` に固定する。
 - FLUX.1-dev、SD3.5、SDXL、unCLIP、LLaVA の全経路は再検証していない。
+- `exhibit/` は encoder の振る舞いを `exhibit/configs/fan-policies.json` の policy で選ぶ。
+  `alpha`、`skip`、`skip_pa`、`use_attn_mask`、`pooled_mode`、`profiling`、`reference_unit`
+  はこのファイルだけが持ち、公式 wrapper には呼び出し時の引数として渡す。参照の選別は公式
+  `sample_reference` に委譲する。upstream の固定 SHA は変えていない。source patch も追加していない。
 
 ## Validation
 

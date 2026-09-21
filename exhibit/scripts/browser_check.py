@@ -136,7 +136,9 @@ def main():
         default=None,
         help="drive this already running server instead of the bundled mock API",
     )
-    p.add_argument("--report-dir", type=Path, default=REPO / "docs/reports/fan-demo")
+    p.add_argument(
+        "--report-dir", type=Path, default=REPO / "docs/reports/fan-personalization"
+    )
     p.add_argument("--pair-ms", default="700", help="mock API: milliseconds per image")
     p.add_argument("--quick", action="store_true")
     args = p.parse_args()
