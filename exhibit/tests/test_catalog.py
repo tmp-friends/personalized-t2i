@@ -184,7 +184,9 @@ def reviewed_v2(tmp_path):
 
 def test_v2_build_has_a_balanced_explicit_16_profile_design():
     """The 16 profiles are listed, not derived; the list is balanced and legal."""
-    cards = build_catalog(definition())
+    value = definition()
+    overrides = value["seed_overrides"]
+    cards = build_catalog(value)
     assert len(cards) == 64
     assert cards[0]["id"] == "girl-c0-l0-t0-m2"
     assert cards[-1]["id"] == "barista-c3-l2-t1-m3"
@@ -193,7 +195,13 @@ def test_v2_build_has_a_balanced_explicit_16_profile_design():
     for subject in ("girl", "student", "traveler", "barista"):
         rows = [card for card in cards if card["subject_id"] == subject]
         assert len(rows) == 16
-        assert len({card["seed"] for card in rows}) == 1
+        # One seed per subject, except the cards the definition re-rolls by id.
+        assert len({card["seed"] for card in rows if card["id"] not in overrides}) == 1
+        assert all(
+            card["seed"] == overrides[card["id"]]
+            for card in rows
+            if card["id"] in overrides
+        )
         for axis in ASPECTS:
             assert Counter(card["axis_levels"][axis] for card in rows) == Counter(
                 dict.fromkeys(range(4), 4)
@@ -259,7 +267,6 @@ def test_build_catalog_rejects_malformed_or_noncanonical_definitions(mutate):
 def test_seed_overrides_reroll_one_card_and_invalidate_only_its_review(reviewed_v2):
     """A per-card seed changes that card's contract; the other 63 stay reviewed."""
     value = definition()
-    assert value["seed_overrides"] == {}
     target = "girl-c0-l0-t0-m2"
     value["seed_overrides"] = {target: 9601}
     cards = {card["id"]: card for card in build_catalog(value)}
@@ -275,7 +282,8 @@ def test_seed_overrides_reroll_one_card_and_invalidate_only_its_review(reviewed_
 def test_a_seed_override_invalidates_only_that_card(reviewed_v2, tmp_path, monkeypatch):
     value = definition()
     target = "girl-c0-l0-t0-m2"
-    value["seed_overrides"] = {target: 9601}
+    # On top of the shipped re-rolls, so only this one card changes.
+    value["seed_overrides"] = {**value["seed_overrides"], target: 9601}
     changed = tmp_path / "catalog-definition.json"
     changed.write_text(json.dumps(value))
     monkeypatch.setattr(catalog_module, "V2", changed)
