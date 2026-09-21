@@ -1,0 +1,478 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-09-21 20:10 JST",
+  "configuration": {
+    "default_policy_id": "legacy_exhibit",
+    "policies": [
+      "legacy_exhibit",
+      "official_encoder"
+    ],
+    "effective_default_policy": {
+      "alpha": 0.5,
+      "skip": -2,
+      "skip_pa": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "use_attn_mask": false,
+      "pooled_mode": "plain",
+      "profiling": {
+        "mode": "all"
+      },
+      "reference_unit": "aspect_phrase"
+    },
+    "catalog_id": "catalog-v1",
+    "sample_manifest_catalog_id": "catalog-v1",
+    "selection": {
+      "min": 3,
+      "max": 10,
+      "round_size": 12,
+      "max_rounds": 3
+    },
+    "seeds": [
+      230923,
+      230924,
+      230925,
+      230926
+    ],
+    "timeout_seconds": 120,
+    "fan_pin": "9d0b76843f6437718195accac9cf3f050a25d26b",
+    "settings_source": "exhibit/configs/fan-policies.json"
+  },
+  "sections": {
+    "実装完了": {
+      "state": "合格",
+      "blocks": {
+        "自動テスト": {
+          "state": "合格",
+          "reasons": [],
+          "detail": {
+            "python_passed": 339,
+            "python_failed": 0,
+            "node_passed": 21,
+            "node_failed": 0
+          },
+          "missing_rate": null,
+          "source": "/home/tomoya/stable-diffusion/personalized-t2i/.worktrees/fan-personalization/exhibit/outputs"
+        },
+        "Preflight（資産・モデル）": {
+          "state": "合格",
+          "reasons": [],
+          "detail": {
+            "catalog_id": "catalog-v1",
+            "reviewed_cards": 16,
+            "cards": 16,
+            "fixed_images": 40,
+            "generic_images": 24,
+            "samples": 6,
+            "models_checked": true,
+            "models_ready": true
+          },
+          "missing_rate": null,
+          "source": "/home/tomoya/stable-diffusion/personalized-t2i/.worktrees/fan-personalization/exhibit/outputs/preflight.json"
+        },
+        "v1資産と個人化ハッシュの不変": {
+          "state": "合格",
+          "reasons": [],
+          "detail": {
+            "samples": 6,
+            "sample_hashes": {
+              "s1-cat": "468e0bb1687af30c9d158da3bce8b94783cb0f7d6e7767d65a7cfee84dee4ed0",
+              "s1-tokyo": "468e0bb1687af30c9d158da3bce8b94783cb0f7d6e7767d65a7cfee84dee4ed0",
+              "s2-cat": "24582731cf6bf0274b8ba573dd70a0e2d731c2ba2b18c3c974dbfe79d2392040",
+              "s2-tokyo": "24582731cf6bf0274b8ba573dd70a0e2d731c2ba2b18c3c974dbfe79d2392040",
+              "s3-cat": "f56c5d79a35420f645220053a536467713b12de654be91fe4e3bf386ad7511a8",
+              "s3-tokyo": "f56c5d79a35420f645220053a536467713b12de654be91fe4e3bf386ad7511a8"
+            },
+            "policy_id": "legacy_exhibit",
+            "effective_policy": {
+              "alpha": 0.5,
+              "skip": -2,
+              "skip_pa": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7
+              ],
+              "use_attn_mask": false,
+              "pooled_mode": "plain",
+              "profiling": {
+                "mode": "all"
+              },
+              "reference_unit": "aspect_phrase"
+            },
+            "frozen_assets_checked": true,
+            "frozen_assets_changed": []
+          },
+          "missing_rate": null,
+          "source": "/home/tomoya/stable-diffusion/personalized-t2i/.worktrees/fan-personalization/exhibit/assets/samples.json"
+        }
+      }
+    },
+    "実機検証": {
+      "state": "不合格",
+      "blocks": {
+        "encoding 数値検査": {
+          "state": "合格",
+          "reasons": [],
+          "detail": {
+            "policies": {
+              "a99004b42358d1f822d223c5e68b33d28801e10fe97ea925c2216c365a8e3749": {
+                "policy_id": "legacy_exhibit",
+                "passed": true,
+                "failed_checks": []
+              },
+              "418f3372b6935d7ee94062f0631f099995a0d501012633cc10fb5976ecab807f": {
+                "policy_id": "screen-skip1-plain-all-alpha-0.3",
+                "passed": true,
+                "failed_checks": []
+              },
+              "0cc84fda31f8cfe849ec5873be25f6c86f84283b5f8163fcf1a8d58a0a6f4f88": {
+                "policy_id": "screen-skip1-plain-all-alpha-0.5",
+                "passed": true,
+                "failed_checks": []
+              },
+              "a628d421dcef81ce43654892fabc909bf853d0fdd9a784addea33defd09eee40": {
+                "policy_id": "screen-skip1-plain-ratio01-alpha-0.3",
+                "passed": true,
+                "failed_checks": []
+              },
+              "5f2a92f3cbbcf32de330f0fa9ca2a07c51de1c59da53fd393d399a3ac651c9c0": {
+                "policy_id": "screen-skip1-plain-ratio01-alpha-0.5",
+                "passed": true,
+                "failed_checks": []
+              }
+            },
+            "policy_count": 5,
+            "passed_count": 5,
+            "fan_restored_after_exception": true,
+            "versions": {
+              "python": "3.10.16",
+              "torch": "2.14.0+cu130",
+              "cuda": "13.0",
+              "device": "NVIDIA GeForce RTX 4090"
+            },
+            "seconds": 92.337
+          },
+          "missing_rate": 0.0,
+          "source": "/home/tomoya/stable-diffusion/personalized-t2i/.worktrees/fan-personalization/exhibit/outputs/fan-evaluation/diagnostics/0be9313589c66e5295d9ef838084baac525d484cbbc4fe30301acc75e681e03c/report.json"
+        },
+        "実ブラウザーの一連操作": {
+          "state": "合格",
+          "reasons": [],
+          "detail": {
+            "url": "http://127.0.0.1:7860",
+            "mock": false,
+            "checks": 16,
+            "page_errors": 0,
+            "console_messages": 0,
+            "external_requests": 0,
+            "failed_requests": 0,
+            "generate_wait_seconds": 23.73
+          },
+          "missing_rate": null,
+          "source": "/home/tomoya/stable-diffusion/personalized-t2i/.worktrees/fan-personalization/docs/reports/fan-personalization/browser-evidence.json"
+        },
+        "連続セッション実測": {
+          "state": "合格",
+          "reasons": [],
+          "detail": {
+            "sessions": 20,
+            "successes": 20,
+            "runs": 60,
+            "runs_measured": 60,
+            "median_seconds": 24.046,
+            "p95_seconds": 24.078,
+            "max_seconds": 24.242,
+            "deadline_seconds": 120.0,
+            "peak_vram_mib": 9780.0,
+            "exact_cache_runs": 20,
+            "cancelled_runs": 20
+          },
+          "missing_rate": 0.0,
+          "source": "/home/tomoya/stable-diffusion/personalized-t2i/.worktrees/fan-personalization/exhibit/outputs/rehearsal.json"
+        },
+        "catalog v2 の確認": {
+          "state": "不合格",
+          "reasons": [
+            "not_reviewed: initial axis phrases do not render all four aspects distinguishably; revise phrases and regenerate before any review entry is written"
+          ],
+          "detail": {
+            "generated": 64,
+            "expected": 64,
+            "reviewed_entries": 0,
+            "usable_cards": 0,
+            "findings_present": true,
+            "decision": "not_reviewed: initial axis phrases do not render all four aspects distinguishably; revise phrases and regenerate before any review entry is written",
+            "visual_findings": {
+              "color": "warm/cool strongly rendered, muted mostly rendered, vivid often not more saturated than default; cool palette tints skin cyan on some cards (visible breakage)",
+              "lighting": "hard directional light and backlighting are rarely visible; the four levels are mostly indistinguishable",
+              "texture": "distinguishable on some subjects (girl, traveler), near-identical on others (student warm row)",
+              "mood": "cheerful (smile) and sometimes serious are visible; calm and dreamlike are not distinguishable"
+            },
+            "clip_probe": {
+              "note": "diagnostic aid only, not a review: frozen openai/clip-vit-large-patch14, does the claimed level rank first among the axis's four phrases",
+              "top1": {
+                "color": 39,
+                "lighting": 20,
+                "texture": 27,
+                "mood": 31
+              },
+              "top1_per_level": {
+                "color": [
+                  8,
+                  9,
+                  14,
+                  8
+                ],
+                "lighting": [
+                  0,
+                  0,
+                  4,
+                  16
+                ],
+                "texture": [
+                  4,
+                  6,
+                  7,
+                  10
+                ],
+                "mood": [
+                  14,
+                  10,
+                  7,
+                  0
+                ]
+              },
+              "all_four_axes": 5,
+              "of": 64
+            },
+            "checked_by": "coding agent (visual contact sheets of all 4 subjects sampled: 8 of 16 sheets, plus frozen-CLIP probe of all 64)",
+            "checked_at": "2026-09-21"
+          },
+          "missing_rate": 1.0,
+          "source": "/home/tomoya/stable-diffusion/personalized-t2i/.worktrees/fan-personalization/exhibit/outputs/preparation/catalog-v2/review-findings.json"
+        }
+      }
+    },
+    "精度実証": {
+      "state": "未実施",
+      "blocks": {
+        "screen（8条件の絞り込み）": {
+          "state": "合格",
+          "reasons": [
+            "19327455f7f3:numerical_failure",
+            "ab45fad27aa6:numerical_failure",
+            "c770ee65e519:numerical_failure",
+            "f96314c33699:numerical_failure"
+          ],
+          "detail": {
+            "experiment_hash": "a8335ee98bba71f4b0b722900c07bcee97ae88dd493745b0b858a521a4119d26",
+            "directory": "exhibit/outputs/fan-evaluation/a8335ee98bba71f4b0b722900c07bcee97ae88dd493745b0b858a521a4119d26",
+            "decision_status": "selected",
+            "decision_hash": "aab7b3e36ebd4d0b2838cdd0b8a60c5b9fe76cc2981a371596bd1f81133f23fa",
+            "status_counts": {
+              "measured": 222
+            },
+            "record_count": 222,
+            "selected": [
+              {
+                "policy_id": "screen-skip1-plain-all",
+                "policy_hash": "ec01ec598f1cc595e794d72bd060f60f6ae93a40003882e22703b8cc951168c4",
+                "mean_history_delta_vs_legacy": 0.0068345418822970795,
+                "mean_target_delta_vs_legacy": -0.00036727438980941815
+              },
+              {
+                "policy_id": "screen-skip1-plain-ratio01",
+                "policy_hash": "b69bef7de643ec7f9b23fcc5b087645d606db4a036ecee2f58c8de450cf32d88",
+                "mean_history_delta_vs_legacy": 0.00578087783248398,
+                "mean_target_delta_vs_legacy": -0.00174927025766984
+              }
+            ],
+            "candidates": [
+              {
+                "policy_hash": "19327455f7f315e06b8c69050e5542ca81bbe0985e3137d587cf2d75281eb0e1",
+                "status": "fail",
+                "reasons": [
+                  "numerical_failure"
+                ],
+                "mean_history_delta_vs_legacy": -0.0011237651048896478,
+                "mean_target_delta_vs_legacy": -0.0015242740334402208
+              },
+              {
+                "policy_hash": "5363d38087f4d918c1673c11ae621984f4746f35dc919af2d417a0c6fe0693ac",
+                "status": "pass",
+                "reasons": [],
+                "mean_history_delta_vs_legacy": -0.00016555841724712078,
+                "mean_target_delta_vs_legacy": 0.00035897708799914493
+              },
+              {
+                "policy_hash": "ab45fad27aa62cdc3e8333dcf4a036a39d9561fc0628cb36902a9de38a86474d",
+                "status": "fail",
+                "reasons": [
+                  "numerical_failure"
+                ],
+                "mean_history_delta_vs_legacy": 0.003128304985986176,
+                "mean_target_delta_vs_legacy": -0.004764066097151001
+              },
+              {
+                "policy_hash": "b69bef7de643ec7f9b23fcc5b087645d606db4a036ecee2f58c8de450cf32d88",
+                "status": "pass",
+                "reasons": [],
+                "mean_history_delta_vs_legacy": 0.00578087783248398,
+                "mean_target_delta_vs_legacy": -0.00174927025766984
+              },
+              {
+                "policy_hash": "c330b7d5c5f49588b64534535e8816d413632568100ce50f274d0e539f7091b1",
+                "status": "pass",
+                "reasons": [],
+                "mean_history_delta_vs_legacy": -0.0012356362806634665,
+                "mean_target_delta_vs_legacy": 0.0013504471556627848
+              },
+              {
+                "policy_hash": "c770ee65e519250fd0859e314107496bac0f1c947f7a28d6e12a05f264bd3648",
+                "status": "fail",
+                "reasons": [
+                  "numerical_failure"
+                ],
+                "mean_history_delta_vs_legacy": 0.00425960357567048,
+                "mean_target_delta_vs_legacy": -0.003577862597718444
+              },
+              {
+                "policy_hash": "ec01ec598f1cc595e794d72bd060f60f6ae93a40003882e22703b8cc951168c4",
+                "status": "pass",
+                "reasons": [],
+                "mean_history_delta_vs_legacy": 0.0068345418822970795,
+                "mean_target_delta_vs_legacy": -0.00036727438980941815
+              },
+              {
+                "policy_hash": "f96314c33699dc6ad04b00f54c019ee670b7f74344b870c71e70f7e27489a89e",
+                "status": "fail",
+                "reasons": [
+                  "numerical_failure"
+                ],
+                "mean_history_delta_vs_legacy": 2.0069434776052997e-05,
+                "mean_target_delta_vs_legacy": -0.004315984282419108
+              }
+            ]
+          },
+          "missing_rate": 0.0,
+          "source": "/home/tomoya/stable-diffusion/personalized-t2i/.worktrees/fan-personalization/exhibit/outputs/fan-evaluation/a8335ee98bba71f4b0b722900c07bcee97ae88dd493745b0b858a521a4119d26/summary.json"
+        },
+        "refine（alpha 追加比較）": {
+          "state": "合格",
+          "reasons": [
+            "0cc84fda31f8:target_non_degradation"
+          ],
+          "detail": {
+            "experiment_hash": "807e52b56200d18a39cb1f45dfcac8ab5041ea19147c3e817e3aa5ff69856e18",
+            "directory": "exhibit/outputs/fan-evaluation/807e52b56200d18a39cb1f45dfcac8ab5041ea19147c3e817e3aa5ff69856e18",
+            "decision_status": "selected",
+            "decision_hash": "19cf1b6f53cbe5b23643647cbda657838a5a7bbf1cf8d7030f56481d6ef573f4",
+            "status_counts": {
+              "measured": 144
+            },
+            "record_count": 144,
+            "selected": [
+              {
+                "policy_id": "screen-skip1-plain-ratio01-alpha-0.5",
+                "policy_hash": "5f2a92f3cbbcf32de330f0fa9ca2a07c51de1c59da53fd393d399a3ac651c9c0",
+                "mean_history_delta_vs_legacy": 0.01702036718258948,
+                "mean_target_delta_vs_legacy": -0.009628065644806403
+              },
+              {
+                "policy_id": "screen-skip1-plain-all",
+                "policy_hash": "ec01ec598f1cc595e794d72bd060f60f6ae93a40003882e22703b8cc951168c4",
+                "mean_history_delta_vs_legacy": 0.0068345418822970795,
+                "mean_target_delta_vs_legacy": -0.00036727438980941815
+              }
+            ],
+            "candidates": [
+              {
+                "policy_hash": "0cc84fda31f8cfe849ec5873be25f6c86f84283b5f8163fcf1a8d58a0a6f4f88",
+                "status": "fail",
+                "reasons": [
+                  "target_non_degradation"
+                ],
+                "mean_history_delta_vs_legacy": 0.014515094454771038,
+                "mean_target_delta_vs_legacy": -0.01407279207973323
+              },
+              {
+                "policy_hash": "418f3372b6935d7ee94062f0631f099995a0d501012633cc10fb5976ecab807f",
+                "status": "pass",
+                "reasons": [],
+                "mean_history_delta_vs_legacy": 0.0020028527158770064,
+                "mean_target_delta_vs_legacy": 0.0037286088775947885
+              },
+              {
+                "policy_hash": "5f2a92f3cbbcf32de330f0fa9ca2a07c51de1c59da53fd393d399a3ac651c9c0",
+                "status": "pass",
+                "reasons": [],
+                "mean_history_delta_vs_legacy": 0.01702036718258948,
+                "mean_target_delta_vs_legacy": -0.009628065644806403
+              },
+              {
+                "policy_hash": "a628d421dcef81ce43654892fabc909bf853d0fdd9a784addea33defd09eee40",
+                "status": "pass",
+                "reasons": [],
+                "mean_history_delta_vs_legacy": 0.002154752366950062,
+                "mean_target_delta_vs_legacy": 0.002238170796473106
+              },
+              {
+                "policy_hash": "b69bef7de643ec7f9b23fcc5b087645d606db4a036ecee2f58c8de450cf32d88",
+                "status": "pass",
+                "reasons": [],
+                "mean_history_delta_vs_legacy": 0.00578087783248398,
+                "mean_target_delta_vs_legacy": -0.00174927025766984
+              },
+              {
+                "policy_hash": "ec01ec598f1cc595e794d72bd060f60f6ae93a40003882e22703b8cc951168c4",
+                "status": "pass",
+                "reasons": [],
+                "mean_history_delta_vs_legacy": 0.0068345418822970795,
+                "mean_target_delta_vs_legacy": -0.00036727438980941815
+              }
+            ]
+          },
+          "missing_rate": 0.0,
+          "source": "/home/tomoya/stable-diffusion/personalized-t2i/.worktrees/fan-personalization/exhibit/outputs/fan-evaluation/807e52b56200d18a39cb1f45dfcac8ab5041ea19147c3e817e3aa5ff69856e18/summary.json"
+        },
+        "heldout（事前基準の判定）": {
+          "state": "未実施",
+          "reasons": [
+            "heldout_not_run"
+          ],
+          "detail": {},
+          "missing_rate": null,
+          "source": "/home/tomoya/stable-diffusion/personalized-t2i/.worktrees/fan-personalization/exhibit/outputs/fan-evaluation"
+        },
+        "本人によるブラインド評価": {
+          "state": "未実施",
+          "reasons": [
+            "study_not_built"
+          ],
+          "detail": {},
+          "missing_rate": null,
+          "source": "/home/tomoya/stable-diffusion/personalized-t2i/.worktrees/fan-personalization/exhibit/outputs/fan-evaluation/study"
+        }
+      }
+    }
+  },
+  "statements": [
+    "未実施の評価を成功として扱わない。欠損は欠損として数える。",
+    "旧 outputs/fan-probe と docs/reports/fan-demo の数値は現行設定の結果として引用しない。",
+    "論文の定量結果をこの展示の性能として記載しない。",
+    "人の回答は収集していない。代答もしない。"
+  ],
+  "inputs_hash": "623454fec4401bb10ee12ca2f3f0504e71807ddbf7a09a23af6bf61ba0fdc55f"
+}
