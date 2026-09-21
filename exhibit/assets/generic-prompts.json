@@ -1,104 +1,26 @@
 {
   "cat": {
-    "type": "rewrite",
-    "id": "cat",
-    "prompt": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1girl, solo, brown hair, green eyes, sweater, holding cat, window, upper body, detailed eyes, detailed illustration, balanced composition, natural lighting, detailed textures, absurdres, highres.",
-    "raw": "balanced composition, natural lighting, detailed textures",
-    "valid": true,
-    "context_hash": null,
-    "model": {
-      "model": "Qwen/Qwen3.5-4B",
-      "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
-      "template_version": "append-aesthetic-character-v4"
-    },
-    "token_lengths": [
-      59,
-      59
-    ]
+    "prompt": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1girl, solo, brown hair, green eyes, sweater, holding cat, window, upper body, detailed eyes, detailed illustration, absurdres, highres.",
+    "topic_id": "cat"
   },
   "tokyo": {
-    "type": "rewrite",
-    "id": "tokyo",
-    "prompt": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1boy, solo, male focus, short black hair, jacket, Tokyo skyline, night, portrait, detailed eyes, detailed illustration, balanced composition, natural lighting, detailed textures, absurdres, highres.",
-    "raw": "balanced composition, natural lighting, detailed textures",
-    "valid": true,
-    "context_hash": null,
-    "model": {
-      "model": "Qwen/Qwen3.5-4B",
-      "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
-      "template_version": "append-aesthetic-character-v4"
-    },
-    "token_lengths": [
-      59,
-      59
-    ]
+    "prompt": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1boy, solo, male focus, short black hair, jacket, Tokyo skyline, night, portrait, detailed eyes, detailed illustration, absurdres, highres.",
+    "topic_id": "tokyo"
   },
   "forest": {
-    "type": "rewrite",
-    "id": "forest",
-    "prompt": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1girl, solo, silver hair, witch hat, cloak, forest, upper body, detailed eyes, detailed illustration, balanced composition, natural lighting, detailed textures, absurdres, highres.",
-    "raw": "balanced composition, natural lighting, detailed textures",
-    "valid": true,
-    "context_hash": null,
-    "model": {
-      "model": "Qwen/Qwen3.5-4B",
-      "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
-      "template_version": "append-aesthetic-character-v4"
-    },
-    "token_lengths": [
-      56,
-      56
-    ]
+    "prompt": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1girl, solo, silver hair, witch hat, cloak, forest, upper body, detailed eyes, detailed illustration, absurdres, highres.",
+    "topic_id": "forest"
   },
   "lighthouse": {
-    "type": "rewrite",
-    "id": "lighthouse",
-    "prompt": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1boy, solo, male focus, short blond hair, sailor hat, striped shirt, lighthouse, ocean, upper body, detailed eyes, detailed illustration, balanced composition, natural lighting, detailed textures, absurdres, highres.",
-    "raw": "balanced composition, natural lighting, detailed textures",
-    "valid": true,
-    "context_hash": null,
-    "model": {
-      "model": "Qwen/Qwen3.5-4B",
-      "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
-      "template_version": "append-aesthetic-character-v4"
-    },
-    "token_lengths": [
-      63,
-      63
-    ]
+    "prompt": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1boy, solo, male focus, short blond hair, sailor hat, striped shirt, lighthouse, ocean, upper body, detailed eyes, detailed illustration, absurdres, highres.",
+    "topic_id": "lighthouse"
   },
   "rain": {
-    "type": "rewrite",
-    "id": "rain",
-    "prompt": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1girl, solo, blue hair, raincoat, rain, city street, upper body, detailed eyes, detailed illustration, balanced composition, natural lighting, detailed textures, absurdres, highres.",
-    "raw": "balanced composition, natural lighting, detailed textures",
-    "valid": true,
-    "context_hash": null,
-    "model": {
-      "model": "Qwen/Qwen3.5-4B",
-      "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
-      "template_version": "append-aesthetic-character-v4"
-    },
-    "token_lengths": [
-      57,
-      57
-    ]
+    "prompt": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1girl, solo, blue hair, raincoat, rain, city street, upper body, detailed eyes, detailed illustration, absurdres, highres.",
+    "topic_id": "rain"
   },
   "cafe": {
-    "type": "rewrite",
-    "id": "cafe",
-    "prompt": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1girl, solo, auburn hair, white shirt, apron, cafe, upper body, detailed eyes, detailed illustration, balanced composition, natural lighting, detailed textures, absurdres, highres.",
-    "raw": "balanced composition, natural lighting, detailed textures",
-    "valid": true,
-    "context_hash": null,
-    "model": {
-      "model": "Qwen/Qwen3.5-4B",
-      "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
-      "template_version": "append-aesthetic-character-v4"
-    },
-    "token_lengths": [
-      56,
-      56
-    ]
+    "prompt": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1girl, solo, auburn hair, white shirt, apron, cafe, upper body, detailed eyes, detailed illustration, absurdres, highres.",
+    "topic_id": "cafe"
   }
 }

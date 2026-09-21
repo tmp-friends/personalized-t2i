@@ -1,8 +1,40 @@
-// Keep old network responses from reviving completed sessions or cancelled jobs.
-export function initialScreen(session) {
-  if (session.run) return "result";
-  const valid = session.choices.filter((c) => c.chosen_id).length;
-  return session.choices.length >= 5 && valid >= 3 ? "persona" : "choose";
+// Pure session-state helpers, shared by app.js and exhibit/tests/test_browser_state.mjs.
+// They keep old network responses from reviving deleted sessions, cancelled runs or
+// snapshots that predate the visitor's latest action.
+
+export const DEFAULT_SELECTION = { min: 3, max: 5 };
+
+/** A selection is usable once it holds between `min` and `max` cards. */
+export function selectionComplete(selection, limits = DEFAULT_SELECTION) {
+  const n = Array.isArray(selection) ? selection.length : 0;
+  const min = limits?.min ?? DEFAULT_SELECTION.min;
+  const max = limits?.max ?? DEFAULT_SELECTION.max;
+  return n >= min && n <= max;
+}
+
+/** Which screen a restored (sessionStorage) session should resume on. */
+export function initialScreen(session, limits = DEFAULT_SELECTION) {
+  if (!session) return "welcome";
+  const run = session.run;
+  if (run) return run.blind?.revealed ? "result" : "blind";
+  return selectionComplete(session.selection, limits) ? "topics" : "cards";
+}
+
+/**
+ * The identity a poll request is tied to. A response is only accepted while all
+ * of these still hold: same session, same run, same newest variant, same reveal
+ * state. Anything the visitor does in the meantime invalidates in-flight polls.
+ */
+export function pollIdentity(session) {
+  const run = session?.run;
+  if (!session?.id || !run) return null;
+  const variants = Array.isArray(run.variants) ? run.variants : [];
+  return {
+    sid: session.id,
+    run: run.id ?? null,
+    variant: variants.length ? (variants[variants.length - 1].id ?? null) : null,
+    revealed: Boolean(run.blind?.revealed),
+  };
 }
 
 export function createPoller({
@@ -17,7 +49,19 @@ export function createPoller({
   let generation = 0,
     timer = null;
   const same = (a, b) =>
-    a && b && a.sid === b.sid && a.job === b.job && a.context === b.context;
+    Boolean(a) &&
+    Boolean(b) &&
+    a.sid === b.sid &&
+    a.run === b.run &&
+    a.variant === b.variant &&
+    a.revealed === b.revealed;
+  // A snapshot from another session/run, or one that has forgotten a reveal we
+  // already saw, is older than what the screen shows.
+  const fresh = (requested, result) =>
+    Boolean(result) &&
+    result.id === requested.sid &&
+    (result.run?.id ?? null) === requested.run &&
+    !(requested.revealed && result.run?.blind && !result.run.blind.revealed);
   function stop() {
     generation++;
     if (timer !== null) unschedule(timer);
@@ -26,34 +70,37 @@ export function createPoller({
   function start() {
     stop();
     const epoch = generation;
+    // Schedule after the previous request settles, never concurrently.
+    const again = () => {
+      if (epoch === generation) timer = schedule(tick);
+    };
     async function tick() {
       const requested = identity();
-      if (epoch !== generation || !requested?.sid) return;
+      if (epoch !== generation) return;
+      if (!requested?.sid) return;
+      let result;
       try {
-        const result = await fetchSnapshot(requested.sid);
-        if (epoch !== generation || !same(requested, identity())) return;
-        if (
-          result.id !== requested.sid ||
-          result.run?.id !== requested.job ||
-          result.run?.context?.hash !== requested.context
-        )
-          return;
-        onSnapshot(result);
-        if (result.run.status === "done") {
-          stop();
-          return;
-        }
+        result = await fetchSnapshot(requested.sid);
       } catch (error) {
-        if (epoch !== generation || !same(requested, identity())) return;
+        if (epoch !== generation) return;
+        if (!same(requested, identity())) return again();
         if (error.status === 404) {
           stop();
           onExpired();
           return;
         }
         onError(error);
+        return again();
       }
-      // Schedule after the previous request settles, never concurrently.
-      if (epoch === generation) timer = schedule(tick);
+      if (epoch !== generation) return;
+      if (!same(requested, identity()) || !fresh(requested, result))
+        return again();
+      onSnapshot(result);
+      if (result.run?.status === "done") {
+        stop();
+        return;
+      }
+      again();
     }
     timer = schedule(tick);
   }

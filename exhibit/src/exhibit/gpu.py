@@ -9,7 +9,7 @@ import time
 import uuid
 from pathlib import Path
 
-from .config import GPU_PYTHON, OUTPUTS, REPO, ROOT, write_json
+from .config import FAN_UPSTREAM, GPU_PYTHON, OUTPUTS, ROOT, write_json
 
 
 class GPUError(RuntimeError):
@@ -85,9 +85,7 @@ def run_stage(request, directory, cancel, deadline, on_event):
         write_json(request_file, request)
         env = {
             **os.environ,
-            "PYTHONPATH": os.pathsep.join(
-                [str(ROOT / "src"), str(REPO / "pigreward-repro/src")]
-            ),
+            "PYTHONPATH": os.pathsep.join([str(ROOT / "src"), str(FAN_UPSTREAM)]),
             "HF_HUB_OFFLINE": "1",
             "TRANSFORMERS_OFFLINE": "1",
             "TOKENIZERS_PARALLELISM": "false",

@@ -1,50 +1,13 @@
-"""Auditable preference context shared verbatim by rewriting and comparison."""
+"""Cards, reference texts and the personalization identity shared by every stage."""
 
 from __future__ import annotations
 
 import hashlib
 import json
-from collections import Counter
 
-AXES = {
-    "color": {
-        "label": "色づかい",
-        "values": {
-            "warm": ("暖かな色", "warm accent colors"),
-            "cool": ("涼しげな色", "cool accent colors"),
-            "muted": ("落ち着いた色", "muted colors"),
-            "vivid": ("鮮やかな色", "vivid colors"),
-        },
-    },
-    "lighting": {
-        "label": "光",
-        "values": {
-            "soft": ("柔らかな光", "soft lighting"),
-            "dramatic": ("印象的な陰影", "dramatic contrast"),
-        },
-    },
-    "composition": {
-        "label": "構図",
-        "values": {
-            "spacious": ("余白を楽しむ", "spacious composition"),
-            "close": ("被写体に近づく", "close framing"),
-        },
-    },
-    "texture": {
-        "label": "描画表現",
-        "values": {
-            "painterly": ("柔らかな絵筆のタッチ", "painterly texture"),
-            "cel_shaded": ("くっきりしたアニメ塗り", "clean lineart with cel shading"),
-        },
-    },
-    "mood": {
-        "label": "雰囲気",
-        "values": {
-            "calm": ("静かで穏やか", "calm atmosphere"),
-            "lively": ("活気のある雰囲気", "lively atmosphere"),
-        },
-    },
-}
+from .config import CARDS_REVIEW, CONFIG, read_json
+
+ASPECTS = ("color", "lighting", "texture", "mood")
 
 
 def digest(value):
@@ -63,111 +26,174 @@ def file_hash(path):
     return h.hexdigest()
 
 
-def build_persona(choices, evidence):
-    chosen = {
-        (c["pair_id"], c["chosen_id"])
-        for c in choices
-        if c.get("chosen_id") is not None
-    }
-    fragments = [
-        e
-        for e in evidence
-        if e.get("reviewed") and (e["pair_id"], e["chosen_id"]) in chosen
-    ]
-    axes = {}
-    for name in AXES:
-        relevant = [
-            e
-            for e in fragments
-            if name in e["dimensions"]
-            and e.get("values", {}).get(name) in AXES[name]["values"]
-        ]
-        votes = Counter(e["values"][name] for e in relevant)
-        # Conflicting observations remain unknown, rather than a forced majority claim.
-        value = next(iter(votes)) if len(votes) == 1 else None
-        axes[name] = {
-            "value": value,
-            "count": len({e["pair_id"] for e in relevant}),
-            "evidence_ids": [e["id"] for e in relevant],
-            "conflict": len(votes) > 1,
-        }
-    return {
-        "axes": axes,
-        "evidence": fragments,
-        "choice_ids": sorted(f"{p}:{c}" for p, c in chosen),
-        "method": "reviewed-evidence-summary",
-    }
-
-
-def effective_context(persona, edits):
-    for axis, value in edits.items():
-        if axis not in AXES or (
-            value is not None and value not in AXES[axis]["values"]
-        ):
-            raise ValueError("Unknown preference value")
-    preferences = {k: edits.get(k, v["value"]) for k, v in persona["axes"].items()}
-    preferences = {k: v for k, v in preferences.items() if v is not None}
-    # Even an unchanged explicit override takes precedence over inference.
-    removed = set(edits) | (set(AXES) - set(preferences))
-    allowed_fields = {
-        "id",
-        "pair_id",
-        "pair_version",
-        "chosen_id",
-        "dimensions",
-        "values",
-        "text",
-        "source",
-        "image_hashes",
-        "basic_prompt_en",
-        "template_version",
-        "template_hash",
-        "preprocessing",
-        "context_source",
-    }
-    fragments = [
-        {key: value for key, value in e.items() if key in allowed_fields}
-        for e in persona["evidence"]
-        if not (set(e["dimensions"]) & removed)
-    ]
-    overrides = {k: v for k, v in edits.items() if v is not None}
-    lines = [e["text"] for e in fragments]
-    lines += [
-        f"User explicitly requests {AXES[k]['values'][v][1]}."
-        for k, v in overrides.items()
-    ]
-    # A surviving inference may have lost a multi-axis fragment; do not resurrect it.
-    supported = {a for e in fragments for a in e["dimensions"]} | set(overrides)
-    preferences = {k: v for k, v in preferences.items() if k in supported}
-    context = {
-        "version": 1,
-        "preferences": preferences,
-        "overrides": overrides,
-        "evidence": fragments,
-        "choice_ids": persona["choice_ids"],
-        "text": "\n".join(lines),
-    }
-    return {**context, "hash": digest(context)}
-
-
-def compose_prompt(topic, phrases, generation):
-    parts = [topic["basic_prompt_en"], *phrases, generation["positive_prompt_tail"]]
+def compose_prompt(basic_prompt_en, phrases, generation):
+    parts = [basic_prompt_en, *phrases, generation["positive_prompt_tail"]]
     normalized = [part.strip().rstrip(" ,.\n") for part in parts if part.strip()]
     return ", ".join(normalized) + "."
 
 
-def cache_key(prompt, settings, seed, context=None):
+def build_cards(config=CONFIG):
+    """4 subjects x 4 expression profiles. The subject never enters a reference."""
+    cards = []
+    for subject in config["card_subjects"]:
+        for profile in config["card_profiles"]:
+            aspects = {key: profile["aspects"][key] for key in ASPECTS}
+            card_id = f"{subject['id']}-{profile['id']}"
+            cards.append(
+                {
+                    "id": card_id,
+                    "subject_id": subject["id"],
+                    "profile_id": profile["id"],
+                    "subject_label": subject["label"],
+                    "profile_label": profile["label"],
+                    "label": f"{subject['label']} · {profile['label']}",
+                    "aspects": aspects,
+                    "aspects_ja": {key: profile["aspects_ja"][key] for key in ASPECTS},
+                    "ref_en": ", ".join(aspects.values()),
+                    "prompt": compose_prompt(
+                        subject["basic_prompt_en"],
+                        list(aspects.values()),
+                        config["generation"],
+                    ),
+                    "seed": subject["seed"],
+                    "path": f"cards/{card_id}.png",
+                }
+            )
+    return cards
+
+
+CARDS = {card["id"]: card for card in build_cards()}
+
+
+def reviewed_ids(path=CARDS_REVIEW):
+    review = read_json(path, {}) or {}
+    return {
+        card_id
+        for card_id in CARDS
+        if isinstance(review.get(card_id), dict) and review[card_id].get("reviewed")
+    }
+
+
+def ref_text(card, aspects_off=()):
+    """The visitor may drop aspects; the dropped phrases leave the reference."""
+    off = set(aspects_off or ())
+    if off - set(ASPECTS):
+        raise ValueError("Unknown aspect")
+    text = ", ".join(
+        phrase for key, phrase in card["aspects"].items() if key not in off
+    )
+    if not text:
+        raise ValueError("説明文がすべて外されています。1つ以上残してください。")
+    return text
+
+
+def normalize_selection(entries, config=CONFIG):
+    """`[{card_id, aspects_off}]`, order preserved, validated against the catalog."""
+    entries = list(entries or [])
+    limits = config["selection"]
+    if not limits["min"] <= len(entries) <= limits["max"]:
+        raise ValueError(f"{limits['min']}〜{limits['max']}枚を選んでください。")
+    selection = []
+    for entry in entries:
+        card_id = entry.get("card_id")
+        if card_id not in CARDS:
+            raise ValueError("Unknown card")
+        if any(x["card_id"] == card_id for x in selection):
+            raise ValueError("Duplicate card")
+        aspects_off = [a for a in ASPECTS if a in set(entry.get("aspects_off") or ())]
+        if set(entry.get("aspects_off") or ()) - set(ASPECTS):
+            raise ValueError("Unknown aspect")
+        ref_text(CARDS[card_id], aspects_off)
+        selection.append({"card_id": card_id, "aspects_off": aspects_off})
+    return selection
+
+
+# Everything that changes the encoding and therefore the identity of a result.
+FAN_SETTINGS = ("skip", "sample_size", "skip_pa", "use_attn_mask")
+
+
+def fan_settings(config=CONFIG):
+    return {key: config["fan"][key] for key in FAN_SETTINGS if key in config["fan"]}
+
+
+def personalization_hash(refs, alpha, *, commit, generation, seeds, fan=None):
     return digest(
-        {"prompt": prompt, "settings": settings, "seed": seed, "context": context}
+        {
+            "refs": refs,
+            "alpha": alpha,
+            "commit": commit,
+            "fan": fan or {},
+            "generation": generation,
+            "seeds": seeds,
+        }
     )
 
 
-def validate_prompt(prompt, topic, tokenizers):
-    if not isinstance(prompt, str) or not prompt.startswith(topic["basic_prompt_en"]):
-        return False
-    if any(c in prompt for c in ["<", ">", "\n"]):
-        return False
-    return all(
-        len(t(prompt, truncation=False)["input_ids"]) <= t.model_max_length
-        for t in tokenizers
+def build_personalization(selection, weights, alpha_key, config=CONFIG):
+    """One reference per distinct aspect phrase; duplicates merge their weights.
+
+    A single bundled sentence per card was measured to swing composition, while
+    short aspect phrases keep the target framing.
+    """
+    if alpha_key not in config["alphas"]:
+        raise ValueError("Unknown alpha")
+    alpha = config["alphas"][alpha_key]
+    weights = weights or {}
+    if set(weights) - {entry["card_id"] for entry in selection}:
+        raise ValueError("Unknown card weight")
+    merged = {}
+    for entry in selection:
+        key = weights.get(entry["card_id"], "normal")
+        if key not in config["weights"]:
+            raise ValueError("Unknown weight")
+        weight = float(config["weights"][key])
+        if not weight:
+            continue
+        card = CARDS[entry["card_id"]]
+        off = set(entry["aspects_off"])
+        for aspect in ASPECTS:
+            if aspect in off:
+                continue
+            phrase = card["aspects"][aspect]
+            if phrase in merged:
+                merged[phrase]["weight"] += weight
+                merged[phrase]["card_ids"].append(card["id"])
+            else:
+                merged[phrase] = {
+                    "text": phrase,
+                    "weight": weight,
+                    "aspect": aspect,
+                    "card_ids": [card["id"]],
+                }
+    refs = list(merged.values())
+    if not refs:
+        raise ValueError("参照を1つ以上残してください。")
+    return {
+        "refs": refs,
+        "alpha": alpha,
+        "sample_size": config["fan"]["sample_size"],
+        "hash": personalization_hash(
+            refs,
+            alpha,
+            commit=config["fan"]["commit"],
+            generation=config["generation"],
+            seeds=config["seeds"],
+            fan=fan_settings(config),
+        ),
+    }
+
+
+def target_prompt(topic, config=CONFIG):
+    """The same fixed sentence for plain and personalized images."""
+    return compose_prompt(topic["basic_prompt_en"], [], config["generation"])
+
+
+def variant_cache_key(topic_id, personalization, config=CONFIG):
+    return digest(
+        {
+            "topic": topic_id,
+            "personalization": personalization["hash"],
+            "generation": config["generation"],
+            "seeds": config["seeds"],
+        }
     )

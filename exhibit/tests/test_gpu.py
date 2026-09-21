@@ -59,7 +59,7 @@ def test_gpu_lease_rejects_concurrent_processes(tmp_path, monkeypatch):
         fcntl.flock(lease, fcntl.LOCK_EX | fcntl.LOCK_NB)
         with pytest.raises(GPUError, match="busy"):
             gpu.run_stage(
-                {"stage": "rewrite"},
+                {"stage": "generate"},
                 tmp_path,
                 threading.Event(),
                 time.monotonic() + 1,

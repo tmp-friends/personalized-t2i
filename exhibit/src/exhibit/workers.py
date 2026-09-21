@@ -6,138 +6,30 @@ import sys
 import time
 from pathlib import Path
 
-from .config import CONFIG
-from .domain import AXES, compose_prompt, file_hash, validate_prompt
+from .config import CONFIG, FAN_UPSTREAM
+from .domain import fan_settings, file_hash
 
 
 def emit(kind, **data):
     print(json.dumps({"type": kind, **data}, ensure_ascii=False), flush=True)
 
 
-def llm_load(vision=False):
+def load_pipeline(settings):
+    """Pinned single-file checkpoint; only architecture files come from the config."""
+    import diffusers
     import torch
-    from transformers import (
-        AutoModelForCausalLM,
-        AutoProcessor,
-        AutoTokenizer,
-        Qwen3_5ForConditionalGeneration,
-    )
+    from diffusers import AutoencoderKL, StableDiffusionXLPipeline
 
-    c = CONFIG["llm"]
-    kw = {"revision": c["revision"], "local_files_only": True}
-    tokenizer = AutoTokenizer.from_pretrained(c["model"], **kw)
-    if vision:
-        model = Qwen3_5ForConditionalGeneration.from_pretrained(
-            c["model"], dtype=torch.bfloat16, device_map="cuda", **kw
-        ).eval()
-        processor = AutoProcessor.from_pretrained(c["model"], **kw)
-        return model, processor
-    return AutoModelForCausalLM.from_pretrained(
-        c["model"], dtype=torch.bfloat16, device_map="cuda", **kw
-    ).eval(), tokenizer
-
-
-def llm_reply(model, tokenizer, text, budget=96):
-    import torch
-
-    rendered = tokenizer.apply_chat_template(
-        [{"role": "user", "content": text}],
-        tokenize=False,
-        add_generation_prompt=True,
-        enable_thinking=False,
-    )
-    inputs = tokenizer(rendered, return_tensors="pt").to("cuda")
-    with torch.inference_mode():
-        out = model.generate(
-            **inputs,
-            max_new_tokens=budget,
-            do_sample=False,
-            pad_token_id=tokenizer.eos_token_id,
-        )
-    return tokenizer.decode(
-        out[0, inputs.input_ids.shape[1] :], skip_special_tokens=True
-    ).strip()
-
-
-def rewrite(request):
-    from transformers import CLIPTokenizer
-
-    settings = CONFIG["generation"]
-    tokenizer_source = settings.get("pipeline_config", settings)
-    tokenizers = [
-        CLIPTokenizer.from_pretrained(
-            tokenizer_source["model"],
-            revision=tokenizer_source["revision"],
-            subfolder=s,
-            local_files_only=True,
-        )
-        for s in ("tokenizer", "tokenizer_2")
-    ]
-    model, tokenizer = llm_load()
-    for item in request["items"]:
-        context = item.get("context")
-        phrases = (
-            [AXES[k]["values"][v][1] for k, v in context["preferences"].items()]
-            if context and context["preferences"]
-            else ["balanced composition", "natural lighting", "detailed textures"]
-        )
-        # The model orders only approved aesthetic phrases. It cannot rewrite the subject.
-        instruction = (
-            "Output ONLY the allowed aesthetic suffix phrases as a comma-separated list. "
-            "Use each allowed phrase exactly once. Do not copy the subject or evidence. Add no other words, quotation marks or explanation. "
-            f"Subject already included by the application (DO NOT OUTPUT): {item['topic']['basic_prompt_en']}\n"
-            f"Preference evidence: {context['text'] if context else 'No personal preferences.'}\n"
-            f"Allowed suffix phrases: {json.dumps(phrases)}"
-        )
-        valid = False
-        raw = ""
-        for attempt in range(2):
-            raw = llm_reply(
-                model,
-                tokenizer,
-                instruction
-                + (
-                    "\nYour previous response was invalid. Include every phrase in this complete list exactly once: "
-                    + ", ".join(phrases)
-                    + ". Return only that comma-separated list, with no omissions or additions."
-                    if attempt
-                    else ""
-                ),
-            )
-            pieces = [s.strip().rstrip(".") for s in raw.split(",")]
-            prompt = compose_prompt(item["topic"], pieces, settings)
-            valid = sorted(pieces) == sorted(phrases) and validate_prompt(
-                prompt, item["topic"], tokenizers
-            )
-            if valid:
-                break
-        emit(
-            "rewrite",
-            id=item["id"],
-            prompt=prompt if valid else None,
-            raw=raw,
-            valid=valid,
-            context_hash=context["hash"] if context else None,
-            model=CONFIG["llm"],
-            token_lengths=[len(t(prompt)["input_ids"]) for t in tokenizers],
-        )
-
-
-def generate(request):
-    import torch
-    from diffusers import EulerAncestralDiscreteScheduler, StableDiffusionXLPipeline
-
-    s = request.get("settings", CONFIG["generation"])
-    if s.get("checkpoint"):
+    if settings.get("checkpoint"):
         from huggingface_hub import hf_hub_download
 
         checkpoint = hf_hub_download(
-            s["model"],
-            filename=s["checkpoint"],
-            revision=s["revision"],
+            settings["model"],
+            filename=settings["checkpoint"],
+            revision=settings["revision"],
             local_files_only=True,
         )
-        config = s["pipeline_config"]
+        config = settings["pipeline_config"]
         config_path = str(
             Path(
                 hf_hub_download(
@@ -158,29 +50,127 @@ def generate(request):
         ).to("cuda")
     else:
         pipe = StableDiffusionXLPipeline.from_pretrained(
-            s["model"],
-            revision=s["revision"],
+            settings["model"],
+            revision=settings["revision"],
             torch_dtype=torch.float16,
             use_safetensors=True,
             local_files_only=True,
         ).to("cuda")
-    pipe.scheduler = EulerAncestralDiscreteScheduler.from_config(pipe.scheduler.config)
+    vae = settings.get("vae")
+    if vae:
+        # The checkpoint's own VAE decodes washed out in fp16; this one does not.
+        pipe.vae = AutoencoderKL.from_pretrained(
+            vae["model"],
+            revision=vae["revision"],
+            torch_dtype=torch.float16,
+            local_files_only=True,
+        ).to("cuda")
+    name = settings.get("scheduler", "EulerAncestralDiscreteScheduler")
+    scheduler = getattr(diffusers, name, None)
+    if scheduler is None:
+        raise ValueError(f"Unknown scheduler: {name}")
+    pipe.scheduler = scheduler.from_config(
+        pipe.scheduler.config, **settings.get("scheduler_kwargs", {})
+    )
     pipe.set_progress_bar_config(disable=True)
-    emit("loaded", scheduler=dict(pipe.scheduler.config))
+    return pipe
+
+
+def build_encoder(pipe, upstream=None):
+    """The published ClassTokenDecoder weights, bound to the pipeline's own encoders.
+
+    ``fan.wrapper.personalized_t2i_encoder`` dispatches on ``pipeline.name_or_path``,
+    which ``from_single_file`` leaves empty, so the SDXL branch is wired by hand.
+    """
+    from fan import FAN
+    from fan.wrapper import stable_diffusion_xl
+
+    weights = Path(upstream or FAN_UPSTREAM) / "weight"
+    large = FAN(pipe.text_encoder, pipe.tokenizer, decoder=str(weights / "L.pth"))
+    bigG = FAN(pipe.text_encoder_2, pipe.tokenizer_2, decoder=str(weights / "bigG.pth"))
+    return stable_diffusion_xl(large, bigG)
+
+
+# Tuning knobs the measured FAN call accepts straight from configs/demo.json.
+PASSTHROUGH = ("use_attn_mask", "skip_pa")
+
+
+def fan_block(fan=None):
+    """The exact encoding settings behind every emitted image."""
+    fan = fan or CONFIG["fan"]
+    return {"commit": fan["commit"], "pooled": "plain", **fan_settings({"fan": fan})}
+
+
+def encode(encoder, prompt, personalization=None, fan=None):
+    """The single adaptation point for the measured FAN call: nothing else casts."""
+    import torch
+
+    fan = fan or CONFIG["fan"]
+    refs = weights = None
+    alpha = None
+    if personalization:
+        refs = [ref["text"] for ref in personalization["refs"]]
+        weights = [float(ref["weight"]) for ref in personalization["refs"]]
+        alpha = personalization["alpha"]
+    with torch.no_grad():
+        cond, pooled = encoder(
+            prompt,
+            refs,
+            weight=weights,
+            alpha=alpha,
+            skip=fan["skip"],
+            sample_size=fan["sample_size"],
+            **{key: fan[key] for key in PASSTHROUGH if key in fan},
+        )
+    return cond.to(torch.float16), pooled.to(torch.float16)
+
+
+def generate(request):
+    import torch
+
+    settings = request.get("settings", CONFIG["generation"])
+    started = time.monotonic()
+    pipe = load_pipeline(settings)
+    encoder = build_encoder(pipe, request.get("upstream"))
+    fan = request.get("fan") or CONFIG["fan"]
+    emit(
+        "loaded",
+        scheduler={
+            "name": settings.get("scheduler", "EulerAncestralDiscreteScheduler"),
+            "kwargs": settings.get("scheduler_kwargs", {}),
+            "config": dict(pipe.scheduler.config),
+        },
+        vae=settings.get("vae"),
+        fan=fan_block(fan),
+        load_seconds=round(time.monotonic() - started, 3),
+    )
+    plain = {}
+
+    def plain_encode(prompt):
+        """Reference-free encoding is bit-identical to `pipe.encode_prompt`."""
+        if prompt not in plain:
+            plain[prompt] = encode(encoder, prompt, fan=fan)
+        return plain[prompt]
+
+    # The negative side is never personalized: only ref/weight/alpha may differ.
+    negative_cond, negative_pooled = plain_encode(settings["negative_prompt"])
     for item in request["items"]:
-        if not all(
-            len(t(item["prompt"], truncation=False)["input_ids"]) <= t.model_max_length
-            for t in (pipe.tokenizer, pipe.tokenizer_2)
-        ):
-            raise ValueError("SDXL tokenizer overflow")
+        personalization = item.get("personalization")
         t = time.monotonic()
+        # Documented deviation from upstream: the personalized pooled embedding
+        # comes from a mis-detected padding token, so the plain pooled is used.
+        cond, pooled = plain_encode(item["prompt"])
+        if personalization:
+            cond = encode(encoder, item["prompt"], personalization, fan)[0]
         image = pipe(
-            item["prompt"],
-            negative_prompt=s["negative_prompt"],
-            num_inference_steps=s["steps"],
-            guidance_scale=s["guidance_scale"],
-            width=s["width"],
-            height=s["height"],
+            prompt_embeds=cond,
+            pooled_prompt_embeds=pooled,
+            negative_prompt_embeds=negative_cond,
+            negative_pooled_prompt_embeds=negative_pooled,
+            num_inference_steps=settings["steps"],
+            guidance_scale=settings["guidance_scale"],
+            width=settings["width"],
+            height=settings["height"],
             generator=torch.Generator(device="cuda").manual_seed(item["seed"]),
         ).images[0]
         path = Path(item["path"])
@@ -195,65 +185,13 @@ def generate(request):
             sha256=file_hash(path),
             seed=item["seed"],
             prompt=item["prompt"],
-            settings=s,
+            negative_prompt=settings["negative_prompt"],
+            settings=settings,
+            fan=fan_block(fan),
+            pooled="plain",
+            personalization_hash=personalization["hash"] if personalization else None,
             seconds=round(time.monotonic() - t, 3),
-            context_hash=item.get("context_hash", request.get("context_hash")),
         )
-
-
-def analyze(request):
-    import torch
-    from PIL import Image
-
-    model, processor = llm_load(vision=True)
-    for item in request["items"]:
-        images = []
-        for path in item["images"]:
-            image = Image.open(path).convert("RGB")
-            image.thumbnail((448, 448))
-            images.append(image)
-        prompt = (
-            f"These images share this subject: {item['basic_prompt_en']} "
-            f"The user chose Image {item['chosen_position']}. Compare only the {item['dimension']} in the two images. "
-            "In one short sentence state an observable relative visual preference supported by this choice. "
-            "Do not infer personality or dislike. No headings or lists."
-        )
-        messages = [
-            {
-                "role": "user",
-                "content": [
-                    {"type": "image", "image": images[0]},
-                    {"type": "image", "image": images[1]},
-                    {"type": "text", "text": prompt},
-                ],
-            }
-        ]
-        inputs = processor.apply_chat_template(
-            messages,
-            tokenize=True,
-            add_generation_prompt=True,
-            return_dict=True,
-            return_tensors="pt",
-            enable_thinking=False,
-        ).to("cuda")
-        with torch.inference_mode():
-            out = model.generate(**inputs, max_new_tokens=110, do_sample=False)
-        raw = processor.decode(
-            out[0, inputs.input_ids.shape[1] :], skip_special_tokens=True
-        )
-        emit(
-            "analysis",
-            id=item["id"],
-            raw=raw,
-            source=CONFIG["llm"],
-            context_source="generic_vlm",
-        )
-
-
-def evaluate(request):
-    from pigreward_repro.worker import evaluate_request
-
-    evaluate_request(request, emit)
 
 
 def main():
@@ -262,12 +200,7 @@ def main():
     started = time.monotonic()
     request = json.loads(Path(sys.argv[1]).read_text())
     torch.set_num_threads(4)
-    {
-        "rewrite": rewrite,
-        "generate": generate,
-        "analyze": analyze,
-        "evaluate": evaluate,
-    }[request["stage"]](request)
+    {"generate": generate}[request["stage"]](request)
     torch.cuda.synchronize()
     emit(
         "metrics",

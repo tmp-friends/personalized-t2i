@@ -69,14 +69,15 @@ encoder 層    FAN                text encoder の self-attention を差し替�
                                   参照 prompt の嗜好を混ぜ、追加学習は不要
 ```
 
-9/23の展示は「5回の画像選択 → 好みの言語化と訂正 → 個人化生成 → PIGRewardによる推薦」
-を中心とする設計案へ更新した。通常生成との比較と、AIの解釈を本人が修正できる体験を見せる。
-詳細は [ZIPP-style persona × PIGReward 展示設計](docs/superpowers/specs/2026-09-19-zipp-pigreward-exhibition-demo-design.md)
-を参照。
+9/23の展示は FAN を主役にした「好きな画像を選ぶ → 同じ一文でブラインド比較 → 反映強度と参照を操作」
+の構成に更新した。入力文も生成モデルも変えず、方式を伏せたまま通常生成と個人化生成を見比べてもらい、
+答えを見てから反映強度 `alpha` と参照ごとの重みを来場者自身が操作して描き直せる。
+LLMによるprompt書き換えとVLM解析、PIGRewardによる推薦は展示の主経路から外した。詳細は
+[FAN展示デモ設計](docs/superpowers/specs/2026-09-21-fan-exhibition-demo-design.md) を参照。
 
 [`exhibit/`](exhibit/) にローカル展示デモを実装。`uv run --project exhibit uvicorn exhibit.app:app --host 127.0.0.1 --port 7860` で起動します。
-通常4枚と好みを反映した4枚を同じseedで比較できます。PIGRewardは採用検証中のため、現在は手動選択モードです。
-実機計測・localhost操作確認・未採用機能は [作業結果HTML](docs/reports/zipp-demo/index.html) を参照。
+通常4枚と好みを反映した4枚を同じseedで比較できます。個人化はFAN公式実装の `ClassTokenDecoder` を使い、
+来場者ごとの追加学習はしません。実機計測・localhost操作確認・未採用機能は [作業結果HTML](docs/reports/fan-demo/index.html) を参照。
 
 ## Repository 方針
 
