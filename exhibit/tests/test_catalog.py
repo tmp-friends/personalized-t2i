@@ -1,5 +1,3 @@
-import copy
-
 from exhibit.catalog import build_catalog, load_catalog
 from exhibit.config import ROOT, read_json
 

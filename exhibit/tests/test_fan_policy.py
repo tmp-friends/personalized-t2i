@@ -5,8 +5,8 @@ import subprocess
 import sys
 
 import pytest
-from exhibit.config import FAN_POLICIES
 from exhibit.catalog import load_catalog
+from exhibit.config import FAN_POLICIES
 from exhibit.domain import CARDS, build_personalization, legacy_snapshot_from_selection
 from exhibit.fan_adapter import profiling_argument, resolve_policy
 

@@ -1,8 +1,9 @@
 """Server-owned, content-addressed card catalogs."""
 from __future__ import annotations
-import hashlib
+
 import json
 from pathlib import Path
+
 from .config import ASSETS, CARDS_REVIEW, CONFIG, ROOT, read_json
 from .domain import ASPECTS, build_cards, compose_prompt, digest, file_hash
 
@@ -42,32 +43,41 @@ def _v1_cards():
       c=_copy(card); c["axis_levels"]={a:maps[a][c["aspects"][a]] for a in ASPECTS}; cards.append(c)
     return cards
 
-def _v2_manifest(): return read_json(ASSETS / "catalog-v2.json", {}) or {}
-def _valid_v1(card, image, review):
+def _v2_manifest(assets=ASSETS): return read_json(Path(assets) / "catalog-v2.json", {}) or {}
+def _valid_v1(card, image, review, assets=ASSETS):
     if not isinstance(image, dict) or not isinstance(review, dict) or not review.get("reviewed"):
         return False
     try:
-        path = (ASSETS / image["path"]).resolve()
-        image_ok = path.is_relative_to(ASSETS.resolve()) and file_hash(path) == image["sha256"]
+        path = (Path(assets) / image["path"]).resolve()
+        image_ok = path.is_relative_to(Path(assets).resolve()) and file_hash(path) == image["sha256"]
     except (OSError, KeyError, TypeError, ValueError):
         return False
     return image_ok and all(image.get(k) == card[k] for k in ("path", "seed", "prompt", "ref_en", "aspects")) and image.get("settings") == CONFIG["generation"]
 
-def _valid_v2(card, image, review):
+def _valid_v2(card, image, review, assets=ASSETS):
     if not isinstance(image,dict) or not isinstance(review,dict): return False
     try:
-      path=(ASSETS / image["path"]).resolve()
-      image_ok=path.is_relative_to(ASSETS.resolve()) and file_hash(path)==image["sha256"]
+      path=(Path(assets) / image["path"]).resolve()
+      image_ok=path.is_relative_to(Path(assets).resolve()) and file_hash(path)==image["sha256"]
     except (OSError,KeyError,TypeError,ValueError): image_ok=False
     return image_ok and all(image.get(k)==card[k] for k in ("path","seed","prompt","ref_en","aspects")) and image.get("settings")==CONFIG["generation"] and review.get("reviewed") is True and review.get("image_sha256")==image.get("sha256") and review.get("description_hash")==_description_hash(card) and review.get("aspects")=={a:True for a in ASPECTS}
 
-def load_catalog(catalog_id, *, reviewed_only=True):
+def load_catalog(catalog_id, *, reviewed_only=True, assets=ASSETS, review_path=None):
     if catalog_id == "catalog-v1":
-      all_cards=_v1_cards(); images=(read_json(ASSETS / "manifest.json",{}) or {}).get("images",{}); review=read_json(CARDS_REVIEW,{}) or {}
-      eligible=[c for c in all_cards if _valid_v1(c, images.get(c["id"]), review.get(c["id"]))]
+      all_cards = _v1_cards()
+      images = (read_json(Path(assets) / "manifest.json", {}) or {}).get("images", {})
+      review = read_json(review_path or CARDS_REVIEW, {}) or {}
+      eligible = [c for c in all_cards if _valid_v1(c, images.get(c["id"]), review.get(c["id"]), assets)]
     elif catalog_id == "catalog-v2":
-      all_cards=build_catalog(read_json(V2)); manifest=_v2_manifest(); images=manifest.get("images",{}) if isinstance(manifest,dict) else {}; review=read_json(V2_REVIEW,{}) or {}
-      eligible=[c for c in all_cards if _valid_v2(c,images.get(c["id"]),review.get(c["id"]))]
+      all_cards = build_catalog(read_json(V2))
+      manifest = _v2_manifest(assets)
+      if not isinstance(manifest, dict) or manifest.get("catalog_id") not in (None, "catalog-v2") or manifest.get("generation") not in (None, CONFIG["generation"]):
+          raise ValueError("Invalid v2 manifest")
+      images = manifest.get("images", {})
+      review = read_json(review_path or V2_REVIEW, {}) or {}
+      if not isinstance(images, dict) or not isinstance(review, dict):
+          raise ValueError("Invalid v2 image or review manifest")
+      eligible = [c for c in all_cards if _valid_v2(c, images.get(c["id"]), review.get(c["id"]), assets)]
     else: raise ValueError("Unknown catalog")
     # Content identity includes generated image hashes when available, never review metadata.
     hashes={c["id"]:(images.get(c["id"],{}) or {}).get("sha256") for c in all_cards}

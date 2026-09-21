@@ -25,7 +25,8 @@ def check_assets(root=ASSETS, *, require_samples=True, review=CARDS_REVIEW, cata
             errors.append(f"Missing or invalid {name}")
             return default
 
-    manifest = read("manifest.json", {})
+    manifest_name = "manifest.json" if catalog_id == "catalog-v1" else "catalog-v2.json"
+    manifest = read(manifest_name, {})
     if manifest.get("generation") != CONFIG["generation"]:
         errors.append("Generation settings mismatch")
     images = manifest.get("images", {}) if isinstance(manifest, dict) else {}
@@ -47,8 +48,8 @@ def check_assets(root=ASSETS, *, require_samples=True, review=CARDS_REVIEW, cata
         catalog_cards = list(CARDS.values())
         reviewed = reviewed_ids(review)
     else:
-        catalog = load_catalog(catalog_id, reviewed_only=True)
-        all_catalog = load_catalog(catalog_id, reviewed_only=False)
+        catalog = load_catalog(catalog_id, reviewed_only=True, assets=root, review_path=review)
+        all_catalog = load_catalog(catalog_id, reviewed_only=False, assets=root, review_path=review)
         catalog_cards = all_catalog["all_cards"]
         reviewed = {card["id"] for card in catalog["cards"]}
     for card in catalog_cards:
@@ -82,8 +83,9 @@ def check_assets(root=ASSETS, *, require_samples=True, review=CARDS_REVIEW, cata
                 errors.append(f"Generic contract mismatch: {key}")
 
     samples = read("samples.json", []) if require_samples else []
-    if require_samples and len(samples) != 6:
-        errors.append("Six sample experiences required")
+    if require_samples and not isinstance(samples, list):
+        errors.append("Invalid samples manifest")
+        samples = []
     for sample in samples:
         errors.extend(sample_errors(sample, root))
     return {

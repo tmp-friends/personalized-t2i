@@ -231,7 +231,7 @@ def _snapshot(snapshot, catalog=None):
         catalog = load_catalog(snapshot["catalog_id"], reviewed_only=True)
     if snapshot["catalog_id"] != catalog["catalog_id"] or snapshot["catalog_hash"] != catalog["catalog_hash"]:
         raise ValueError("Stale catalog hash")
-    card_map = {card["id"]: card for card in catalog["all_cards"]}
+    card_map = {card["id"]: card for card in catalog["cards"]}
     gains = snapshot["aspect_gains"]
     if not isinstance(gains, dict) or set(gains) != set(ASPECTS):
         raise ValueError("aspect_gains must name every aspect")

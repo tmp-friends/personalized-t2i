@@ -2,14 +2,23 @@
 """Explicit preparation only; serving never downloads or manufactures assets."""
 
 import argparse
+import os
+import subprocess
 import threading
 import time
 from pathlib import Path
 
-from exhibit.config import ASSETS, CONFIG, FAN_UPSTREAM, OUTPUTS, read_json, write_json
-from exhibit.domain import CARDS, build_legacy_personalization, target_prompt
 from exhibit.catalog import build_catalog
-from exhibit.config import ROOT
+from exhibit.config import (
+    ASSETS,
+    CONFIG,
+    FAN_UPSTREAM,
+    OUTPUTS,
+    ROOT,
+    read_json,
+    write_json,
+)
+from exhibit.domain import CARDS, build_legacy_personalization, target_prompt
 from exhibit.gpu import run_stage
 
 # Representative selections for the offline sample experiences (3 cards each).
@@ -91,10 +100,16 @@ def prepare_cards(catalog="v1"):
     if catalog == "v2":
         definition = read_json(ROOT / "configs/catalog-v2.json")
         cards = {card["id"]: card for card in build_catalog(definition)}
+        token_path = OUTPUTS / "preparation" / "catalog-v2" / "token-counts.json"
+        check = [str(ROOT.parent / CONFIG["fan"]["python"]), str(ROOT / "scripts/check_card_tokens.py"), "--catalog", "v2", "--output", str(token_path)]
+        token_env = {**os.environ, "PYTHONPATH": str(ROOT / "src")}
+        completed = subprocess.run(check, check=False, text=True, capture_output=True, env=token_env)
+        if completed.returncode:
+            raise RuntimeError("v2 card token validation failed before generation: " + completed.stderr)
         items = [{"id": card["id"], "prompt": card["prompt"], "seed": card["seed"], "path": str(ASSETS / card["path"])} for card in cards.values()]
         events = stage({"stage": "generate", "items": items}, "catalog-v2/card-images")
         images = image_records(events, extra=lambda key: {k: cards[key][k] for k in ("ref_en", "aspects", "subject_id", "profile_id", "axis_levels")})
-        write_json(ASSETS / "catalog-v2.json", {"version": 1, "catalog_id": "catalog-v2", "generation": CONFIG["generation"], "images": images})
+        write_json(ASSETS / "catalog-v2.json", {"version": 1, "catalog_id": "catalog-v2", "generation": CONFIG["generation"], "token_counts": str(token_path.relative_to(OUTPUTS)), "images": images})
         print("v2 cards prepared; review them in configs/cards-v2-review.json", flush=True)
         return
     items = [
