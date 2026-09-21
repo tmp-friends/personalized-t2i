@@ -52,7 +52,7 @@
   "browser": {
     "browser": "Chromium headless / actual localhost",
     "url": "http://127.0.0.1:7860",
-    "browser_wall_seconds": 24.4,
+    "browser_wall_seconds": 24.41,
     "checks": [
       "five choices",
       "persona correction",
