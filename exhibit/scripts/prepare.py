@@ -8,6 +8,8 @@ from pathlib import Path
 
 from exhibit.config import ASSETS, CONFIG, FAN_UPSTREAM, OUTPUTS, read_json, write_json
 from exhibit.domain import CARDS, build_legacy_personalization, target_prompt
+from exhibit.catalog import build_catalog
+from exhibit.config import ROOT
 from exhibit.gpu import run_stage
 
 # Representative selections for the offline sample experiences (3 cards each).
@@ -85,7 +87,16 @@ def image_records(events, extra=None):
     }
 
 
-def prepare_cards():
+def prepare_cards(catalog="v1"):
+    if catalog == "v2":
+        definition = read_json(ROOT / "configs/catalog-v2.json")
+        cards = {card["id"]: card for card in build_catalog(definition)}
+        items = [{"id": card["id"], "prompt": card["prompt"], "seed": card["seed"], "path": str(ASSETS / card["path"])} for card in cards.values()]
+        events = stage({"stage": "generate", "items": items}, "catalog-v2/card-images")
+        images = image_records(events, extra=lambda key: {k: cards[key][k] for k in ("ref_en", "aspects", "subject_id", "profile_id", "axis_levels")})
+        write_json(ASSETS / "catalog-v2.json", {"version": 1, "catalog_id": "catalog-v2", "generation": CONFIG["generation"], "images": images})
+        print("v2 cards prepared; review them in configs/cards-v2-review.json", flush=True)
+        return
     items = [
         {
             "id": card["id"],
@@ -173,10 +184,12 @@ def prepare_samples():
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("step", choices=["cards", "generic", "samples"])
+    parser.add_argument("--catalog", choices=["v1", "v2"], default="v1")
     args = parser.parse_args()
-    {"cards": prepare_cards, "generic": prepare_generic, "samples": prepare_samples}[
-        args.step
-    ]()
+    if args.step == "cards":
+        prepare_cards(args.catalog)
+    else:
+        {"generic": prepare_generic, "samples": prepare_samples}[args.step]()
 
 
 if __name__ == "__main__":

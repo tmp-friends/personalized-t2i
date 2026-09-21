@@ -13,7 +13,8 @@ from .domain import (
 )
 
 
-def check_assets(root=ASSETS, *, require_samples=True, review=CARDS_REVIEW):
+def check_assets(root=ASSETS, *, require_samples=True, review=CARDS_REVIEW, catalog_id="catalog-v1"):
+    from .catalog import load_catalog
     root = Path(root)
     errors = []
 
@@ -42,8 +43,16 @@ def check_assets(root=ASSETS, *, require_samples=True, review=CARDS_REVIEW):
             return False
         return True
 
-    reviewed = reviewed_ids(review)
-    for card_id, card in CARDS.items():
+    if catalog_id == "catalog-v1":
+        catalog_cards = list(CARDS.values())
+        reviewed = reviewed_ids(review)
+    else:
+        catalog = load_catalog(catalog_id, reviewed_only=True)
+        all_catalog = load_catalog(catalog_id, reviewed_only=False)
+        catalog_cards = all_catalog["all_cards"]
+        reviewed = {card["id"] for card in catalog["cards"]}
+    for card in catalog_cards:
+        card_id = card["id"]
         image = images.get(card_id) or {}
         if check_image(card_id, image) and (
             image.get("seed") != card["seed"]
@@ -83,7 +92,7 @@ def check_assets(root=ASSETS, *, require_samples=True, review=CARDS_REVIEW):
         "errors": errors,
         "fixed_images": len(images),
         "reviewed_cards": len(reviewed),
-        "cards": len(CARDS),
+        "cards": len(catalog_cards),
         "samples": len(samples),
     }
 

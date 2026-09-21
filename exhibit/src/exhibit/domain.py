@@ -133,10 +133,11 @@ def personalization_hash(refs, alpha, *, commit, generation, seeds, fan=None):
 
 def legacy_snapshot_from_selection(selection, config=CONFIG):
     """Explicit v1 list conversion; the new public builder never accepts lists."""
+    from .catalog import load_catalog
     return {
         "revision": 0,
         "catalog_id": "catalog-v1",
-        "catalog_hash": digest(build_cards(config)),
+        "catalog_hash": load_catalog("catalog-v1", reviewed_only=False)["catalog_hash"],
         "selection": [
             {
                 "card_id": entry["card_id"],
@@ -210,7 +211,7 @@ def _finite_json(value, label):
     raise ValueError(f"{label} must be JSON-shaped")
 
 
-def _snapshot(snapshot):
+def _snapshot(snapshot, catalog=None):
     if not isinstance(snapshot, dict):
         raise TypeError("snapshot must be a PreferenceSnapshot object")
     needed = {"revision", "catalog_id", "catalog_hash", "selection", "aspect_gains"}
@@ -225,6 +226,12 @@ def _snapshot(snapshot):
         )
     ):
         raise ValueError("Invalid snapshot identity")
+    if catalog is None:
+        from .catalog import load_catalog
+        catalog = load_catalog(snapshot["catalog_id"], reviewed_only=True)
+    if snapshot["catalog_id"] != catalog["catalog_id"] or snapshot["catalog_hash"] != catalog["catalog_hash"]:
+        raise ValueError("Stale catalog hash")
+    card_map = {card["id"]: card for card in catalog["all_cards"]}
     gains = snapshot["aspect_gains"]
     if not isinstance(gains, dict) or set(gains) != set(ASPECTS):
         raise ValueError("aspect_gains must name every aspect")
@@ -244,7 +251,7 @@ def _snapshot(snapshot):
         }:
             raise ValueError("Invalid selection entry")
         card_id, aspects = entry["card_id"], entry["aspects"]
-        if card_id not in CARDS or card_id in seen:
+        if card_id not in card_map or card_id in seen:
             raise ValueError("Unknown or duplicate card")
         if type(entry["strength"]) is not int or entry["strength"] not in (1, 2):
             raise ValueError("strength must be 1 or 2")
@@ -265,7 +272,7 @@ def _snapshot(snapshot):
         )
     return {
         "catalog_id": snapshot["catalog_id"],
-        "catalog_hash": snapshot["catalog_hash"],
+        "catalog_hash": catalog["catalog_hash"],
         "selection": sorted(selection, key=lambda item: item["card_id"]),
         "aspect_gains": {key: float(gains[key]) for key in ASPECTS},
     }
@@ -300,12 +307,16 @@ def _provenance(provenance):
     return json.loads(json.dumps(provenance, sort_keys=True))
 
 
-def _refs(snapshot, policy):
+def _refs(snapshot, policy, catalog=None):
+    if catalog is None:
+        from .catalog import load_catalog
+        catalog = load_catalog(snapshot["catalog_id"], reviewed_only=True)
+    cards = {card["id"]: card for card in catalog["cards"]}
     gains, unit, merged = snapshot["aspect_gains"], policy["reference_unit"], {}
     if unit == "card_description" and any(gain != 1 for gain in gains.values()):
         raise ValueError("card_description requires all aspect_gains to equal 1")
     for entry in snapshot["selection"]:
-        card = CARDS[entry["card_id"]]
+        card = cards[entry["card_id"]]
         aspects = [aspect for aspect in ASPECTS if aspect in entry["aspects"]]
         if unit == "aspect_phrase":
             candidates = [
@@ -353,12 +364,15 @@ def build_personalization(snapshot, *, prompt, policy, provenance):
         raise TypeError("snapshot must be a PreferenceSnapshot object")
     if not isinstance(prompt, str) or not prompt.strip():
         raise ValueError("prompt is required")
+    from .catalog import load_catalog
+    resolved_catalog = load_catalog(snapshot["catalog_id"], reviewed_only=True)
     snapshot, effective, source = (
-        _snapshot(snapshot),
+        _snapshot(snapshot, resolved_catalog),
         freeze_policy(policy),
         _provenance(provenance),
     )
-    policy_value, refs = thaw_policy(effective), _refs(snapshot, thaw_policy(effective))
+    policy_value = thaw_policy(effective)
+    refs = _refs(snapshot, policy_value, resolved_catalog)
     identity = {
         "snapshot": snapshot,
         "refs": refs,
