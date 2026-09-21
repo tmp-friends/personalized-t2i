@@ -1,8 +1,11 @@
 // Dependency-free stand-in for the FAN exhibition backend, used to drive the real
 // frontend (exhibit/src/exhibit/static) in a browser without a GPU or the Python app.
-// It implements the API table of docs/superpowers/specs/2026-09-21-fan-exhibition-demo-design.md
-// §5 and the snapshot shapes of §4.1, holds one session in memory, fakes generation
-// progress (one image per PAIR_MS) and draws every image as an SVG on the fly.
+// It implements the API table of docs/superpowers/specs/2026-09-21-fan-personalization-improvement-design.md
+// §8.1 and the snapshot shape exhibit/src/exhibit/service.py publishes: revisions,
+// multi-round elicitation with a request-id ledger, the 409/422 split, the run
+// lifecycle with exact-cache, optional labelled feedback and samples that leave the
+// visitor's draft alone. It holds one session in memory, fakes generation progress
+// (one image per PAIR_MS) and draws every image as an SVG on the fly.
 //
 //   node exhibit/tests/mock_api.mjs [--port 8811] [--pair-ms 500] [--idle 90]
 import http from "node:http";
@@ -23,84 +26,99 @@ const IDLE_SECONDS = Number(arg("idle", 90));
 const SEEDS = [230923, 230924, 230925, 230926];
 const ALPHA = 0.5;
 const TAIL = "absurdres, highres.";
-
-const SUBJECTS = [
-  { id: "girl", label: "街角の少女", prompt: "1girl, standing on a street corner" },
-  { id: "student", label: "図書館の青年", prompt: "1boy, reading in a library" },
-  { id: "traveler", label: "草原の旅人", prompt: "1girl, traveler on a grassland" },
-  { id: "barista", label: "カフェの店員", prompt: "1boy, barista behind a counter" },
-];
-const PROFILES = [
-  {
-    id: "warm_soft",
-    label: "あたたかく、やわらかく",
-    hue: 28,
-    aspects: {
-      color: "warm color palette, amber and orange tones",
-      lighting: "soft lighting, gentle shadows",
-      texture: "watercolor painting, soft brushwork, painterly texture",
-      mood: "calm atmosphere",
-    },
-    aspects_ja: {
-      color: "暖かなオレンジ系の色",
-      lighting: "やわらかい光",
-      texture: "水彩のような筆づかい",
-      mood: "静かな雰囲気",
-    },
-  },
-  {
-    id: "cool_clean",
-    label: "涼しく、くっきり",
-    hue: 196,
-    aspects: {
-      color: "cool color palette, blue and teal tones",
-      lighting: "soft diffused light",
-      texture: "cel shading, clean lineart, anime coloring",
-      mood: "calm atmosphere",
-    },
-    aspects_ja: {
-      color: "青緑系の涼しい色",
-      lighting: "拡散したやわらかい光",
-      texture: "くっきりした線と塗り",
-      mood: "静かな雰囲気",
-    },
-  },
-  {
-    id: "dramatic",
-    label: "劇的な光と影",
-    hue: 278,
-    aspects: {
-      color: "muted colors, dark background",
-      lighting: "dramatic lighting, strong shadows, rim light",
-      texture: "detailed shading, painterly texture",
-      mood: "serious atmosphere",
-    },
-    aspects_ja: {
-      color: "落ち着いた色と暗い背景",
-      lighting: "強い光と影",
-      texture: "細かな陰影",
-      mood: "真剣な雰囲気",
-    },
-  },
-  {
-    id: "vivid_lively",
-    label: "鮮やかで、にぎやか",
-    hue: 338,
-    aspects: {
-      color: "vivid colors, saturated colors",
-      lighting: "bright lighting, sparkle",
-      texture: "cel shading, flat color",
-      mood: "cheerful expression, lively atmosphere",
-    },
-    aspects_ja: {
-      color: "鮮やかで濃い色",
-      lighting: "明るくきらめく光",
-      texture: "平たく明快な塗り",
-      mood: "楽しい雰囲気",
-    },
-  },
-];
+const SELECTION = { min: 3, max: 10, round_size: 12, max_rounds: 3 };
 const ASPECT_KEYS = ["color", "lighting", "texture", "mood"];
+const STRENGTHS = [1, 2];
+const GAINS = [0.5, 1, 2];
+const SUBJECT_CAP = 3;
+const RELAXED_CAP = 4;
+const EXPLORE_SLOTS = 4;
+const DIVERSITY_PENALTY = 0.25;
+const POLICY = {
+  policy_id: "legacy_exhibit",
+  alpha: ALPHA,
+  skip: -2,
+  skip_pa: [0, 1, 2, 3, 4, 5, 6, 7],
+  use_attn_mask: false,
+  pooled_mode: "plain",
+  profiling: { mode: "all" },
+  reference_unit: "aspect_phrase",
+};
+
+/* ------------------------------------------------------------- catalog */
+const SUBJECTS = [
+  { id: "girl", label: "街角の少女", hue: 18 },
+  { id: "student", label: "図書館の青年", hue: 210 },
+  { id: "traveler", label: "草原の旅人", hue: 120 },
+  { id: "barista", label: "カフェの店員", hue: 300 },
+];
+// Design §6.1: four axes x four levels, and the deterministic 16-profile layout.
+const AXES = {
+  color: [
+    "warm color palette, amber tones",
+    "cool color palette, blue and teal tones",
+    "muted colors, low saturation",
+    "vivid colors, high saturation",
+  ],
+  lighting: [
+    "soft diffused light",
+    "hard directional light, strong shadows",
+    "backlighting, rim light",
+    "even lighting, gentle shadows",
+  ],
+  texture: [
+    "watercolor painting, soft brushwork",
+    "cel shading, clean lineart",
+    "flat color, minimal shading",
+    "painterly texture, detailed shading",
+  ],
+  mood: [
+    "calm atmosphere",
+    "cheerful expression, lively atmosphere",
+    "serious atmosphere",
+    "dreamlike atmosphere",
+  ],
+};
+const AXES_JA = {
+  color: ["暖かい色", "涼しい色", "落ち着いた色", "鮮やかな色"],
+  lighting: ["やわらかい光", "強い光と影", "逆光の縁取り", "均一な光"],
+  texture: ["水彩のような筆づかい", "くっきりした線と塗り", "平たい塗り", "緻密な陰影"],
+  mood: ["静かな雰囲気", "にぎやかな雰囲気", "真剣な雰囲気", "夢のような雰囲気"],
+};
+const MUL2 = [0, 2, 3, 1];
+const CARDS = SUBJECTS.flatMap((subject) => {
+  const cards = [];
+  for (let color = 0; color < 4; color++)
+    for (let lighting = 0; lighting < 4; lighting++) {
+      const levels = {
+        color,
+        lighting,
+        texture: color ^ lighting,
+        mood: color ^ MUL2[lighting],
+      };
+      const profile_id = `c${color}-l${lighting}-t${levels.texture}-m${levels.mood}`;
+      const aspects = Object.fromEntries(
+        ASPECT_KEYS.map((key) => [key, AXES[key][levels[key]]]),
+      );
+      const aspects_ja = Object.fromEntries(
+        ASPECT_KEYS.map((key) => [key, AXES_JA[key][levels[key]]]),
+      );
+      const profile_label = `${aspects_ja.color}・${aspects_ja.texture}`;
+      cards.push({
+        id: `${subject.id}-${profile_id}`,
+        subject_id: subject.id,
+        profile_id,
+        label: `${subject.label} · ${profile_label}`,
+        subject_label: subject.label,
+        profile_label,
+        axis_levels: levels,
+        aspects,
+        aspects_ja,
+        url: `/assets/cards-v2/${subject.id}-${profile_id}.png`,
+      });
+    }
+  return cards;
+});
 const TOPICS = [
   { id: "cat", label: "窓辺で猫と過ごす少女", prompt: "1girl with a cat by the window" },
   { id: "tokyo", label: "夜の街を歩く", prompt: "1girl walking through a neon city at night" },
@@ -109,20 +127,18 @@ const TOPICS = [
   { id: "cafe", label: "静かなカフェの午後", prompt: "1girl in a quiet cafe in the afternoon" },
   { id: "lighthouse", label: "灯台のある岬", prompt: "1girl at a cape with a lighthouse" },
 ];
-const CARDS = SUBJECTS.flatMap((s) =>
-  PROFILES.map((p) => ({
-    id: `${s.id}-${p.id}`,
-    subject_id: s.id,
-    profile_id: p.id,
-    label: `${s.label} · ${p.label}`,
-    subject_label: s.label,
-    profile_label: p.label,
-    aspects: { ...p.aspects },
-    aspects_ja: { ...p.aspects_ja },
-    url: `/assets/cards/${s.id}-${p.id}.png`,
-  })),
-);
+const cardOf = (id) => CARDS.find((c) => c.id === id);
+const subjectOf = (id) => SUBJECTS.find((s) => s.id === cardOf(id)?.subject_id);
+const topicOf = (id) => TOPICS.find((t) => t.id === id);
+const targetPrompt = (topicId) =>
+  `masterpiece, best quality, ${topicOf(topicId)?.prompt ?? topicId}, ${TAIL}`;
+const hashOf = (value) =>
+  crypto.createHash("sha256").update(JSON.stringify(value)).digest("hex");
+const CATALOG_HASH = hashOf(CARDS).slice(0, 32);
 const CONFIG = {
+  schema_version: 2,
+  catalog_id: "catalog-v2",
+  catalog_hash: CATALOG_HASH,
   cards: CARDS,
   aspects: { color: "色", lighting: "光", texture: "描画", mood: "雰囲気" },
   topics: TOPICS.map((t) => ({
@@ -131,7 +147,17 @@ const CONFIG = {
     preview_url: `/assets/generic/${t.id}-0.png`,
   })),
   alpha: ALPHA,
-  selection: { min: 3, max: 5 },
+  policy: {
+    policy_id: POLICY.policy_id,
+    policy_hash: hashOf(POLICY).slice(0, 32),
+    alpha: ALPHA,
+    pooled_mode: POLICY.pooled_mode,
+    reference_unit: POLICY.reference_unit,
+    profiling: POLICY.profiling,
+  },
+  strengths: STRENGTHS,
+  aspect_gains: GAINS,
+  selection: SELECTION,
   idle_seconds: IDLE_SECONDS,
   timeout_seconds: 120,
   samples: [
@@ -139,17 +165,13 @@ const CONFIG = {
       id: "s1-cat",
       topic_id: "cat",
       label: "S1 · 窓辺で猫と過ごす少女",
-      preview_url: "/assets/cards/girl-warm_soft.png",
+      preview_url: "/assets/cards-v2/girl-c0-l0-t0-m0.png",
     },
     { id: "s2-tokyo", topic_id: "tokyo", label: "S2 · 夜の街を歩く", preview_url: null },
   ],
   ready: true,
 };
-const cardOf = (id) => CARDS.find((c) => c.id === id);
-const profileOf = (cardId) => PROFILES.find((p) => p.id === cardOf(cardId)?.profile_id);
-const topicOf = (id) => TOPICS.find((t) => t.id === id);
-const targetPrompt = (topicId) =>
-  `masterpiece, best quality, ${topicOf(topicId)?.prompt ?? topicId}, ${TAIL}`;
+const POLICY_HASH = CONFIG.policy.policy_hash;
 
 /* ------------------------------------------------------------- drawing */
 const esc = (s) =>
@@ -171,106 +193,382 @@ function svg({ hue, sat = 62, light = 46, top, bottom, seed = 0 }) {
 </svg>`;
 }
 
+/* ------------------------------------------------------- round policy */
+const AXIS_PAIRS = [];
+for (let i = 0; i < ASPECT_KEYS.length; i++)
+  for (let j = i + 1; j < ASPECT_KEYS.length; j++) AXIS_PAIRS.push([i, j]);
+const levelsOf = (cardId) => ASPECT_KEYS.map((key) => cardOf(cardId).axis_levels[key]);
+function addCounts(counts, levels) {
+  levels.forEach((level, axis) => {
+    const key = `a${axis}:${level}`;
+    counts[key] = (counts[key] || 0) + 1;
+  });
+  for (const [left, right] of AXIS_PAIRS) {
+    const key = `p${left}-${right}:${levels[left]}-${levels[right]}`;
+    counts[key] = (counts[key] || 0) + 1;
+  }
+}
+function cost(counts, levels) {
+  let total = 0;
+  levels.forEach((level, axis) => (total += counts[`a${axis}:${level}`] || 0));
+  for (const [left, right] of AXIS_PAIRS)
+    total += counts[`p${left}-${right}:${levels[left]}-${levels[right]}`] || 0;
+  return total;
+}
+const match = (a, b) =>
+  a.reduce((n, level, axis) => n + (level === b[axis] ? 1 : 0), 0) / a.length;
+function similarity(levels, preferences) {
+  const total = preferences.reduce((sum, p) => sum + p.strength, 0);
+  if (!total) return 0;
+  const score = preferences.reduce(
+    (sum, p) =>
+      sum +
+      (p.strength *
+        p.axes.reduce((n, axis) => n + (levels[axis] === p.levels[axis] ? 1 : 0), 0)) /
+        p.axes.length,
+    0,
+  );
+  return score / total;
+}
+const tiebreak = (seed, roundIndex, cardId) =>
+  crypto.createHash("sha256").update(`${seed}:${roundIndex}:${cardId}`).digest("hex");
+function plan(pool, preferences, { counts, roundSize, cap, keys }) {
+  const remaining = [...pool];
+  const local = { ...counts };
+  const picks = [];
+  const used = {};
+  const explore = preferences.length ? Math.min(EXPLORE_SLOTS, roundSize) : roundSize;
+  for (const [slot, target] of [
+    ["similar", roundSize - explore],
+    ["explore", explore],
+  ]) {
+    for (let n = 0; n < target; n++) {
+      let chosen = null,
+        best = null;
+      const taken = slot === "similar" ? picks.map((p) => levelsOf(p.card_id)) : [];
+      for (const cardId of remaining) {
+        const subject = cardOf(cardId).subject_id;
+        if ((used[subject] || 0) >= cap) continue;
+        const levels = levelsOf(cardId);
+        let key;
+        if (slot === "similar") {
+          const penalty = taken.reduce((max, other) => Math.max(max, match(levels, other)), 0);
+          key = [
+            -(similarity(levels, preferences) - DIVERSITY_PENALTY * penalty),
+            keys[cardId],
+          ];
+        } else key = [cost(local, levels), keys[cardId]];
+        if (best === null || key[0] < best[0] || (key[0] === best[0] && key[1] < best[1])) {
+          chosen = cardId;
+          best = key;
+        }
+      }
+      if (chosen === null) break;
+      picks.push({ card_id: chosen, slot });
+      remaining.splice(remaining.indexOf(chosen), 1);
+      used[cardOf(chosen).subject_id] = (used[cardOf(chosen).subject_id] || 0) + 1;
+      addCounts(local, levelsOf(chosen));
+    }
+  }
+  return picks;
+}
+function nextRound(state) {
+  const roundIndex = state.rounds.length;
+  const seen = new Set(state.shown);
+  const counts = {};
+  for (const cardId of state.shown) addCounts(counts, levelsOf(cardId));
+  const pool = CARDS.map((c) => c.id).filter((id) => !seen.has(id));
+  const keys = Object.fromEntries(
+    pool.map((id) => [id, tiebreak(state.seed, roundIndex, id)]),
+  );
+  const preferences = state.selection
+    .filter((entry) => entry.aspects.length)
+    .map((entry) => ({
+      levels: levelsOf(entry.card_id),
+      axes: entry.aspects.map((aspect) => ASPECT_KEYS.indexOf(aspect)),
+      strength: entry.strength,
+    }));
+  const options = { counts, roundSize: SELECTION.round_size, keys };
+  let picks = plan(pool, preferences, { ...options, cap: SUBJECT_CAP });
+  if (picks.length < SELECTION.round_size) {
+    const widened = plan(pool, preferences, { ...options, cap: RELAXED_CAP });
+    if (widened.length > picks.length) picks = widened;
+  }
+  let shortfall = null;
+  if (picks.length < SELECTION.round_size)
+    shortfall = !pool.length
+      ? "no_unseen_cards"
+      : pool.length < SELECTION.round_size
+        ? "insufficient_unseen_cards"
+        : "subject_cap_limit";
+  // Same-subject cards stay adjacent, in the order they were picked.
+  const order = [...new Set(picks.map((p) => cardOf(p.card_id).subject_id))];
+  const ordered = order.flatMap((subject) =>
+    picks.filter((p) => cardOf(p.card_id).subject_id === subject),
+  );
+  const record = {
+    round_index: roundIndex,
+    card_ids: ordered.map((p) => p.card_id),
+    cards: ordered,
+    shortfall_reason: shortfall,
+  };
+  return { round_id: hashOf([state.seed, record]).slice(0, 16), ...record };
+}
+
 /* --------------------------------------------------------------- state */
 let session = null;
 const token = () => crypto.randomBytes(8).toString("hex");
-const shuffle = (xs) => {
-  const a = [...xs];
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = crypto.randomInt(i + 1);
-    [a[i], a[j]] = [a[j], a[i]];
+const isInt = (value) => Number.isInteger(value);
+
+class Refused extends Error {
+  constructor(status, detail) {
+    super(detail);
+    this.status = status;
   }
-  return a;
+}
+const refuse = (status, detail) => {
+  throw new Refused(status, detail);
 };
-/**
- * One entry per distinct aspect phrase, merged across the selected cards:
- * a phrase weighs as many cards as share it, aspects turned off never appear.
- */
-function mergedRefs(selection) {
-  const out = new Map();
-  const weight = 1;
-  for (const entry of selection) {
+
+/** Design §5.3: one entry per distinct phrase, weight = strength x aspect gain. */
+function mergedRefs(state) {
+  const merged = new Map();
+  for (const entry of state.selection) {
     const card = cardOf(entry.card_id);
-    const off = entry.aspects_off || [];
     for (const aspect of ASPECT_KEYS) {
-      if (off.includes(aspect)) continue;
+      if (!entry.aspects.includes(aspect)) continue;
       const text = card.aspects[aspect];
-      const hit = out.get(text);
-      if (!hit) out.set(text, { text, weight, aspect, card_ids: [entry.card_id] });
-      else {
-        hit.weight = Math.round((hit.weight + weight) * 100) / 100;
-        if (!hit.card_ids.includes(entry.card_id)) hit.card_ids.push(entry.card_id);
-      }
+      const item = merged.get(text) || { text, weight: 0, card_ids: [], aspects: [] };
+      item.weight = Math.round((item.weight + entry.strength * state.aspect_gains[aspect]) * 100) / 100;
+      if (!item.card_ids.includes(entry.card_id)) item.card_ids.push(entry.card_id);
+      if (!item.aspects.includes(aspect)) item.aspects.push(aspect);
+      merged.set(text, item);
     }
   }
-  return [...out.values()];
+  return [...merged.values()]
+    .map((item) => ({
+      ref_id: hashOf(item.text).slice(0, 16),
+      text: item.text,
+      weight: item.weight,
+      card_ids: [...item.card_ids].sort(),
+      aspects: [...item.aspects].sort(),
+    }))
+    .sort((a, b) => (a.text < b.text ? -1 : a.text > b.text ? 1 : 0));
 }
-const hashOf = (obj) =>
-  crypto.createHash("sha256").update(JSON.stringify(obj)).digest("hex").slice(0, 16);
-/** Personalised images get the mean hue of the selected cards; plain stays neutral. */
-function personalHue() {
-  if (!session.selection.length) return 210;
-  const hues = session.selection.map((entry) => profileOf(entry.card_id).hue);
+function personalizationOf(state, topicId) {
+  const refs = mergedRefs(state);
+  const hash = hashOf({
+    refs,
+    prompt: targetPrompt(topicId),
+    policy: POLICY,
+    catalog: CATALOG_HASH,
+  }).slice(0, 32);
+  return {
+    refs,
+    alpha: ALPHA,
+    policy_id: POLICY.policy_id,
+    policy_hash: POLICY_HASH,
+    personalization_hash: hash,
+    hash,
+    effective_policy: POLICY,
+  };
+}
+const busy = () => Boolean(session?.run && session.run.status_at() !== "done");
+function personalHue(state) {
+  if (!state.selection.length) return 210;
+  const hues = state.selection.map((entry) => subjectOf(entry.card_id).hue);
   return Math.round(hues.reduce((a, b) => a + b, 0) / hues.length);
 }
 function progress(run) {
-  if (run.mode === "sample") return 4;
-  return Math.max(0, Math.min(4, Math.floor((Date.now() - run.startedAt) / PAIR_MS)));
+  if (run.mode !== "live") return SEEDS.length;
+  return Math.max(0, Math.min(SEEDS.length, Math.floor((Date.now() - run.startedAt) / PAIR_MS)));
 }
-const runStatus = () => (progress(session.run) < 4 ? "generating" : "done");
-function makeRun(topic_id, request_id) {
-  return {
+function imagesOf(run, kind) {
+  const count = kind === "plain" ? SEEDS.length : progress(run);
+  return SEEDS.slice(0, count).map((seed, i) => {
+    const relative =
+      kind === "plain" ? `${run.id}/plain-${i}.png` : `${run.id}/personal/personal-${i}.png`;
+    return {
+      id: `${kind}-${i}`,
+      seed,
+      sha256: hashOf([run.id, kind, i]),
+      relative_path: relative,
+      url: `/api/sessions/${session.id}/images/${relative}`,
+      ...(kind === "plain"
+        ? { prompt: targetPrompt(run.topic_id) }
+        : {
+            policy_id: run.mode === "sample" ? null : POLICY.policy_id,
+            policy_hash: run.mode === "sample" ? null : POLICY_HASH,
+            personalization_hash: run.personalization.hash,
+          }),
+    };
+  });
+}
+function makeRun(topicId, requestId, state) {
+  const personalization = personalizationOf(state, topicId);
+  const cacheKey = `${topicId}:${personalization.hash}`;
+  const cached = state.cache[cacheKey];
+  const run = {
     id: `run-${token().slice(0, 6)}`,
-    topic_id,
-    request_id,
-    mode: "live",
+    request_id: requestId,
+    topic_id: topicId,
+    mode: cached ? "exact-cache" : "live",
     startedAt: Date.now(),
+    cacheKey,
+    preference_revision: state.revision,
+    preference: {
+      revision: state.revision,
+      catalog_id: CONFIG.catalog_id,
+      catalog_hash: CATALOG_HASH,
+      selection: JSON.parse(JSON.stringify(state.selection)),
+      aspect_gains: { ...state.aspect_gains },
+    },
+    personalization,
+    feedback: null,
+    status_at() {
+      return this.mode === "live" && progress(this) < SEEDS.length ? "generating" : "done";
+    },
   };
+  return run;
 }
-function personalImages(run) {
-  return SEEDS.slice(0, progress(run)).map((seed, i) => ({
-    id: `personal-${i}`,
-    seed,
-    url: `/api/sessions/${session.id}/images/personal/personal-${i}.png`,
-    relative_path: `runs/${run.id}/personal/personal-${i}.png`,
-    sha256: hashOf([run.id, i]),
-  }));
-}
-function snapshot() {
-  const base = {
-    id: session.id,
-    card_order: session.card_order,
-    selection: session.selection,
-    run: null,
-  };
-  const run = session.run;
-  if (!run) return base;
-  const status = runStatus();
-  const refs = mergedRefs(session.selection);
-  base.run = {
+function publicRun(state) {
+  const run = state.run;
+  if (!run) return null;
+  const status = run.status_at();
+  const done = status === "done";
+  if (done && run.mode === "live") state.cache[run.cacheKey] = true;
+  const message =
+    run.mode === "sample"
+      ? "代表的な選択から事前に生成したサンプルです。あなたの選択を反映した結果ではありません。"
+      : run.mode === "exact-cache"
+        ? "同じ好み・同じお題で、この体験中に生成した結果です。"
+        : done
+          ? "4枚ができました。"
+          : `${progress(run)} / ${SEEDS.length}枚ができました。`;
+  return {
     id: run.id,
     topic_id: run.topic_id,
-    mode: run.mode || "live",
     status,
-    message:
-      status === "done"
-        ? "4枚できました。"
-        : `${progress(run)} / 4枚ができました。`,
-    elapsed_seconds: Math.round((Date.now() - run.startedAt) / 1000),
+    mode: run.mode,
+    message,
+    elapsed_seconds: done ? Math.max(1, Math.round((Date.now() - run.startedAt) / 1000)) : 0,
     error: null,
     prompt: targetPrompt(run.topic_id),
-    plain: SEEDS.map((seed, i) => ({
-      id: `plain-${i}`,
-      seed,
-      url: `/api/sessions/${session.id}/images/plain-${i}.png`,
-      relative_path: `runs/${run.id}/plain-${i}.png`,
-      prompt: targetPrompt(run.topic_id),
-    })),
-    personal: personalImages(run),
-    personalization: { alpha: ALPHA, sample_size: 0, hash: hashOf([refs, ALPHA]), refs },
-    timings: { generation: { wall_seconds: 25.1 } },
+    plain: imagesOf(run, "plain"),
+    personal: imagesOf(run, "personal"),
+    preference_revision: run.preference_revision,
+    preference: run.preference,
+    policy_id: run.mode === "sample" ? null : POLICY.policy_id,
+    policy_hash: run.mode === "sample" ? null : POLICY_HASH,
+    personalization_hash: run.personalization.hash,
+    personalization: run.personalization,
+    feedback: run.feedback,
+    timings: done ? { generation: { wall_seconds: 25.1 } } : {},
   };
-  return base;
+}
+function roundAvailable(state) {
+  if (state.rounds.length >= SELECTION.max_rounds) return false;
+  const seen = new Set(state.shown);
+  return CARDS.some((card) => !seen.has(card.id));
+}
+function snapshot() {
+  const state = session;
+  return {
+    id: state.id,
+    revision: state.revision,
+    catalog_id: CONFIG.catalog_id,
+    catalog_hash: CATALOG_HASH,
+    committed: state.committed,
+    selection: JSON.parse(JSON.stringify(state.selection)),
+    aspect_gains: { ...state.aspect_gains },
+    rounds: state.rounds.map((round) => ({
+      round_id: round.round_id,
+      round_index: round.round_index,
+      card_ids: [...round.card_ids],
+      cards: round.cards.map((card) => ({ ...card })),
+      shortfall_reason: round.shortfall_reason,
+    })),
+    shown_ids: [...state.shown],
+    next_round_available: roundAvailable(state),
+    run: publicRun(state),
+  };
+}
+function serveRound(state) {
+  const record = nextRound(state);
+  state.rounds.push(record);
+  state.shown.push(...record.card_ids);
+  return record;
+}
+
+/* ---------------------------------------------------------- validation */
+function ledger(state, requestId, kind, payload) {
+  if (typeof requestId !== "string" || !requestId || requestId.length > 100)
+    refuse(422, "Invalid request ID");
+  const payloadHash = hashOf({ kind, payload });
+  const entry = state.ledger[requestId];
+  if (entry && entry.payload_hash !== payloadHash)
+    refuse(409, "Request ID was reused with different input");
+  return { payloadHash, entry };
+}
+function guardBusy(state) {
+  if (state.run && state.run.status_at() !== "done")
+    refuse(409, "生成中です。終わるまで選択は変えられません。");
+}
+function guardRevision(state, expected) {
+  if (!isInt(expected)) refuse(422, "expected_revision must be an integer");
+  if (expected !== state.revision)
+    refuse(409, "画面が古くなっています。最新の状態を読み込んでください。");
+}
+const sameKeys = (value, keys) =>
+  value &&
+  typeof value === "object" &&
+  !Array.isArray(value) &&
+  Object.keys(value).length === keys.length &&
+  keys.every((key) => key in value);
+function normalizeSelection(body, state) {
+  if (!sameKeys(body, ["expected_revision", "cards", "aspect_gains", "commit"]))
+    refuse(422, "Preference payload has unknown or missing fields");
+  if (typeof body.commit !== "boolean") refuse(422, "commit must be a boolean");
+  const commit = body.commit;
+  if (!Array.isArray(body.cards)) refuse(422, "cards must be a list");
+  const lowest = commit ? SELECTION.min : 0;
+  if (body.cards.length < lowest || body.cards.length > SELECTION.max)
+    refuse(422, `${lowest}〜${SELECTION.max}枚を選んでください。`);
+  const gains = body.aspect_gains;
+  if (!sameKeys(gains, ASPECT_KEYS)) refuse(422, "aspect_gains must name every aspect");
+  for (const key of ASPECT_KEYS)
+    if (typeof gains[key] !== "number" || !GAINS.includes(gains[key]))
+      refuse(422, "Invalid aspect_gains");
+  const shown = new Set(state.shown);
+  const seen = new Set();
+  const selection = body.cards.map((entry) => {
+    if (!sameKeys(entry, ["card_id", "strength", "aspects"]))
+      refuse(422, "Invalid selection entry");
+    if (typeof entry.card_id !== "string" || !cardOf(entry.card_id) || seen.has(entry.card_id))
+      refuse(422, "Unknown or duplicate card");
+    if (!isInt(entry.strength) || !STRENGTHS.includes(entry.strength))
+      refuse(422, "strength must be 1 or 2");
+    if (
+      !Array.isArray(entry.aspects) ||
+      entry.aspects.some((a) => !ASPECT_KEYS.includes(a)) ||
+      new Set(entry.aspects).size !== entry.aspects.length ||
+      (!entry.aspects.length && commit)
+    )
+      refuse(422, "Invalid aspects");
+    if (!shown.has(entry.card_id)) refuse(422, "まだ表示していない画像は選べません。");
+    seen.add(entry.card_id);
+    return {
+      card_id: entry.card_id,
+      strength: entry.strength,
+      aspects: [...entry.aspects].sort(),
+    };
+  });
+  selection.sort((a, b) => (a.card_id < b.card_id ? -1 : a.card_id > b.card_id ? 1 : 0));
+  return {
+    selection,
+    aspect_gains: Object.fromEntries(ASPECT_KEYS.map((key) => [key, gains[key]])),
+    committed: commit,
+  };
 }
 
 /* -------------------------------------------------------------- server */
@@ -281,11 +579,11 @@ const TYPES = {
   ".css": "text/css; charset=utf-8",
   ".woff2": "font/woff2",
 };
-function send(res, status, body, type = "application/json") {
+function send(res, status, body, type = "application/json", cache = "no-store") {
   const payload = type.startsWith("application/json") ? JSON.stringify(body) : body;
   res.writeHead(status, {
     "content-type": type,
-    "cache-control": "no-store",
+    "cache-control": cache,
     "x-content-type-options": "nosniff",
   });
   res.end(payload);
@@ -293,7 +591,9 @@ function send(res, status, body, type = "application/json") {
 const fail = (res, status, detail) => send(res, status, { detail });
 const ok = (res) => send(res, 200, snapshot());
 function image(res, opts) {
-  send(res, 200, svg(opts), "image/svg+xml; charset=utf-8");
+  // Cards and finished frames are immutable here; let the browser keep them so a
+  // re-render does not refetch every picture.
+  send(res, 200, svg(opts), "image/svg+xml; charset=utf-8", "max-age=120");
 }
 function readBody(req) {
   return new Promise((resolve) => {
@@ -312,7 +612,12 @@ function serveStatic(res, name) {
   const file = path.join(STATIC, path.basename(name));
   if (!fs.existsSync(file)) return fail(res, 404, "not found");
   const binary = path.extname(file) === ".woff2";
-  send(res, 200, fs.readFileSync(file, binary ? null : "utf8"), TYPES[path.extname(file)] || "text/plain");
+  send(
+    res,
+    200,
+    fs.readFileSync(file, binary ? null : "utf8"),
+    TYPES[path.extname(file)] || "text/plain",
+  );
 }
 
 const server = http.createServer(async (req, res) => {
@@ -329,12 +634,13 @@ const server = http.createServer(async (req, res) => {
     }
     if (p === "/fallback")
       return send(res, 200, "<h1>fallback</h1>", "text/html; charset=utf-8");
-    if (p.startsWith("/assets/cards/")) {
+    if (p.startsWith("/assets/cards-v2/")) {
       const card = cardOf(path.basename(p, ".png"));
       if (!card) return fail(res, 404, "no card");
-      const prof = PROFILES.find((x) => x.id === card.profile_id);
       return image(res, {
-        hue: prof.hue,
+        hue: (subjectOf(card.id).hue + card.axis_levels.color * 24) % 360,
+        sat: [55, 55, 24, 82][card.axis_levels.color],
+        light: [50, 44, 40, 52][card.axis_levels.lighting],
         top: card.subject_id.toUpperCase(),
         bottom: card.profile_id,
         seed: CARDS.indexOf(card) + 1,
@@ -357,7 +663,7 @@ const server = http.createServer(async (req, res) => {
     if (p === "/api/health" && m === "GET")
       return send(res, 200, {
         status: "ok",
-        gpu_busy: Boolean(session?.run && runStatus() !== "done"),
+        gpu_busy: busy(),
         mode: "fan-live",
         offline: true,
       });
@@ -365,95 +671,176 @@ const server = http.createServer(async (req, res) => {
       if (session) return fail(res, 409, "ほかの体験が進行中です。");
       session = {
         id: `sess-${token().slice(0, 8)}`,
-        card_order: shuffle(CARDS.map((c) => c.id)),
+        seed: token(),
+        revision: 0,
         selection: [],
+        aspect_gains: Object.fromEntries(ASPECT_KEYS.map((key) => [key, 1])),
+        committed: false,
+        rounds: [],
+        shown: [],
+        ledger: {},
+        cache: {},
         run: null,
       };
+      serveRound(session);
       return ok(res);
     }
     const parts = p.split("/").filter(Boolean); // api sessions <sid> ...
     if (parts[0] !== "api" || parts[1] !== "sessions") return fail(res, 404, "not found");
     const sid = parts[2];
     if (!session || session.id !== sid)
-      return fail(res, 404, "セッションが見つかりません。");
+      return fail(res, 404, "体験が終了しました。最初から始めてください。");
+    const state = session;
     const tail = parts.slice(3);
     const body = m === "GET" || m === "DELETE" ? {} : await readBody(req);
 
     if (!tail.length && m === "GET") return ok(res);
     if (!tail.length && m === "DELETE") {
       session = null;
-      return send(res, 200, { ok: true });
+      return send(res, 200, { ok: true, releasing_gpu: false });
     }
     if (tail[0] === "images") {
-      const run = session.run;
+      const run = state.run;
       if (!run) return fail(res, 404, "no run");
-      if (tail.length === 3) {
-        if (tail[1] !== "personal") return fail(res, 404, "no image");
-        const i = Number(path.basename(tail[2], ".png").split("-").pop());
+      const name = path.basename(tail[tail.length - 1], ".png");
+      const index = Number(name.split("-").pop());
+      if (!Number.isInteger(index) || index < 0 || index >= SEEDS.length)
+        return fail(res, 404, "no image");
+      if (name.startsWith("personal"))
         return image(res, {
-          hue: personalHue(),
+          hue: personalHue(state),
           top: `FAN · alpha ${ALPHA}`,
-          bottom: `seed ${SEEDS[i]}`,
-          seed: i + 9,
+          bottom: `seed ${SEEDS[index]}`,
+          seed: index + 9,
         });
-      }
-      const i = Number(path.basename(tail[1], ".png").split("-").pop());
       return image(res, {
         hue: 205,
         sat: 14,
         light: 40,
         top: "PLAIN",
-        bottom: `seed ${SEEDS[i]}`,
-        seed: i + 3,
+        bottom: `seed ${SEEDS[index]}`,
+        seed: index + 3,
       });
     }
     if (tail[0] === "touch" && m === "POST") return send(res, 200, { ok: true });
+
     if (tail[0] === "selection" && m === "PUT") {
-      if (session.run && runStatus() !== "done")
-        return fail(res, 409, "生成中は変更できません。");
-      const cards = body.cards || [];
-      if (cards.length < CONFIG.selection.min || cards.length > CONFIG.selection.max)
-        return fail(res, 409, "3〜5枚を選んでください。");
-      for (const c of cards) {
-        if (!cardOf(c.card_id)) return fail(res, 409, `不明なカード: ${c.card_id}`);
-        if ((c.aspects_off || []).length >= ASPECT_KEYS.length)
-          return fail(res, 409, "側面をすべて外すことはできません。");
+      guardBusy(state);
+      guardRevision(state, body.expected_revision);
+      const content = normalizeSelection(body, state);
+      const current = {
+        selection: state.selection,
+        aspect_gains: state.aspect_gains,
+        committed: state.committed,
+      };
+      if (hashOf(content) !== hashOf(current)) {
+        Object.assign(state, JSON.parse(JSON.stringify(content)));
+        state.revision += 1;
+        // The finished comparison belongs to the previous preference.
+        state.run = null;
       }
-      session.selection = cards.map((c) => ({
-        card_id: c.card_id,
-        aspects_off: c.aspects_off || [],
-      }));
-      session.run = null;
       return ok(res);
     }
-    if (tail[0] === "runs" && m === "POST") {
-      const { topic_id, request_id } = body;
-      if (!topicOf(topic_id)) return fail(res, 409, "不明なお題です。");
-      if (!session.selection.length) return fail(res, 409, "先に画像を選んでください。");
-      const run = session.run;
-      if (run?.request_id === request_id) return ok(res);
-      if (run && runStatus() !== "done") return fail(res, 409, "いま描いています。");
-      // Every request is a fresh comparison; the finished one is replaced.
-      session.run = makeRun(topic_id, request_id);
+    if (tail[0] === "rounds" && m === "POST") {
+      if (!sameKeys(body, ["request_id", "expected_revision"]))
+        refuse(422, "Round payload has unknown or missing fields");
+      const { entry, payloadHash } = ledger(state, body.request_id, "round", {
+        expected_revision: body.expected_revision,
+      });
+      if (entry) return ok(res); // the same request never shows a card twice
+      guardBusy(state);
+      guardRevision(state, body.expected_revision);
+      if (state.rounds.length >= SELECTION.max_rounds)
+        refuse(409, `選択は最大${SELECTION.max_rounds}回までです。`);
+      const seen = new Set(state.shown);
+      if (!CARDS.some((card) => !seen.has(card.id)))
+        refuse(409, "お見せできる画像がもうありません。");
+      const record = serveRound(state);
+      state.ledger[body.request_id] = {
+        kind: "round",
+        payload_hash: payloadHash,
+        round_id: record.round_id,
+      };
+      return ok(res);
+    }
+    if (tail[0] === "runs" && tail.length === 1 && m === "POST") {
+      if (!sameKeys(body, ["topic_id", "request_id", "expected_revision"]))
+        refuse(422, "Run payload has unknown or missing fields");
+      const { entry, payloadHash } = ledger(state, body.request_id, "run", {
+        topic_id: body.topic_id,
+        expected_revision: body.expected_revision,
+      });
+      if (entry) {
+        if (state.run && state.run.id === entry.run_id) return ok(res);
+        refuse(409, "この生成はすでに終わっています。");
+      }
+      if (!topicOf(body.topic_id)) refuse(422, "Unknown topic");
+      guardRevision(state, body.expected_revision);
+      if (!state.committed) refuse(422, `${SELECTION.min}枚以上を選んで決定してください。`);
+      if (state.run && state.run.status_at() !== "done") refuse(409, "処理中です。");
+      state.run = makeRun(body.topic_id, body.request_id, state);
+      state.ledger[body.request_id] = {
+        kind: "run",
+        payload_hash: payloadHash,
+        run_id: state.run.id,
+      };
+      return ok(res);
+    }
+    if (tail[0] === "runs" && tail.length === 3 && tail[2] === "feedback" && m === "PUT") {
+      if (!sameKeys(body, ["expected_revision", "preference"]))
+        refuse(422, "Feedback payload has unknown or missing fields");
+      if (!["plain", "personal", "tie"].includes(body.preference))
+        refuse(422, "Unknown preference");
+      if (!isInt(body.expected_revision))
+        refuse(422, "expected_revision must be an integer");
+      const run = state.run;
+      if (
+        !run ||
+        run.id !== tail[1] ||
+        run.mode === "sample" ||
+        run.status_at() !== "done" ||
+        run.preference_revision !== body.expected_revision ||
+        body.expected_revision !== state.revision
+      )
+        refuse(409, "この結果には回答できません。");
+      run.feedback = {
+        preference: body.preference,
+        preference_revision: run.preference_revision,
+        personalization_hash: run.personalization.hash,
+      };
       return ok(res);
     }
     if (tail[0] === "cancel" && m === "POST") {
       // Cancelling an unfinished comparison drops the whole run.
-      if (session.run && runStatus() !== "done") session.run = null;
+      if (state.run && state.run.status_at() !== "done") state.run = null;
       return ok(res);
     }
     if (tail[0] === "sample" && m === "POST") {
+      if (busy()) refuse(409, "処理中です。");
       const sample = CONFIG.samples.find((s) => s.id === body.sample_id);
-      if (!sample) return fail(res, 404, "no sample");
-      session.selection = ["girl-warm_soft", "student-cool_clean", "traveler-warm_soft"].map(
-        (card_id) => ({ card_id, aspects_off: [] }),
-      );
-      session.run = makeRun(sample.topic_id, sample.id);
-      session.run.mode = "sample";
+      if (!sample) refuse(422, "Sample unavailable or inconsistent");
+      // Somebody else's preference: draft, revision and rounds stay untouched.
+      const shown = ["girl-c0-l0-t0-m0", "student-c1-l1-t0-m3", "traveler-c2-l0-t2-m2"];
+      const borrowed = {
+        selection: shown.map((card_id) => ({
+          card_id,
+          strength: 1,
+          aspects: [...ASPECT_KEYS].sort(),
+        })),
+        aspect_gains: Object.fromEntries(ASPECT_KEYS.map((key) => [key, 1])),
+        revision: 0,
+        cache: {}, // a sample never touches this session's cache
+      };
+      const run = makeRun(sample.topic_id, `sample-${sample.id}`, borrowed);
+      run.mode = "sample";
+      run.preference_revision = null;
+      run.preference = { ...run.preference, source: "sample", sample_id: sample.id };
+      state.run = run;
       return ok(res);
     }
     return fail(res, 404, "not found");
   } catch (e) {
+    if (e instanceof Refused) return fail(res, e.status, e.message);
     return fail(res, 500, String(e?.stack || e));
   }
 });
