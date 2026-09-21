@@ -16,7 +16,6 @@ const el = (tag, attrs = {}, children = []) => {
 const state = {
   typed: "",
   participant: null,
-  order: null,
   step: 0,
   condition: null,
   selection: [],
@@ -28,12 +27,7 @@ const state = {
 
 const conditionOf = (name) => STUDY.conditions.find((item) => item.condition === name);
 const limitsOf = (condition) => condition.selection;
-const orderedConditions = () =>
-  state.order === "legacy_first"
-    ? ["legacy_pool", "new_pool"]
-    : state.order === "new_first"
-      ? ["new_pool", "legacy_pool"]
-      : [STUDY.conditions[0].condition];
+const orderedConditions = () => [STUDY.conditions[0].condition];
 
 const picked = (cardId) => state.selection.find((item) => item.card_id === cardId);
 
@@ -52,7 +46,6 @@ function blocker() {
 
 function visibleCards() {
   const condition = state.condition;
-  if (condition.flow === "single_screen") return condition.catalog.cards;
   const round = state.rounds[state.rounds.length - 1];
   const byId = Object.fromEntries(condition.catalog.cards.map((c) => [c.id, c]));
   return (round?.card_ids || []).map((cardId) => byId[cardId]);
@@ -77,7 +70,6 @@ function requestRound() {
 
 const canAskRound = () => {
   const condition = state.condition;
-  if (condition.flow === "single_screen") return false;
   if (state.rounds.length >= condition.selection.max_rounds) return false;
   return state.shown.length < condition.catalog.cards.length;
 };
@@ -90,9 +82,7 @@ function startCondition(name) {
   state.shown = [];
   state.rounds = [];
   state.startedAt = Date.now();
-  if (state.condition.flow === "single_screen")
-    state.shown = state.condition.catalog.cards.map((card) => card.id);
-  else requestRound();
+  requestRound();
   render();
 }
 
@@ -122,13 +112,8 @@ function toggleCard(card) {
   } else {
     state.selection = [
       ...state.selection,
-      {
-        card_id: card.id,
-        strength: 1,
-        // The v1 flow used every phrase unless the visitor dropped one; the new
-        // flow never turns an unanswered card into "every aspect".
-        aspects: state.condition.aspects_default_on ? [...STUDY.aspects] : [],
-      },
+      // An unanswered card never becomes "every aspect".
+      { card_id: card.id, strength: 1, aspects: [] },
     ];
   }
   $("#notice").textContent = "";
@@ -176,7 +161,7 @@ function renderPick(entry, card) {
   chips.append(all);
   row.append(chips);
 
-  if (state.condition.strength) {
+  {
     const steps = el("div", { class: "steps" });
     for (const [value, label] of [
       [1, "好き"],
@@ -224,13 +209,9 @@ function snapshot() {
       .sort((a, b) => (a.card_id < b.card_id ? -1 : a.card_id > b.card_id ? 1 : 0)),
     aspect_gains: gains,
     shown_ids: [...state.shown],
-    round_count: state.condition.flow === "single_screen" ? 1 : state.rounds.length,
+    round_count: state.rounds.length,
     elapsed_ms: Date.now() - state.startedAt,
   };
-  if (STUDY.study_kind === "elicitation") {
-    value.collection_condition = state.condition.condition;
-    value.presented_index = state.step;
-  }
   return value;
 }
 
@@ -247,9 +228,7 @@ function download(name, text) {
 function finish() {
   const value = snapshot();
   const text = JSON.stringify(value, null, 2) + "\n";
-  const name = `${STUDY.study_id}-${value.participant_id}${
-    value.collection_condition ? "-" + value.collection_condition : ""
-  }.json`;
+  const name = `${STUDY.study_id}-${value.participant_id}.json`;
   state.exported.push({ name, value });
   state.step += 1;
   render(text, name);
@@ -281,40 +260,11 @@ function renderIntro() {
     state.typed = input.value;
   });
   form.append(input);
-  if (STUDY.study_kind === "elicitation") {
-    form.append(
-      el("h2", { text: "実施順" }),
-      el("p", { class: "sub", text: "実施者の指示どおりに選んでください。" }),
-    );
-    const orders = el("div", { class: "chips" });
-    for (const [value, label] of [
-      ["legacy_first", "旧 → 新"],
-      ["new_first", "新 → 旧"],
-    ]) {
-      const button = el("button", {
-        class: "chip",
-        type: "button",
-        "data-order": value,
-        "aria-pressed": String(state.order === value),
-        text: label,
-      });
-      button.addEventListener("click", () => {
-        state.order = value;
-        render();
-      });
-      orders.append(button);
-    }
-    form.append(orders);
-  }
   const start = el("button", { class: "primary", type: "button", text: "はじめる" });
   start.addEventListener("click", () => {
     const value = (state.typed = input.value.trim());
     if (!new RegExp(STUDY.participant_pattern).test(value)) {
       $("#notice").textContent = `参加者IDの形式が違います（${STUDY.participant_pattern_label}）。`;
-      return;
-    }
-    if (STUDY.study_kind === "elicitation" && !state.order) {
-      $("#notice").textContent = "実施順を選んでください。";
       return;
     }
     state.participant = value;
@@ -341,22 +291,14 @@ function renderCollect() {
     el("p", { class: "sub", text: condition.instruction }),
   );
   const round = state.rounds[state.rounds.length - 1];
-  if (condition.flow !== "single_screen")
-    head.append(
-      el("p", {
-        class: "round-tag",
-        text: `${state.rounds.length} / ${condition.selection.max_rounds} 回目 · ${
-          state.selection.length
-        } / ${limits.max} 枚選択中`,
-      }),
-    );
-  else
-    head.append(
-      el("p", {
-        class: "round-tag",
-        text: `${state.selection.length} / ${limits.max} 枚選択中`,
-      }),
-    );
+  head.append(
+    el("p", {
+      class: "round-tag",
+      text: `${state.rounds.length} / ${condition.selection.max_rounds} 回目 · ${
+        state.selection.length
+      } / ${limits.max} 枚選択中`,
+    }),
+  );
   if (round?.shortfall_reason)
     head.append(
       el("p", { class: "sub", text: "お見せできる画像はこれで最後です。" }),

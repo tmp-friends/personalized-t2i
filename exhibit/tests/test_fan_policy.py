@@ -5,23 +5,39 @@ import subprocess
 import sys
 
 import pytest
-from exhibit.catalog import load_catalog
-from exhibit.config import FAN_POLICIES
-from exhibit.domain import CARDS, build_personalization, legacy_snapshot_from_selection
+from exhibit.catalog import CATALOG_ID, build_catalog
+from exhibit.config import FAN_POLICIES, ROOT, read_json
+from exhibit.domain import build_personalization, digest
 from exhibit.fan_adapter import profiling_argument, resolve_policy
+
+# A complete in-memory catalog: these tests are about the encoding identity, not
+# about which cards a human has reviewed on disk.
+ALL_CARDS = build_catalog(read_json(ROOT / "configs/catalog-v2.json"))
+CARDS = {card["id"]: card for card in ALL_CARDS}
+IDS = list(CARDS)
+CATALOG = {
+    "catalog_id": CATALOG_ID,
+    "catalog_hash": digest(ALL_CARDS),
+    "all_cards": ALL_CARDS,
+    "cards": ALL_CARDS,
+}
+
+
+def build(value, **kwargs):
+    return build_personalization(value, catalog=CATALOG, **kwargs)
 
 
 def snapshot(selection=None, *, gains=None, revision=1):
-    cards = list(CARDS)
     return {
         "revision": revision,
-        "catalog_id": "catalog-v1",
-        "catalog_hash": load_catalog("catalog-v1", reviewed_only=False)["catalog_hash"],
+        "catalog_id": CATALOG["catalog_id"],
+        "catalog_hash": CATALOG["catalog_hash"],
         "selection": selection
         or [
-            {"card_id": cards[0], "strength": 2, "aspects": ["color", "mood"]},
-            {"card_id": cards[4], "strength": 1, "aspects": ["color", "mood"]},
-            {"card_id": cards[2], "strength": 1, "aspects": ["texture"]},
+            # The first two share a profile, so their phrases merge by weight.
+            {"card_id": IDS[0], "strength": 2, "aspects": ["color", "mood"]},
+            {"card_id": IDS[16], "strength": 1, "aspects": ["color", "mood"]},
+            {"card_id": IDS[2], "strength": 1, "aspects": ["texture"]},
         ],
         "aspect_gains": gains or {"color": 2, "lighting": 1, "texture": 0.5, "mood": 1},
     }
@@ -95,10 +111,8 @@ def test_profiling_argument_rejects_ambiguous_or_invalid_values(policy):
 def test_build_personalization_requires_snapshot_and_normalizes_content_identity():
     policy = resolve_policy("legacy_exhibit", FAN_POLICIES)
     value = snapshot()
-    built = build_personalization(
-        value, prompt="a target", policy=policy, provenance=provenance()
-    )
-    reordered = build_personalization(
+    built = build(value, prompt="a target", policy=policy, provenance=provenance())
+    reordered = build(
         {**value, "revision": 99, "selection": list(reversed(value["selection"]))},
         prompt="a target",
         policy=policy,
@@ -109,20 +123,16 @@ def test_build_personalization_requires_snapshot_and_normalizes_content_identity
     assert [ref["text"] for ref in built["refs"]] == sorted(
         ref["text"] for ref in built["refs"]
     )
-    color = CARDS[next(iter(CARDS))]["aspects"]["color"]
+    color = CARDS[IDS[0]]["aspects"]["color"]
     assert next(ref for ref in built["refs"] if ref["text"] == color)["weight"] == 6.0
     assert all(len(ref["ref_id"]) == 64 for ref in built["refs"])
     with pytest.raises(TypeError, match="snapshot"):
-        build_personalization(
-            [], prompt="a target", policy=policy, provenance=provenance()
-        )
+        build([], prompt="a target", policy=policy, provenance=provenance())
 
 
 def test_personalization_hash_tracks_effective_policy_and_provenance_content():
     policy = resolve_policy("legacy_exhibit", FAN_POLICIES)
-    base = build_personalization(
-        snapshot(), prompt="a target", policy=policy, provenance=provenance()
-    )
+    base = build(snapshot(), prompt="a target", policy=policy, provenance=provenance())
     changes = [
         ({**policy, "pooled_mode": "fan"}, provenance()),
         ({**policy, "skip": -1}, provenance()),
@@ -133,7 +143,7 @@ def test_personalization_hash_tracks_effective_policy_and_provenance_content():
 
     for changed_policy, changed_provenance in changes:
         assert (
-            build_personalization(
+            build(
                 snapshot(),
                 prompt="a target",
                 policy=changed_policy,
@@ -143,24 +153,13 @@ def test_personalization_hash_tracks_effective_policy_and_provenance_content():
         )
 
 
-def test_card_description_rejects_non_uniform_gains_and_legacy_conversion_is_explicit():
+def test_card_description_rejects_non_uniform_gains():
     policy = {
         **resolve_policy("legacy_exhibit", FAN_POLICIES),
         "reference_unit": "card_description",
     }
     with pytest.raises(ValueError, match="aspect_gains"):
-        build_personalization(
-            snapshot(), prompt="a target", policy=policy, provenance=provenance()
-        )
-
-    legacy = legacy_snapshot_from_selection(
-        [{"card_id": card_id, "aspects_off": []} for card_id in list(CARDS)[:3]]
-    )
-    assert legacy["selection"][0] == {
-        "card_id": next(iter(CARDS)),
-        "strength": 1,
-        "aspects": ["color", "lighting", "texture", "mood"],
-    }
+        build(snapshot(), prompt="a target", policy=policy, provenance=provenance())
 
 
 def test_same_effective_policy_has_the_same_identity_regardless_of_registry_name():
@@ -168,13 +167,13 @@ def test_same_effective_policy_has_the_same_identity_regardless_of_registry_name
     policies["policies"]["legacy_alias"] = copy.deepcopy(
         policies["policies"]["legacy_exhibit"]
     )
-    base = build_personalization(
+    base = build(
         snapshot(),
         prompt="a target",
         policy=resolve_policy("legacy_exhibit", policies),
         provenance=provenance(),
     )
-    alias = build_personalization(
+    alias = build(
         snapshot(),
         prompt="a target",
         policy=resolve_policy("legacy_alias", policies),
@@ -185,9 +184,7 @@ def test_same_effective_policy_has_the_same_identity_regardless_of_registry_name
 
 def test_personalization_identity_uses_actual_target_and_generation_inputs():
     policy = resolve_policy("legacy_exhibit", FAN_POLICIES)
-    base = build_personalization(
-        snapshot(), prompt="a target", policy=policy, provenance=provenance()
-    )
+    base = build(snapshot(), prompt="a target", policy=policy, provenance=provenance())
     variants = [
         ("another target", provenance()),
         (
@@ -198,9 +195,7 @@ def test_personalization_identity_uses_actual_target_and_generation_inputs():
     ]
     for prompt, source in variants:
         assert (
-            build_personalization(
-                snapshot(), prompt=prompt, policy=policy, provenance=source
-            )["hash"]
+            build(snapshot(), prompt=prompt, policy=policy, provenance=source)["hash"]
             != base["hash"]
         )
 
@@ -212,7 +207,7 @@ def test_card_description_requires_every_gain_to_be_one():
     }
     for gain in (0.5, 2):
         with pytest.raises(ValueError, match="aspect_gains"):
-            build_personalization(
+            build(
                 snapshot(
                     gains={
                         aspect: gain
@@ -226,7 +221,7 @@ def test_card_description_requires_every_gain_to_be_one():
 
 
 def test_built_effective_policy_is_json_shaped_and_detached():
-    built = build_personalization(
+    built = build(
         snapshot(),
         prompt="a target",
         policy=resolve_policy("legacy_exhibit", FAN_POLICIES),
@@ -247,7 +242,7 @@ def test_policy_canonicalizes_equivalent_numbers_and_rejects_bool_skip_pa():
         "profiling": {"mode": "ratio", "value": 1.0},
     }
     assert (
-        build_personalization(
+        build(
             snapshot(
                 gains={aspect: 1 for aspect in ("color", "lighting", "texture", "mood")}
             ),
@@ -255,7 +250,7 @@ def test_policy_canonicalizes_equivalent_numbers_and_rejects_bool_skip_pa():
             policy=equivalent,
             provenance=provenance(),
         )["hash"]
-        == build_personalization(
+        == build(
             snapshot(
                 gains={
                     aspect: 1.0 for aspect in ("color", "lighting", "texture", "mood")
@@ -275,7 +270,7 @@ def test_policy_canonicalizes_equivalent_numbers_and_rejects_bool_skip_pa():
 
 def test_snapshot_rejects_negative_revision():
     with pytest.raises(ValueError, match="snapshot identity"):
-        build_personalization(
+        build(
             snapshot(revision=-1),
             prompt="a target",
             policy=resolve_policy("legacy_exhibit", FAN_POLICIES),
@@ -298,7 +293,7 @@ def test_fan_adapter_import_does_not_load_torch():
 
 
 def test_card_description_aggregates_cards_in_canonical_aspect_order():
-    cards = list(CARDS)
+    cards = IDS
     policy = {
         **resolve_policy("legacy_exhibit", FAN_POLICIES),
         "reference_unit": "card_description",
@@ -311,16 +306,14 @@ def test_card_description_aggregates_cards_in_canonical_aspect_order():
                 "aspects": ["mood", "texture", "color", "lighting"],
             },
             {
-                "card_id": cards[4],
+                "card_id": cards[16],
                 "strength": 1,
                 "aspects": ["lighting", "color", "mood", "texture"],
             },
         ],
         gains={aspect: 1 for aspect in ("color", "lighting", "texture", "mood")},
     )
-    built = build_personalization(
-        value, prompt="a target", policy=policy, provenance=provenance()
-    )
+    built = build(value, prompt="a target", policy=policy, provenance=provenance())
     expected = ", ".join(
         CARDS[cards[0]]["aspects"][aspect]
         for aspect in ("color", "lighting", "texture", "mood")
@@ -330,7 +323,7 @@ def test_card_description_aggregates_cards_in_canonical_aspect_order():
             "ref_id": hashlib.sha256(expected.encode()).hexdigest(),
             "text": expected,
             "weight": 3.0,
-            "card_ids": sorted([cards[0], cards[4]]),
+            "card_ids": sorted([cards[0], cards[16]]),
             "aspects": [],
         }
     ]
@@ -340,12 +333,12 @@ def test_card_description_aggregates_cards_in_canonical_aspect_order():
 def test_personalization_rejects_unreviewed_catalog_cards(monkeypatch):
     from exhibit import catalog as catalog_module
 
-    card = copy.deepcopy(next(iter(CARDS.values())))
+    card = copy.deepcopy(CARDS[IDS[0]])
     monkeypatch.setattr(
         catalog_module,
         "load_catalog",
-        lambda catalog_id, *, reviewed_only: {
-            "catalog_id": catalog_id,
+        lambda *, reviewed_only: {
+            "catalog_id": "catalog-v2",
             "catalog_hash": "catalog-hash",
             "all_cards": [card],
             "cards": [] if reviewed_only else [card],
@@ -369,12 +362,12 @@ def test_personalization_rejects_unreviewed_catalog_cards(monkeypatch):
 def test_personalization_rejects_stale_hash_and_cross_catalog_card(monkeypatch):
     from exhibit import catalog as catalog_module
 
-    v2_card = copy.deepcopy(next(iter(CARDS.values())))
+    v2_card = copy.deepcopy(CARDS[IDS[0]])
     v2_card["id"] = "v2-card"
     monkeypatch.setattr(
         catalog_module,
         "load_catalog",
-        lambda catalog_id, *, reviewed_only: {
+        lambda *, reviewed_only: {
             "catalog_id": "catalog-v2",
             "catalog_hash": "current-hash",
             "all_cards": [v2_card],
@@ -398,9 +391,7 @@ def test_personalization_rejects_stale_hash_and_cross_catalog_card(monkeypatch):
     cross_catalog = {
         **base,
         "catalog_hash": "current-hash",
-        "selection": [
-            {"card_id": next(iter(CARDS)), "strength": 1, "aspects": ["color"]}
-        ],
+        "selection": [{"card_id": IDS[0], "strength": 1, "aspects": ["color"]}],
     }
     with pytest.raises(ValueError, match="Unknown or duplicate card"):
         build_personalization(
@@ -415,7 +406,7 @@ def test_snapshot_rejects_client_supplied_reference_text():
     value = snapshot()
     value["selection"][0]["ref_en"] = "client supplied"
     with pytest.raises(ValueError, match="Invalid selection entry"):
-        build_personalization(
+        build(
             value,
             prompt="a target",
             policy=resolve_policy("legacy_exhibit", FAN_POLICIES),
@@ -427,7 +418,7 @@ def test_personalization_rejects_snapshot_missing_catalog_id_without_key_error()
     value = snapshot()
     value.pop("catalog_id")
     with pytest.raises(ValueError, match="unknown or missing fields"):
-        build_personalization(
+        build(
             value,
             prompt="a target",
             policy=resolve_policy("legacy_exhibit", FAN_POLICIES),

@@ -142,17 +142,22 @@ def test_rounds_are_replayed_and_limited(client):
         ).status_code
         == 409
     )
+    third = client.post(
+        f"/api/sessions/{sid}/rounds", json={"request_id": "q2", "expected_revision": 0}
+    )
+    assert third.status_code == 200 and len(third.json()["rounds"]) == 3
+    # Three rounds is the configured maximum, whatever is left unseen.
     assert (
         client.post(
             f"/api/sessions/{sid}/rounds",
-            json={"request_id": "q2", "expected_revision": 0},
+            json={"request_id": "q3", "expected_revision": 0},
         ).status_code
         == 409
     )
     assert (
         client.post(
             f"/api/sessions/{sid}/rounds",
-            json={"request_id": "q3", "expected_revision": 0, "round": 3},
+            json={"request_id": "q4", "expected_revision": 0, "round": 3},
         ).status_code
         == 422
     )
@@ -245,9 +250,9 @@ def test_health_and_config_are_available_without_loading_gpu(client):
     assert not health["gpu_busy"] and health["mode"] == "fan-live"
     config = client.get("/api/config").json()
     assert config["schema_version"] == CONFIG["schema_version"]
-    assert config["catalog_id"] == CONFIG["catalog_id"] and config["catalog_hash"]
+    assert config["catalog_id"] == "catalog-v2" and config["catalog_hash"]
     assert len(config["topics"]) == 6
-    assert len(config["cards"]) == 16
+    assert len(config["cards"]) == 64
     assert set(config["cards"][0]["axis_levels"]) == set(config["aspects"])
     assert set(config["aspects"]) == {"color", "lighting", "texture", "mood"}
     assert config["selection"] == {
@@ -280,11 +285,12 @@ def test_config_only_offers_reviewed_cards(client, asset_tree):
 
 
 def partly_reviewed_v2(root, review_path):
-    """40 of 64 v2 cards reviewed, leaning hard on `girl` and the lower levels."""
+    """40 of 64 cards reviewed, leaning hard on `girl` and the lower levels."""
+    from conftest import write_catalog_bundle
+    from exhibit.config import ROOT, read_json
     from exhibit.domain import ASPECTS
-    from test_catalog import definition, write_v2_bundle
 
-    cards = build_catalog(definition())
+    cards = build_catalog(read_json(ROOT / "configs/catalog-v2.json"))
     reviewed = set()
     for subject, quota in (
         ("girl", 16),
@@ -297,7 +303,7 @@ def partly_reviewed_v2(root, review_path):
             key=lambda card: (sum(card["axis_levels"][a] for a in ASPECTS), card["id"]),
         )
         reviewed.update(card["id"] for card in rows[:quota])
-    write_v2_bundle(root, review_path, reviewed=reviewed)
+    write_catalog_bundle(root, review_path, reviewed=reviewed)
     return reviewed
 
 
@@ -306,14 +312,10 @@ def test_a_partly_reviewed_v2_catalog_still_opens_and_serves_rounds(
 ):
     """Design §6.1 runs on the cards that passed, not on a complete 64."""
     from exhibit import catalog as catalog_module
-    from exhibit import service as service_module
 
-    review = tmp_path / "cards-v2-review.json"
+    review = tmp_path / "partly-reviewed.json"
     reviewed = partly_reviewed_v2(assets, review)
-    monkeypatch.setattr(catalog_module, "V2_REVIEW", review)
-    monkeypatch.setattr(
-        service_module, "CONFIG", {**CONFIG, "catalog_id": "catalog-v2"}
-    )
+    monkeypatch.setattr(catalog_module, "REVIEW", review)
 
     config = client.get("/api/config").json()
     assert config["catalog_id"] == "catalog-v2"

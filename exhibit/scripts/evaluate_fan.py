@@ -685,11 +685,9 @@ def run_phase(config_path, phase, *, resume, cancel, deadline, on_event):
     )
 
 
-def run_study(
-    config_path, *, study_kind, resume, cancel, deadline, on_event, runner=None
-):
+def run_study(config_path, *, resume, cancel, deadline, on_event, runner=None):
     """Generate the fixed study matrix; refuse before the GPU when it is not fixed."""
-    config = load_evaluation_config(config_path, "study", study_kind=study_kind)
+    config = load_evaluation_config(config_path, "study")
     study = config["study"]
     directory = Path(study["study_dir"])
     manifest_path = directory / "manifest.json"
@@ -783,10 +781,6 @@ def parse_args(argv=None):
         command.add_argument("--timeout", type=float, default=1800)
         if name != "encoding":
             command.add_argument("--resume", action="store_true")
-        if name == "study":
-            command.add_argument(
-                "--study-kind", choices=("encoder", "elicitation"), default=None
-            )
     return parser.parse_args(argv)
 
 
@@ -837,7 +831,6 @@ def main(argv=None):
     if args.command == "study":
         index = run_study(
             args.config,
-            study_kind=args.study_kind,
             resume=args.resume,
             cancel=cancel,
             deadline=deadline,

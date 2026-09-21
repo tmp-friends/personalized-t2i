@@ -6,7 +6,7 @@ aspects (color, lighting, texture, mood) as an English phrase plus a Japanese
 label. The exhibit owner opens the built page, looks at every card, ticks the
 aspects a museum visitor would actually see without being told, ticks a
 subject-quality box, and exports ``cards-v2-review.json`` -- the file
-``exhibit/src/exhibit/catalog.py`` (``_valid_v2``) requires before catalog-v2
+``exhibit/src/exhibit/catalog.py`` (``_valid_card``) requires before catalog-v2
 can be shown.
 
 This script only builds the page. It never marks anything reviewed itself:
@@ -64,7 +64,7 @@ def gather_cards(*, assets, review_path):
     manifest_path = assets / "catalog-v2.json"
     try:
         catalog = load_catalog(
-            "catalog-v2", reviewed_only=False, assets=assets, review_path=review_path
+            reviewed_only=False, assets=assets, review_path=review_path
         )
     except (ValueError, TypeError) as exc:
         raise SystemExit(

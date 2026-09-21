@@ -25,27 +25,22 @@ from ..evaluation import participant_bootstrap_interval
 ASSETS = Path(__file__).resolve().parent / "assets"
 PARTICIPANT_ID = re.compile(r"^p[0-9]{2,4}$")
 PARTICIPANT_ID_LABEL = "p と2〜4桁の数字（例 p001）"
-CONDITIONS = {"encoder": ("new_pool",), "elicitation": ("legacy_pool", "new_pool")}
+CONDITIONS = {"encoder": ("new_pool",)}
 COMPARISON_ROLES = {
     "candidate_vs_legacy": ("candidate", "legacy"),
     "own_vs_other": ("own", "other"),
-    "new_pool_vs_legacy_pool": ("new_pool", "legacy_pool"),
 }
 ROLE_POLICY = {
     "candidate": "candidate",
     "own": "candidate",
     "other": "candidate",
     "legacy": "legacy",
-    "new_pool": "encoder",
-    "legacy_pool": "encoder",
 }
 ROLE_CONDITION = {
     "candidate": "new_pool",
     "legacy": "new_pool",
     "own": "new_pool",
     "other": "new_pool",
-    "new_pool": "new_pool",
-    "legacy_pool": "legacy_pool",
 }
 OTHER_ROLES = {"other"}
 STORED_FIELDS = (
@@ -94,18 +89,7 @@ def study_dir(config):
 def catalogs_for(config, *, loader=None):
     """Load the reviewed catalog of every condition this kind collects."""
     loader = loader or load_catalog
-    study = config["study"]
-    result = {"new_pool": loader(study["catalog_id"], reviewed_only=True)}
-    if study["study_kind"] == "elicitation":
-        result["legacy_pool"] = loader(study["legacy_catalog_id"], reviewed_only=True)
-    return result
-
-
-def _selection_for(config, condition):
-    study = config["study"]
-    return copy.deepcopy(
-        study["legacy_selection"] if condition == "legacy_pool" else study["selection"]
-    )
+    return {"new_pool": loader(reviewed_only=True)}
 
 
 # --------------------------------------------------------------- collection
@@ -154,29 +138,18 @@ def _page_json(value):
 def collection_condition(config, condition, catalog):
     """One condition of the collection page: catalog, limits, and the round keys."""
     study = config["study"]
-    limits = _selection_for(config, condition)
-    legacy = condition == "legacy_pool"
+    limits = copy.deepcopy(study["selection"])
     return {
         "condition": condition,
-        "flow": "single_screen" if legacy else "rounds",
-        "aspects_default_on": legacy,
-        "strength": not legacy,
         "selection": limits,
-        "title": "気に入った画像をえらぶ"
-        if not legacy
-        else "気に入った画像をえらぶ（一覧から）",
+        "title": "気に入った画像をえらぶ",
         "instruction": (
             f"好みに近い画像を{limits['min']}〜{limits['max']}枚えらんでください。"
-            + (
-                "一覧はこの1画面だけです。"
-                if legacy
-                else f"「ほかの候補も見る」で最大{limits['max_rounds']}回まで別の画像を見られます。"
-            )
+            f"「ほかの候補も見る」で最大{limits['max_rounds']}回まで別の画像を見られます。"
         ),
         "aspect_instruction": (
-            "画像ごとに、好きなところを外してください。"
-            if legacy
-            else "画像ごとに、好きなところを1つ以上えらんでください。すべて好きなら「全部好き」を押してください。"
+            "画像ごとに、好きなところを1つ以上えらんでください。"
+            "すべて好きなら「全部好き」を押してください。"
         ),
         "catalog": {
             "catalog_id": catalog["catalog_id"],
@@ -241,12 +214,6 @@ def build_collection_page(config, catalogs):
 
 def _condition_of(record, kind):
     condition = record.get("collection_condition")
-    if kind == "elicitation":
-        if condition not in CONDITIONS[kind]:
-            raise StudyError(
-                "collection_condition must be legacy_pool or new_pool for an elicitation study"
-            )
-        return condition
     if condition not in (None, "new_pool"):
         raise StudyError("an encoder study collects only the new_pool condition")
     return "new_pool"
@@ -295,10 +262,7 @@ def validate_export(record, config, catalogs, *, source="export"):
     payload = {"cards": record["selection"], "aspect_gains": record["aspect_gains"]}
     try:
         snapshot = normalize_preferences(
-            payload,
-            catalog,
-            commit=True,
-            selection=_selection_for(config, condition),
+            payload, catalog, commit=True, selection=study["selection"]
         )
     except (TypeError, ValueError) as error:
         raise StudyError(f"invalid selection: {error}") from error
@@ -771,7 +735,7 @@ def unstarted_summary(directory):
     }
 
 
-def summarize_study(directory, *, participants=None):
+def summarize_study(directory):
     """Average inside a participant first, then across participants."""
     directory = Path(directory)
     if not (directory / "manifest.json").is_file():
@@ -954,10 +918,6 @@ def summarize_study(directory, *, participants=None):
             "note": "この集計はfan-policies.jsonを変更しない。",
         },
     }
-    if kind == "elicitation":
-        result["collection_effect"] = _collection_effect(
-            manifest, comparisons, participants
-        )
     return result
 
 
@@ -986,55 +946,6 @@ def _fidelity(manifest, keys, answers):
         "answered_rows": rows,
         "counts": counts,
         "note": "忠実度の確認であり、好みの勝率には加えない。",
-    }
-
-
-def _collection_effect(manifest, comparisons, participants):
-    """Design §9.7: the effect of the pool plus the whole selection flow."""
-    metrics = {}
-    for record in (participants or {}).get("records", []):
-        condition = record["collection_condition"]
-        bucket = metrics.setdefault(
-            condition,
-            {
-                "participants": 0,
-                "mean_elapsed_ms": None,
-                "mean_selection_count": None,
-                "mean_explicit_aspects": None,
-                "_elapsed": [],
-                "_selection": [],
-                "_aspects": [],
-            },
-        )
-        bucket["participants"] += 1
-        if "elapsed_ms" in record.get("metrics", {}):
-            bucket["_elapsed"].append(record["metrics"]["elapsed_ms"])
-        selection = record["snapshot"]["selection"]
-        bucket["_selection"].append(len(selection))
-        bucket["_aspects"].append(sum(len(item["aspects"]) for item in selection))
-    for bucket in metrics.values():
-        for name, values in (
-            ("mean_elapsed_ms", bucket.pop("_elapsed")),
-            ("mean_selection_count", bucket.pop("_selection")),
-            ("mean_explicit_aspects", bucket.pop("_aspects")),
-        ):
-            bucket[name] = sum(values) / len(values) if values else None
-    comparison = comparisons.get("new_pool_vs_legacy_pool", {})
-    return {
-        "by_condition": metrics,
-        # The rate comes only from participants who answered every pair, while the
-        # selection metrics come from everyone who was collected: different scopes.
-        "preference_rate_new_pool": comparison.get("mean"),
-        "participants_scored": comparison.get("participants_scored", 0),
-        "incomplete_participants": sorted(
-            comparison.get("incomplete_participants", {})
-        ),
-        "effect_label": "pool + selection flow",
-        "note": "差は「pool＋選択フロー全体」の効果であり、枚数増加だけの効果とは呼ばない。",
-        "scope_note": (
-            "選択の指標は収集できた全員分、選好率は全組に回答した参加者のみ。"
-            "一部だけ回答した参加者は選好率に含めず、incomplete_participants に残す。"
-        ),
     }
 
 
@@ -1107,17 +1018,7 @@ def instructions_markdown(config, *, status):
             "## 1. 好みの収集",
             "",
             "1. 参加者ごとに未使用のIDを決め、`collect/index.html` を開いてもらう。",
-            *(
-                [
-                    (
-                        "2. 実施順は半数を「旧 → 新」、残り半数を「新 → 旧」にする"
-                        "（p001, p003, … は旧→新、p002, p004, … は新→旧）。"
-                    ),
-                    "3. 2つの条件それぞれでJSONを保存してもらい、2ファイルを受け取る。",
-                ]
-                if kind == "elicitation"
-                else ["2. 選び終えたらJSONを保存してもらい、1ファイルを受け取る。"]
-            ),
+            "2. 選び終えたらJSONを保存してもらい、1ファイルを受け取る。",
             "",
             "```bash",
             "PYTHONPATH=exhibit/src exhibit/.venv/bin/python \\",
@@ -1285,28 +1186,4 @@ def summary_markdown(summary):
         f"- 回答行: {summary['fidelity']['answered_rows']}件。{summary['fidelity']['note']}",
         "",
     ]
-    if "collection_effect" in summary:
-        effect = summary["collection_effect"]
-        lines += [
-            "## 収集フローの効果",
-            "",
-            f"- 効果のラベル: {effect['effect_label']}",
-            f"- {effect['note']}",
-            "",
-        ]
-        lines.append(f"- {effect['scope_note']}")
-        rate = effect["preference_rate_new_pool"]
-        lines.append(
-            "- 新poolの選好率: "
-            + ("未算出" if rate is None else f"{rate:.3f}")
-            + f"（全組に回答した {effect['participants_scored']}人、"
-            f"未完了 {len(effect['incomplete_participants'])}人）"
-        )
-        for condition, item in effect["by_condition"].items():
-            lines.append(
-                f"- {condition}: {item['participants']}人、平均選択枚数 "
-                f"{item['mean_selection_count']}、平均の明示側面数 "
-                f"{item['mean_explicit_aspects']}、平均所要 {item['mean_elapsed_ms']}ms"
-            )
-        lines.append("")
     return "\n".join(lines)

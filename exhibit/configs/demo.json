@@ -87,108 +87,12 @@
       "basic_prompt_en": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1girl, solo, auburn hair, white shirt, apron, cafe, upper body, detailed eyes, detailed illustration"
     }
   ],
-  "card_subjects": [
-    {
-      "id": "girl",
-      "label": "街角の少女",
-      "basic_prompt_en": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1girl, solo, brown hair, beret, coat, town square, upper body, detailed eyes, detailed illustration",
-      "seed": 601
-    },
-    {
-      "id": "student",
-      "label": "図書館の青年",
-      "basic_prompt_en": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1boy, solo, male focus, black hair, vest, white shirt, library, upper body, detailed eyes, detailed illustration",
-      "seed": 602
-    },
-    {
-      "id": "traveler",
-      "label": "草原の旅人",
-      "basic_prompt_en": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1girl, solo, silver hair, cloak, grassland, detailed eyes, detailed illustration",
-      "seed": 603
-    },
-    {
-      "id": "barista",
-      "label": "カフェの店員",
-      "basic_prompt_en": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1boy, solo, male focus, brown hair, apron, white shirt, cafe, upper body, detailed eyes, detailed illustration",
-      "seed": 604
-    }
-  ],
-  "card_profiles": [
-    {
-      "id": "warm_soft",
-      "label": "あたたかく、やわらかく",
-      "aspects": {
-        "color": "warm color palette, amber and orange tones",
-        "lighting": "warm golden hour light, gentle shadows",
-        "texture": "watercolor painting, soft brushwork, painterly texture",
-        "mood": "calm atmosphere"
-      },
-      "aspects_ja": {
-        "color": "暖かなオレンジ系の色",
-        "lighting": "夕暮れのような暖かな光",
-        "texture": "水彩のような筆づかい",
-        "mood": "静かな雰囲気"
-      }
-    },
-    {
-      "id": "cool_clean",
-      "label": "涼しく、くっきり",
-      "aspects": {
-        "color": "cool color palette, blue and teal tones",
-        "lighting": "soft diffused light",
-        "texture": "cel shading, clean lineart, anime coloring",
-        "mood": "calm atmosphere"
-      },
-      "aspects_ja": {
-        "color": "涼しげな青系の色",
-        "lighting": "やわらかく広がる光",
-        "texture": "くっきりしたアニメ塗り",
-        "mood": "静かな雰囲気"
-      }
-    },
-    {
-      "id": "dramatic",
-      "label": "劇的な光と影",
-      "aspects": {
-        "color": "muted colors, dark background",
-        "lighting": "dramatic lighting, strong shadows, rim light",
-        "texture": "detailed shading, painterly texture",
-        "mood": "serious atmosphere"
-      },
-      "aspects_ja": {
-        "color": "落ち着いた色と暗い背景",
-        "lighting": "強い光と影",
-        "texture": "緻密な陰影",
-        "mood": "真剣な雰囲気"
-      }
-    },
-    {
-      "id": "vivid_lively",
-      "label": "鮮やかで、にぎやか",
-      "aspects": {
-        "color": "vivid colors, colorful, high saturation",
-        "lighting": "bright lighting, sparkle",
-        "texture": "cel shading, flat color",
-        "mood": "cheerful expression, lively atmosphere"
-      },
-      "aspects_ja": {
-        "color": "鮮やかで彩度の高い色",
-        "lighting": "明るくきらめく光",
-        "texture": "くっきりした平塗り",
-        "mood": "楽しくにぎやかな雰囲気"
-      }
-    }
-  ],
-  "catalog_id": "catalog-v1",
-  "sample_manifest": {
-    "catalog_id": "catalog-v1",
-    "required_ids": [
-      "s1-cat",
-      "s1-tokyo",
-      "s2-cat",
-      "s2-tokyo",
-      "s3-cat",
-      "s3-tokyo"
-    ]
-  }
+  "sample_ids": [
+    "s1-cat",
+    "s1-tokyo",
+    "s2-cat",
+    "s2-tokyo",
+    "s3-cat",
+    "s3-tokyo"
+  ]
 }

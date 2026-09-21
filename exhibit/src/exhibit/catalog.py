@@ -6,11 +6,13 @@ import json
 import re
 from pathlib import Path
 
-from .config import ASSETS, CARDS_REVIEW, CONFIG, ROOT
-from .domain import ASPECTS, build_cards, compose_prompt, digest, file_hash
+from .config import ASSETS, CONFIG, ROOT
+from .domain import ASPECTS, compose_prompt, digest, file_hash
 
-V2 = ROOT / "configs/catalog-v2.json"
-V2_REVIEW = ROOT / "configs/cards-v2-review.json"
+# The exhibit serves exactly one catalog; its id stays in every hash and manifest.
+CATALOG_ID = "catalog-v2"
+DEFINITION = ROOT / "configs/catalog-v2.json"
+REVIEW = ROOT / "configs/cards-v2-review.json"
 TOKENIZER_FILES = tuple(
     f"{tokenizer}/{filename}"
     for tokenizer in ("tokenizer", "tokenizer_2")
@@ -29,11 +31,6 @@ _TOKEN_ROW_FIELDS = (
     "limit",
     "overflow",
     "special_tokens",
-)
-LEGACY_OVERFLOW_IDS = (
-    "girl-warm_soft",
-    "student-warm_soft",
-    "barista-warm_soft",
 )
 _HEX_SHA256 = re.compile(r"[0-9a-f]{64}")
 
@@ -159,12 +156,10 @@ def card_negative_prompt(definition):
     return value
 
 
-def card_settings(catalog_id, definition=None):
-    """Exhibit generation settings, with v2's single card-only negative override."""
-    if catalog_id != "catalog-v2":
-        return _copy(CONFIG["generation"])
+def card_settings(definition=None):
+    """Exhibit generation settings, with the catalog's card-only negative override."""
     if definition is None:
-        definition = _read_json_value(V2, "catalog-v2 definition")
+        definition = _read_json_value(DEFINITION, "catalog-v2 definition")
     return {
         **_copy(CONFIG["generation"]),
         "negative_prompt": card_negative_prompt(definition),
@@ -186,7 +181,7 @@ def build_catalog(definition):
     }
     if not isinstance(definition, dict) or set(definition) != required:
         raise ValueError("Invalid catalog definition")
-    if definition["catalog_id"] != "catalog-v2":
+    if definition["catalog_id"] != CATALOG_ID:
         raise ValueError("Catalog definition must identify catalog-v2")
     if definition["generation"] != CONFIG["generation"]:
         raise ValueError("Catalog generation settings are not canonical")
@@ -260,27 +255,6 @@ def build_catalog(definition):
     return cards
 
 
-def _v1_cards():
-    cards = []
-    base = build_cards()
-    levels = {
-        axis: {
-            phrase: index
-            for index, phrase in enumerate(
-                dict.fromkeys(card["aspects"][axis] for card in base)
-            )
-        }
-        for axis in ASPECTS
-    }
-    for card in base:
-        copied = _copy(card)
-        copied["axis_levels"] = {
-            axis: levels[axis][card["aspects"][axis]] for axis in ASPECTS
-        }
-        cards.append(copied)
-    return cards
-
-
 def _read_json_value(path, label, *, missing=None):
     path = Path(path)
     if not path.exists():
@@ -304,24 +278,7 @@ def _image_bytes_match(image, assets):
         return False
 
 
-def _valid_v1(card, image, review, assets):
-    if (
-        not isinstance(image, dict)
-        or not isinstance(review, dict)
-        or review.get("reviewed") is not True
-    ):
-        return False
-    return (
-        _image_bytes_match(image, assets)
-        and all(
-            image.get(key) == card[key]
-            for key in ("path", "seed", "prompt", "ref_en", "aspects")
-        )
-        and image.get("settings") == CONFIG["generation"]
-    )
-
-
-def _valid_v2(card, image, review, assets, settings):
+def _valid_card(card, image, review, assets, settings):
     if not isinstance(image, dict) or not isinstance(review, dict):
         return False
     fields = (
@@ -348,74 +305,44 @@ def _valid_v2(card, image, review, assets, settings):
     )
 
 
-def _manifest_images(manifest, *, catalog_id, settings=None):
+def _manifest_images(manifest, settings):
     if manifest is None:
         return {}
     if not isinstance(manifest, dict):
-        raise TypeError(f"Invalid {catalog_id} manifest")
-    if catalog_id == "catalog-v2":
-        required = {
-            "version",
-            "catalog_id",
-            "generation",
-            "token_validation",
-            "images",
-        }
-        if (
-            set(manifest) != required
-            or manifest["version"] != 2
-            or manifest["catalog_id"] != catalog_id
-            or manifest["generation"] != settings
-            or not isinstance(manifest["token_validation"], dict)
-            or not isinstance(manifest["images"], dict)
-        ):
-            raise ValueError("Invalid catalog-v2 manifest")
-    elif not isinstance(manifest.get("images"), dict):
-        raise ValueError("Invalid catalog-v1 manifest")
+        raise TypeError("Invalid catalog-v2 manifest")
+    required = {"version", "catalog_id", "generation", "token_validation", "images"}
+    if (
+        set(manifest) != required
+        or manifest["version"] != 2
+        or manifest["catalog_id"] != CATALOG_ID
+        or manifest["generation"] != settings
+        or not isinstance(manifest["token_validation"], dict)
+        or not isinstance(manifest["images"], dict)
+    ):
+        raise ValueError("Invalid catalog-v2 manifest")
     return manifest["images"]
 
 
-def load_catalog(catalog_id, *, reviewed_only=True, assets=ASSETS, review_path=None):
-    """Load a known catalog and filter to image-bound human reviews by default."""
+def load_catalog(*, reviewed_only=True, assets=ASSETS, review_path=None):
+    """Load the catalog and filter to image-bound human reviews by default."""
     assets = Path(assets)
-    if catalog_id == "catalog-v1":
-        all_cards = _v1_cards()
-        manifest = _read_json_value(
-            assets / "manifest.json", "catalog-v1 manifest", missing={"images": {}}
+    definition = _read_json_value(DEFINITION, "catalog-v2 definition")
+    all_cards = build_catalog(definition)
+    settings = card_settings(definition)
+    manifest = _read_json_value(
+        assets / "catalog-v2.json", "catalog-v2 manifest", missing=None
+    )
+    images = _manifest_images(manifest, settings)
+    review = _read_json_value(review_path or REVIEW, "catalog-v2 review", missing={})
+    if not isinstance(review, dict):
+        raise TypeError("Invalid catalog-v2 review")
+    eligible = [
+        card
+        for card in all_cards
+        if _valid_card(
+            card, images.get(card["id"]), review.get(card["id"]), assets, settings
         )
-        images = _manifest_images(manifest, catalog_id=catalog_id)
-        review = _read_json_value(
-            review_path or CARDS_REVIEW, "catalog-v1 review", missing={}
-        )
-        if not isinstance(review, dict):
-            raise ValueError("Invalid catalog-v1 review")
-        eligible = [
-            card
-            for card in all_cards
-            if _valid_v1(card, images.get(card["id"]), review.get(card["id"]), assets)
-        ]
-    elif catalog_id == "catalog-v2":
-        definition = _read_json_value(V2, "catalog-v2 definition")
-        all_cards = build_catalog(definition)
-        settings = card_settings(catalog_id, definition)
-        manifest = _read_json_value(
-            assets / "catalog-v2.json", "catalog-v2 manifest", missing=None
-        )
-        images = _manifest_images(manifest, catalog_id=catalog_id, settings=settings)
-        review = _read_json_value(
-            review_path or V2_REVIEW, "catalog-v2 review", missing={}
-        )
-        if not isinstance(review, dict):
-            raise ValueError("Invalid catalog-v2 review")
-        eligible = [
-            card
-            for card in all_cards
-            if _valid_v2(
-                card, images.get(card["id"]), review.get(card["id"]), assets, settings
-            )
-        ]
-    else:
-        raise ValueError("Unknown catalog")
+    ]
 
     image_hashes = {
         card["id"]: (
@@ -426,12 +353,12 @@ def load_catalog(catalog_id, *, reviewed_only=True, assets=ASSETS, review_path=N
         for card in all_cards
     }
     identity = {
-        "catalog_id": catalog_id,
+        "catalog_id": CATALOG_ID,
         "all_cards": all_cards,
         "image_hashes": image_hashes,
     }
     return {
-        "catalog_id": catalog_id,
+        "catalog_id": CATALOG_ID,
         "catalog_hash": digest(identity),
         "all_cards": _copy(all_cards),
         "cards": _copy(eligible if reviewed_only else all_cards),
@@ -506,11 +433,11 @@ def _validate_negative_report(negative, negative_prompt):
         raise ValueError("Card negative prompt token validation failed")
 
 
-def validate_token_report(report, cards, *, catalog_id="catalog-v2", generation=None):
+def validate_token_report(report, cards, *, generation=None):
     """Reject reports not bound to the exact prompts and pinned tokenizer files."""
     if not isinstance(report, dict):
         raise TypeError("Invalid token validation report")
-    generation = generation if generation is not None else card_settings(catalog_id)
+    generation = generation if generation is not None else card_settings()
     required = {
         "schema_version",
         "catalog_id",
@@ -520,12 +447,11 @@ def validate_token_report(report, cards, *, catalog_id="catalog-v2", generation=
         "results",
         "max_tokens",
         "negative_validation",
-        "legacy_overflow_evidence",
     }
     if (
         set(report) != required
-        or report["schema_version"] != 2
-        or report["catalog_id"] != catalog_id
+        or report["schema_version"] != 3
+        or report["catalog_id"] != CATALOG_ID
         or report["generation"] != generation
         or report["prompt_set_hash"] != prompt_set_hash(cards)
     ):
@@ -584,14 +510,4 @@ def validate_token_report(report, cards, *, catalog_id="catalog-v2", generation=
     maximum = max((len(row["token_ids"]) for row in rows), default=0)
     if report["max_tokens"] != maximum or maximum > 77:
         raise ValueError("Card token validation failed")
-
-    legacy = report["legacy_overflow_evidence"]
-    if (
-        not isinstance(legacy, dict)
-        or set(legacy) != {"path", "sha256", "over_limit_ids"}
-        or legacy["over_limit_ids"] != list(LEGACY_OVERFLOW_IDS)
-        or not isinstance(legacy["sha256"], str)
-        or not _HEX_SHA256.fullmatch(legacy["sha256"])
-    ):
-        raise ValueError("Legacy overflow evidence is missing")
     return _copy(report)

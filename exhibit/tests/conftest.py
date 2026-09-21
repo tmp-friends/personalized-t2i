@@ -4,14 +4,25 @@ import json
 from pathlib import Path
 
 import pytest
-from exhibit.config import CONFIG, write_json
-from exhibit.domain import CARDS, build_legacy_personalization, file_hash, target_prompt
+from exhibit.catalog import build_catalog, card_settings, description_hash, load_catalog
+from exhibit.config import CONFIG, ROOT, read_json, write_json
+from exhibit.domain import (
+    ASPECTS,
+    LEGACY_POLICY_ID,
+    build_personalization,
+    digest,
+    file_hash,
+    legacy_policy,
+    target_prompt,
+)
+from exhibit.elicitation import normalize_preferences
 
 # Injected so a CPU test never needs the Hub cache; the shape is the real one.
+# Only the two source hashes are fabricated: the rest is the shipped contract.
 PROVENANCE = {
     "fan_pin": CONFIG["fan"]["commit"],
     "adapter_hash": "a" * 64,
-    "decoder_hash": "d" * 64,
+    "decoder_hash": digest(CONFIG["fan"]["decoders"]),
     "tokenizer_hash": "t" * 64,
     "generation": CONFIG["generation"],
     "seeds": CONFIG["seeds"],
@@ -43,33 +54,146 @@ def generic_images(root):
     return images, prompts
 
 
-def card_images(root):
-    images = {}
-    for card in CARDS.values():
-        relative = card["path"]
+def token_validation(cards, settings, *, overflow=False):
+    """A report shaped exactly like check_card_tokens.py's, with stub token ids."""
+    rows = [
+        {
+            "card_id": card["id"],
+            "prompt_hash": digest(card["prompt"]),
+            "tokenizer": tokenizer,
+            "token_ids": list(range(78))
+            if overflow and card is cards[0]
+            else [1, 2, 3],
+            "tokens": 78 if overflow and card is cards[0] else 3,
+            "limit": 77,
+            "overflow": overflow and card is cards[0],
+            "special_tokens": True,
+        }
+        for card in cards
+        for tokenizer in ("tokenizer", "tokenizer_2")
+    ]
+    negative = [
+        {
+            "prompt_hash": digest(settings["negative_prompt"]),
+            "tokenizer": tokenizer,
+            "token_ids": [1, 2, 3],
+            "tokens": 3,
+            "limit": 77,
+            "overflow": False,
+            "special_tokens": True,
+        }
+        for tokenizer in ("tokenizer", "tokenizer_2")
+    ]
+    return {
+        "schema_version": 3,
+        "catalog_id": "catalog-v2",
+        "generation": settings,
+        "prompt_set_hash": digest(
+            [{"id": card["id"], "prompt": card["prompt"]} for card in cards]
+        ),
+        "tokenizers": {
+            "repo_id": CONFIG["generation"]["pipeline_config"]["model"],
+            "revision": CONFIG["generation"]["pipeline_config"]["revision"],
+            "files": {
+                f"{name}/{filename}": "1" * 64
+                for name in ("tokenizer", "tokenizer_2")
+                for filename in (
+                    "vocab.json",
+                    "merges.txt",
+                    "tokenizer_config.json",
+                    "special_tokens_map.json",
+                )
+            },
+        },
+        "results": rows,
+        "max_tokens": max(row["tokens"] for row in rows),
+        "negative_validation": {
+            "prompt_hash": digest(settings["negative_prompt"]),
+            "results": negative,
+            "max_tokens": 3,
+        },
+    }
+
+
+def write_catalog_bundle(root, review_path, *, reviewed=True):
+    """The generated catalog, its images and a matching human review."""
+    definition = read_json(ROOT / "configs/catalog-v2.json")
+    cards = build_catalog(definition)
+    settings = card_settings(definition)
+    images, reviews = {}, {}
+    for card in cards:
         images[card["id"]] = {
-            "path": relative,
-            "sha256": fake_png(root / relative, f"card {card['id']}"),
+            "path": card["path"],
+            "sha256": fake_png(root / card["path"], "image:" + card["id"]),
             "seed": card["seed"],
             "prompt": card["prompt"],
             "ref_en": card["ref_en"],
             "aspects": card["aspects"],
-            "settings": CONFIG["generation"],
+            "aspects_ja": card["aspects_ja"],
+            "label": card["label"],
+            "profile_label": card["profile_label"],
+            "settings": settings,
         }
-    return images
+        reviews[card["id"]] = {
+            # `reviewed` is a flag for every card, or the set that passed.
+            "reviewed": reviewed
+            if isinstance(reviewed, bool)
+            else card["id"] in reviewed,
+            "image_sha256": images[card["id"]]["sha256"],
+            "description_hash": description_hash(card),
+            "aspects": {aspect: True for aspect in ASPECTS},
+            "note": "human note",
+        }
+    write_json(
+        root / "catalog-v2.json",
+        {
+            "version": 2,
+            "catalog_id": "catalog-v2",
+            "generation": settings,
+            "token_validation": token_validation(cards, settings),
+            "images": images,
+        },
+    )
+    review_path.write_text(json.dumps(reviews))
+    return cards, images, reviews
 
 
-def sample_records(root):
-    ids = list(CARDS)
+def sample_records(root, review_path):
+    """Three selections x two topics, built exactly as prepare.py builds them."""
+    catalog = load_catalog(reviewed_only=True, assets=root, review_path=review_path)
+    policy = legacy_policy()
+    ids = [card["id"] for card in catalog["cards"]]
     samples = []
     for number in range(3):
-        selection = [
-            {"card_id": ids[number * 3 + offset], "aspects_off": []}
-            for offset in range(3)
-        ]
-        personalization = build_legacy_personalization(selection)
+        snapshot = {
+            "revision": 0,
+            **normalize_preferences(
+                {
+                    "cards": [
+                        {
+                            "card_id": ids[number * 3 + offset],
+                            "strength": 1,
+                            "aspects": ["color", "texture"],
+                        }
+                        for offset in range(3)
+                    ],
+                    "aspect_gains": {aspect: 1 for aspect in ASPECTS},
+                },
+                catalog,
+                commit=True,
+                selection=CONFIG["selection"],
+            ),
+        }
         for topic in CONFIG["topics"][:2]:
             sample_id = f"s{number + 1}-{topic['id']}"
+            personalization = build_personalization(
+                snapshot,
+                prompt=target_prompt(topic),
+                policy=policy,
+                provenance=PROVENANCE,
+                catalog=catalog,
+            )
+            personalization["policy_id"] = LEGACY_POLICY_ID
             images = []
             for index, seed in enumerate(CONFIG["seeds"]):
                 relative = f"samples/{sample_id}-{index}.png"
@@ -91,7 +215,7 @@ def sample_records(root):
                     "id": sample_id,
                     "topic_id": topic["id"],
                     "label": f"サンプル{number + 1} · {topic['label']}",
-                    "selection": selection,
+                    "preference": snapshot,
                     "personalization": personalization,
                     "mode": "sample",
                     "images": images,
@@ -104,25 +228,29 @@ def sample_records(root):
 def asset_tree(tmp_path):
     """A complete, self-consistent bundle: cards, generic images and samples."""
     root = tmp_path / "assets"
+    review = tmp_path / "cards-v2-review.json"
+    cards, card_map, reviews = write_catalog_bundle(root, review)
     images, prompts = generic_images(root)
-    images.update(card_images(root))
     write_json(
         root / "manifest.json",
         {"version": 5, "generation": CONFIG["generation"], "images": images},
     )
     write_json(root / "generic-prompts.json", prompts)
-    write_json(root / "samples.json", sample_records(root))
-    review = tmp_path / "cards-review.json"
-    review.write_text(
-        json.dumps({card_id: {"reviewed": True, "note": ""} for card_id in CARDS})
-    )
-    return {"root": root, "review": review}
+    write_json(root / "samples.json", sample_records(root, review))
+    return {
+        "root": root,
+        "review": review,
+        "cards": cards,
+        "images": card_map,
+        "reviews": reviews,
+    }
 
 
 @pytest.fixture
 def assets(asset_tree, monkeypatch):
     """The service and app read the bundle through their own module globals."""
     from exhibit import app as app_module
+    from exhibit import catalog as catalog_module
     from exhibit import preflight as preflight_module
     from exhibit import service as service_module
 
@@ -130,7 +258,8 @@ def assets(asset_tree, monkeypatch):
     for module in (service_module, app_module, preflight_module):
         monkeypatch.setattr(module, "ASSETS", root, raising=False)
     # The catalog is loaded through the service, so one review path covers both.
-    monkeypatch.setattr(service_module, "CARDS_REVIEW", asset_tree["review"])
+    monkeypatch.setattr(catalog_module, "REVIEW", asset_tree["review"])
+    monkeypatch.setattr(catalog_module, "ASSETS", root)
     return root
 
 

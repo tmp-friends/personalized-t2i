@@ -4,6 +4,7 @@ from collections import Counter
 from itertools import combinations
 
 import pytest
+from conftest import token_validation, write_catalog_bundle
 from exhibit.catalog import (
     build_catalog,
     card_settings,
@@ -13,7 +14,7 @@ from exhibit.catalog import (
     validate_token_report,
 )
 from exhibit.config import CONFIG, ROOT, read_json
-from exhibit.domain import ASPECTS, digest, file_hash
+from exhibit.domain import ASPECTS, digest
 
 from exhibit import catalog as catalog_module
 
@@ -35,144 +36,14 @@ def definition():
 
 
 def v2_settings():
-    return card_settings("catalog-v2", definition())
-
-
-def description_hash(card):
-    return digest(
-        {
-            "aspects": card["aspects"],
-            "aspects_ja": card["aspects_ja"],
-            "ref_en": card["ref_en"],
-            "label": card["label"],
-            "profile_label": card["profile_label"],
-        }
-    )
-
-
-def prompt_set_hash(cards):
-    return digest([{"id": card["id"], "prompt": card["prompt"]} for card in cards])
-
-
-def token_validation(cards, *, overflow=False):
-    file_hashes = {
-        f"{name}/{filename}": "1" * 64
-        for name in ("tokenizer", "tokenizer_2")
-        for filename in (
-            "vocab.json",
-            "merges.txt",
-            "tokenizer_config.json",
-            "special_tokens_map.json",
-        )
-    }
-    rows = []
-    for card in cards:
-        for tokenizer in ("tokenizer", "tokenizer_2"):
-            rows.append(
-                {
-                    "card_id": card["id"],
-                    "prompt_hash": digest(card["prompt"]),
-                    "tokenizer": tokenizer,
-                    "token_ids": [49406, 100, 49407],
-                    "tokens": 78 if overflow and card is cards[0] else 3,
-                    "limit": 77,
-                    "overflow": overflow and card is cards[0],
-                    "special_tokens": True,
-                }
-            )
-    settings = v2_settings()
-    negative = [
-        {
-            "prompt_hash": digest(settings["negative_prompt"]),
-            "tokenizer": tokenizer,
-            "token_ids": [49406, 100, 49407],
-            "tokens": 3,
-            "limit": 77,
-            "overflow": False,
-            "special_tokens": True,
-        }
-        for tokenizer in ("tokenizer", "tokenizer_2")
-    ]
-    return {
-        "schema_version": 2,
-        "catalog_id": "catalog-v2",
-        "generation": settings,
-        "prompt_set_hash": prompt_set_hash(cards),
-        "tokenizers": {
-            "repo_id": CONFIG["generation"]["pipeline_config"]["model"],
-            "revision": CONFIG["generation"]["pipeline_config"]["revision"],
-            "files": file_hashes,
-        },
-        "results": rows,
-        "max_tokens": max(row["tokens"] for row in rows),
-        "negative_validation": {
-            "prompt_hash": digest(settings["negative_prompt"]),
-            "results": negative,
-            "max_tokens": 3,
-        },
-        "legacy_overflow_evidence": {
-            "path": "configs/legacy-card-token-overflow.json",
-            "sha256": "2" * 64,
-            "over_limit_ids": [
-                "girl-warm_soft",
-                "student-warm_soft",
-                "barista-warm_soft",
-            ],
-        },
-    }
-
-
-def write_v2_bundle(root, review_path, *, reviewed=True):
-    cards = build_catalog(definition())
-    settings = v2_settings()
-    images = {}
-    reviews = {}
-    for card in cards:
-        path = root / card["path"]
-        path.parent.mkdir(parents=True, exist_ok=True)
-        path.write_bytes(("image:" + card["id"]).encode())
-        images[card["id"]] = {
-            "path": card["path"],
-            "sha256": file_hash(path),
-            "seed": card["seed"],
-            "prompt": card["prompt"],
-            "ref_en": card["ref_en"],
-            "aspects": card["aspects"],
-            "aspects_ja": card["aspects_ja"],
-            "label": card["label"],
-            "profile_label": card["profile_label"],
-            "settings": settings,
-        }
-        reviews[card["id"]] = {
-            # `reviewed` is a flag for every card, or the set that passed.
-            "reviewed": reviewed
-            if isinstance(reviewed, bool)
-            else card["id"] in reviewed,
-            "image_sha256": images[card["id"]]["sha256"],
-            "description_hash": description_hash(card),
-            "aspects": {aspect: True for aspect in ASPECTS},
-            "note": "human note",
-        }
-    (root / "catalog-v2.json").write_text(
-        json.dumps(
-            {
-                "version": 2,
-                "catalog_id": "catalog-v2",
-                "generation": settings,
-                "token_validation": token_validation(cards),
-                "images": images,
-            }
-        )
-    )
-    review_path.write_text(json.dumps(reviews))
-    return cards, images, reviews
+    return card_settings(definition())
 
 
 @pytest.fixture
 def reviewed_v2(tmp_path):
     root = tmp_path / "assets"
     review = tmp_path / "review.json"
-    cards, images, reviews = write_v2_bundle(root, review)
+    cards, images, reviews = write_catalog_bundle(root, review)
     return {
         "root": root,
         "review": review,
@@ -286,10 +157,8 @@ def test_a_seed_override_invalidates_only_that_card(reviewed_v2, tmp_path, monke
     value["seed_overrides"] = {**value["seed_overrides"], target: 9601}
     changed = tmp_path / "catalog-definition.json"
     changed.write_text(json.dumps(value))
-    monkeypatch.setattr(catalog_module, "V2", changed)
-    loaded = load_catalog(
-        "catalog-v2", assets=reviewed_v2["root"], review_path=reviewed_v2["review"]
-    )
+    monkeypatch.setattr(catalog_module, "DEFINITION", changed)
+    loaded = load_catalog(assets=reviewed_v2["root"], review_path=reviewed_v2["review"])
     assert {item["id"] for item in loaded["cards"]} == {
         card["id"] for card in reviewed_v2["cards"]
     } - {target}
@@ -297,7 +166,7 @@ def test_a_seed_override_invalidates_only_that_card(reviewed_v2, tmp_path, monke
 
 def test_v2_cards_are_generated_with_the_catalog_only_negative_prompt():
     value = definition()
-    settings = card_settings("catalog-v2", value)
+    settings = card_settings(value)
     assert settings["negative_prompt"] == value["card_negative_prompt"]
     assert settings["negative_prompt"] != CONFIG["generation"]["negative_prompt"]
     assert "from behind" in settings["negative_prompt"]
@@ -307,7 +176,6 @@ def test_v2_cards_are_generated_with_the_catalog_only_negative_prompt():
         for key, item in CONFIG["generation"].items()
         if key != "negative_prompt"
     }
-    assert card_settings("catalog-v1") == CONFIG["generation"]
 
 
 def test_v2_review_is_invalidated_when_cards_used_the_exhibit_negative_prompt(
@@ -318,18 +186,12 @@ def test_v2_review_is_invalidated_when_cards_used_the_exhibit_negative_prompt(
     manifest = json.loads(manifest_path.read_text())
     manifest["images"][card["id"]]["settings"] = CONFIG["generation"]
     manifest_path.write_text(json.dumps(manifest))
-    loaded = load_catalog(
-        "catalog-v2", assets=reviewed_v2["root"], review_path=reviewed_v2["review"]
-    )
+    loaded = load_catalog(assets=reviewed_v2["root"], review_path=reviewed_v2["review"])
     assert card["id"] not in {item["id"] for item in loaded["cards"]}
 
 
 def test_v2_loader_accepts_a_fully_reviewed_synthetic_catalog(reviewed_v2):
-    loaded = load_catalog(
-        "catalog-v2",
-        assets=reviewed_v2["root"],
-        review_path=reviewed_v2["review"],
-    )
+    loaded = load_catalog(assets=reviewed_v2["root"], review_path=reviewed_v2["review"])
     assert len(loaded["cards"]) == len(loaded["all_cards"]) == 64
     assert loaded["cards"][0]["id"] == "girl-c0-l0-t0-m2"
 
@@ -343,9 +205,7 @@ def test_v2_review_is_invalidated_by_image_bytes_or_sha(reviewed_v2, tamper):
         manifest = json.loads((reviewed_v2["root"] / "catalog-v2.json").read_text())
         manifest["images"][card["id"]]["sha256"] = "0" * 64
         (reviewed_v2["root"] / "catalog-v2.json").write_text(json.dumps(manifest))
-    loaded = load_catalog(
-        "catalog-v2", assets=reviewed_v2["root"], review_path=reviewed_v2["review"]
-    )
+    loaded = load_catalog(assets=reviewed_v2["root"], review_path=reviewed_v2["review"])
     assert card["id"] not in {item["id"] for item in loaded["cards"]}
 
 
@@ -361,10 +221,8 @@ def test_v2_review_is_invalidated_by_description_changes(
         changed["axes_ja"][axis][0] += "（編集）"
     changed_path = tmp_path / "catalog-definition.json"
     changed_path.write_text(json.dumps(changed))
-    monkeypatch.setattr(catalog_module, "V2", changed_path)
-    loaded = load_catalog(
-        "catalog-v2", assets=reviewed_v2["root"], review_path=reviewed_v2["review"]
-    )
+    monkeypatch.setattr(catalog_module, "DEFINITION", changed_path)
+    loaded = load_catalog(assets=reviewed_v2["root"], review_path=reviewed_v2["review"])
     assert "girl-c0-l0-t0-m2" not in {item["id"] for item in loaded["cards"]}
 
 
@@ -382,26 +240,21 @@ def test_v2_requires_exactly_four_strict_axis_verdicts(reviewed_v2, verdicts):
     reviews = reviewed_v2["reviews"]
     reviews[card["id"]]["aspects"] = verdicts
     reviewed_v2["review"].write_text(json.dumps(reviews))
-    loaded = load_catalog(
-        "catalog-v2", assets=reviewed_v2["root"], review_path=reviewed_v2["review"]
-    )
+    loaded = load_catalog(assets=reviewed_v2["root"], review_path=reviewed_v2["review"])
     assert card["id"] not in {item["id"] for item in loaded["cards"]}
 
 
 def test_catalog_hash_ignores_review_notes_and_filter_but_tracks_content(reviewed_v2):
-    first = load_catalog(
-        "catalog-v2", assets=reviewed_v2["root"], review_path=reviewed_v2["review"]
-    )
+    first = load_catalog(assets=reviewed_v2["root"], review_path=reviewed_v2["review"])
     reviews = reviewed_v2["reviews"]
     card = reviewed_v2["cards"][0]
     reviews[card["id"]]["note"] = "a different note"
     reviews[card["id"]]["reviewed"] = False
     reviewed_v2["review"].write_text(json.dumps(reviews))
     filtered = load_catalog(
-        "catalog-v2", assets=reviewed_v2["root"], review_path=reviewed_v2["review"]
+        assets=reviewed_v2["root"], review_path=reviewed_v2["review"]
     )
     unfiltered = load_catalog(
-        "catalog-v2",
         reviewed_only=False,
         assets=reviewed_v2["root"],
         review_path=reviewed_v2["review"],
@@ -414,7 +267,6 @@ def test_catalog_hash_ignores_review_notes_and_filter_but_tracks_content(reviewe
     manifest["images"][card["id"]]["sha256"] = "0" * 64
     (reviewed_v2["root"] / "catalog-v2.json").write_text(json.dumps(manifest))
     changed = load_catalog(
-        "catalog-v2",
         reviewed_only=False,
         assets=reviewed_v2["root"],
         review_path=reviewed_v2["review"],
@@ -431,27 +283,13 @@ def test_v2_loader_rejects_malformed_generated_manifests(tmp_path, manifest_valu
     root.mkdir()
     (root / "catalog-v2.json").write_text(json.dumps(manifest_value))
     with pytest.raises((TypeError, ValueError)):
-        load_catalog("catalog-v2", reviewed_only=False, assets=root)
+        load_catalog(reviewed_only=False, assets=root)
 
 
 def test_v2_loader_rejects_malformed_review_manifest(reviewed_v2):
     reviewed_v2["review"].write_text("[]")
-    with pytest.raises(ValueError):
-        load_catalog(
-            "catalog-v2", assets=reviewed_v2["root"], review_path=reviewed_v2["review"]
-        )
-
-
-def test_v1_loader_preserves_all_frozen_cards_and_legacy_contract(asset_tree):
-    loaded = load_catalog(
-        "catalog-v1", assets=asset_tree["root"], review_path=asset_tree["review"]
-    )
-    assert len(loaded["cards"]) == len(loaded["all_cards"]) == 16
-    assert loaded["all_cards"][0]["id"] == "girl-warm_soft"
-    assert loaded["all_cards"][-1]["id"] == "barista-vivid_lively"
-    warm = next(card for card in loaded["all_cards"] if card["id"] == "girl-warm_soft")
-    cool = next(card for card in loaded["all_cards"] if card["id"] == "girl-cool_clean")
-    assert warm["axis_levels"]["mood"] == cool["axis_levels"]["mood"]
+    with pytest.raises(TypeError):
+        load_catalog(assets=reviewed_v2["root"], review_path=reviewed_v2["review"])
 
 
 class FakeTokenizer:
@@ -505,7 +343,7 @@ def test_validate_negative_tokens_checks_the_card_negative_against_the_same_limi
 
 def test_token_report_binds_the_card_negative_prompt_and_rejects_its_overflow():
     cards = build_catalog(definition())[:2]
-    report = token_validation(cards)
+    report = token_validation(cards, v2_settings())
     assert validate_token_report(report, cards, generation=v2_settings())
 
     overflowing = copy.deepcopy(report)

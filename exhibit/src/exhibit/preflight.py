@@ -3,23 +3,23 @@
 import json
 from pathlib import Path
 
-from .config import ASSETS, CARDS_REVIEW, CONFIG, FAN_UPSTREAM, GPU_PYTHON
+from .config import ASSETS, CONFIG, FAN_UPSTREAM, GPU_PYTHON
 from .domain import (
-    build_legacy_personalization,
+    build_personalization,
+    digest,
     file_hash,
     target_prompt,
 )
 
 
-def check_assets(root=ASSETS, *, require_samples=True, review=None, catalog_id=None):
-    from .catalog import card_settings, load_catalog, validate_token_report
+def check_assets(root=ASSETS, *, require_samples=True, review=None):
+    from .catalog import CATALOG_ID, card_settings, load_catalog, validate_token_report
 
     root = Path(root)
-    catalog_id = catalog_id or CONFIG.get("catalog_id")
     errors = []
     try:
-        # v2 cards carry the catalog's own protective negative prompt.
-        card_generation = card_settings(catalog_id)
+        # The cards carry the catalog's own protective negative prompt.
+        card_generation = card_settings()
     except (OSError, TypeError, ValueError):
         card_generation = CONFIG["generation"]
 
@@ -49,21 +49,10 @@ def check_assets(root=ASSETS, *, require_samples=True, review=None, catalog_id=N
     if baseline_manifest.get("generation") != CONFIG["generation"]:
         errors.append("Generation settings mismatch")
 
-    if catalog_id == "catalog-v1":
-        card_manifest = baseline_manifest
-        card_images = baseline_images
-        review_path = review or CARDS_REVIEW
-    elif catalog_id == "catalog-v2":
-        card_manifest = read_object("catalog-v2.json")
-        card_images = image_map(card_manifest, "catalog-v2.json")
-        review_path = review
-        if card_manifest.get("generation") != card_generation:
-            errors.append("Generation settings mismatch: catalog-v2.json")
-    else:
-        errors.append(f"Unknown catalog: {catalog_id}")
-        card_manifest = {}
-        card_images = {}
-        review_path = review
+    card_manifest = read_object("catalog-v2.json")
+    card_images = image_map(card_manifest, "catalog-v2.json")
+    if card_manifest.get("generation") != card_generation:
+        errors.append("Generation settings mismatch: catalog-v2.json")
 
     def check_image(key, image):
         try:
@@ -78,21 +67,18 @@ def check_assets(root=ASSETS, *, require_samples=True, review=None, catalog_id=N
             return False
         return True
 
+    catalog = None
     try:
-        eligible = load_catalog(
-            catalog_id, reviewed_only=True, assets=root, review_path=review_path
-        )
-        complete = load_catalog(
-            catalog_id, reviewed_only=False, assets=root, review_path=review_path
-        )
+        catalog = load_catalog(reviewed_only=True, assets=root, review_path=review)
+        complete = load_catalog(reviewed_only=False, assets=root, review_path=review)
         catalog_cards = complete["all_cards"]
-        reviewed = {card["id"] for card in eligible["cards"]}
+        reviewed = {card["id"] for card in catalog["cards"]}
     except (OSError, TypeError, ValueError) as exc:
         errors.append(f"Invalid catalog: {exc}")
         catalog_cards = []
         reviewed = set()
 
-    if catalog_id == "catalog-v2" and catalog_cards:
+    if catalog_cards:
         try:
             validate_token_report(
                 card_manifest.get("token_validation"),
@@ -102,9 +88,15 @@ def check_assets(root=ASSETS, *, require_samples=True, review=None, catalog_id=N
         except (TypeError, ValueError) as exc:
             errors.append(f"Invalid token validation: {exc}")
 
-    card_fields = ["seed", "prompt", "ref_en", "aspects"]
-    if catalog_id == "catalog-v2":
-        card_fields.extend(("aspects_ja", "label", "profile_label"))
+    card_fields = (
+        "seed",
+        "prompt",
+        "ref_en",
+        "aspects",
+        "aspects_ja",
+        "label",
+        "profile_label",
+    )
     for card in catalog_cards:
         card_id = card["id"]
         image = card_images.get(card_id) if isinstance(card_images, dict) else None
@@ -141,17 +133,12 @@ def check_assets(root=ASSETS, *, require_samples=True, review=None, catalog_id=N
         if not isinstance(samples, list):
             errors.append("Invalid samples manifest")
             samples = []
-        contract = CONFIG.get("sample_manifest")
-        required_ids = (
-            contract.get("required_ids") if isinstance(contract, dict) else None
-        )
+        required_ids = CONFIG.get("sample_ids")
         if (
-            not isinstance(contract, dict)
-            or set(contract) != {"catalog_id", "required_ids"}
-            or contract.get("catalog_id") != "catalog-v1"
-            or not isinstance(required_ids, list)
+            not isinstance(required_ids, list)
+            or not required_ids
             or any(not isinstance(item, str) or not item for item in required_ids)
-            or len(required_ids) != len(set(required_ids or ()))
+            or len(required_ids) != len(set(required_ids))
         ):
             errors.append("Invalid sample manifest contract")
         else:
@@ -167,7 +154,7 @@ def check_assets(root=ASSETS, *, require_samples=True, review=None, catalog_id=N
                 errors.append("Sample manifest IDs mismatch")
     for sample in samples:
         if isinstance(sample, dict):
-            errors.extend(sample_errors(sample, root))
+            errors.extend(sample_errors(sample, root, catalog=catalog))
         else:
             errors.append("Invalid sample record")
 
@@ -180,7 +167,7 @@ def check_assets(root=ASSETS, *, require_samples=True, review=None, catalog_id=N
     return {
         "ready": not errors,
         "mode": "fan-live",
-        "catalog_id": catalog_id,
+        "catalog_id": CATALOG_ID,
         "errors": errors,
         "fixed_images": len(card_images) if isinstance(card_images, dict) else 0,
         "generic_images": generic_count,
@@ -301,11 +288,9 @@ def check_fan_env(upstream=None, gpu_python=None):
     }
 
 
-def write_preflight(path, *, include_models=False, catalog_id=None):
+def write_preflight(path, *, include_models=False):
     """Evaluate and persist the same fresh preflight result returned to callers."""
-    result = (
-        check_assets() if catalog_id is None else check_assets(catalog_id=catalog_id)
-    )
+    result = check_assets()
     if include_models:
         result["models"] = check_models()
         result["ready"] = result["ready"] and result["models"]["ready"]
@@ -315,7 +300,8 @@ def write_preflight(path, *, include_models=False, catalog_id=None):
     return result
 
 
-def sample_errors(sample, root=ASSETS):
+def sample_errors(sample, root=ASSETS, *, catalog=None):
+    """One pre-generated sample: its stored preference must still rebuild its hash."""
     root = Path(root)
     errors = []
     if not isinstance(sample, dict):
@@ -340,18 +326,43 @@ def sample_errors(sample, root=ASSETS):
     if not topic:
         fail("unknown topic")
 
-    selection = sample.get("selection")
     raw_personalization = sample.get("personalization")
     if not isinstance(raw_personalization, dict):
         fail("invalid personalization")
         personalization = {}
     else:
         personalization = raw_personalization
-    try:
-        rebuilt = build_legacy_personalization(selection)
-    except (AttributeError, KeyError, TypeError, ValueError):
-        rebuilt = None
-        fail("selection is unusable")
+    provenance = personalization.get("provenance")
+    if not isinstance(provenance, dict) or any(
+        provenance.get(key) != value
+        for key, value in (
+            ("fan_pin", CONFIG["fan"]["commit"]),
+            ("decoder_hash", digest(CONFIG["fan"]["decoders"])),
+            ("generation", CONFIG["generation"]),
+            ("seeds", CONFIG["seeds"]),
+        )
+    ):
+        fail("provenance is not the current contract")
+        provenance = None
+    if catalog is None:
+        from .catalog import load_catalog
+
+        try:
+            catalog = load_catalog(reviewed_only=True, assets=root)
+        except (OSError, TypeError, ValueError):
+            catalog = None
+    rebuilt = None
+    if topic and provenance and catalog:
+        try:
+            rebuilt = build_personalization(
+                sample.get("preference"),
+                prompt=target_prompt(topic),
+                policy=personalization.get("effective_policy"),
+                provenance=provenance,
+                catalog=catalog,
+            )
+        except (AttributeError, KeyError, TypeError, ValueError):
+            fail("preference is unusable")
     if not rebuilt or rebuilt["hash"] != personalization.get("hash"):
         fail("personalization mismatch")
 

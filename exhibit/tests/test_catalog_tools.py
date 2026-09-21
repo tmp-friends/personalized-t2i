@@ -22,7 +22,7 @@ def v2_cards():
 
 
 def v2_settings():
-    return card_settings("catalog-v2")
+    return card_settings()
 
 
 def fake_provenance():
@@ -57,13 +57,7 @@ def report_for(cards, *, overflow=False):
         "tokenizer_2": FakeTokenizer(3),
     }
     script = load_script("check_card_tokens")
-    return script.build_token_report(
-        "catalog-v2",
-        cards,
-        tokenizers,
-        fake_provenance(),
-        ROOT / "configs/legacy-card-token-overflow.json",
-    )
+    return script.build_token_report(cards, tokenizers, fake_provenance())
 
 
 def test_runtime_tokenizer_provenance_hashes_all_pinned_tokenizer_files(tmp_path):
@@ -97,10 +91,10 @@ def test_runtime_tokenizer_provenance_hashes_all_pinned_tokenizer_files(tmp_path
     assert all(len(value) == 64 for value in result["files"].values())
 
 
-def test_token_report_binds_prompts_generation_special_ids_files_and_legacy_evidence():
+def test_token_report_binds_prompts_generation_special_ids_and_tokenizer_files():
     cards = v2_cards()[:2]
     report = report_for(cards)
-    assert report["schema_version"] == 2
+    assert report["schema_version"] == 3
     assert report["catalog_id"] == "catalog-v2"
     assert report["generation"] == v2_settings()
     assert report["prompt_set_hash"] == digest(
@@ -120,33 +114,14 @@ def test_token_report_binds_prompts_generation_special_ids_files_and_legacy_evid
     }
     assert all(row["special_tokens"] is True for row in negative["results"])
     assert negative["max_tokens"] == 3
-    evidence = report["legacy_overflow_evidence"]
-    assert evidence["over_limit_ids"] == [
-        "girl-warm_soft",
-        "student-warm_soft",
-        "barista-warm_soft",
-    ]
-    assert evidence["sha256"] == file_hash(
-        ROOT / "configs/legacy-card-token-overflow.json"
-    )
-
-
-def test_legacy_three_card_overflow_evidence_remains_frozen():
-    rows = read_json(ROOT / "configs/legacy-card-token-overflow.json")
-    for tokenizer in rows:
-        assert [item["id"] for item in tokenizer["over_limit"]] == [
-            "girl-warm_soft",
-            "student-warm_soft",
-            "barista-warm_soft",
-        ]
 
 
 def _configure_prepare(module, tmp_path, monkeypatch, *, overflow):
     assets = tmp_path / "assets"
     outputs = tmp_path / "outputs"
     assets.mkdir()
-    legacy = assets / "manifest.json"
-    legacy.write_bytes(b"frozen v1 manifest")
+    topics = assets / "manifest.json"
+    topics.write_bytes(b"the topic manifest")
     monkeypatch.setattr(module, "ASSETS", assets)
     monkeypatch.setattr(module, "OUTPUTS", outputs)
     cards = v2_cards()
@@ -158,14 +133,12 @@ def _configure_prepare(module, tmp_path, monkeypatch, *, overflow):
         return subprocess.CompletedProcess(command, 0, "", "")
 
     monkeypatch.setattr(module.subprocess, "run", run)
-    return assets, outputs, legacy, cards
+    return assets, outputs, topics, cards
 
 
-def test_prepare_v2_blocks_generation_when_report_contains_overflow(
-    tmp_path, monkeypatch
-):
+def test_prepare_blocks_generation_when_report_contains_overflow(tmp_path, monkeypatch):
     module = load_script("prepare")
-    assets, _, legacy, _ = _configure_prepare(
+    assets, _, topics, _ = _configure_prepare(
         module, tmp_path, monkeypatch, overflow=True
     )
     calls = []
@@ -173,17 +146,17 @@ def test_prepare_v2_blocks_generation_when_report_contains_overflow(
         module, "stage", lambda *args, **kwargs: calls.append(args) or []
     )
     with pytest.raises(RuntimeError, match="token validation"):
-        module.prepare_cards("v2")
+        module.prepare_cards()
     assert calls == []
-    assert legacy.read_bytes() == b"frozen v1 manifest"
+    assert topics.read_bytes() == b"the topic manifest"
     assert not (assets / "catalog-v2.json").exists()
 
 
-def test_prepare_v2_writes_only_v2_manifest_with_bound_token_report(
+def test_prepare_writes_the_catalog_manifest_with_a_bound_token_report(
     tmp_path, monkeypatch
 ):
     module = load_script("prepare")
-    assets, _, legacy, cards = _configure_prepare(
+    assets, _, topics, cards = _configure_prepare(
         module, tmp_path, monkeypatch, overflow=False
     )
 
@@ -207,9 +180,9 @@ def test_prepare_v2_writes_only_v2_manifest_with_bound_token_report(
         return events
 
     monkeypatch.setattr(module, "stage", stage)
-    module.prepare_cards("v2")
+    module.prepare_cards()
     manifest = json.loads((assets / "catalog-v2.json").read_text())
-    assert legacy.read_bytes() == b"frozen v1 manifest"
+    assert topics.read_bytes() == b"the topic manifest"
     assert manifest["version"] == 2
     assert manifest["catalog_id"] == "catalog-v2"
     assert len(manifest["images"]) == len(cards) == 64
@@ -251,7 +224,7 @@ def _recording_stage(module, monkeypatch, generated):
     monkeypatch.setattr(module, "stage", stage)
 
 
-def test_prepare_v2_only_regenerates_the_named_cards_and_keeps_the_manifest(
+def test_prepare_only_regenerates_the_named_cards_and_keeps_the_manifest(
     tmp_path, monkeypatch
 ):
     """Swapping one card costs one generation, and leaves every other entry alone."""
@@ -261,11 +234,11 @@ def test_prepare_v2_only_regenerates_the_named_cards_and_keeps_the_manifest(
     )
     generated = []
     _recording_stage(module, monkeypatch, generated)
-    module.prepare_cards("v2")
+    module.prepare_cards()
     before = json.loads((assets / "catalog-v2.json").read_text())["images"]
 
     target = cards[3]["id"]
-    module.prepare_cards("v2", only=[target, target])
+    module.prepare_cards(only=[target, target])
     after = json.loads((assets / "catalog-v2.json").read_text())["images"]
 
     assert generated[1] == ("catalog-v2/card-images-partial", [target])
@@ -274,13 +247,13 @@ def test_prepare_v2_only_regenerates_the_named_cards_and_keeps_the_manifest(
     assert all(after[key] == before[key] for key in before if key != target)
 
 
-def test_prepare_v2_only_rejects_an_unknown_card(tmp_path, monkeypatch):
+def test_prepare_only_rejects_an_unknown_card(tmp_path, monkeypatch):
     module = load_script("prepare")
     _configure_prepare(module, tmp_path, monkeypatch, overflow=False)
     calls = []
     monkeypatch.setattr(
         module, "stage", lambda *args, **kwargs: calls.append(args) or []
     )
-    with pytest.raises(RuntimeError, match="Unknown catalog-v2 card: girl-nope"):
-        module.prepare_cards("v2", only=["girl-nope"])
+    with pytest.raises(RuntimeError, match="Unknown card: girl-nope"):
+        module.prepare_cards(only=["girl-nope"])
     assert calls == []

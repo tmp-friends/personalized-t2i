@@ -25,10 +25,7 @@ EVALUATOR_FILES = {
     "special_tokens_map.json",
 }
 
-STUDY_COMPARISONS = {
-    "encoder": ("candidate_vs_legacy", "own_vs_other"),
-    "elicitation": ("new_pool_vs_legacy_pool",),
-}
+STUDY_COMPARISONS = {"encoder": ("candidate_vs_legacy", "own_vs_other")}
 
 PIPELINE_CONFIG_FILES = (
     "model_index.json",
@@ -186,23 +183,20 @@ def _select(items, ids, label):
     return [copy.deepcopy(by_id[item_id]) for item_id in ids]
 
 
-def _study_phase(raw, base, topics, *, study_kind):
-    """Resolve one study kind; two kinds never share a directory or a manifest."""
+def _study_phase(raw, base, topics):
+    """Resolve the study section; its kind decides directory, manifest and roles."""
     study = copy.deepcopy(raw["study"])
-    kind = study_kind or study.get("study_kind")
+    kind = study.get("study_kind")
     if kind not in STUDY_COMPARISONS:
-        raise ValueError("study_kind must be encoder or elicitation")
+        raise ValueError("study_kind must be encoder")
     if kind not in study.get("kinds", {}):
         raise ValueError(f"evaluation config has no {kind} study section")
     section = copy.deepcopy(study["kinds"][kind])
     registry = _read(base / "fan-policies.json")
-    if kind == "encoder":
-        roles = {
-            "candidate": section["candidate_policy_id"],
-            "legacy": section["baseline_policy_id"],
-        }
-    else:
-        roles = {"encoder": section["encoder_policy_id"]}
+    roles = {
+        "candidate": section["candidate_policy_id"],
+        "legacy": section["baseline_policy_id"],
+    }
     policies = {
         role: _policy_spec(policy_id, thaw_policy(resolve_policy(policy_id, registry)))
         for role, policy_id in roles.items()
@@ -227,10 +221,8 @@ def _study_phase(raw, base, topics, *, study_kind):
         "study_id": section["study_id"],
         "study_dir": str((base / section["study_dir"]).resolve()),
         "catalog_id": section["catalog_id"],
-        "legacy_catalog_id": section.get("legacy_catalog_id"),
         "participants": copy.deepcopy(study["participants"]),
         "selection": copy.deepcopy(study["selection"]),
-        "legacy_selection": copy.deepcopy(study["legacy_selection"]),
         "bootstrap": copy.deepcopy(study["bootstrap"]),
         "derangement_seed": study["derangement_seed"],
         "comparisons": comparisons,
@@ -239,7 +231,7 @@ def _study_phase(raw, base, topics, *, study_kind):
     }
 
 
-def load_evaluation_config(path, phase, *, parents=None, study_kind=None):
+def load_evaluation_config(path, phase, *, parents=None):
     """Resolve one phase without consulting arbitrary prior output directories."""
     path = Path(path).resolve()
     raw = _read(path)
@@ -336,7 +328,7 @@ def load_evaluation_config(path, phase, *, parents=None, study_kind=None):
     if phase == "study":
         return {
             **common,
-            "study": _study_phase(raw, base, topics, study_kind=study_kind),
+            "study": _study_phase(raw, base, topics),
         }
     raise ValueError(f"unknown evaluation phase: {phase}")
 
@@ -397,7 +389,7 @@ def build_study_experiment(config, manifest, provenance, *, catalog_loader=None)
         topic = topics[item["topic_id"]]
         catalog_id = variant["catalog_id"]
         if catalog_id not in catalogs:
-            catalogs[catalog_id] = catalog_loader(catalog_id, reviewed_only=True)
+            catalogs[catalog_id] = catalog_loader(reviewed_only=True)
         personalization = build_personalization(
             variant["snapshot"],
             prompt=topic["generation_prompt"],
@@ -1216,7 +1208,7 @@ def validate_heldout_catalog(config, *, catalog_loader=None):
             ) from error
         catalog_loader = load_catalog
     try:
-        catalog = catalog_loader("catalog-v2", reviewed_only=True)
+        catalog = catalog_loader(reviewed_only=True)
     except (OSError, KeyError, TypeError, ValueError) as error:
         raise ValueError(
             "heldout catalog is not prepared; complete Task 4 catalog generation and review"

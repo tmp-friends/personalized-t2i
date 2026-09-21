@@ -32,7 +32,7 @@ def write_fake_v2_assets(root, *, skip_image_for=(), defn=None):
     """A full 64-card catalog-v2 bundle with tiny real PNGs, self-contained."""
     defn = defn if defn is not None else definition()
     cards = build_catalog(defn)
-    settings = card_settings("catalog-v2", defn)
+    settings = card_settings(defn)
     images = {}
     for index, card in enumerate(cards):
         path = root / card["path"]
@@ -302,7 +302,7 @@ def test_load_catalog_accepts_a_fully_confirmed_export_entry_and_excludes_partia
     review_path = bundle["root"].parent / "cards-v2-review.json"
     review_path.write_text(json.dumps(review, ensure_ascii=False))
 
-    loaded = load_catalog("catalog-v2", assets=bundle["root"], review_path=review_path)
+    loaded = load_catalog(assets=bundle["root"], review_path=review_path)
     loaded_ids = {card["id"] for card in loaded["cards"]}
     assert full_id in loaded_ids
     assert partial_id not in loaded_ids
@@ -323,7 +323,7 @@ def test_load_catalog_tolerates_reviewed_false_entries_for_untouched_cards(bundl
     )
     review_path = bundle["root"].parent / "cards-v2-review.json"
     review_path.write_text(json.dumps(review, ensure_ascii=False))
-    loaded = load_catalog("catalog-v2", assets=bundle["root"], review_path=review_path)
+    loaded = load_catalog(assets=bundle["root"], review_path=review_path)
     assert loaded["cards"] == []
     assert len(loaded["all_cards"]) == 64
 
@@ -378,7 +378,7 @@ def test_description_change_invalidates_import_like_the_loader(
     changed["axes"]["color"][0] += ", edited"
     changed_path = tmp_path / "catalog-definition.json"
     changed_path.write_text(json.dumps(changed))
-    monkeypatch.setattr(catalog_module, "V2", changed_path)
+    monkeypatch.setattr(catalog_module, "DEFINITION", changed_path)
 
     review = {
         card["id"]: {

@@ -516,7 +516,7 @@ def test_every_documented_gain_step_survives_normalization(gain):
 
 
 def test_a_committed_snapshot_is_accepted_by_build_personalization():
-    catalog = load_catalog("catalog-v1", reviewed_only=True)
+    catalog = load_catalog(reviewed_only=True)
     assert catalog["cards"]
     ids = [c["id"] for c in catalog["cards"]]
     value = {
@@ -546,7 +546,7 @@ def test_a_committed_snapshot_is_accepted_by_build_personalization():
 
 
 def test_a_committed_snapshot_feeds_the_next_round_of_the_same_catalog():
-    catalog = load_catalog("catalog-v1", reviewed_only=True)
+    catalog = load_catalog(reviewed_only=True)
     ids = [c["id"] for c in catalog["cards"]]
     normalized = normalize_preferences(
         {

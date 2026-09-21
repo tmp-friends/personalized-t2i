@@ -29,13 +29,7 @@ def main(argv=None):
         raise SystemExit(
             f"{directory} is not a study directory; run build_preference_study.py first"
         )
-    participants_path = directory / "participants.json"
-    participants = (
-        json.loads(participants_path.read_text())
-        if participants_path.is_file()
-        else None
-    )
-    summary = study_lib.summarize_study(directory, participants=participants)
+    summary = study_lib.summarize_study(directory)
     study_lib.write_json(directory / "summary.json", summary)
     study_lib.write_text(directory / "summary.md", study_lib.summary_markdown(summary))
     print(

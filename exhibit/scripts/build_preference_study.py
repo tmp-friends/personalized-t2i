@@ -24,16 +24,12 @@ from exhibit import study as study_lib
 
 
 def load_config(args):
-    config = load_evaluation_config(args.config, "study", study_kind=args.study_kind)
+    config = load_evaluation_config(args.config, "study")
     study = config["study"]
     if args.study_dir:
         study["study_dir"] = str(Path(args.study_dir).resolve())
     if args.study_id:
         study["study_id"] = args.study_id
-    if args.catalog_id:
-        study["catalog_id"] = args.catalog_id
-    if args.legacy_catalog_id:
-        study["legacy_catalog_id"] = args.legacy_catalog_id
     return config
 
 
@@ -60,11 +56,8 @@ def load_images(directory, manifest):
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--config", required=True)
-    parser.add_argument("--study-kind", choices=("encoder", "elicitation"))
     parser.add_argument("--study-dir", help="override the configured study directory")
     parser.add_argument("--study-id")
-    parser.add_argument("--catalog-id", help="override the reviewed catalog id")
-    parser.add_argument("--legacy-catalog-id")
     parser.add_argument(
         "--merge",
         nargs="+",

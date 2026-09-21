@@ -66,7 +66,7 @@ def test_a_new_session_is_an_empty_draft_with_the_first_round(tmp_path, assets):
     service = make(tmp_path)
     snapshot = service.create_session()
     assert snapshot["revision"] == 0
-    assert snapshot["catalog_id"] == CONFIG["catalog_id"]
+    assert snapshot["catalog_id"] == "catalog-v2"
     assert snapshot["committed"] is False
     assert snapshot["selection"] == []
     assert snapshot["aspect_gains"] == {key: 1.0 for key in GAINS}
@@ -148,15 +148,18 @@ def test_rounds_are_served_once_and_a_retry_repeats_nothing(tmp_path, assets):
     second = snapshot["rounds"][1]
     assert len(snapshot["rounds"]) == 2
     assert not set(second["card_ids"]) & set(first)
-    # Sixteen reviewed cards cannot fill a second round of twelve.
-    assert second["shortfall_reason"] == "insufficient_unseen_cards"
+    # Sixty-four reviewed cards fill three full rounds of twelve.
+    assert second["shortfall_reason"] is None
+    assert len(second["card_ids"]) == CONFIG["selection"]["round_size"]
     assert service.request_round(sid, "round-2", 0) == snapshot
     assert len(service.snapshot(sid)["rounds"]) == 2
     with pytest.raises(Conflict):
         service.request_round(sid, "round-2", 1)
+    assert service.snapshot(sid)["next_round_available"]
+    service.request_round(sid, "round-3", 0)
     assert not service.snapshot(sid)["next_round_available"]
     with pytest.raises(RoundError):
-        service.request_round(sid, "round-3", 0)
+        service.request_round(sid, "round-4", 0)
 
 
 def test_no_more_than_three_rounds_are_served(tmp_path, assets, monkeypatch):
@@ -520,20 +523,16 @@ def test_another_policy_or_catalog_misses_the_cache_and_the_old_content_hits(
     monkeypatch.setattr(service_module, "FAN_POLICIES", registered)
 
     root = asset_tree["root"]
-    manifest = json.loads((root / "manifest.json").read_text())
+    manifest = json.loads((root / "catalog-v2.json").read_text())
     selected = {entry["card_id"] for entry in service.snapshot(sid)["selection"]}
-    card_id = next(
-        key
-        for key, image in manifest["images"].items()
-        if key not in selected and image["path"].startswith("cards/")
-    )
+    card_id = next(key for key in manifest["images"] if key not in selected)
     original = (root / manifest["images"][card_id]["path"]).read_bytes()
     original_sha = manifest["images"][card_id]["sha256"]
     (root / manifest["images"][card_id]["path"]).write_bytes(original + b" revised")
     manifest["images"][card_id]["sha256"] = service_module.file_hash(
         root / manifest["images"][card_id]["path"]
     )
-    write_json(root / "manifest.json", manifest)
+    write_json(root / "catalog-v2.json", manifest)
     start(service, sid, "r2")
     settle(service)
     assert service.snapshot(sid)["run"]["mode"] == "live"
@@ -541,7 +540,7 @@ def test_another_policy_or_catalog_misses_the_cache_and_the_old_content_hits(
 
     (root / manifest["images"][card_id]["path"]).write_bytes(original)
     manifest["images"][card_id]["sha256"] = original_sha
-    write_json(root / "manifest.json", manifest)
+    write_json(root / "catalog-v2.json", manifest)
     start(service, sid, "r3")
     settle(service)
     assert service.snapshot(sid)["run"]["mode"] == "exact-cache"

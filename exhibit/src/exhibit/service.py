@@ -13,7 +13,6 @@ from pathlib import Path
 from .catalog import load_catalog
 from .config import (
     ASSETS,
-    CARDS_REVIEW,
     CONFIG,
     FAN_POLICIES,
     FAN_UPSTREAM,
@@ -26,7 +25,6 @@ from .domain import (
     build_personalization,
     digest,
     file_hash,
-    legacy_snapshot_from_selection,
     run_cache_key,
     target_prompt,
 )
@@ -96,14 +94,7 @@ def _link(source, destination):
 
 def active_catalog():
     """The reviewed catalog this exhibit serves; the client never names one."""
-    catalog_id = CONFIG["catalog_id"]
-    return load_catalog(
-        catalog_id,
-        reviewed_only=True,
-        assets=ASSETS,
-        # Each catalog owns its review file; naming v1's would empty v2 entirely.
-        review_path=CARDS_REVIEW if catalog_id == "catalog-v1" else None,
-    )
+    return load_catalog(reviewed_only=True, assets=ASSETS)
 
 
 def default_policy():
@@ -733,12 +724,9 @@ class Service:
                 ),
                 None,
             )
-            if not item or sample_errors(item, ASSETS):
+            if not item or sample_errors(item, ASSETS, catalog=active_catalog()):
                 raise ValueError("Sample unavailable or inconsistent")
-            try:
-                preference = legacy_snapshot_from_selection(item["selection"])
-            except (KeyError, TypeError, ValueError) as exc:
-                raise ValueError("Sample unavailable or inconsistent") from exc
+            preference = copy.deepcopy(item["preference"])
             run_id = uuid.uuid4().hex
             directory = self.root / "sessions" / sid / run_id
             directory.mkdir(parents=True, exist_ok=True)

@@ -31,17 +31,6 @@ def test_all_exhibit_topics_use_the_illustrious_v2_quality_prefix():
         assert target.endswith(CONFIG["generation"]["positive_prompt_tail"] + ".")
 
 
-def test_all_card_prompts_use_the_same_quality_envelope():
-    for card in domain.CARDS.values():
-        assert card["prompt"].startswith(QUALITY_PREFIX), card["id"]
-        assert card["prompt"].endswith(
-            CONFIG["generation"]["positive_prompt_tail"] + "."
-        )
-        # The subject never enters a reference; only the expression phrases do.
-        assert QUALITY_PREFIX not in card["ref_en"]
-        assert card["ref_en"] == ", ".join(card["aspects"].values())
-
-
 def test_generation_profile_matches_the_reviewed_illustrious_v2_contract():
     g = CONFIG["generation"]
     assert g["model"] == "OnomaAIResearch/Illustrious-XL-v2.0"

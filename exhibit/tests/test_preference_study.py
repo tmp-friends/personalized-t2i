@@ -29,7 +29,7 @@ NODE = shutil.which("node")
 
 
 def _catalog_v2():
-    """catalog-v1 is the only reviewed catalog on disk; v2 is built in memory."""
+    """A complete catalog, so the study tests do not depend on the review file."""
     cards = build_catalog(read_json(ROOT / "configs/catalog-v2.json"))
     identity = {
         "catalog_id": "catalog-v2",
@@ -50,20 +50,18 @@ def catalog_v2():
 
 
 @pytest.fixture(scope="module")
-def catalog_v1():
-    return load_catalog("catalog-v1", reviewed_only=True)
+def disk_catalog():
+    """What the shipped config actually collects against: the reviewed catalog."""
+    return load_catalog(reviewed_only=True)
 
 
 @pytest.fixture
-def catalogs(catalog_v2, catalog_v1):
-    return {
-        "new_pool": copy.deepcopy(catalog_v2),
-        "legacy_pool": copy.deepcopy(catalog_v1),
-    }
+def catalogs(catalog_v2):
+    return {"new_pool": copy.deepcopy(catalog_v2)}
 
 
 def _config(tmp_path, kind="encoder", *, minimum=None):
-    config = load_evaluation_config(CONFIG_PATH, "study", study_kind=kind)
+    config = load_evaluation_config(CONFIG_PATH, "study")
     config["study"]["study_dir"] = str(tmp_path / kind)
     if minimum:
         config["study"]["participants"] = minimum
@@ -96,40 +94,16 @@ def export(participant, catalog, *, offset=0, condition=None, count=3, **extra):
     return value
 
 
-def participants_for(config, catalogs, count, *, kind="encoder"):
+def participants_for(config, catalogs, count):
     exports = []
     for index in range(count):
         participant = f"p{index + 1:03d}"
-        if kind == "elicitation":
-            exports.append(
-                (
-                    f"{participant}-new.json",
-                    export(
-                        participant,
-                        catalogs["new_pool"],
-                        offset=index,
-                        condition="new_pool",
-                    ),
-                )
+        exports.append(
+            (
+                f"{participant}.json",
+                export(participant, catalogs["new_pool"], offset=index),
             )
-            exports.append(
-                (
-                    f"{participant}-legacy.json",
-                    export(
-                        participant,
-                        catalogs["legacy_pool"],
-                        offset=index % 4,
-                        condition="legacy_pool",
-                    ),
-                )
-            )
-        else:
-            exports.append(
-                (
-                    f"{participant}.json",
-                    export(participant, catalogs["new_pool"], offset=index),
-                )
-            )
+        )
     document, report = study_lib.merge_participants(config, exports, catalogs=catalogs)
     assert not report["rejected"], report["rejected"]
     return document
@@ -176,27 +150,6 @@ def test_collection_page_is_self_contained_and_states_what_is_stored(config, cat
     assert study_lib.PARTICIPANT_ID.pattern in html
 
 
-def test_elicitation_collection_page_offers_both_flows(tmp_path, catalogs):
-    config = _config(tmp_path, "elicitation")
-    html = study_lib.build_collection_page(config, catalogs)["html"]
-    data = json.loads(html.split("globalThis.STUDY = ")[1].split(";\n")[0])
-
-    conditions = {item["condition"]: item for item in data["conditions"]}
-    assert set(conditions) == {"legacy_pool", "new_pool"}
-    assert conditions["legacy_pool"]["flow"] == "single_screen"
-    assert conditions["legacy_pool"]["selection"] == {
-        "min": 3,
-        "max": 5,
-        "round_size": 16,
-        "max_rounds": 1,
-    }
-    assert conditions["legacy_pool"]["aspects_default_on"] is True
-    assert conditions["new_pool"]["flow"] == "rounds"
-    assert conditions["new_pool"]["selection"]["round_size"] == 12
-    assert conditions["new_pool"]["selection"]["max_rounds"] == 3
-    assert conditions["new_pool"]["strength"] is True
-
-
 def test_inline_module_drops_only_the_export_keyword():
     source = (
         "export const A = 1;\nexport function f() {}\nexport { f };\nconst b = 2;\n"
@@ -241,14 +194,11 @@ def _round_scenarios(catalog, limits):
 
 
 @pytest.mark.skipif(NODE is None, reason="node is not installed")
-@pytest.mark.parametrize("catalog_id", ["catalog-v1", "catalog-v2"])
-def test_round_order_matches_between_python_and_the_page(
-    tmp_path, catalog_id, catalog_v1, catalog_v2
-):
-    catalog = catalog_v1 if catalog_id == "catalog-v1" else catalog_v2
-    size = 6 if catalog_id == "catalog-v1" else 12
+@pytest.mark.parametrize("size", [6, 12])
+def test_round_order_matches_between_python_and_the_page(tmp_path, size, catalog_v2):
+    catalog = catalog_v2
     limits = {"min": 3, "max": 10, "round_size": size, "max_rounds": 3}
-    seed = f"encoder-preference-1:{catalog_id}"
+    seed = f"encoder-preference-1:round-{size}"
     table = study_lib.key_table(catalog, session_seed=seed, rounds=3)
     cases = []
     for scenario in _round_scenarios(catalog, limits):
@@ -415,41 +365,6 @@ def test_merge_refuses_a_second_differing_record_for_one_participant(config, cat
     assert "conflicting" in report["rejected"][0]["reason"]
 
 
-def test_an_encoder_study_refuses_a_legacy_pool_record(config, catalogs):
-    _, report = study_lib.merge_participants(
-        config,
-        [("a.json", export("p001", catalogs["legacy_pool"], condition="legacy_pool"))],
-        catalogs=catalogs,
-    )
-
-    assert "only the new_pool condition" in report["rejected"][0]["reason"]
-
-
-def test_an_elicitation_participant_needs_both_conditions(tmp_path, catalogs):
-    config = _config(
-        tmp_path, "elicitation", minimum={"pilot_minimum": 2, "main_minimum": 2}
-    )
-    document, report = study_lib.merge_participants(
-        config,
-        [
-            ("a.json", export("p001", catalogs["new_pool"], condition="new_pool")),
-            ("b.json", export("p002", catalogs["new_pool"], condition="new_pool")),
-            (
-                "c.json",
-                export("p002", catalogs["legacy_pool"], condition="legacy_pool"),
-            ),
-            ("d.json", export("p003", catalogs["new_pool"])),
-        ],
-        catalogs=catalogs,
-    )
-
-    assert report["incomplete"] == [
-        {"participant_id": "p001", "missing": ["legacy_pool"]}
-    ]
-    assert "legacy_pool or new_pool" in report["rejected"][0]["reason"]
-    assert list(study_lib.complete_participants(config, document)) == ["p002"]
-
-
 # ----------------------------------------------------------------- manifest
 
 
@@ -527,43 +442,6 @@ def test_manifest_fixes_balanced_sides_and_a_per_participant_order(config, catal
         assert len(variants) == 2
 
 
-def test_the_two_kinds_never_share_a_directory_a_manifest_or_a_summary(
-    tmp_path, catalogs
-):
-    encoder = _config(
-        tmp_path, "encoder", minimum={"pilot_minimum": 2, "main_minimum": 2}
-    )
-    elicitation = _config(
-        tmp_path, "elicitation", minimum={"pilot_minimum": 2, "main_minimum": 2}
-    )
-
-    assert encoder["study"]["study_dir"] != elicitation["study"]["study_dir"]
-    assert encoder["study"]["study_id"] != elicitation["study"]["study_id"]
-
-    encoder_manifest, _ = study_lib.build_manifest(
-        encoder, participants_for(encoder, catalogs, 3), catalogs=catalogs
-    )
-    elicitation_manifest, _ = study_lib.build_manifest(
-        elicitation,
-        participants_for(elicitation, catalogs, 3, kind="elicitation"),
-        catalogs=catalogs,
-    )
-
-    assert encoder_manifest["study_hash"] != elicitation_manifest["study_hash"]
-    assert list(encoder_manifest["comparisons"]) == [
-        "candidate_vs_legacy",
-        "own_vs_other",
-    ]
-    assert list(elicitation_manifest["comparisons"]) == ["new_pool_vs_legacy_pool"]
-    assert elicitation_manifest["assignment"] == {}
-    assert elicitation_manifest["image_count"] == 3 * 2 * 2 * 4
-    # An elicitation manifest may not be built from encoder-only participants.
-    with pytest.raises(study_lib.StudyError):
-        study_lib.build_manifest(
-            elicitation, participants_for(encoder, catalogs, 3), catalogs=catalogs
-        )
-
-
 def test_study_images_are_content_addressed_and_deduplicated(
     tmp_path, config, catalogs
 ):
@@ -582,7 +460,7 @@ def test_study_images_are_content_addressed_and_deduplicated(
         config,
         manifest,
         provenance,
-        catalog_loader=lambda catalog_id, **kwargs: catalogs["new_pool"],
+        catalog_loader=lambda **kwargs: catalogs["new_pool"],
     )
 
     assert len(experiment["jobs"]) == manifest["image_count"] == 60
@@ -885,24 +763,6 @@ def test_conflicting_duplicate_answers_void_the_pair(tmp_path, config, catalogs)
     assert "conflicting duplicate answer" in study_lib.summary_markdown(summary)
 
 
-def test_an_elicitation_study_never_qualifies_a_policy_change(tmp_path, catalogs):
-    config = _config(
-        tmp_path, "elicitation", minimum={"pilot_minimum": 2, "main_minimum": 2}
-    )
-    participants = participants_for(config, catalogs, 3, kind="elicitation")
-    directory = tmp_path / "study"
-    manifest, keys = write_study(directory, config, participants, catalogs)
-    for participant in manifest["participants"]:
-        answer_file(directory, manifest, keys, participant, subject_wins)
-
-    summary = study_lib.summarize_study(directory, participants=participants)
-
-    assert all(
-        item["conclusion"] == "improved" for item in summary["comparisons"].values()
-    )
-    assert summary["default_policy_change"]["eligible"] is False
-
-
 def test_the_two_comparisons_are_aggregated_independently(tmp_path, config, catalogs):
     participants = participants_for(config, catalogs, 4)
     directory = tmp_path / "study"
@@ -1039,35 +899,6 @@ def test_fidelity_is_reported_apart_from_the_preference_score(
     assert "好みの勝率には加えない" in summary["fidelity"]["note"]
 
 
-def test_the_elicitation_summary_labels_the_pool_and_flow_effect(tmp_path, catalogs):
-    config = _config(
-        tmp_path, "elicitation", minimum={"pilot_minimum": 2, "main_minimum": 2}
-    )
-    participants = participants_for(config, catalogs, 3, kind="elicitation")
-    directory = tmp_path / "study"
-    manifest, keys = write_study(directory, config, participants, catalogs)
-    for participant in manifest["participants"]:
-        answer_file(directory, manifest, keys, participant, subject_wins)
-
-    summary = study_lib.summarize_study(directory, participants=participants)
-    markdown = study_lib.summary_markdown(summary)
-
-    effect = summary["collection_effect"]
-    assert set(effect["by_condition"]) == {"new_pool", "legacy_pool"}
-    assert effect["by_condition"]["new_pool"]["participants"] == 3
-    assert effect["by_condition"]["new_pool"]["mean_selection_count"] == 3
-    assert effect["by_condition"]["new_pool"]["mean_explicit_aspects"] == 6
-    assert effect["by_condition"]["new_pool"]["mean_elapsed_ms"] is not None
-    assert effect["preference_rate_new_pool"] == 1.0
-    assert effect["participants_scored"] == 3
-    assert effect["incomplete_participants"] == []
-    assert effect["effect_label"] == "pool + selection flow"
-    assert "枚数増加だけの効果とは呼ばない" in markdown
-    assert effect["scope_note"] in markdown
-    assert "新poolの選好率: 1.000" in markdown
-    assert list(summary["comparisons"]) == ["new_pool_vs_legacy_pool"]
-
-
 # ------------------------------------------------------------- command line
 
 
@@ -1080,7 +911,9 @@ def _script(name, module_name):
     return module
 
 
-def test_the_builder_stops_at_the_collection_stage_without_participants(tmp_path):
+def test_the_builder_stops_at_the_collection_stage_without_participants(
+    tmp_path, disk_catalog
+):
     builder = _script("build_preference_study.py", "task8_build_study")
     directory = tmp_path / "study"
 
@@ -1090,14 +923,14 @@ def test_the_builder_stops_at_the_collection_stage_without_participants(tmp_path
             str(CONFIG_PATH),
             "--study-dir",
             str(directory),
-            "--catalog-id",
-            "catalog-v1",
         ]
     )
 
     assert (directory / "collect/index.html").is_file()
     assert (directory / "README.md").is_file()
-    assert len(list((directory / "collect/images").iterdir())) == 16
+    assert len(list((directory / "collect/images").iterdir())) == len(
+        disk_catalog["cards"]
+    )
     assert not (directory / "manifest.json").exists()
     assert not (directory / "keys.json").exists()
     assert not (directory / "participants.json").exists()
@@ -1106,19 +939,12 @@ def test_the_builder_stops_at_the_collection_stage_without_participants(tmp_path
     assert status["planned_images"] is None
 
 
-def test_the_builder_merges_then_refuses_to_plan_images(tmp_path, catalog_v1):
+def test_the_builder_merges_then_refuses_to_plan_images(tmp_path, disk_catalog):
     builder = _script("build_preference_study.py", "task8_build_study_merge")
     directory = tmp_path / "study"
     export_path = tmp_path / "p001.json"
-    export_path.write_text(json.dumps(export("p001", catalog_v1)))
-    arguments = [
-        "--config",
-        str(CONFIG_PATH),
-        "--study-dir",
-        str(directory),
-        "--catalog-id",
-        "catalog-v1",
-    ]
+    export_path.write_text(json.dumps(export("p001", disk_catalog)))
+    arguments = ["--config", str(CONFIG_PATH), "--study-dir", str(directory)]
 
     with pytest.raises(SystemExit) as error:
         builder.main([*arguments, "--merge", str(export_path)])
@@ -1130,11 +956,10 @@ def test_the_builder_merges_then_refuses_to_plan_images(tmp_path, catalog_v1):
     assert not (directory / "images.json").exists()
 
 
-def test_the_builder_writes_answer_pages_once_the_images_exist(tmp_path, catalog_v1):
+def test_the_builder_writes_answer_pages_once_the_images_exist(tmp_path, disk_catalog):
     builder = _script("build_preference_study.py", "task8_build_study_pages")
     config = _config(tmp_path, "encoder")
-    config["study"]["catalog_id"] = "catalog-v1"
-    catalogs = {"new_pool": catalog_v1}
+    catalogs = {"new_pool": disk_catalog}
     directory = Path(config["study"]["study_dir"])
     participants = participants_for(config, catalogs, 5)
     study_lib.write_json(directory / "participants.json", participants)
@@ -1148,14 +973,7 @@ def test_the_builder_writes_answer_pages_once_the_images_exist(tmp_path, catalog
             "images": _fake_images(manifest, tmp_path / "generated"),
         },
     )
-    arguments = [
-        "--config",
-        str(CONFIG_PATH),
-        "--study-dir",
-        str(directory),
-        "--catalog-id",
-        "catalog-v1",
-    ]
+    arguments = ["--config", str(CONFIG_PATH), "--study-dir", str(directory)]
 
     builder.main(arguments)
 
@@ -1192,7 +1010,7 @@ def test_a_study_experiment_registers_like_any_other_matrix(tmp_path, config, ca
             "generation": config["generation"],
             "seeds": [230923],
         },
-        catalog_loader=lambda catalog_id, **kwargs: catalogs["new_pool"],
+        catalog_loader=lambda **kwargs: catalogs["new_pool"],
     )
 
     directory, checkpoint = register_experiment(
@@ -1228,7 +1046,6 @@ def test_the_study_command_refuses_before_touching_the_gpu(
         lambda *args, **kwargs: pytest.fail("the evaluator was opened before refusing"),
     )
     arguments = {
-        "study_kind": "encoder",
         "resume": True,
         "cancel": controller.threading.Event(),
         "deadline": controller.time.monotonic() + 10,
@@ -1259,7 +1076,7 @@ def test_the_study_command_refuses_before_touching_the_gpu(
 
 
 def test_the_study_command_generates_once_and_indexes_every_image(
-    tmp_path, monkeypatch, catalog_v1
+    tmp_path, monkeypatch, disk_catalog
 ):
     from PIL import Image
 
@@ -1267,9 +1084,8 @@ def test_the_study_command_generates_once_and_indexes_every_image(
     config = _config(
         tmp_path, "encoder", minimum={"pilot_minimum": 2, "main_minimum": 2}
     )
-    config["study"]["catalog_id"] = "catalog-v1"
     directory = Path(config["study"]["study_dir"])
-    catalogs = {"new_pool": catalog_v1}
+    catalogs = {"new_pool": disk_catalog}
     manifest, _ = write_study(
         directory, config, participants_for(config, catalogs, 2), catalogs
     )
@@ -1279,7 +1095,6 @@ def test_the_study_command_generates_once_and_indexes_every_image(
         value = real(path, phase, **kwargs)
         if phase == "study":
             value["study"]["study_dir"] = str(directory)
-            value["study"]["catalog_id"] = "catalog-v1"
         return value
 
     monkeypatch.setattr(controller, "load_evaluation_config", loader)
@@ -1333,7 +1148,6 @@ def test_the_study_command_generates_once_and_indexes_every_image(
     events = []
     index = controller.run_study(
         str(CONFIG_PATH),
-        study_kind="encoder",
         resume=False,
         cancel=controller.threading.Event(),
         deadline=controller.time.monotonic() + 30,

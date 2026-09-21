@@ -7,7 +7,6 @@ REPO = ROOT.parent
 CONFIG = json.loads((ROOT / "configs/demo.json").read_text())
 FAN_POLICIES = json.loads((ROOT / "configs/fan-policies.json").read_text())
 ASSETS = ROOT / "assets"
-CARDS_REVIEW = ROOT / "configs/cards-review.json"
 OUTPUTS = Path(os.environ.get("EXHIBIT_OUTPUTS", str(ROOT / "outputs"))).resolve()
 # The FAN encoder needs its own environment; the pinned path lives with the contract.
 GPU_PYTHON = os.environ.get("EXHIBIT_GPU_PYTHON", str(REPO / CONFIG["fan"]["python"]))

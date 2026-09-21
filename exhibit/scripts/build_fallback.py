@@ -48,10 +48,9 @@ def main():
         for sample in (read_json(ASSETS / "samples.json", []) or [])
         if not sample_errors(sample, ASSETS)
     ]
-    manifest = read_json(ASSETS / "manifest.json", {}) or {}
-    images = manifest.get("images", {})
-    # The configured catalog decides which reviewed cards exist at all.
-    catalog = load_catalog(CONFIG["catalog_id"], reviewed_only=True)
+    topic_images = (read_json(ASSETS / "manifest.json", {}) or {}).get("images", {})
+    card_images = (read_json(ASSETS / "catalog-v2.json", {}) or {}).get("images", {})
+    catalog = load_catalog(reviewed_only=True)
     limits = CONFIG["selection"]
     policy = legacy_policy()
     parts = [
@@ -80,7 +79,7 @@ def main():
             f"profiling {html.escape(policy['profiling']['mode'])}）です。</p>"
         )
     ]
-    prepared = [card for card in catalog["cards"] if card["id"] in images]
+    prepared = [card for card in catalog["cards"] if card["id"] in card_images]
     if prepared:
         parts.append(
             f"<h2>選べるカード（確認済み {len(prepared)}枚 / "
@@ -90,7 +89,9 @@ def main():
         for card in prepared:
             parts.append(
                 figure(
-                    ASSETS / images[card["id"]]["path"], card["label"], card["label"]
+                    ASSETS / card_images[card["id"]]["path"],
+                    card["label"],
+                    card["label"],
                 )
             )
         parts.append("</div>")
@@ -108,13 +109,14 @@ def main():
         parts.append(
             f"<h2>{html.escape(sample.get('label', sample['id']))}</h2>"
             f"<p>お題：{html.escape(topic['label'])} / "
-            f"policy {html.escape(LEGACY_POLICY_ID)} / "
-            f"alpha {sample['personalization']['alpha']} / 参照 {len(refs)}件</p>"
+            f"policy {html.escape(sample['personalization']['policy_id'])} / "
+            f"alpha {sample['personalization']['effective_policy']['alpha']} / "
+            f"参照 {len(refs)}件</p>"
         )
         for label, entries in [
             (
                 "参照なしの通常生成",
-                [images.get(f"{sample['topic_id']}-{i}") for i in range(4)],
+                [topic_images.get(f"{sample['topic_id']}-{i}") for i in range(4)],
             ),
             ("参照ありの個人化生成", sample["images"]),
         ]:

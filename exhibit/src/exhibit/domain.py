@@ -6,7 +6,7 @@ import hashlib
 import json
 import math
 
-from .config import CARDS_REVIEW, CONFIG, FAN_POLICIES, read_json
+from .config import CONFIG, FAN_POLICIES
 from .fan_adapter import (
     freeze_policy,
     profiling_argument,
@@ -39,86 +39,6 @@ def compose_prompt(basic_prompt_en, phrases, generation):
     return ", ".join(normalized) + "."
 
 
-def build_cards(config=CONFIG):
-    """4 subjects x 4 expression profiles. The subject never enters a reference."""
-    cards = []
-    for subject in config["card_subjects"]:
-        for profile in config["card_profiles"]:
-            aspects = {key: profile["aspects"][key] for key in ASPECTS}
-            card_id = f"{subject['id']}-{profile['id']}"
-            cards.append(
-                {
-                    "id": card_id,
-                    "subject_id": subject["id"],
-                    "profile_id": profile["id"],
-                    "subject_label": subject["label"],
-                    "profile_label": profile["label"],
-                    "label": f"{subject['label']} · {profile['label']}",
-                    "aspects": aspects,
-                    "aspects_ja": {key: profile["aspects_ja"][key] for key in ASPECTS},
-                    "ref_en": ", ".join(aspects.values()),
-                    "prompt": compose_prompt(
-                        subject["basic_prompt_en"],
-                        list(aspects.values()),
-                        config["generation"],
-                    ),
-                    "seed": subject["seed"],
-                    "path": f"cards/{card_id}.png",
-                }
-            )
-    return cards
-
-
-CARDS = {card["id"]: card for card in build_cards()}
-
-
-def reviewed_ids(path=CARDS_REVIEW):
-    review = read_json(path, {}) or {}
-    return {
-        card_id
-        for card_id in CARDS
-        if isinstance(review.get(card_id), dict) and review[card_id].get("reviewed")
-    }
-
-
-def ref_text(card, aspects_off=()):
-    """The visitor may drop aspects; the dropped phrases leave the reference."""
-    off = set(aspects_off or ())
-    if off - set(ASPECTS):
-        raise ValueError("Unknown aspect")
-    text = ", ".join(
-        phrase for key, phrase in card["aspects"].items() if key not in off
-    )
-    if not text:
-        raise ValueError("説明文がすべて外されています。1つ以上残してください。")
-    return text
-
-
-# The v1 flow kept its own limits; the multi-round config never widens them.
-LEGACY_SELECTION = {"min": 3, "max": 5}
-
-
-def normalize_selection(entries, config=CONFIG, *, limits=None):
-    """`[{card_id, aspects_off}]`, order preserved, validated against the catalog."""
-    entries = list(entries or [])
-    limits = limits or LEGACY_SELECTION
-    if not limits["min"] <= len(entries) <= limits["max"]:
-        raise ValueError(f"{limits['min']}〜{limits['max']}枚を選んでください。")
-    selection = []
-    for entry in entries:
-        card_id = entry.get("card_id")
-        if card_id not in CARDS:
-            raise ValueError("Unknown card")
-        if any(x["card_id"] == card_id for x in selection):
-            raise ValueError("Duplicate card")
-        aspects_off = [a for a in ASPECTS if a in set(entry.get("aspects_off") or ())]
-        if set(entry.get("aspects_off") or ()) - set(ASPECTS):
-            raise ValueError("Unknown aspect")
-        ref_text(CARDS[card_id], aspects_off)
-        selection.append({"card_id": card_id, "aspects_off": aspects_off})
-    return selection
-
-
 # Everything that changes the encoding and therefore the identity of a result.
 # The values themselves live only in configs/fan-policies.json.
 FAN_SETTINGS = ("skip", "sample_size", "skip_pa", "use_attn_mask")
@@ -126,93 +46,8 @@ LEGACY_POLICY_ID = "legacy_exhibit"
 
 
 def legacy_policy(policies=FAN_POLICIES):
-    """The registered policy the v1 assets and samples were generated with."""
+    """The registered policy the current assets and samples were generated with."""
     return thaw_policy(resolve_policy(LEGACY_POLICY_ID, policies))
-
-
-def fan_settings(policy=None):
-    """The v1 encoder block, derived from the policy that now owns these values."""
-    policy = policy or legacy_policy()
-    return {
-        "skip": policy["skip"],
-        "sample_size": profiling_argument(policy),
-        "skip_pa": list(policy["skip_pa"]),
-        "use_attn_mask": policy["use_attn_mask"],
-    }
-
-
-def legacy_fan_manifest_block(config=CONFIG, policy=None):
-    """The v1 asset manifest's `fan` block: the pinned sources plus the settings."""
-    return {**config["fan"], **fan_settings(policy)}
-
-
-def personalization_hash(refs, alpha, *, commit, generation, seeds, fan=None):
-    """The stable legacy cache identity used by current assets."""
-    return digest(
-        {
-            "refs": refs,
-            "alpha": alpha,
-            "commit": commit,
-            "fan": fan or {},
-            "generation": generation,
-            "seeds": seeds,
-        }
-    )
-
-
-def legacy_snapshot_from_selection(selection, config=CONFIG):
-    """Explicit v1 list conversion; the new public builder never accepts lists."""
-    from .catalog import load_catalog
-
-    return {
-        "revision": 0,
-        "catalog_id": "catalog-v1",
-        "catalog_hash": load_catalog("catalog-v1", reviewed_only=False)["catalog_hash"],
-        "selection": [
-            {
-                "card_id": entry["card_id"],
-                "strength": 1,
-                "aspects": [a for a in ASPECTS if a not in entry["aspects_off"]],
-            }
-            for entry in normalize_selection(selection, config)
-        ],
-        "aspect_gains": {aspect: 1 for aspect in ASPECTS},
-    }
-
-
-def build_legacy_personalization(selection, config=CONFIG, *, policy=None):
-    """The byte-compatible builder retained until the service is migrated."""
-    policy = policy or legacy_policy()
-    settings = fan_settings(policy)
-    alpha, merged = policy["alpha"], {}
-    for entry in selection:
-        card = CARDS[entry["card_id"]]
-        for aspect in ASPECTS:
-            if aspect in set(entry["aspects_off"]):
-                continue
-            phrase = card["aspects"][aspect]
-            item = merged.setdefault(
-                phrase,
-                {"text": phrase, "weight": 0.0, "aspect": aspect, "card_ids": []},
-            )
-            item["weight"] += 1.0
-            item["card_ids"].append(card["id"])
-    refs = list(merged.values())
-    if not refs:
-        raise ValueError("参照を1つ以上残してください。")
-    return {
-        "refs": refs,
-        "alpha": alpha,
-        "sample_size": settings["sample_size"],
-        "hash": personalization_hash(
-            refs,
-            alpha,
-            commit=config["fan"]["commit"],
-            generation=config["generation"],
-            seeds=config["seeds"],
-            fan=settings,
-        ),
-    }
 
 
 def _normal_text(value):
@@ -284,7 +119,7 @@ def _snapshot(snapshot, catalog=None):
     if catalog is None:
         from .catalog import load_catalog
 
-        catalog = load_catalog(snapshot["catalog_id"], reviewed_only=True)
+        catalog = load_catalog(reviewed_only=True)
     if (
         snapshot["catalog_id"] != catalog["catalog_id"]
         or snapshot["catalog_hash"] != catalog["catalog_hash"]
@@ -360,7 +195,7 @@ def _refs(snapshot, policy, catalog=None):
     if catalog is None:
         from .catalog import load_catalog
 
-        catalog = load_catalog(snapshot["catalog_id"], reviewed_only=True)
+        catalog = load_catalog(reviewed_only=True)
     cards = {card["id"]: card for card in catalog["cards"]}
     gains, unit, merged = snapshot["aspect_gains"], policy["reference_unit"], {}
     if unit == "card_description" and any(gain != 1 for gain in gains.values()):
@@ -418,11 +253,7 @@ def build_personalization(snapshot, *, prompt, policy, provenance, catalog=None)
     from .catalog import load_catalog
 
     # The caller may pass the server-owned catalog it already validated.
-    resolved_catalog = (
-        load_catalog(snapshot["catalog_id"], reviewed_only=True)
-        if catalog is None
-        else catalog
-    )
+    resolved_catalog = load_catalog(reviewed_only=True) if catalog is None else catalog
     snapshot, effective, source = (
         _snapshot(snapshot, resolved_catalog),
         freeze_policy(policy),

@@ -1366,10 +1366,10 @@ def _v2_cards():
 def _loader_for(reviewed_ids):
     cards = _v2_cards()
 
-    def loader(catalog_id, *, reviewed_only):
-        assert (catalog_id, reviewed_only) == ("catalog-v2", True)
+    def loader(*, reviewed_only):
+        assert reviewed_only is True
         return {
-            "catalog_id": catalog_id,
+            "catalog_id": "catalog-v2",
             "catalog_hash": "catalog-content-hash",
             "cards": [copy.deepcopy(c) for c in cards if c["id"] in reviewed_ids],
             "all_cards": copy.deepcopy(cards),

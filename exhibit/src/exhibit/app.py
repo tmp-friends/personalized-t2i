@@ -180,7 +180,7 @@ def config():
                 "preview_url": "/assets/" + s["images"][0]["path"],
             }
             for s in samples
-            if not sample_errors(s, ASSETS)
+            if not sample_errors(s, ASSETS, catalog=catalog)
         ],
         "ready": len(catalog["cards"]) >= CONFIG["selection"]["min"]
         and manifest.get("generation") == CONFIG["generation"],

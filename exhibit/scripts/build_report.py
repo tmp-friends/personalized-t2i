@@ -20,7 +20,7 @@ from datetime import datetime
 from pathlib import Path
 from zoneinfo import ZoneInfo
 
-from exhibit.catalog import load_catalog
+from exhibit.catalog import CATALOG_ID, load_catalog
 from exhibit.config import (
     ASSETS,
     CONFIG,
@@ -30,13 +30,8 @@ from exhibit.config import (
     read_json,
     write_json,
 )
-from exhibit.domain import (
-    LEGACY_POLICY_ID,
-    build_legacy_personalization,
-    digest,
-    file_hash,
-    legacy_policy,
-)
+from exhibit.domain import LEGACY_POLICY_ID, digest, legacy_policy
+from exhibit.preflight import sample_errors
 from PIL import Image
 
 REPORT = REPO / "docs/reports/fan-personalization"
@@ -167,47 +162,33 @@ def preflight_block():
     )
 
 
-def legacy_invariant_block():
-    """The v1 samples must still rebuild to the hash stored beside their images."""
+def sample_invariant_block():
+    """Every shipped sample must still rebuild the hash stored beside its images."""
     samples = read_json(ASSETS / "samples.json", None)
     if not isinstance(samples, list) or not samples:
         return block(
             NOT_RUN, reasons=["samples_missing"], source=ASSETS / "samples.json"
         )
-    mismatched, rebuilt = [], {}
+    try:
+        catalog = load_catalog(reviewed_only=True)
+    except (OSError, TypeError, ValueError) as error:
+        return block(
+            FAILED,
+            reasons=[f"catalog_unreadable:{error}"],
+            source=ASSETS / "samples.json",
+        )
+    reasons, hashes = [], {}
     for sample in samples:
         sample_id = sample.get("id") if isinstance(sample, dict) else None
-        try:
-            value = build_legacy_personalization(sample["selection"])["hash"]
-        except (KeyError, TypeError, ValueError) as error:
-            mismatched.append(f"{sample_id}:{type(error).__name__}")
-            continue
-        rebuilt[sample_id] = value
-        if value != (sample.get("personalization") or {}).get("hash"):
-            mismatched.append(f"{sample_id}:hash_changed")
-    baseline = read_json(OUTPUTS / "preparation/legacy-baseline/baseline.json", None)
-    frozen = []
-    if isinstance(baseline, dict):
-        # The frozen v1 assets must be untouched; demo.json itself moved on purpose.
-        for path, expected in sorted((baseline.get("images") or {}).items()):
-            target = REPO / path
-            if not target.is_file() or file_hash(target) != expected:
-                frozen.append(path)
-        for path, expected in sorted((baseline.get("files") or {}).items()):
-            if path.startswith("exhibit/configs/"):
-                continue
-            target = REPO / path
-            if not target.is_file() or file_hash(target) != expected:
-                frozen.append(path)
+        reasons.extend(sample_errors(sample, ASSETS, catalog=catalog))
+        if isinstance(sample, dict):
+            hashes[sample_id] = (sample.get("personalization") or {}).get("hash")
     detail = {
         "samples": len(samples),
-        "sample_hashes": rebuilt,
+        "sample_hashes": hashes,
         "policy_id": LEGACY_POLICY_ID,
         "effective_policy": legacy_policy(),
-        "frozen_assets_checked": bool(baseline),
-        "frozen_assets_changed": frozen,
     }
-    reasons = mismatched + [f"changed:{path}" for path in frozen]
     return block(
         PASSED if not reasons else FAILED,
         reasons=reasons,
@@ -368,7 +349,7 @@ def catalog_v2_block():
     )
     total, eligible = None, None
     try:
-        catalog = load_catalog("catalog-v2", reviewed_only=True)
+        catalog = load_catalog(reviewed_only=True)
         total = len(catalog["all_cards"])
         eligible = len(catalog["cards"])
     except (OSError, TypeError, ValueError) as error:
@@ -576,7 +557,7 @@ def collect(report_dir):
     implementation = {
         "自動テスト": tests_block(),
         "Preflight（資産・モデル）": preflight_block(),
-        "v1資産と個人化ハッシュの不変": legacy_invariant_block(),
+        "サンプルと個人化ハッシュの不変": sample_invariant_block(),
     }
     verification = {
         "encoding 数値検査": encoding_block(),
@@ -602,10 +583,7 @@ def collect(report_dir):
         "effective_default_policy": legacy_policy()
         if policy_id == LEGACY_POLICY_ID
         else None,
-        "catalog_id": CONFIG["catalog_id"],
-        "sample_manifest_catalog_id": (CONFIG.get("sample_manifest") or {}).get(
-            "catalog_id"
-        ),
+        "catalog_id": CATALOG_ID,
         "selection": CONFIG["selection"],
         "seeds": CONFIG["seeds"],
         "timeout_seconds": CONFIG["timeout_seconds"],
@@ -714,16 +692,13 @@ def figures(items):
 
 
 def gallery():
-    """Only images that exist: reviewed v1 cards, generic shots, v1 samples."""
+    """Only images that exist: catalog cards, generic shots, samples."""
     parts = {}
     try:
-        catalog = load_catalog(CONFIG["catalog_id"], reviewed_only=False)
+        catalog = load_catalog(reviewed_only=False)
+        reviewed = {card["id"] for card in load_catalog(reviewed_only=True)["cards"]}
     except (OSError, TypeError, ValueError):
-        catalog = {"cards": [], "all_cards": []}
-    reviewed = {
-        card["id"]
-        for card in load_catalog(CONFIG["catalog_id"], reviewed_only=True)["cards"]
-    }
+        catalog, reviewed = {"cards": [], "all_cards": []}, set()
     cards = []
     for card in catalog["all_cards"]:
         src = thumb(ASSETS / card["path"], size=150)
@@ -756,18 +731,6 @@ def gallery():
                 f"<figcaption>{E(sample['id'])}</figcaption></figure>"
             )
     parts["samples"] = samples
-    v2 = []
-    catalog_v2 = read_json(ASSETS / "catalog-v2.json", None)
-    for key, image in sorted(((catalog_v2 or {}).get("images") or {}).items()):
-        if not key.startswith("girl-"):
-            continue
-        src = thumb(ASSETS / image["path"], size=150)
-        if src:
-            v2.append(
-                f'<figure><img alt="{E(key)}" loading="lazy" src="{src}">'
-                f"<figcaption>{E(key)} · 未確認</figcaption></figure>"
-            )
-    parts["catalog_v2"] = v2
     return parts
 
 
@@ -852,8 +815,9 @@ inputs {E(evidence["inputs_hash"][:16])}</div></header>
 <h2>現在の設定</h2>
 <p>エンコーダー設定の正は <code>exhibit/configs/fan-policies.json</code> の一箇所です。
 <code>configs/demo.json</code> にはパス・pin・decoder hash だけが残り、alpha や skip_pa は
-持ちません。評価が揃うまで既定 policy は <code>legacy_exhibit</code>、展示の catalog は
-<code>catalog-v1</code> のままです。</p>
+持ちません。評価が揃うまで既定 policy は <code>legacy_exhibit</code> のままです。展示の
+catalog は所有者判断（2026-09-22）で <code>catalog-v2</code> に切り替え、
+<code>catalog-v1</code> は互換を残さず削除しました。</p>
 <div class="scroll"><table><thead><tr><th>項目</th><th>値</th></tr></thead>
 <tbody>{config_rows}</tbody></table></div>
 {section_html("実装完了", sections["実装完了"], "設計 §11 A。コードと資産の整合が取れているか。")}
@@ -861,14 +825,12 @@ inputs {E(evidence["inputs_hash"][:16])}</div></header>
 {catalog_v2_html(sections["実機検証"]["blocks"]["catalog v2 の確認"])}
 {section_html("精度実証", sections["精度実証"], "設計 §11 C。事前に固定した基準と本人の回答で、改善を示せたか。")}
 <h2>固定資産</h2>
-<h3>カード（{E(CONFIG["catalog_id"])}）</h3>
+<h3>カード（{E(CATALOG_ID)}）</h3>
 {figures(parts["cards"])}
 <h3>お題ごとの通常生成（seed {E(str(CONFIG["seeds"][0]))}）</h3>
 {figures(parts["generic"])}
-<h3>代表サンプル（v1の選択から事前生成）</h3>
+<h3>代表サンプル（確認済みカードの選択から事前生成）</h3>
 {figures(parts["samples"])}
-<h3>catalog v2 の生成画像（girl のみ抜粋・すべて未確認）</h3>
-{figures(parts["catalog_v2"])}
 <h2>説明で守っていること</h2>
 <div class="panel"><ul>{statements}</ul></div>
 <h2>再開コマンド</h2>
@@ -921,10 +883,7 @@ def readme(evidence):
             f"- 既定 policy: `{configuration['default_policy_id']}`"
             "（評価が揃うまで変更しない）"
         ),
-        (
-            f"- 展示の catalog: `{configuration['catalog_id']}`"
-            f"（サンプルの catalog: `{configuration['sample_manifest_catalog_id']}`）"
-        ),
+        f"- 展示の catalog: `{configuration['catalog_id']}`",
         (
             "- エンコーダー設定の正: `exhibit/configs/fan-policies.json`。"
             "`configs/demo.json` はパス・pin・decoder hash のみ。"
@@ -971,11 +930,7 @@ def main(argv=None):
     report_dir = args.report_dir
     report_dir.mkdir(parents=True, exist_ok=True)
     evidence = collect(report_dir)
-    parts = (
-        {"cards": [], "generic": [], "samples": [], "catalog_v2": []}
-        if args.no_images
-        else gallery()
-    )
+    parts = {"cards": [], "generic": [], "samples": []} if args.no_images else gallery()
     write_json(report_dir / "evidence.json", evidence)
     (report_dir / "index.html").write_text(render(evidence, parts))
     (report_dir / "README.md").write_text(readme(evidence))

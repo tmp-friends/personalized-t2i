@@ -6,43 +6,24 @@ import json
 from pathlib import Path
 
 from exhibit.catalog import (
-    LEGACY_OVERFLOW_IDS,
+    CATALOG_ID,
     build_catalog,
     card_settings,
-    load_catalog,
     prompt_set_hash,
     validate_card_tokens,
     validate_negative_tokens,
 )
 from exhibit.config import CONFIG, ROOT, read_json
-from exhibit.domain import file_hash
 from exhibit.evaluation import runtime_tokenizer_provenance
 
 
-def build_token_report(
-    catalog_id, cards, tokenizers, provenance, legacy_path, generation=None
-):
+def build_token_report(cards, tokenizers, provenance, generation=None):
     """Create an auditable report bound to prompts, special tokens, and files."""
-    generation = generation if generation is not None else card_settings(catalog_id)
+    generation = generation if generation is not None else card_settings()
     rows = validate_card_tokens(cards, tokenizers)
-    legacy_path = Path(legacy_path)
-    try:
-        legacy = json.loads(legacy_path.read_text())
-        overflow_sets = [
-            [item["id"] for item in tokenizer["over_limit"]] for tokenizer in legacy
-        ]
-    except (OSError, ValueError, KeyError, TypeError) as exc:
-        raise ValueError("Legacy overflow evidence is invalid") from exc
-    expected = list(LEGACY_OVERFLOW_IDS)
-    if not overflow_sets or any(items != expected for items in overflow_sets):
-        raise ValueError("Legacy overflow evidence changed")
-    try:
-        relative = legacy_path.resolve().relative_to(ROOT.resolve())
-    except ValueError:
-        relative = legacy_path
     return {
-        "schema_version": 2,
-        "catalog_id": catalog_id,
+        "schema_version": 3,
+        "catalog_id": CATALOG_ID,
         "generation": generation,
         "prompt_set_hash": prompt_set_hash(cards),
         "tokenizers": provenance,
@@ -51,17 +32,11 @@ def build_token_report(
         "negative_validation": validate_negative_tokens(
             generation["negative_prompt"], tokenizers
         ),
-        "legacy_overflow_evidence": {
-            "path": str(relative),
-            "sha256": file_hash(legacy_path),
-            "over_limit_ids": expected,
-        },
     }
 
 
 def main(argv=None):
     parser = argparse.ArgumentParser()
-    parser.add_argument("--catalog", choices=("v1", "v2"), default="v2")
     parser.add_argument("--output", type=Path)
     args = parser.parse_args(argv)
 
@@ -77,21 +52,14 @@ def main(argv=None):
         )
         for name in ("tokenizer", "tokenizer_2")
     }
-    catalog_id = "catalog-" + args.catalog
-    if catalog_id == "catalog-v2":
-        # This gate runs before generation, so it never reads the assets it gates.
-        definition = read_json(ROOT / "configs/catalog-v2.json")
-        cards = build_catalog(definition)
-        generation = card_settings(catalog_id, definition)
-    else:
-        cards = load_catalog(catalog_id, reviewed_only=False)["all_cards"]
-        generation = card_settings(catalog_id)
+    # This gate runs before generation, so it never reads the assets it gates.
+    definition = read_json(ROOT / "configs/catalog-v2.json")
+    cards = build_catalog(definition)
+    generation = card_settings(definition)
     report = build_token_report(
-        catalog_id,
         cards,
         tokenizers,
         runtime_tokenizer_provenance(CONFIG["generation"]),
-        ROOT / "configs/legacy-card-token-overflow.json",
         generation,
     )
     text = json.dumps(report, ensure_ascii=False, indent=2, allow_nan=False) + "\n"
