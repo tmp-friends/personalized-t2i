@@ -111,3 +111,168 @@ def resolve_policy(policy_id, policies):
         raise ValueError("Unknown policy")
     policy = thaw_policy(registered[policy_id])
     return freeze_policy(policy)
+
+
+TRACE_PHASES = ("clip_l_hidden", "clip_g_hidden", "clip_g_pool")
+
+
+def _trace_indices(value):
+    if value is None:
+        return None
+    for method in ("detach", "cpu"):
+        operation = getattr(value, method, None)
+        if operation is not None:
+            value = operation()
+    if hasattr(value, "tolist"):
+        value = value.tolist()
+    if (
+        isinstance(value, (list, tuple))
+        and len(value) == 1
+        and isinstance(value[0], (list, tuple))
+    ):
+        value = value[0]
+    if not isinstance(value, (list, tuple)):
+        raise TypeError("sample_reference indices must be a sequence or None")
+    return [int(index) for index in value]
+
+
+def _trace_call(phase, refs, indices, called):
+    source = copy.deepcopy(refs)
+    return {
+        "phase": phase,
+        "input_refs": source,
+        "selected_indices": indices,
+        "selected_refs": (
+            source
+            if indices is None
+            else [copy.deepcopy(source[index]) for index in indices]
+        ),
+        "sample_reference_called": called,
+    }
+
+
+def _validated_refs(refs):
+    values = []
+    for ref in refs:
+        if not isinstance(ref, Mapping):
+            raise TypeError("each reference must be an object")
+        text = ref.get("text")
+        weight = ref.get("weight")
+        if not isinstance(text, str) or not text.strip():
+            raise ValueError("reference text must be non-empty")
+        if not _finite_number(weight) or weight <= 0:
+            raise ValueError("reference weight must be finite and positive")
+        values.append(copy.deepcopy(dict(ref)))
+    return values
+
+
+def _share_big_g_pool_call(calls):
+    shared = copy.deepcopy(calls[1])
+    shared["phase"] = "clip_g_pool"
+    shared["sample_reference_called"] = False
+    shared["shared_selection_with"] = "clip_g_hidden"
+    calls.append(shared)
+
+
+def _encode_once(encoder, prompt, refs, effective, collect_trace):
+    import torch
+
+    ref_values = copy.deepcopy(refs) if refs else None
+    texts = [ref["text"] for ref in ref_values] if ref_values else None
+    weights = [float(ref["weight"]) for ref in ref_values] if ref_values else None
+    sample_size = profiling_argument(effective)
+    calls = []
+    fan_model = getattr(encoder, "_fan_model_module", None)
+    original = None
+
+    if collect_trace and ref_values and sample_size:
+        if fan_model is None:
+            import importlib
+
+            fan_model = importlib.import_module("fan.model")
+        original = fan_model.sample_reference
+
+        # Return the official tensor rather than rebuilding it. Recording is kept
+        # separate so reference selection remains entirely upstream-owned.
+        def recording_sample_reference(*args, **kwargs):
+            selected = original(*args, **kwargs)
+            indices = _trace_indices(selected)
+            position = len(calls)
+            phase = (
+                TRACE_PHASES[position]
+                if position < len(TRACE_PHASES)
+                else f"unexpected_{position}"
+            )
+            calls.append(_trace_call(phase, ref_values, indices, True))
+            return selected
+
+        fan_model.sample_reference = recording_sample_reference
+
+    try:
+        with torch.no_grad():
+            hidden, pooled = encoder(
+                prompt,
+                texts,
+                weight=weights,
+                alpha=effective["alpha"] if ref_values else None,
+                skip=effective["skip"],
+                sample_size=sample_size,
+                skip_pa=list(effective["skip_pa"]),
+                use_attn_mask=effective["use_attn_mask"],
+            )
+    finally:
+        if original is not None:
+            fan_model.sample_reference = original
+
+    if collect_trace and ref_values:
+        if not sample_size:
+            calls = [
+                _trace_call(phase, ref_values, None, False) for phase in TRACE_PHASES
+            ]
+            if effective["skip"] == -1:
+                calls.pop()
+                _share_big_g_pool_call(calls)
+        elif effective["skip"] == -1 and len(calls) == 2:
+            _share_big_g_pool_call(calls)
+        elif len(calls) != len(TRACE_PHASES):
+            raise RuntimeError(
+                "Expected official sample_reference calls for every SDXL phase, "
+                f"got {len(calls)}"
+            )
+    return hidden.to(torch.float16), pooled.to(torch.float16), calls
+
+
+def encode_conditioning(encoder, prompt, refs, policy, *, collect_trace=False):
+    """Encode one SDXL prompt using a validated FAN policy.
+
+    Reference selection stays inside the pinned FAN implementation. The adapter
+    only records the official selections and chooses whether the generator sees
+    FAN's pooled embedding or a reference-free pooled embedding.
+    """
+    if not isinstance(prompt, str) or not prompt:
+        raise ValueError("prompt is required")
+    if refs is not None and not isinstance(refs, (list, tuple)):
+        raise TypeError("refs must be a list or None")
+    effective = freeze_policy(policy)
+    effective_value = thaw_policy(effective)
+    ref_values = _validated_refs(refs) if refs else None
+
+    hidden, fan_pooled, calls = _encode_once(
+        encoder, prompt, ref_values, effective, collect_trace
+    )
+    pooled = fan_pooled
+    pooled_source = "fan" if ref_values else "plain"
+    if ref_values and effective["pooled_mode"] == "plain":
+        _, pooled, _ = _encode_once(encoder, prompt, None, effective, False)
+        pooled_source = "plain"
+
+    return {
+        "hidden": hidden,
+        "pooled": pooled,
+        "trace": {
+            "calls": calls,
+            "pooled_source": pooled_source,
+            "profiling": copy.deepcopy(effective_value["profiling"]),
+        },
+        "effective_policy": effective_value,
+    }

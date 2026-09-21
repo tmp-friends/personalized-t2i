@@ -6,8 +6,15 @@ import sys
 import time
 from pathlib import Path
 
-from .config import CONFIG, FAN_UPSTREAM
-from .domain import fan_settings, file_hash
+from .config import CONFIG, FAN_POLICIES, FAN_UPSTREAM, write_json
+from .domain import digest, file_hash
+from .fan_adapter import (
+    encode_conditioning,
+    freeze_policy,
+    profiling_argument,
+    resolve_policy,
+    thaw_policy,
+)
 
 
 def emit(kind, **data):
@@ -82,57 +89,100 @@ def build_encoder(pipe, upstream=None):
     ``fan.wrapper.personalized_t2i_encoder`` dispatches on ``pipeline.name_or_path``,
     which ``from_single_file`` leaves empty, so the SDXL branch is wired by hand.
     """
+    import importlib
+
     from fan import FAN
     from fan.wrapper import stable_diffusion_xl
 
     weights = Path(upstream or FAN_UPSTREAM) / "weight"
     large = FAN(pipe.text_encoder, pipe.tokenizer, decoder=str(weights / "L.pth"))
     bigG = FAN(pipe.text_encoder_2, pipe.tokenizer_2, decoder=str(weights / "bigG.pth"))
-    return stable_diffusion_xl(large, bigG)
+    encoder = stable_diffusion_xl(large, bigG)
+    encoder._fan_components = {"clip_l": large, "clip_g": bigG}
+    encoder._fan_model_module = importlib.import_module("fan.model")
+    return encoder
 
 
-# Tuning knobs the measured FAN call accepts straight from configs/demo.json.
-PASSTHROUGH = ("use_attn_mask", "skip_pa")
-
-
-def fan_block(fan=None):
-    """The exact encoding settings behind every emitted image."""
+def fan_block(fan=None, policy=None):
+    """The exact encoding settings behind an emitted image."""
     fan = fan or CONFIG["fan"]
-    return {"commit": fan["commit"], "pooled": "plain", **fan_settings({"fan": fan})}
+    if policy is None:
+        return {"commit": fan["commit"]}
+    return {
+        "commit": fan["commit"],
+        "pooled": policy["pooled_mode"],
+        "skip": policy["skip"],
+        "sample_size": profiling_argument(policy),
+        "skip_pa": list(policy["skip_pa"]),
+        "use_attn_mask": policy["use_attn_mask"],
+    }
 
 
-def encode(encoder, prompt, personalization=None, fan=None):
-    """The single adaptation point for the measured FAN call: nothing else casts."""
-    import torch
+def effective_policy(personalization=None, fan=None):
+    """Resolve a JSON policy, including the temporary legacy service payload."""
+    if personalization and personalization.get("effective_policy") is not None:
+        return thaw_policy(freeze_policy(personalization["effective_policy"]))
+    policy = thaw_policy(resolve_policy("legacy_exhibit", FAN_POLICIES))
+    if not personalization:
+        return policy
 
     fan = fan or CONFIG["fan"]
-    refs = weights = None
-    alpha = None
-    if personalization:
-        refs = [ref["text"] for ref in personalization["refs"]]
-        weights = [float(ref["weight"]) for ref in personalization["refs"]]
-        alpha = personalization["alpha"]
-    with torch.no_grad():
-        cond, pooled = encoder(
-            prompt,
-            refs,
-            weight=weights,
-            alpha=alpha,
-            skip=fan["skip"],
-            sample_size=fan["sample_size"],
-            **{key: fan[key] for key in PASSTHROUGH if key in fan},
-        )
-    return cond.to(torch.float16), pooled.to(torch.float16)
+    sample_size = personalization.get("sample_size", fan.get("sample_size", 0))
+    if sample_size == 0:
+        profiling = {"mode": "all"}
+    elif type(sample_size) is int:
+        profiling = {"mode": "count", "value": sample_size}
+    else:
+        profiling = {"mode": "ratio", "value": sample_size}
+    legacy = {
+        **policy,
+        "alpha": personalization.get("alpha", policy["alpha"]),
+        "skip": fan.get("skip", policy["skip"]),
+        "skip_pa": fan.get("skip_pa", policy["skip_pa"]),
+        "use_attn_mask": fan.get("use_attn_mask", policy["use_attn_mask"]),
+        "profiling": profiling,
+    }
+    return thaw_policy(freeze_policy(legacy))
+
+
+def effective_policy_id(personalization, policy, policy_hash):
+    """Use a truthful registry label or an explicit custom content label."""
+    supplied = personalization.get("policy_id") if personalization else None
+    registered = FAN_POLICIES.get("policies", {})
+    if supplied is not None:
+        if not isinstance(supplied, str) or not supplied:
+            raise ValueError("policy_id must be a non-empty string")
+        if supplied in registered:
+            registered_hash = digest(thaw_policy(freeze_policy(registered[supplied])))
+            if registered_hash != policy_hash:
+                raise ValueError("policy_id does not match effective_policy")
+        return supplied
+    for policy_id, candidate in registered.items():
+        candidate_hash = digest(thaw_policy(freeze_policy(candidate)))
+        if candidate_hash == policy_hash:
+            return policy_id
+    return "custom:" + policy_hash[:16]
 
 
 def generate(request):
     import torch
 
     settings = request.get("settings", CONFIG["generation"])
+    fan = request.get("fan") or CONFIG["fan"]
+    resolved_items = []
+    for item in request["items"]:
+        personalization = item.get("personalization")
+        policy = effective_policy(personalization, fan)
+        policy_hash = digest(policy)
+        supplied_hash = personalization.get("policy_hash") if personalization else None
+        if supplied_hash is not None and supplied_hash != policy_hash:
+            raise ValueError("policy_hash does not match effective_policy")
+        policy_id = effective_policy_id(personalization, policy, policy_hash)
+        resolved_items.append((item, personalization, policy, policy_hash, policy_id))
+
     started = time.monotonic()
     pipe = load_pipeline(settings)
     encoder = build_encoder(pipe, request.get("upstream"))
-    fan = request.get("fan") or CONFIG["fan"]
     emit(
         "loaded",
         scheduler={
@@ -146,27 +196,31 @@ def generate(request):
     )
     plain = {}
 
-    def plain_encode(prompt):
-        """Reference-free encoding is bit-identical to `pipe.encode_prompt`."""
-        if prompt not in plain:
-            plain[prompt] = encode(encoder, prompt, fan=fan)
-        return plain[prompt]
+    def plain_encode(prompt, policy):
+        """Reference-free prompts are cached by their complete effective policy."""
+        key = json.dumps([prompt, policy], sort_keys=True, separators=(",", ":"))
+        if key not in plain:
+            plain[key] = encode_conditioning(encoder, prompt, None, policy)
+        return plain[key]
 
-    # The negative side is never personalized: only ref/weight/alpha may differ.
-    negative_cond, negative_pooled = plain_encode(settings["negative_prompt"])
-    for item in request["items"]:
-        personalization = item.get("personalization")
+    for item, personalization, policy, policy_hash, policy_id in resolved_items:
         t = time.monotonic()
-        # Documented deviation from upstream: the personalized pooled embedding
-        # comes from a mis-detected padding token, so the plain pooled is used.
-        cond, pooled = plain_encode(item["prompt"])
+        negative = plain_encode(settings["negative_prompt"], policy)
         if personalization:
-            cond = encode(encoder, item["prompt"], personalization, fan)[0]
+            conditioning = encode_conditioning(
+                encoder,
+                item["prompt"],
+                personalization["refs"],
+                policy,
+                collect_trace=True,
+            )
+        else:
+            conditioning = plain_encode(item["prompt"], policy)
         image = pipe(
-            prompt_embeds=cond,
-            pooled_prompt_embeds=pooled,
-            negative_prompt_embeds=negative_cond,
-            negative_pooled_prompt_embeds=negative_pooled,
+            prompt_embeds=conditioning["hidden"],
+            pooled_prompt_embeds=conditioning["pooled"],
+            negative_prompt_embeds=negative["hidden"],
+            negative_pooled_prompt_embeds=negative["pooled"],
             num_inference_steps=settings["steps"],
             guidance_scale=settings["guidance_scale"],
             width=settings["width"],
@@ -178,6 +232,13 @@ def generate(request):
         temporary = path.with_suffix(".tmp.png")
         image.save(temporary)
         temporary.replace(path)
+        trace_path = path.with_suffix(".trace.json")
+        write_json(trace_path, conditioning["trace"])
+        personalization_hash = (
+            (personalization.get("personalization_hash") or personalization.get("hash"))
+            if personalization
+            else None
+        )
         emit(
             "image",
             id=item["id"],
@@ -187,9 +248,14 @@ def generate(request):
             prompt=item["prompt"],
             negative_prompt=settings["negative_prompt"],
             settings=settings,
-            fan=fan_block(fan),
-            pooled="plain",
-            personalization_hash=personalization["hash"] if personalization else None,
+            fan=fan_block(fan, policy),
+            pooled=conditioning["trace"]["pooled_source"],
+            policy_id=policy_id,
+            effective_policy=conditioning["effective_policy"],
+            policy_hash=policy_hash,
+            profiling_trace=conditioning["trace"],
+            profiling_trace_path=str(trace_path),
+            personalization_hash=personalization_hash,
             seconds=round(time.monotonic() - t, 3),
         )
 

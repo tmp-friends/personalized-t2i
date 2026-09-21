@@ -1,0 +1,616 @@
+"""GPU-side FAN diagnostics; torch and model libraries stay lazy."""
+
+from __future__ import annotations
+
+import argparse
+import copy
+import json
+import sys
+import time
+import types
+from pathlib import Path
+
+from .config import CONFIG, FAN_UPSTREAM, write_json
+from .domain import digest, file_hash
+from .fan_adapter import (
+    encode_conditioning,
+    freeze_policy,
+    profiling_argument,
+    thaw_policy,
+)
+from .workers import build_encoder, load_pipeline
+
+NO_REF_LIMITS = {"normalized_rmse": 1e-3, "mean_cosine": 0.9999}
+PERSONAL_LIMITS = {"normalized_rmse": 5e-3, "mean_cosine": 0.999}
+
+
+def emit(kind, **data):
+    print(
+        json.dumps({"type": kind, **data}, ensure_ascii=False, allow_nan=False),
+        flush=True,
+    )
+
+
+def validate_policy_specs(specs):
+    """Validate explicit effective policies and key results by their contents."""
+    if not isinstance(specs, list) or not specs:
+        raise ValueError("policies must be a non-empty list")
+    result = []
+    seen_ids = set()
+    for spec in specs:
+        if not isinstance(spec, dict):
+            raise TypeError("each policy spec must be an object")
+        policy_id = spec.get("policy_id")
+        if not isinstance(policy_id, str) or not policy_id or policy_id in seen_ids:
+            raise ValueError("policy_id must be present and unique")
+        if "effective_policy" not in spec:
+            raise ValueError("effective_policy is required")
+        effective = thaw_policy(freeze_policy(spec["effective_policy"]))
+        result.append(
+            {
+                "policy_id": policy_id,
+                "policy_hash": digest(effective),
+                "effective_policy": effective,
+            }
+        )
+        seen_ids.add(policy_id)
+    return result
+
+
+def tensor_metrics(candidate, base):
+    """Section 9.3 tensor metrics, including finite and zero-vector checks."""
+    import torch
+
+    if tuple(candidate.shape) != tuple(base.shape):
+        raise ValueError("tensor shapes differ")
+    left = candidate.detach().float()
+    right = base.detach().float()
+    left_finite_vectors = torch.isfinite(left).all(dim=-1)
+    right_finite_vectors = torch.isfinite(right).all(dim=-1)
+    finite = bool(left_finite_vectors.all() and right_finite_vectors.all())
+    left_norm = torch.linalg.vector_norm(
+        torch.where(torch.isfinite(left), left, torch.zeros_like(left)), dim=-1
+    )
+    right_norm = torch.linalg.vector_norm(
+        torch.where(torch.isfinite(right), right, torch.zeros_like(right)), dim=-1
+    )
+    result = {
+        "shape": list(candidate.shape),
+        "finite": finite,
+        "candidate_nonfinite_values": int((~torch.isfinite(left)).sum().item()),
+        "base_nonfinite_values": int((~torch.isfinite(right)).sum().item()),
+        "candidate_zero_vectors": int(
+            (left_finite_vectors & (left_norm == 0)).sum().item()
+        ),
+        "base_zero_vectors": int(
+            (right_finite_vectors & (right_norm == 0)).sum().item()
+        ),
+    }
+    if not finite:
+        result.update(
+            {
+                "max_abs_diff": None,
+                "mean_abs_diff": None,
+                "normalized_rmse": None,
+                "mean_cosine": None,
+                "min_cosine": None,
+            }
+        )
+        return result
+
+    delta = left - right
+    cosine = torch.nn.functional.cosine_similarity(left, right, dim=-1)
+    base_rms = torch.sqrt(torch.mean(right * right))
+    normalized_rmse = torch.sqrt(torch.mean(delta * delta)) / torch.clamp(
+        base_rms, min=1e-6
+    )
+    result.update(
+        {
+            "max_abs_diff": float(delta.abs().max().item()),
+            "mean_abs_diff": float(delta.abs().mean().item()),
+            "normalized_rmse": float(normalized_rmse.item()),
+            "mean_cosine": float(cosine.mean().item()),
+            "min_cosine": float(cosine.min().item()),
+        }
+    )
+    return result
+
+
+def compare_conditioning(candidate, base, limits):
+    result = {
+        "hidden": tensor_metrics(candidate["hidden"], base["hidden"]),
+        "pooled": tensor_metrics(candidate["pooled"], base["pooled"]),
+        "limits": copy.deepcopy(limits),
+    }
+    result["passed"] = all(
+        value["finite"]
+        and value["candidate_zero_vectors"] == 0
+        and value["base_zero_vectors"] == 0
+        and value["normalized_rmse"] <= limits["normalized_rmse"]
+        and value["mean_cosine"] >= limits["mean_cosine"]
+        for value in (result["hidden"], result["pooled"])
+    )
+    return result
+
+
+def _raw_official(encoder, prompt, refs, policy):
+    import torch
+
+    texts = [ref["text"] for ref in refs] if refs else None
+    weights = [float(ref["weight"]) for ref in refs] if refs else None
+    with torch.no_grad():
+        hidden, pooled = encoder(
+            prompt,
+            texts,
+            weight=weights,
+            alpha=policy["alpha"] if refs else None,
+            skip=policy["skip"],
+            sample_size=profiling_argument(policy),
+            skip_pa=list(policy["skip_pa"]),
+            use_attn_mask=policy["use_attn_mask"],
+        )
+    return {"hidden": hidden.to(torch.float16), "pooled": pooled.to(torch.float16)}
+
+
+def _pipeline_conditioning(pipe, prompt):
+    import torch
+
+    with torch.no_grad():
+        hidden, _, pooled, _ = pipe.encode_prompt(
+            prompt=prompt,
+            device="cuda",
+            num_images_per_prompt=1,
+            do_classifier_free_guidance=False,
+        )
+    return {"hidden": hidden.to(torch.float16), "pooled": pooled.to(torch.float16)}
+
+
+def _policy_variant(policy, **changes):
+    value = thaw_policy(freeze_policy(policy))
+    value.update(copy.deepcopy(changes))
+    return thaw_policy(freeze_policy(value))
+
+
+def _reference_variants(refs):
+    combined = copy.deepcopy(refs)
+    first = copy.deepcopy(combined[0])
+    half = float(first["weight"]) / 2
+    left, right = copy.deepcopy(first), copy.deepcopy(first)
+    left["weight"] = half
+    right["weight"] = half
+    duplicate = [left, right, *copy.deepcopy(combined[1:])]
+    scale = [
+        {**copy.deepcopy(ref), "weight": float(ref["weight"]) * 3} for ref in combined
+    ]
+    order = list(reversed(copy.deepcopy(combined)))
+    return {
+        "duplicate_split": duplicate,
+        "common_weight_scale": scale,
+        "reference_order": order,
+    }
+
+
+def _token_detector_report(pipe, encoder, texts):
+    import torch
+
+    rows = []
+    components = encoder._fan_components
+    sources = (
+        ("clip_l", components["clip_l"], pipe.tokenizer, pipe.text_encoder),
+        ("clip_g", components["clip_g"], pipe.tokenizer_2, pipe.text_encoder_2),
+    )
+    for encoder_name, fan, tokenizer, model in sources:
+        for label, text in texts:
+            batch = tokenizer(
+                text,
+                padding="max_length",
+                max_length=fan.n_token,
+                truncation=True,
+                return_tensors="pt",
+            )
+            ids = batch["input_ids"].to("cuda")
+            attention = batch["attention_mask"].to("cuda")
+            with torch.no_grad():
+                states = model(
+                    input_ids=ids,
+                    attention_mask=None,
+                    output_hidden_states=True,
+                ).hidden_states
+                unnormalized = states[-1]
+                normalized = fan.normalize_text_hidden_state(unnormalized)
+                eos_id = model.text_model.eos_token_id
+                if eos_id == 2:
+                    eos_index = ids.to(dtype=torch.int).argmax(dim=-1)
+                else:
+                    eos_index = (ids.to(dtype=torch.int) == eos_id).int().argmax(dim=-1)
+                rows.append(
+                    {
+                        "encoder": encoder_name,
+                        "text_id": label,
+                        "text": text,
+                        "target_length": int(attention.sum().item()),
+                        "input_eos_index": int(eos_index.item()),
+                        "detector_on_unnormalized": int(
+                            fan.decoder(unnormalized).item()
+                        ),
+                        "detector_on_normalized": int(fan.decoder(normalized).item()),
+                        "untruncated_token_count": len(
+                            tokenizer(text, truncation=False)["input_ids"]
+                        ),
+                    }
+                )
+    return rows
+
+
+def _personalized_detector_report(encoder, prompt, refs, policy):
+    """Observe the official bigG detector before/after final norm, then restore it."""
+    import torch
+
+    fan = encoder._fan_components["clip_g"]
+    tokenizer = fan.processor
+    model = fan.model
+    batch = tokenizer(
+        prompt,
+        padding="max_length",
+        max_length=fan.n_token,
+        truncation=True,
+        return_tensors="pt",
+    )
+    ids = batch["input_ids"].to("cuda")
+    attention = batch["attention_mask"].to("cuda")
+    eos_id = model.text_model.eos_token_id
+    if eos_id == 2:
+        eos_index = ids.to(dtype=torch.int).argmax(dim=-1)
+    else:
+        eos_index = (ids.to(dtype=torch.int) == eos_id).int().argmax(dim=-1)
+
+    rows = []
+    alphas = []
+    for alpha in (0.0, float(policy["alpha"])):
+        if alpha not in alphas:
+            alphas.append(alpha)
+    for alpha in alphas:
+        calls = []
+        original = fan.decoder.forward
+
+        def recording_forward(
+            self, hidden_state, training=False, _original=original, _calls=calls
+        ):
+            official = _original(hidden_state, training=training)
+            normalized = fan.normalize_text_hidden_state(hidden_state)
+            normalized_index = _original(normalized, training=training)
+            _calls.append(
+                {
+                    "hidden_shape": list(hidden_state.shape),
+                    "detector_on_unnormalized": int(official.item()),
+                    "detector_on_normalized": int(normalized_index.item()),
+                }
+            )
+            return official
+
+        fan.decoder.forward = types.MethodType(recording_forward, fan.decoder)
+        try:
+            observed_policy = _policy_variant(policy, alpha=alpha)
+            _raw_official(encoder, prompt, refs, observed_policy)
+        finally:
+            fan.decoder.forward = original
+        rows.append(
+            {
+                "alpha": alpha,
+                "target_length": int(attention.sum().item()),
+                "input_eos_index": int(eos_index.item()),
+                "detector_calls": calls,
+                "decoder_restored": fan.decoder.forward is original,
+            }
+        )
+    return rows
+
+
+def _runtime_provenance(pipe, upstream, settings):
+    import diffusers
+    import transformers
+
+    upstream = Path(upstream)
+    weights = upstream / "weight"
+
+    def tokenizer_record(tokenizer):
+        return {
+            "class": type(tokenizer).__name__,
+            "name_or_path": str(getattr(tokenizer, "name_or_path", "")),
+            "model_max_length": tokenizer.model_max_length,
+            "vocab_hash": digest(tokenizer.get_vocab()),
+        }
+
+    source_root = Path(__file__).resolve().parent
+    exhibit_root = source_root.parents[1]
+    patch_root = upstream.parent.parent / "patches"
+    series = patch_root / "series"
+    patch_names = (
+        [
+            line
+            for line in series.read_text().splitlines()
+            if line and not line.startswith("#")
+        ]
+        if series.is_file()
+        else []
+    )
+    return {
+        "fan_commit": CONFIG["fan"]["commit"],
+        "fan_source": {
+            name: file_hash(upstream / "fan" / name)
+            for name in ("model.py", "wrapper.py")
+        },
+        "integration_source": {
+            name: file_hash(source_root / name)
+            for name in (
+                "fan_adapter.py",
+                "workers.py",
+                "gpu.py",
+                "evaluation_worker.py",
+            )
+        }
+        | {
+            "scripts/evaluate_fan.py": file_hash(
+                exhibit_root / "scripts/evaluate_fan.py"
+            )
+        },
+        "patch_series": {
+            "series_hash": file_hash(series) if series.is_file() else None,
+            "patches": {name: file_hash(patch_root / name) for name in patch_names},
+        },
+        "decoders": {name: file_hash(weights / name) for name in ("L.pth", "bigG.pth")},
+        "tokenizers": {
+            "clip_l": tokenizer_record(pipe.tokenizer),
+            "clip_g": tokenizer_record(pipe.tokenizer_2),
+        },
+        "pipeline": {
+            key: copy.deepcopy(settings.get(key))
+            for key in ("model", "revision", "checkpoint", "pipeline_config")
+        },
+        "libraries": {
+            "diffusers": diffusers.__version__,
+            "transformers": transformers.__version__,
+        },
+    }
+
+
+def _exception_restoration(encoder, prompt, refs, policy):
+    before = encode_conditioning(encoder, prompt, None, policy)
+    attention = (
+        encoder._fan_components["clip_l"].model.text_model.encoder.layers[0].self_attn
+    )
+    original = attention.forward
+
+    def injected_failure(self, *args, **kwargs):
+        raise RuntimeError("diagnostic injected attention failure")
+
+    injected = types.MethodType(injected_failure, attention)
+    failure_policy = _policy_variant(policy, profiling={"mode": "all"}, skip_pa=[0])
+    attention.forward = injected
+    error = None
+    restored_by_fan = False
+    try:
+        try:
+            encode_conditioning(
+                encoder, prompt, refs, failure_policy, collect_trace=True
+            )
+        except RuntimeError as exc:
+            error = str(exc)
+            restored_by_fan = attention.forward is injected
+    finally:
+        attention.forward = original
+    after = encode_conditioning(encoder, prompt, None, policy)
+    comparison = compare_conditioning(after, before, NO_REF_LIMITS)
+    return {
+        "injected_error": error,
+        "fan_restored_saved_forward": restored_by_fan,
+        "reference_free_after_exception": comparison,
+        "passed": (
+            error == "diagnostic injected attention failure"
+            and restored_by_fan
+            and comparison["passed"]
+        ),
+    }
+
+
+def _diagnose_prompt(pipe, encoder, direct_encoder, prompt, refs, spec):
+    policy = spec["effective_policy"]
+    pipeline_plain = _pipeline_conditioning(pipe, prompt)
+    fan_plain = encode_conditioning(encoder, prompt, None, policy)
+    adapter = encode_conditioning(encoder, prompt, refs, policy, collect_trace=True)
+    direct_fan = _raw_official(direct_encoder, prompt, refs, policy)
+    if policy["pooled_mode"] == "fan":
+        direct_expected = direct_fan
+    else:
+        direct_plain = _raw_official(direct_encoder, prompt, None, policy)
+        direct_expected = {
+            "hidden": direct_fan["hidden"],
+            "pooled": direct_plain["pooled"],
+        }
+
+    alpha_zero_policy = _policy_variant(policy, alpha=0.0)
+    alpha_zero = encode_conditioning(
+        encoder, prompt, refs, alpha_zero_policy, collect_trace=True
+    )
+    all_policy = _policy_variant(policy, profiling={"mode": "all"})
+    invariant_base = encode_conditioning(encoder, prompt, refs, all_policy)
+    invariants = {}
+    for name, variant_refs in _reference_variants(refs).items():
+        variant = encode_conditioning(encoder, prompt, variant_refs, all_policy)
+        invariants[name] = compare_conditioning(
+            variant, invariant_base, PERSONAL_LIMITS
+        )
+
+    comparisons = {
+        "fan_no_reference_vs_pipeline": compare_conditioning(
+            fan_plain, pipeline_plain, NO_REF_LIMITS
+        ),
+        "adapter_vs_direct_official": compare_conditioning(
+            adapter, direct_expected, NO_REF_LIMITS
+        ),
+        "alpha_zero_vs_no_reference": compare_conditioning(
+            alpha_zero, fan_plain, PERSONAL_LIMITS
+        ),
+        "personalized_vs_no_reference": compare_conditioning(
+            adapter, fan_plain, PERSONAL_LIMITS
+        ),
+        "invariants": invariants,
+    }
+    comparisons["personalized_vs_no_reference"]["diagnostic_only"] = True
+    if policy["pooled_mode"] == "plain":
+        comparisons["official_fan_pooled_vs_selected_plain"] = tensor_metrics(
+            direct_fan["pooled"], adapter["pooled"]
+        )
+
+    required = [
+        ("fan_no_reference_vs_pipeline", comparisons["fan_no_reference_vs_pipeline"]),
+        ("adapter_vs_direct_official", comparisons["adapter_vs_direct_official"]),
+        ("alpha_zero_vs_no_reference", comparisons["alpha_zero_vs_no_reference"]),
+    ]
+    required.extend(("invariants." + name, value) for name, value in invariants.items())
+    failures = [name for name, value in required if not value["passed"]]
+    return {
+        "trace": adapter["trace"],
+        "alpha_zero_trace": alpha_zero["trace"],
+        "personalized_detector": _personalized_detector_report(
+            encoder, prompt, refs, policy
+        ),
+        "comparisons": comparisons,
+        "eligibility": {"passed": not failures, "failures": failures},
+    }
+
+
+def _prompts(config):
+    values = config.get("prompts")
+    if values is None and isinstance(config.get("prompt"), str):
+        values = [{"id": "default", "text": config["prompt"]}]
+    if not isinstance(values, list) or not values:
+        raise ValueError("prompt or prompts is required")
+    result = []
+    seen = set()
+    for index, value in enumerate(values):
+        if isinstance(value, str):
+            value = {"id": f"prompt-{index}", "text": value}
+        if not isinstance(value, dict):
+            raise TypeError("each prompt must be a string or object")
+        prompt_id, text = value.get("id"), value.get("text")
+        if not isinstance(prompt_id, str) or not prompt_id or prompt_id in seen:
+            raise ValueError("prompt id must be present and unique")
+        if not isinstance(text, str) or not text:
+            raise ValueError("prompt text is required")
+        result.append({"id": prompt_id, "text": text})
+        seen.add(prompt_id)
+    return result
+
+
+def run_encoding(config):
+    import torch
+    from fan.wrapper import stable_diffusion_xl
+
+    started = time.monotonic()
+    policies = validate_policy_specs(config.get("policies"))
+    prompts = _prompts(config)
+    refs = config.get("refs")
+    if not isinstance(refs, list) or not refs:
+        raise ValueError("refs must be a non-empty list")
+    settings = config.get("settings", CONFIG["generation"])
+    upstream = config.get("upstream", str(FAN_UPSTREAM))
+    output = Path(config["output"]).resolve()
+
+    pipe = load_pipeline(settings)
+    encoder = build_encoder(pipe, upstream)
+    direct_encoder = stable_diffusion_xl(
+        encoder._fan_components["clip_l"], encoder._fan_components["clip_g"]
+    )
+    results = {}
+    for spec in policies:
+        prompt_results = {}
+        for prompt in prompts:
+            emit(
+                "diagnostic",
+                policy_id=spec["policy_id"],
+                policy_hash=spec["policy_hash"],
+                prompt_id=prompt["id"],
+            )
+            prompt_results[prompt["id"]] = _diagnose_prompt(
+                pipe, encoder, direct_encoder, prompt["text"], refs, spec
+            )
+        results[spec["policy_hash"]] = {
+            **spec,
+            "prompts": prompt_results,
+            "eligibility": {
+                "passed": all(
+                    item["eligibility"]["passed"] for item in prompt_results.values()
+                ),
+                "failures": {
+                    prompt_id: item["eligibility"]["failures"]
+                    for prompt_id, item in prompt_results.items()
+                    if item["eligibility"]["failures"]
+                },
+            },
+        }
+
+    detector_texts = [
+        *[("prompt:" + item["id"], item["text"]) for item in prompts],
+        *[(f"ref:{index}", ref["text"]) for index, ref in enumerate(refs)],
+    ]
+    exception = _exception_restoration(
+        encoder,
+        prompts[0]["text"],
+        refs,
+        policies[0]["effective_policy"],
+    )
+    if not exception["passed"]:
+        for policy_result in results.values():
+            policy_result["eligibility"]["passed"] = False
+            policy_result["eligibility"]["failures"]["_worker"] = [
+                "exception_restoration"
+            ]
+    report = {
+        "schema_version": 1,
+        "kind": "fan-encoding-diagnostic",
+        "settings": settings,
+        "upstream": upstream,
+        "provenance": _runtime_provenance(pipe, upstream, settings),
+        "prompts": prompts,
+        "refs": refs,
+        "policies": results,
+        "token_detector": _token_detector_report(pipe, encoder, detector_texts),
+        "exception_restoration": exception,
+        "versions": {
+            "python": sys.version.split()[0],
+            "torch": torch.__version__,
+            "cuda": torch.version.cuda,
+            "device": torch.cuda.get_device_name(0),
+        },
+        "seconds": round(time.monotonic() - started, 3),
+    }
+    json.dumps(report, ensure_ascii=False, allow_nan=False)
+    write_json(output, report)
+    emit(
+        "encoding_report",
+        path=str(output),
+        policy_count=len(policies),
+        all_eligible=all(item["eligibility"]["passed"] for item in results.values()),
+        exception_restored=exception["passed"],
+    )
+    return report
+
+
+def parse_args(argv=None):
+    parser = argparse.ArgumentParser(description=__doc__)
+    subparsers = parser.add_subparsers(dest="command", required=True)
+    encoding = subparsers.add_parser("encoding")
+    encoding.add_argument("--config", required=True)
+    return parser.parse_args(argv)
+
+
+def main(argv=None):
+    args = parse_args(argv)
+    config = json.loads(Path(args.config).read_text())
+    if args.command == "encoding":
+        run_encoding(config)
+
+
+if __name__ == "__main__":
+    main()

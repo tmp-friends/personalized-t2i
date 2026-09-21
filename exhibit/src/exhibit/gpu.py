@@ -7,6 +7,7 @@ import signal
 import subprocess
 import time
 import uuid
+from contextlib import contextmanager
 from pathlib import Path
 
 from .config import FAN_UPSTREAM, GPU_PYTHON, OUTPUTS, ROOT, write_json
@@ -14,6 +15,29 @@ from .config import FAN_UPSTREAM, GPU_PYTHON, OUTPUTS, ROOT, write_json
 
 class GPUError(RuntimeError):
     pass
+
+
+@contextmanager
+def gpu_lease(cancel, deadline):
+    """Hold the process-wide GPU lock after honoring cancellation and timeout."""
+    OUTPUTS.mkdir(parents=True, exist_ok=True)
+    if cancel.is_set():
+        raise GPUError("cancelled")
+    if time.monotonic() >= deadline:
+        raise GPUError("timeout")
+    with (OUTPUTS / "gpu.lock").open("a") as lease:
+        try:
+            fcntl.flock(lease, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        except BlockingIOError as error:
+            raise GPUError("GPU busy") from error
+        try:
+            if cancel.is_set():
+                raise GPUError("cancelled")
+            if time.monotonic() >= deadline:
+                raise GPUError("timeout")
+            yield
+        finally:
+            fcntl.flock(lease, fcntl.LOCK_UN)
 
 
 def run_process(command, directory, cancel, deadline, on_event, *, env=None):
@@ -73,12 +97,7 @@ def run_process(command, directory, cancel, deadline, on_event, *, env=None):
 
 
 def run_stage(request, directory, cancel, deadline, on_event):
-    OUTPUTS.mkdir(parents=True, exist_ok=True)
-    with (OUTPUTS / "gpu.lock").open("a") as lease:
-        try:
-            fcntl.flock(lease, fcntl.LOCK_EX | fcntl.LOCK_NB)
-        except BlockingIOError as e:
-            raise GPUError("GPU busy") from e
+    with gpu_lease(cancel, deadline):
         directory = Path(directory) / (request["stage"] + "-" + uuid.uuid4().hex[:8])
         directory.mkdir(parents=True, exist_ok=True)
         request_file = directory / "request.json"
