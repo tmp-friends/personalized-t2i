@@ -157,13 +157,16 @@ function svg({ hue, sat = 62, light = 46, top, bottom, seed = 0 }) {
   const a = `hsl(${hue} ${sat}% ${light}%)`;
   const b = `hsl(${(hue + 40) % 360} ${Math.max(20, sat - 22)}% ${Math.max(12, light - 28)}%)`;
   const r = 120 + ((seed * 37) % 90);
-  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  // 1024x1280 (4:5 portrait), matching the real generation size.
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1280" width="1024" height="1280">
 <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${a}"/><stop offset="1" stop-color="${b}"/></linearGradient></defs>
-<rect width="512" height="512" fill="url(#g)"/>
-<circle cx="${180 + ((seed * 53) % 150)}" cy="${200 + ((seed * 29) % 110)}" r="${r}" fill="#ffffff22"/>
-<circle cx="${360 - ((seed * 17) % 120)}" cy="${360 - ((seed * 41) % 100)}" r="${r * 0.6}" fill="#00000033"/>
-<text x="28" y="60" font-family="monospace" font-size="30" fill="#fff" opacity="0.92">${esc(top)}</text>
-<text x="28" y="478" font-family="monospace" font-size="22" fill="#fff" opacity="0.75">${esc(bottom)}</text>
+<rect width="1024" height="1280" fill="url(#g)"/>
+<circle cx="${360 + ((seed * 53) % 300)}" cy="${500 + ((seed * 29) % 280)}" r="${r * 2}" fill="#ffffff22"/>
+<circle cx="${720 - ((seed * 17) % 240)}" cy="${900 - ((seed * 41) % 250)}" r="${r * 1.2}" fill="#00000033"/>
+<rect x="0" y="0" width="1024" height="1280" fill="none" stroke="#ffffff30" stroke-width="4"/>
+<text x="48" y="104" font-family="monospace" font-size="56" fill="#fff" opacity="0.92">${esc(top)}</text>
+<text x="48" y="1216" font-family="monospace" font-size="40" fill="#fff" opacity="0.75">${esc(bottom)}</text>
+<text x="976" y="1216" text-anchor="end" font-family="monospace" font-size="30" fill="#fff" opacity="0.45">1024x1280</text>
 </svg>`;
 }
 

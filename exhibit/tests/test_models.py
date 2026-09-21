@@ -25,6 +25,7 @@ def pinned_environment(tmp_path, monkeypatch):
             "revision": "weight-revision",
             "checkpoint": "illustration.safetensors",
             "pipeline_config": {"model": "demo/config", "revision": "config-revision"},
+            "vae": {"model": "demo/vae-fp16-fix", "revision": "vae-revision"},
         },
         "fan": {
             "python": "unused",
@@ -51,7 +52,9 @@ def pinned_environment(tmp_path, monkeypatch):
         "tokenizer_2/tokenizer_config.json",
     ]
     files = [
-        "models--demo--illustration/snapshots/weight-revision/illustration.safetensors"
+        "models--demo--illustration/snapshots/weight-revision/illustration.safetensors",
+        "models--demo--vae-fp16-fix/snapshots/vae-revision/config.json",
+        "models--demo--vae-fp16-fix/snapshots/vae-revision/diffusion_pytorch_model.safetensors",
     ] + [
         f"models--demo--config/snapshots/config-revision/{name}"
         for name in config_files
@@ -73,6 +76,27 @@ def test_pinned_checkpoint_and_fan_runtime_are_ready(pinned_environment):
     result = preflight.check_models()
     assert result["ready"], result["errors"]
     assert result["fan"]["decoders"].keys() == DECODERS.keys()
+    assert [m["model"] for m in result["models"]] == [
+        "demo/illustration",
+        "demo/vae-fp16-fix",
+    ]
+
+
+@pytest.mark.parametrize(
+    "missing", ["config.json", "diffusion_pytorch_model.safetensors"]
+)
+def test_the_pinned_fp16_fix_vae_must_be_cached(pinned_environment, missing):
+    (
+        pinned_environment["cache"]
+        / "models--demo--vae-fp16-fix/snapshots/vae-revision"
+        / missing
+    ).unlink()
+    result = preflight.check_models()
+    assert not result["ready"]
+    assert any(
+        error.startswith("Missing pinned VAE: demo/vae-fp16-fix") and missing in error
+        for error in result["errors"]
+    )
 
 
 def test_single_file_model_requires_the_exact_pinned_checkpoint(pinned_environment):

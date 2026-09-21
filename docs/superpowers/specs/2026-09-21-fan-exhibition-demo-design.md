@@ -20,7 +20,7 @@ LLM によるプロンプト書き換えと VLM 解析、PIGReward 推薦を展�
 
 | 層 | 採用 | 備考 |
 |---|---|---|
-| 生成器 | Illustrious XL v2.0-STABLE（SDXL 系、単一 safetensors、固定 revision） | 現行 `configs/demo.json` の `generation` を維持（1024², 28 steps, Euler a, CFG 5.0, fp16） |
+| 生成器 | Illustrious XL v2.0-STABLE（SDXL 系、単一 safetensors、固定 revision）。デコーダーは固定 revision の `madebyollin/sdxl-vae-fp16-fix`（同梱 VAE は fp16 で白っぽく低コントラストになる） | `configs/demo.json` の `generation`（1024×1280 縦長, 30 steps, DPM++ 2M SDE Karras, CFG 5.0, fp16）。サンプラーは実画像比較で Euler a より高精細・高彩度（彩度 60.8→87.3, laplacian 243→462, +0.24 s/枚） |
 | 個人化 | FAN 公式実装 `fan-repro/.work/upstream/fan`（固定 SHA）。`FAN(text_encoder, tokenizer, decoder=L.pth)` と `FAN(text_encoder_2, tokenizer_2, decoder=bigG.pth)` を `fan.wrapper.stable_diffusion_xl` で束ね、`prompt_embeds` / `pooled_prompt_embeds` を pipeline へ渡す | `personalized_t2i_encoder` の `name_or_path` 文字列判定には依存しない |
 | GPU 環境 | `fan-repro/.venv/bin/python`（transformers 4.57 系, diffusers 0.39 系, torch 2.14） | FAN の attention monkey-patch は transformers 5 系と非互換のため、既存 `tailored-visions-repro/.venv` は使わない |
 | 履歴選択 | `sample_size=0`（参照 3〜5 件は全部使う） | 参照が増えた将来に `sample_reference` を有効化する |

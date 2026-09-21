@@ -16,8 +16,9 @@ def emit(kind, **data):
 
 def load_pipeline(settings):
     """Pinned single-file checkpoint; only architecture files come from the config."""
+    import diffusers
     import torch
-    from diffusers import EulerAncestralDiscreteScheduler, StableDiffusionXLPipeline
+    from diffusers import AutoencoderKL, StableDiffusionXLPipeline
 
     if settings.get("checkpoint"):
         from huggingface_hub import hf_hub_download
@@ -55,7 +56,22 @@ def load_pipeline(settings):
             use_safetensors=True,
             local_files_only=True,
         ).to("cuda")
-    pipe.scheduler = EulerAncestralDiscreteScheduler.from_config(pipe.scheduler.config)
+    vae = settings.get("vae")
+    if vae:
+        # The checkpoint's own VAE decodes washed out in fp16; this one does not.
+        pipe.vae = AutoencoderKL.from_pretrained(
+            vae["model"],
+            revision=vae["revision"],
+            torch_dtype=torch.float16,
+            local_files_only=True,
+        ).to("cuda")
+    name = settings.get("scheduler", "EulerAncestralDiscreteScheduler")
+    scheduler = getattr(diffusers, name, None)
+    if scheduler is None:
+        raise ValueError(f"Unknown scheduler: {name}")
+    pipe.scheduler = scheduler.from_config(
+        pipe.scheduler.config, **settings.get("scheduler_kwargs", {})
+    )
     pipe.set_progress_bar_config(disable=True)
     return pipe
 
@@ -119,7 +135,12 @@ def generate(request):
     fan = request.get("fan") or CONFIG["fan"]
     emit(
         "loaded",
-        scheduler=dict(pipe.scheduler.config),
+        scheduler={
+            "name": settings.get("scheduler", "EulerAncestralDiscreteScheduler"),
+            "kwargs": settings.get("scheduler_kwargs", {}),
+            "config": dict(pipe.scheduler.config),
+        },
+        vae=settings.get("vae"),
         fan=fan_block(fan),
         load_seconds=round(time.monotonic() - started, 3),
     )

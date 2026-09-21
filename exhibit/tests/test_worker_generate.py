@@ -15,6 +15,12 @@ SETTINGS = {
     "revision": "weights-revision",
     "checkpoint": "v2.safetensors",
     "pipeline_config": {"model": "demo/config", "revision": "config-revision"},
+    "scheduler": "DPMSolverMultistepScheduler",
+    "scheduler_kwargs": {
+        "algorithm_type": "sde-dpmsolver++",
+        "use_karras_sigmas": True,
+    },
+    "vae": {"model": "demo/vae-fp16-fix", "revision": "vae-revision"},
     "negative_prompt": "lowres, worst quality, bad hands",
     "steps": 28,
     "guidance_scale": 5.0,
@@ -40,7 +46,15 @@ class Image:
 @pytest.fixture
 def stubs(monkeypatch, tmp_path):
     """Everything the worker imports lazily, recorded instead of executed."""
-    calls = {"pipeline": [], "encode": [], "fan": [], "wrapper": [], "downloads": []}
+    calls = {
+        "pipeline": [],
+        "encode": [],
+        "fan": [],
+        "wrapper": [],
+        "downloads": [],
+        "vae": [],
+        "scheduler": [],
+    }
 
     class Generator:
         def __init__(self, device):
@@ -86,6 +100,7 @@ def stubs(monkeypatch, tmp_path):
     class Pipeline:
         def __init__(self):
             self.scheduler = SimpleNamespace(config={})
+            self.vae = "checkpoint-vae"
             self.text_encoder = "large-encoder"
             self.text_encoder_2 = "bigG-encoder"
             self.tokenizer = "large-tokenizer"
@@ -102,15 +117,31 @@ def stubs(monkeypatch, tmp_path):
             return SimpleNamespace(images=[Image()])
 
     pipeline = Pipeline()
+
+    def load_vae(model, **kwargs):
+        calls["vae"].append((model, kwargs))
+        return SimpleNamespace(to=lambda device: f"{model}@{device}")
+
+    def scheduler_factory(name):
+        def from_config(config, **kwargs):
+            calls["scheduler"].append((name, kwargs))
+            return SimpleNamespace(config={**config, "name": name, **kwargs})
+
+        return SimpleNamespace(from_config=from_config)
+
     monkeypatch.setitem(
         sys.modules,
         "diffusers",
         SimpleNamespace(
+            AutoencoderKL=SimpleNamespace(from_pretrained=load_vae),
             StableDiffusionXLPipeline=SimpleNamespace(
                 from_single_file=lambda *args, **kwargs: pipeline
             ),
-            EulerAncestralDiscreteScheduler=SimpleNamespace(
-                from_config=lambda config: SimpleNamespace(config=config)
+            DPMSolverMultistepScheduler=scheduler_factory(
+                "DPMSolverMultistepScheduler"
+            ),
+            EulerAncestralDiscreteScheduler=scheduler_factory(
+                "EulerAncestralDiscreteScheduler"
             ),
         ),
     )
@@ -143,6 +174,7 @@ def stubs(monkeypatch, tmp_path):
     )
     calls["events"] = events
     calls["upstream"] = tmp_path / "upstream"
+    calls["sdxl"] = pipeline
     return calls
 
 
@@ -300,3 +332,66 @@ def test_the_worker_module_stays_python_3_10_compatible():
     for name in ("workers.py", "config.py", "domain.py"):
         source = (ROOT / "src/exhibit" / name).read_text()
         ast.parse(source, filename=name, feature_version=(3, 10))
+
+
+def test_the_pinned_fp16_fix_vae_replaces_the_checkpoint_decoder(stubs, tmp_path):
+    """The bundled VAE decodes washed out in fp16, so the decoder is pinned."""
+    workers.generate({**request_for(tmp_path, stubs["upstream"]), "items": []})
+
+    assert stubs["vae"] == [
+        (
+            "demo/vae-fp16-fix",
+            {
+                "revision": "vae-revision",
+                "torch_dtype": "fp16",
+                "local_files_only": True,
+            },
+        )
+    ]
+    assert stubs["sdxl"].vae == "demo/vae-fp16-fix@cuda"
+    assert stubs["events"][0][1]["vae"] == SETTINGS["vae"]
+
+
+def test_a_settings_block_without_a_vae_keeps_the_checkpoint_decoder(stubs, tmp_path):
+    settings = {k: v for k, v in SETTINGS.items() if k != "vae"}
+    request = {**request_for(tmp_path, stubs["upstream"]), "settings": settings}
+    workers.generate({**request, "items": []})
+
+    assert stubs["vae"] == []
+    assert stubs["sdxl"].vae == "checkpoint-vae"
+    assert stubs["events"][0][1]["vae"] is None
+
+
+def test_the_scheduler_comes_from_the_configuration(stubs, tmp_path):
+    """DPM++ 2M SDE Karras was measured sharper than Euler a with the fixed VAE."""
+    workers.generate({**request_for(tmp_path, stubs["upstream"]), "items": []})
+
+    assert stubs["scheduler"] == [
+        (
+            "DPMSolverMultistepScheduler",
+            {"algorithm_type": "sde-dpmsolver++", "use_karras_sigmas": True},
+        )
+    ]
+    loaded = stubs["events"][0][1]["scheduler"]
+    assert loaded["name"] == "DPMSolverMultistepScheduler"
+    assert loaded["kwargs"] == SETTINGS["scheduler_kwargs"]
+    assert loaded["config"]["name"] == "DPMSolverMultistepScheduler"
+
+
+def test_settings_without_scheduler_kwargs_still_load(stubs, tmp_path):
+    settings = {
+        k: v for k, v in SETTINGS.items() if k not in ("scheduler", "scheduler_kwargs")
+    }
+    request = {**request_for(tmp_path, stubs["upstream"]), "settings": settings}
+    workers.generate({**request, "items": []})
+
+    assert stubs["scheduler"] == [("EulerAncestralDiscreteScheduler", {})]
+    assert stubs["events"][0][1]["scheduler"]["kwargs"] == {}
+
+
+def test_an_unknown_scheduler_fails_at_load_time(stubs, tmp_path):
+    settings = {**SETTINGS, "scheduler": "NoSuchScheduler"}
+    request = {**request_for(tmp_path, stubs["upstream"]), "settings": settings}
+    with pytest.raises(ValueError, match="Unknown scheduler: NoSuchScheduler"):
+        workers.generate(request)
+    assert stubs["events"] == []

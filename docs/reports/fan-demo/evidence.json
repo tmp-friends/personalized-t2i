@@ -1,15 +1,15 @@
 {
-  "generated_at": "2026-09-21 02:56 JST",
+  "generated_at": "2026-09-21 12:43 JST",
   "browser": {
     "browser": "Chromium headless / actual localhost",
     "url": "http://127.0.0.1:7860",
     "mock": false,
-    "blind_wait_seconds": 19.13,
+    "blind_wait_seconds": 24.66,
     "checks": [
       "welcome renders and offers to start",
       "select 3 cards, toggle one aspect off on the first",
       "proceed to topics and pick one",
-      "all 4 blind pairs ready within 150s (19.13s)",
+      "all 4 blind pairs ready within 150s (24.66s)",
       "pre-reveal snapshot hides mapping/plain/variant images and 404s direct path",
       "pick A on pairs 0-1, tie on pair 2, leave pair 3 unanswered",
       "reveal: score, matched seeds, references merged by phrase with aspect-off honored, worker settings/pooled",
@@ -625,10 +625,10 @@
     }
   },
   "rehearsal": {
-    "sessions": 10,
-    "successes": 10,
-    "p95_seconds": 38.819,
-    "median_seconds": 38.776,
+    "sessions": 8,
+    "successes": 8,
+    "p95_seconds": 48.134,
+    "median_seconds": 48.123,
     "scope": "FAN live generation only; every stage loads in a fresh subprocess"
   },
   "preflight": {
@@ -647,6 +647,12 @@
           "model": "OnomaAIResearch/Illustrious-XL-v2.0",
           "revision": "69459c1fe6f46db41ab31e6114f05acc0e06bcaa",
           "weight_files": 1
+        },
+        {
+          "model": "madebyollin/sdxl-vae-fp16-fix",
+          "revision": "207b116dae70ace3637169f1ddd2434b91b3a8cd",
+          "weight_files": 2,
+          "role": "vae"
         }
       ],
       "gpu_python": "/home/tomoya/stable-diffusion/personalized-t2i/.worktrees/fan-exhibit/fan-repro/.venv/bin/python",
@@ -664,7 +670,7 @@
     }
   },
   "tests": {
-    "python_passed": 60,
+    "python_passed": 67,
     "node_passed": 12,
     "node_failed": 0
   },

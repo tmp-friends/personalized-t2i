@@ -1,18 +1,26 @@
 {
-  "version": "exhibit-fan-illustrious-v3",
+  "version": "exhibit-fan-illustrious-v6",
   "generation": {
     "model": "OnomaAIResearch/Illustrious-XL-v2.0",
     "revision": "69459c1fe6f46db41ab31e6114f05acc0e06bcaa",
-    "scheduler": "EulerAncestralDiscreteScheduler",
+    "scheduler": "DPMSolverMultistepScheduler",
+    "scheduler_kwargs": {
+      "algorithm_type": "sde-dpmsolver++",
+      "use_karras_sigmas": true
+    },
     "width": 1024,
-    "height": 1024,
-    "steps": 28,
+    "height": 1280,
+    "steps": 30,
     "guidance_scale": 5.0,
     "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
     "precision": "fp16",
     "pipeline_config": {
       "model": "OnomaAIResearch/Illustrious-xl-early-release-v0",
       "revision": "dca0dac303e6dc4b0c31d8001bc685b89b5d0204"
+    },
+    "vae": {
+      "model": "madebyollin/sdxl-vae-fp16-fix",
+      "revision": "207b116dae70ace3637169f1ddd2434b91b3a8cd"
     },
     "checkpoint": "Illustrious-XL-v2.0.safetensors",
     "positive_prompt_tail": "absurdres, highres"

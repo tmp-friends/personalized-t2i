@@ -2,13 +2,13 @@
   "browser": "Chromium headless / actual localhost",
   "url": "http://127.0.0.1:7860",
   "mock": false,
-  "blind_wait_seconds": 19.13,
+  "blind_wait_seconds": 24.66,
   "run": {
-    "id": "5e6f14a1a970462597fd7d8938daa0b8",
+    "id": "29ee6e02067e425b93d5d0107a6f942d",
     "topic_id": "tokyo",
     "status": "done",
     "message": "4枚ができました。",
-    "elapsed_seconds": 19.19,
+    "elapsed_seconds": 23.92,
     "error": null,
     "blind": {
       "revealed": true,
@@ -19,15 +19,15 @@
           "ready": true,
           "items": [
             {
-              "token": "C0sbuwmLYYJVTaNV",
-              "url": "/api/sessions/0695190ec9f0485ab0007edc37be6127/images/blind/C0sbuwmLYYJVTaNV.png"
+              "token": "0pvXDO80sEqS-EFI",
+              "url": "/api/sessions/1bd4d3641f114ea8b06aa975b1551dab/images/blind/0pvXDO80sEqS-EFI.png"
             },
             {
-              "token": "eOmkG6sATsmApZcv",
-              "url": "/api/sessions/0695190ec9f0485ab0007edc37be6127/images/blind/eOmkG6sATsmApZcv.png"
+              "token": "2dNFCoerI_0Bec9L",
+              "url": "/api/sessions/1bd4d3641f114ea8b06aa975b1551dab/images/blind/2dNFCoerI_0Bec9L.png"
             }
           ],
-          "pick": "C0sbuwmLYYJVTaNV"
+          "pick": "0pvXDO80sEqS-EFI"
         },
         {
           "index": 1,
@@ -35,15 +35,15 @@
           "ready": true,
           "items": [
             {
-              "token": "nVi9GC37IDUqTBiY",
-              "url": "/api/sessions/0695190ec9f0485ab0007edc37be6127/images/blind/nVi9GC37IDUqTBiY.png"
+              "token": "tjTB0PdkKEwIYsFT",
+              "url": "/api/sessions/1bd4d3641f114ea8b06aa975b1551dab/images/blind/tjTB0PdkKEwIYsFT.png"
             },
             {
-              "token": "nEWt_RJpm76Fx9Ax",
-              "url": "/api/sessions/0695190ec9f0485ab0007edc37be6127/images/blind/nEWt_RJpm76Fx9Ax.png"
+              "token": "B_uT2JR5SVqL64Db",
+              "url": "/api/sessions/1bd4d3641f114ea8b06aa975b1551dab/images/blind/B_uT2JR5SVqL64Db.png"
             }
           ],
-          "pick": "nVi9GC37IDUqTBiY"
+          "pick": "tjTB0PdkKEwIYsFT"
         },
         {
           "index": 2,
@@ -51,12 +51,12 @@
           "ready": true,
           "items": [
             {
-              "token": "FvRCa_i8B65MmV3Z",
-              "url": "/api/sessions/0695190ec9f0485ab0007edc37be6127/images/blind/FvRCa_i8B65MmV3Z.png"
+              "token": "tXY54BkVNdF7LAT6",
+              "url": "/api/sessions/1bd4d3641f114ea8b06aa975b1551dab/images/blind/tXY54BkVNdF7LAT6.png"
             },
             {
-              "token": "7kod8gznLBAITKY4",
-              "url": "/api/sessions/0695190ec9f0485ab0007edc37be6127/images/blind/7kod8gznLBAITKY4.png"
+              "token": "05POBA1M5VxNPaF7",
+              "url": "/api/sessions/1bd4d3641f114ea8b06aa975b1551dab/images/blind/05POBA1M5VxNPaF7.png"
             }
           ],
           "pick": "tie"
@@ -67,12 +67,12 @@
           "ready": true,
           "items": [
             {
-              "token": "kRpiV81STc6kmSAn",
-              "url": "/api/sessions/0695190ec9f0485ab0007edc37be6127/images/blind/kRpiV81STc6kmSAn.png"
+              "token": "-WAaVIngNSmevHBi",
+              "url": "/api/sessions/1bd4d3641f114ea8b06aa975b1551dab/images/blind/-WAaVIngNSmevHBi.png"
             },
             {
-              "token": "izK99KjEJuVgKDug",
-              "url": "/api/sessions/0695190ec9f0485ab0007edc37be6127/images/blind/izK99KjEJuVgKDug.png"
+              "token": "7dHSTjvhLyc9O1HN",
+              "url": "/api/sessions/1bd4d3641f114ea8b06aa975b1551dab/images/blind/7dHSTjvhLyc9O1HN.png"
             }
           ],
           "pick": null
@@ -80,14 +80,14 @@
       ],
       "answered": 3,
       "mapping": {
-        "C0sbuwmLYYJVTaNV": "plain",
-        "eOmkG6sATsmApZcv": "personal",
-        "nVi9GC37IDUqTBiY": "personal",
-        "nEWt_RJpm76Fx9Ax": "plain",
-        "FvRCa_i8B65MmV3Z": "personal",
-        "7kod8gznLBAITKY4": "plain",
-        "kRpiV81STc6kmSAn": "personal",
-        "izK99KjEJuVgKDug": "plain"
+        "0pvXDO80sEqS-EFI": "plain",
+        "2dNFCoerI_0Bec9L": "personal",
+        "tjTB0PdkKEwIYsFT": "personal",
+        "B_uT2JR5SVqL64Db": "plain",
+        "tXY54BkVNdF7LAT6": "plain",
+        "05POBA1M5VxNPaF7": "personal",
+        "-WAaVIngNSmevHBi": "personal",
+        "7dHSTjvhLyc9O1HN": "plain"
       },
       "score": {
         "personal": 1,
@@ -101,44 +101,44 @@
         "id": "plain-0",
         "seed": 230923,
         "prompt": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1boy, solo, male focus, short black hair, jacket, Tokyo skyline, night, portrait, detailed eyes, detailed illustration, absurdres, highres.",
-        "sha256": "a5b968752332a82872a6000df8d9012ba925c082ef00a045ff5fab099588953a",
-        "relative_path": "5e6f14a1a970462597fd7d8938daa0b8/plain-0.png",
-        "url": "/api/sessions/0695190ec9f0485ab0007edc37be6127/images/5e6f14a1a970462597fd7d8938daa0b8/plain-0.png"
+        "sha256": "5b1e36867b1d1c4742f40c288ee1e823506a53c35eeca9436df60c97155056c6",
+        "relative_path": "29ee6e02067e425b93d5d0107a6f942d/plain-0.png",
+        "url": "/api/sessions/1bd4d3641f114ea8b06aa975b1551dab/images/29ee6e02067e425b93d5d0107a6f942d/plain-0.png"
       },
       {
         "id": "plain-1",
         "seed": 230924,
         "prompt": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1boy, solo, male focus, short black hair, jacket, Tokyo skyline, night, portrait, detailed eyes, detailed illustration, absurdres, highres.",
-        "sha256": "6b3300fee96b676ffe9bfc99905d92e9442538fcf640f4da860488e7a6b7df70",
-        "relative_path": "5e6f14a1a970462597fd7d8938daa0b8/plain-1.png",
-        "url": "/api/sessions/0695190ec9f0485ab0007edc37be6127/images/5e6f14a1a970462597fd7d8938daa0b8/plain-1.png"
+        "sha256": "a5d7370ec55cbf55114a65e639ecc1dd848fca52e3935e19d2faf3cd324193c7",
+        "relative_path": "29ee6e02067e425b93d5d0107a6f942d/plain-1.png",
+        "url": "/api/sessions/1bd4d3641f114ea8b06aa975b1551dab/images/29ee6e02067e425b93d5d0107a6f942d/plain-1.png"
       },
       {
         "id": "plain-2",
         "seed": 230925,
         "prompt": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1boy, solo, male focus, short black hair, jacket, Tokyo skyline, night, portrait, detailed eyes, detailed illustration, absurdres, highres.",
-        "sha256": "af329944081ec0c2523df3132cfe4a04d92b1352d7268ff326aa950cb7433720",
-        "relative_path": "5e6f14a1a970462597fd7d8938daa0b8/plain-2.png",
-        "url": "/api/sessions/0695190ec9f0485ab0007edc37be6127/images/5e6f14a1a970462597fd7d8938daa0b8/plain-2.png"
+        "sha256": "f8e3423a4d4b0b3b3285a3cedd4693768edeb124533abb7bbe58bc44b678f222",
+        "relative_path": "29ee6e02067e425b93d5d0107a6f942d/plain-2.png",
+        "url": "/api/sessions/1bd4d3641f114ea8b06aa975b1551dab/images/29ee6e02067e425b93d5d0107a6f942d/plain-2.png"
       },
       {
         "id": "plain-3",
         "seed": 230926,
         "prompt": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1boy, solo, male focus, short black hair, jacket, Tokyo skyline, night, portrait, detailed eyes, detailed illustration, absurdres, highres.",
-        "sha256": "4799ac722cc8ca64fa160d1dda29b2261cd1db715edc43b77a6d59e6c5a7cc02",
-        "relative_path": "5e6f14a1a970462597fd7d8938daa0b8/plain-3.png",
-        "url": "/api/sessions/0695190ec9f0485ab0007edc37be6127/images/5e6f14a1a970462597fd7d8938daa0b8/plain-3.png"
+        "sha256": "5c05accb05989d557c74158a17da0a6be50b3ef059749b9731d6fe41cf9aa318",
+        "relative_path": "29ee6e02067e425b93d5d0107a6f942d/plain-3.png",
+        "url": "/api/sessions/1bd4d3641f114ea8b06aa975b1551dab/images/29ee6e02067e425b93d5d0107a6f942d/plain-3.png"
       }
     ],
     "variants": [
       {
         "id": "v0",
-        "request_id": "b2f2a6c7-4030-444a-a3d2-d73b2e05abed",
+        "request_id": "797b512e-441a-4bff-b28b-24cfb23ef6db",
         "alpha_key": "mid",
         "weights": {
-          "girl-dramatic": "normal",
-          "student-warm_soft": "normal",
-          "traveler-cool_clean": "normal"
+          "barista-dramatic": "normal",
+          "girl-cool_clean": "normal",
+          "girl-vivid_lively": "normal"
         },
         "status": "done",
         "mode": "live",
@@ -147,30 +147,30 @@
           {
             "id": "v0-0",
             "seed": 230923,
-            "sha256": "e659cce9c22b0d075b01e73061bd1b701fd958ff47dbb6b37e6c14b348586674",
-            "relative_path": "5e6f14a1a970462597fd7d8938daa0b8/v0/v0-0.png",
-            "url": "/api/sessions/0695190ec9f0485ab0007edc37be6127/images/5e6f14a1a970462597fd7d8938daa0b8/v0/v0-0.png"
+            "sha256": "9b332c1e4befa0d72dca7539acecd3770bcc909df5e11360b242eff081847ae1",
+            "relative_path": "29ee6e02067e425b93d5d0107a6f942d/v0/v0-0.png",
+            "url": "/api/sessions/1bd4d3641f114ea8b06aa975b1551dab/images/29ee6e02067e425b93d5d0107a6f942d/v0/v0-0.png"
           },
           {
             "id": "v0-1",
             "seed": 230924,
-            "sha256": "00a950b705580de9e92046fe3cd6360543f0d48bca3c4770038c4ae7d168fa28",
-            "relative_path": "5e6f14a1a970462597fd7d8938daa0b8/v0/v0-1.png",
-            "url": "/api/sessions/0695190ec9f0485ab0007edc37be6127/images/5e6f14a1a970462597fd7d8938daa0b8/v0/v0-1.png"
+            "sha256": "0027b1247e2899e2431c70d3519c0b846a59498b56788f235423e153195dc28b",
+            "relative_path": "29ee6e02067e425b93d5d0107a6f942d/v0/v0-1.png",
+            "url": "/api/sessions/1bd4d3641f114ea8b06aa975b1551dab/images/29ee6e02067e425b93d5d0107a6f942d/v0/v0-1.png"
           },
           {
             "id": "v0-2",
             "seed": 230925,
-            "sha256": "bd4748f421bf6f9dca5594852db9ccc840473189fcda5ce52f6eda75bf21ffb9",
-            "relative_path": "5e6f14a1a970462597fd7d8938daa0b8/v0/v0-2.png",
-            "url": "/api/sessions/0695190ec9f0485ab0007edc37be6127/images/5e6f14a1a970462597fd7d8938daa0b8/v0/v0-2.png"
+            "sha256": "e72fa9e32834d02df23aac8f7c6de26ca9edd2cf066a8a54ba83e453cd6bf8fa",
+            "relative_path": "29ee6e02067e425b93d5d0107a6f942d/v0/v0-2.png",
+            "url": "/api/sessions/1bd4d3641f114ea8b06aa975b1551dab/images/29ee6e02067e425b93d5d0107a6f942d/v0/v0-2.png"
           },
           {
             "id": "v0-3",
             "seed": 230926,
-            "sha256": "28d2da8da466cc6eb6b34b2e46b9d0af0ad09422325fad1613a6fe6a58eaddb6",
-            "relative_path": "5e6f14a1a970462597fd7d8938daa0b8/v0/v0-3.png",
-            "url": "/api/sessions/0695190ec9f0485ab0007edc37be6127/images/5e6f14a1a970462597fd7d8938daa0b8/v0/v0-3.png"
+            "sha256": "4deda86abc50ac5c0b02b3bbc5d6e96f20df20d45fa77bd2817fe72b6e10665d",
+            "relative_path": "29ee6e02067e425b93d5d0107a6f942d/v0/v0-3.png",
+            "url": "/api/sessions/1bd4d3641f114ea8b06aa975b1551dab/images/29ee6e02067e425b93d5d0107a6f942d/v0/v0-3.png"
           }
         ],
         "personalization": {
@@ -180,7 +180,7 @@
               "weight": 1.0,
               "aspect": "color",
               "card_ids": [
-                "girl-dramatic"
+                "barista-dramatic"
               ]
             },
             {
@@ -188,7 +188,7 @@
               "weight": 1.0,
               "aspect": "lighting",
               "card_ids": [
-                "girl-dramatic"
+                "barista-dramatic"
               ]
             },
             {
@@ -196,40 +196,7 @@
               "weight": 1.0,
               "aspect": "texture",
               "card_ids": [
-                "girl-dramatic"
-              ]
-            },
-            {
-              "text": "warm color palette, amber and orange tones",
-              "weight": 1.0,
-              "aspect": "color",
-              "card_ids": [
-                "student-warm_soft"
-              ]
-            },
-            {
-              "text": "warm golden hour light, gentle shadows",
-              "weight": 1.0,
-              "aspect": "lighting",
-              "card_ids": [
-                "student-warm_soft"
-              ]
-            },
-            {
-              "text": "watercolor painting, soft brushwork, painterly texture",
-              "weight": 1.0,
-              "aspect": "texture",
-              "card_ids": [
-                "student-warm_soft"
-              ]
-            },
-            {
-              "text": "calm atmosphere",
-              "weight": 2.0,
-              "aspect": "mood",
-              "card_ids": [
-                "student-warm_soft",
-                "traveler-cool_clean"
+                "barista-dramatic"
               ]
             },
             {
@@ -237,7 +204,7 @@
               "weight": 1.0,
               "aspect": "color",
               "card_ids": [
-                "traveler-cool_clean"
+                "girl-cool_clean"
               ]
             },
             {
@@ -245,7 +212,7 @@
               "weight": 1.0,
               "aspect": "lighting",
               "card_ids": [
-                "traveler-cool_clean"
+                "girl-cool_clean"
               ]
             },
             {
@@ -253,31 +220,71 @@
               "weight": 1.0,
               "aspect": "texture",
               "card_ids": [
-                "traveler-cool_clean"
+                "girl-cool_clean"
+              ]
+            },
+            {
+              "text": "calm atmosphere",
+              "weight": 1.0,
+              "aspect": "mood",
+              "card_ids": [
+                "girl-cool_clean"
+              ]
+            },
+            {
+              "text": "vivid colors, colorful, high saturation",
+              "weight": 1.0,
+              "aspect": "color",
+              "card_ids": [
+                "girl-vivid_lively"
+              ]
+            },
+            {
+              "text": "bright lighting, sparkle",
+              "weight": 1.0,
+              "aspect": "lighting",
+              "card_ids": [
+                "girl-vivid_lively"
+              ]
+            },
+            {
+              "text": "cel shading, flat color",
+              "weight": 1.0,
+              "aspect": "texture",
+              "card_ids": [
+                "girl-vivid_lively"
+              ]
+            },
+            {
+              "text": "cheerful expression, lively atmosphere",
+              "weight": 1.0,
+              "aspect": "mood",
+              "card_ids": [
+                "girl-vivid_lively"
               ]
             }
           ],
           "alpha": 0.5,
           "sample_size": 0,
-          "hash": "75cfc8983bee4d7f0ead7856578aa724847ee8dcf2184579669a0345067ae0f6"
+          "hash": "1bb50f4f466d60e642f54136d4110302f5374e94ec007abfbb34518ef0ab4844"
         },
         "prompt": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1boy, solo, male focus, short black hair, jacket, Tokyo skyline, night, portrait, detailed eyes, detailed illustration, absurdres, highres.",
         "timings": {
           "generation": {
             "returncode": 0,
-            "wall_seconds": 19.195
+            "wall_seconds": 24.857
           }
         },
         "error": null
       },
       {
         "id": "v1",
-        "request_id": "9abc39f2-ebd7-4440-9b6c-7e46c71a7f94",
+        "request_id": "6b2b4e60-e6e7-4d80-b795-4978c7eb018e",
         "alpha_key": "strong",
         "weights": {
-          "girl-dramatic": "emphasis",
-          "student-warm_soft": "exclude",
-          "traveler-cool_clean": "normal"
+          "barista-dramatic": "emphasis",
+          "girl-cool_clean": "exclude",
+          "girl-vivid_lively": "normal"
         },
         "status": "done",
         "mode": "live",
@@ -286,30 +293,30 @@
           {
             "id": "v1-0",
             "seed": 230923,
-            "sha256": "a19a83c919f3b4367551a7c68e12877ad29b1952eeb142b865007a2e33829d2a",
-            "relative_path": "5e6f14a1a970462597fd7d8938daa0b8/v1/v1-0.png",
-            "url": "/api/sessions/0695190ec9f0485ab0007edc37be6127/images/5e6f14a1a970462597fd7d8938daa0b8/v1/v1-0.png"
+            "sha256": "2d2eb96b2690fe0a1fedbded76276f5065ae97717747ae5c3e0ab5f81cbc3191",
+            "relative_path": "29ee6e02067e425b93d5d0107a6f942d/v1/v1-0.png",
+            "url": "/api/sessions/1bd4d3641f114ea8b06aa975b1551dab/images/29ee6e02067e425b93d5d0107a6f942d/v1/v1-0.png"
           },
           {
             "id": "v1-1",
             "seed": 230924,
-            "sha256": "74e033b9ce3b0036890acbde5cc0d25cf0d9005088b99b396afab852f24b6382",
-            "relative_path": "5e6f14a1a970462597fd7d8938daa0b8/v1/v1-1.png",
-            "url": "/api/sessions/0695190ec9f0485ab0007edc37be6127/images/5e6f14a1a970462597fd7d8938daa0b8/v1/v1-1.png"
+            "sha256": "b031005d1bb9a1474e20a455bbf3436d05bb1c73f8cda25fc823de7cb0dd2432",
+            "relative_path": "29ee6e02067e425b93d5d0107a6f942d/v1/v1-1.png",
+            "url": "/api/sessions/1bd4d3641f114ea8b06aa975b1551dab/images/29ee6e02067e425b93d5d0107a6f942d/v1/v1-1.png"
           },
           {
             "id": "v1-2",
             "seed": 230925,
-            "sha256": "0e77a8467303b102f47b114144e6770d870f6045fc504bd84aaf1564b66d24eb",
-            "relative_path": "5e6f14a1a970462597fd7d8938daa0b8/v1/v1-2.png",
-            "url": "/api/sessions/0695190ec9f0485ab0007edc37be6127/images/5e6f14a1a970462597fd7d8938daa0b8/v1/v1-2.png"
+            "sha256": "5704e20520dfec75c477d441a53c067f611ac73fdbc3f5de51533c3e1c71c892",
+            "relative_path": "29ee6e02067e425b93d5d0107a6f942d/v1/v1-2.png",
+            "url": "/api/sessions/1bd4d3641f114ea8b06aa975b1551dab/images/29ee6e02067e425b93d5d0107a6f942d/v1/v1-2.png"
           },
           {
             "id": "v1-3",
             "seed": 230926,
-            "sha256": "33e7e6665cd740dfa6341ff7bffd84a27d737a032648fca5593580cf46b07212",
-            "relative_path": "5e6f14a1a970462597fd7d8938daa0b8/v1/v1-3.png",
-            "url": "/api/sessions/0695190ec9f0485ab0007edc37be6127/images/5e6f14a1a970462597fd7d8938daa0b8/v1/v1-3.png"
+            "sha256": "1667f4e7e503e057f9799f8367e248afb5b89429318a4540a4a67b1535bd9cdd",
+            "relative_path": "29ee6e02067e425b93d5d0107a6f942d/v1/v1-3.png",
+            "url": "/api/sessions/1bd4d3641f114ea8b06aa975b1551dab/images/29ee6e02067e425b93d5d0107a6f942d/v1/v1-3.png"
           }
         ],
         "personalization": {
@@ -319,7 +326,7 @@
               "weight": 2.0,
               "aspect": "color",
               "card_ids": [
-                "girl-dramatic"
+                "barista-dramatic"
               ]
             },
             {
@@ -327,7 +334,7 @@
               "weight": 2.0,
               "aspect": "lighting",
               "card_ids": [
-                "girl-dramatic"
+                "barista-dramatic"
               ]
             },
             {
@@ -335,51 +342,51 @@
               "weight": 2.0,
               "aspect": "texture",
               "card_ids": [
-                "girl-dramatic"
+                "barista-dramatic"
               ]
             },
             {
-              "text": "cool color palette, blue and teal tones",
+              "text": "vivid colors, colorful, high saturation",
               "weight": 1.0,
               "aspect": "color",
               "card_ids": [
-                "traveler-cool_clean"
+                "girl-vivid_lively"
               ]
             },
             {
-              "text": "soft diffused light",
+              "text": "bright lighting, sparkle",
               "weight": 1.0,
               "aspect": "lighting",
               "card_ids": [
-                "traveler-cool_clean"
+                "girl-vivid_lively"
               ]
             },
             {
-              "text": "cel shading, clean lineart, anime coloring",
+              "text": "cel shading, flat color",
               "weight": 1.0,
               "aspect": "texture",
               "card_ids": [
-                "traveler-cool_clean"
+                "girl-vivid_lively"
               ]
             },
             {
-              "text": "calm atmosphere",
+              "text": "cheerful expression, lively atmosphere",
               "weight": 1.0,
               "aspect": "mood",
               "card_ids": [
-                "traveler-cool_clean"
+                "girl-vivid_lively"
               ]
             }
           ],
           "alpha": 0.6,
           "sample_size": 0,
-          "hash": "44af1d5a09c5047e47921e109e70817f7a415c583390a734e55bf9836b940116"
+          "hash": "a8c6e2521a911cc3a8a0f803f633b15ca6463fa20461d8af046a7ea3096bdfe3"
         },
         "prompt": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1boy, solo, male focus, short black hair, jacket, Tokyo skyline, night, portrait, detailed eyes, detailed illustration, absurdres, highres.",
         "timings": {
           "generation": {
             "returncode": 0,
-            "wall_seconds": 19.192
+            "wall_seconds": 23.91
           }
         },
         "error": null
@@ -390,7 +397,7 @@
     "welcome renders and offers to start",
     "select 3 cards, toggle one aspect off on the first",
     "proceed to topics and pick one",
-    "all 4 blind pairs ready within 150s (19.13s)",
+    "all 4 blind pairs ready within 150s (24.66s)",
     "pre-reveal snapshot hides mapping/plain/variant images and 404s direct path",
     "pick A on pairs 0-1, tie on pair 2, leave pair 3 unanswered",
     "reveal: score, matched seeds, references merged by phrase with aspect-off honored, worker settings/pooled",

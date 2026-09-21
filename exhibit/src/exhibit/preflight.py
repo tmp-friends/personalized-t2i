@@ -137,6 +137,27 @@ def check_models():
             "weight_files": len(files),
         }
     )
+    vae = settings.get("vae")
+    if vae:
+        # The decoder is pinned separately; the checkpoint's own VAE is unused.
+        vae_path = (
+            cache
+            / ("models--" + vae["model"].replace("/", "--"))
+            / "snapshots"
+            / vae["revision"]
+        )
+        vae_files = ["config.json", "diffusion_pytorch_model.safetensors"]
+        missing = [name for name in vae_files if not (vae_path / name).is_file()]
+        if missing:
+            errors.append(f"Missing pinned VAE: {vae['model']} ({', '.join(missing)})")
+        models.append(
+            {
+                "model": vae["model"],
+                "revision": vae["revision"],
+                "weight_files": len(vae_files) - len(missing),
+                "role": "vae",
+            }
+        )
     fan = check_fan_env()
     errors.extend(fan["errors"])
     return {

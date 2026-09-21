@@ -64,7 +64,9 @@ G0の追試で次を確定しました。`skip_pa=[0,1,2,3,4,5,6,7]`（personali
 
 ## 生成モデルとモチーフ
 
-[Illustrious XL v2.0-STABLE](https://huggingface.co/OnomaAIResearch/Illustrious-XL-v2.0)（revision `69459c1fe6f46db41ab31e6114f05acc0e06bcaa`）を使用します。1024×1024・28 steps・Euler ancestral・CFG 5.0・fp16。単一safetensorsを `from_single_file` で読み込み、構成ファイルとtokenizerだけを初期Illustriousの固定revisionから読みます。`from_single_file` は `name_or_path` を残さないため、FANのSDXLエンコーダーは `FAN(text_encoder, tokenizer, L.pth)` と `FAN(text_encoder_2, tokenizer_2, bigG.pth)` を `fan.wrapper.stable_diffusion_xl` で束ねて手動で組み立てます。
+[Illustrious XL v2.0-STABLE](https://huggingface.co/OnomaAIResearch/Illustrious-XL-v2.0)（revision `69459c1fe6f46db41ab31e6114f05acc0e06bcaa`）を使用します。1024×1280（縦長）・30 steps・DPM++ 2M SDE Karras（`DPMSolverMultistepScheduler` + `algorithm_type: sde-dpmsolver++` / `use_karras_sigmas`）・CFG 5.0・fp16。サンプラーは実画像比較でEuler ancestralより明確に高精細・高彩度だったため採用しました（2026-09-21計測、固定VAE・同一seed: 彩度 60.8→87.3、laplacian 243→462、1枚あたり +0.24 秒）。縦長 1024×1280 は upper body のお題の構図が安定し、同一条件で暖/寒の分離幅が正方形より広かったため採用しました（cat 30.0→32.8、rain 26.3→43.4、α=0.6 で被写体指定は維持、1枚あたり 3.7→4.7 秒）。単一safetensorsを `from_single_file` で読み込み、構成ファイルとtokenizerだけを初期Illustriousの固定revisionから読みます。`from_single_file` は `name_or_path` を残さないため、FANのSDXLエンコーダーは `FAN(text_encoder, tokenizer, L.pth)` と `FAN(text_encoder_2, tokenizer_2, bigG.pth)` を `fan.wrapper.stable_diffusion_xl` で束ねて手動で組み立てます。
+
+デコーダーだけは固定revisionの [sdxl-vae-fp16-fix](https://huggingface.co/madebyollin/sdxl-vae-fp16-fix)（`207b116dae70ace3637169f1ddd2434b91b3a8cd`）に差し替えます。チェックポイント同梱のVAEをfp16で使うと全体が白っぽく低コントラストになるためです（2026-09-21計測、同一seed・同一構図でデコーダーのみ変更: 彩度 42.6→60.8、コントラスト 46.7→62.1、laplacian 84→179）。
 
 お題は「窓辺で猫と過ごす少女」「東京の夜景と青年」「森を旅する魔法使い」「海辺の灯台と船乗り」「雨の街角の少女」「カフェで迎える店員」の6件。カードの被写体（街角の少女・図書館の青年・草原の旅人・カフェの店員）はお題と重ねていないため、「被写体が好き」と「表現が好き」を切り分けられます。通常側と個人化側のモデル・設定・seedは一致させます。
 
