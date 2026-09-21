@@ -20,7 +20,7 @@
 4. negativeには低品質、手指、JPEG artifact、透かし、署名、構図破綻、複数画面を中心に置き、展示上必要な複数人物とNSFWの抑制を加える。写真・3D・モノクロ・chibi等の画風抑制は外し、個人化表現との衝突を避ける。
 5. 展示用の5対は同じ題材・seedで、色／光／構図／塗り／雰囲気を主に変える。画像の外見や小物も変化するため、各軸を完全に独立させた心理測定とは扱わない。
 
-モデルは`OnomaAIResearch/Illustrious-XL-v2.0`、revision `69459c1fe6f46db41ab31e6114f05acc0e06bcaa`。生成設定は1024×1024、Euler ancestral、28 steps、CFG 5.0、fp16。通常・個人化・選択画像を同じ設定に揃える。
+モデルは`OnomaAIResearch/Illustrious-XL-v2.0`、revision `69459c1fe6f46db41ab31e6114f05acc0e06bcaa`。生成設定は1024×1280、DPM++ SDE Karras（`DPMSolverMultistepScheduler`、`sde-dpmsolver++`、Karras sigmas）、30 steps、CFG 5.0、fp16（VAEは`madebyollin/sdxl-vae-fp16-fix`）。参照資料のEuler系・28 stepsは出発点で、実画像確認の結果、現行設定は [demo.json](../../../../exhibit/configs/demo.json) のとおり。通常・個人化・選択画像を同じ設定に揃える。
 
 ### Clip skip表記の差
 
