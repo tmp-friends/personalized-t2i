@@ -7,6 +7,16 @@ import pytest
 from exhibit.config import CONFIG, write_json
 from exhibit.domain import CARDS, build_legacy_personalization, file_hash, target_prompt
 
+# Injected so a CPU test never needs the Hub cache; the shape is the real one.
+PROVENANCE = {
+    "fan_pin": CONFIG["fan"]["commit"],
+    "adapter_hash": "a" * 64,
+    "decoder_hash": "d" * 64,
+    "tokenizer_hash": "t" * 64,
+    "generation": CONFIG["generation"],
+    "seeds": CONFIG["seeds"],
+}
+
 
 def fake_png(path, payload):
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -119,7 +129,8 @@ def assets(asset_tree, monkeypatch):
     root = asset_tree["root"]
     for module in (service_module, app_module, preflight_module):
         monkeypatch.setattr(module, "ASSETS", root, raising=False)
-    monkeypatch.setattr(app_module, "reviewed_ids", lambda: set(CARDS), raising=False)
+    # The catalog is loaded through the service, so one review path covers both.
+    monkeypatch.setattr(service_module, "CARDS_REVIEW", asset_tree["review"])
     return root
 
 
@@ -136,6 +147,8 @@ def stage_stub(monkeypatch):
             path = Path(item["path"])
             path.parent.mkdir(parents=True, exist_ok=True)
             path.write_bytes(item["id"].encode())
+            personalization = item["personalization"]
+            # The same identity fields the real worker emits with every image.
             on_event(
                 {
                     "type": "image",
@@ -144,7 +157,10 @@ def stage_stub(monkeypatch):
                     "sha256": file_hash(path),
                     "seed": item["seed"],
                     "prompt": item["prompt"],
-                    "personalization_hash": item["personalization"]["hash"],
+                    "policy_id": personalization["policy_id"],
+                    "policy_hash": personalization["policy_hash"],
+                    "effective_policy": personalization["effective_policy"],
+                    "personalization_hash": personalization["hash"],
                     "seconds": 0.01,
                 }
             )

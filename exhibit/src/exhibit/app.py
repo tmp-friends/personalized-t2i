@@ -3,16 +3,18 @@
 import asyncio
 from contextlib import asynccontextmanager
 from pathlib import Path
+from typing import Any
 
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictInt
 
 from .config import ASSETS, CONFIG, REPO, read_json
-from .domain import CARDS, reviewed_ids
+from .domain import digest
+from .elicitation import PreferenceError, RoundError
 from .preflight import sample_errors
-from .service import Conflict, Service
+from .service import Conflict, Service, active_catalog, default_policy
 
 service = Service()
 STATIC = Path(__file__).parent / "static"
@@ -59,6 +61,17 @@ async def conflict(_, exc):
     return JSONResponse({"detail": str(exc)}, status_code=409)
 
 
+# Both preference errors subclass ValueError; the closest handler wins.
+@app.exception_handler(RoundError)
+async def round_conflict(_, exc):
+    return JSONResponse({"detail": str(exc)}, status_code=409)
+
+
+@app.exception_handler(PreferenceError)
+async def preference(_, exc):
+    return JSONResponse({"detail": str(exc)}, status_code=422)
+
+
 @app.exception_handler(ValueError)
 async def invalid(_, exc):
     return JSONResponse({"detail": str(exc)}, status_code=422)
@@ -76,17 +89,34 @@ class Body(BaseModel):
 
 
 class Card(Body):
+    # Strength and aspects stay raw: the preference normalizer, not pydantic,
+    # decides whether `true` or `1.0` is a strength.
     card_id: str = Field(max_length=60)
-    aspects_off: list[str] = Field(default_factory=list, max_length=4)
+    strength: Any = Field(...)
+    aspects: list[Any] = Field(max_length=8)
 
 
 class Selection(Body):
-    cards: list[Card] = Field(max_length=16)
+    expected_revision: StrictInt
+    cards: list[Card] = Field(max_length=32)
+    aspect_gains: dict[str, Any]
+    commit: StrictBool
+
+
+class Round(Body):
+    request_id: str = Field(min_length=1, max_length=100)
+    expected_revision: StrictInt
 
 
 class Generate(Body):
     topic_id: str = Field(max_length=30)
     request_id: str = Field(min_length=1, max_length=100)
+    expected_revision: StrictInt
+
+
+class Feedback(Body):
+    expected_revision: StrictInt
+    preference: str = Field(max_length=20)
 
 
 class Sample(Body):
@@ -95,10 +125,14 @@ class Sample(Body):
 
 @app.get("/api/config")
 def config():
-    reviewed = reviewed_ids()
+    catalog = active_catalog()
+    policy_id, policy = default_policy()
     samples = read_json(ASSETS / "samples.json", []) or []
     manifest = read_json(ASSETS / "manifest.json", {}) or {}
     return {
+        "schema_version": CONFIG["schema_version"],
+        "catalog_id": catalog["catalog_id"],
+        "catalog_hash": catalog["catalog_hash"],
         "cards": [
             {
                 "id": card["id"],
@@ -107,12 +141,12 @@ def config():
                 "label": card["label"],
                 "subject_label": card["subject_label"],
                 "profile_label": card["profile_label"],
+                "axis_levels": card["axis_levels"],
                 "aspects": card["aspects"],
                 "aspects_ja": card["aspects_ja"],
                 "url": "/assets/" + card["path"],
             }
-            for card in CARDS.values()
-            if card["id"] in reviewed
+            for card in catalog["cards"]
         ],
         "aspects": CONFIG["aspect_labels"],
         "topics": [
@@ -123,7 +157,18 @@ def config():
             }
             for topic in CONFIG["topics"]
         ],
-        "alpha": CONFIG["alpha"],
+        # Display values come from the resolved policy, never from the root config.
+        "alpha": policy["alpha"],
+        "policy": {
+            "policy_id": policy_id,
+            "policy_hash": digest(policy),
+            "alpha": policy["alpha"],
+            "pooled_mode": policy["pooled_mode"],
+            "reference_unit": policy["reference_unit"],
+            "profiling": policy["profiling"],
+        },
+        "strengths": [1, 2],
+        "aspect_gains": [0.5, 1, 2],
         "selection": CONFIG["selection"],
         "idle_seconds": CONFIG["idle_seconds"],
         "timeout_seconds": CONFIG["timeout_seconds"],
@@ -137,7 +182,8 @@ def config():
             for s in samples
             if not sample_errors(s, ASSETS)
         ],
-        "ready": bool(reviewed) and manifest.get("generation") == CONFIG["generation"],
+        "ready": len(catalog["cards"]) >= CONFIG["selection"]["min"]
+        and manifest.get("generation") == CONFIG["generation"],
     }
 
 
@@ -169,12 +215,30 @@ def touch(sid: str):
 
 @app.put("/api/sessions/{sid}/selection")
 def selection(sid: str, body: Selection):
-    return service.set_selection(sid, [card.model_dump() for card in body.cards])
+    return service.set_selection(
+        sid,
+        expected_revision=body.expected_revision,
+        cards=[card.model_dump() for card in body.cards],
+        aspect_gains=body.aspect_gains,
+        commit=body.commit,
+    )
+
+
+@app.post("/api/sessions/{sid}/rounds")
+def rounds(sid: str, body: Round):
+    return service.request_round(sid, body.request_id, body.expected_revision)
 
 
 @app.post("/api/sessions/{sid}/runs")
 def generate(sid: str, body: Generate):
-    return service.start_run(sid, body.topic_id, body.request_id)
+    return service.start_run(
+        sid, body.topic_id, body.request_id, body.expected_revision
+    )
+
+
+@app.put("/api/sessions/{sid}/runs/{rid}/feedback")
+def feedback(sid: str, rid: str, body: Feedback):
+    return service.set_feedback(sid, rid, body.expected_revision, body.preference)
 
 
 @app.post("/api/sessions/{sid}/sample")

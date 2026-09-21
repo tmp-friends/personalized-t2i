@@ -1,5 +1,6 @@
 {
   "version": "exhibit-fan-illustrious-v6",
+  "schema_version": 2,
   "generation": {
     "model": "OnomaAIResearch/Illustrious-XL-v2.0",
     "revision": "69459c1fe6f46db41ab31e6114f05acc0e06bcaa",
@@ -36,7 +37,9 @@
   "alpha": 0.5,
   "selection": {
     "min": 3,
-    "max": 5
+    "max": 10,
+    "round_size": 12,
+    "max_rounds": 3
   },
   "fan": {
     "python": "fan-repro/.venv/bin/python",

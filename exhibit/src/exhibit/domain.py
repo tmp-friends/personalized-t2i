@@ -88,10 +88,14 @@ def ref_text(card, aspects_off=()):
     return text
 
 
-def normalize_selection(entries, config=CONFIG):
+# The v1 flow kept its own limits; the multi-round config never widens them.
+LEGACY_SELECTION = {"min": 3, "max": 5}
+
+
+def normalize_selection(entries, config=CONFIG, *, limits=None):
     """`[{card_id, aspects_off}]`, order preserved, validated against the catalog."""
     entries = list(entries or [])
-    limits = config["selection"]
+    limits = limits or LEGACY_SELECTION
     if not limits["min"] <= len(entries) <= limits["max"]:
         raise ValueError(f"{limits['min']}〜{limits['max']}枚を選んでください。")
     selection = []
@@ -375,7 +379,7 @@ def _refs(snapshot, policy, catalog=None):
     return sorted(refs, key=lambda item: (item["text"], item["ref_id"]))
 
 
-def build_personalization(snapshot, *, prompt, policy, provenance):
+def build_personalization(snapshot, *, prompt, policy, provenance, catalog=None):
     """Build a policy-bound, content-addressed snapshot; implicit lists are invalid."""
     from .fan_adapter import freeze_policy, profiling_argument, thaw_policy
 
@@ -388,7 +392,12 @@ def build_personalization(snapshot, *, prompt, policy, provenance):
         raise ValueError("Snapshot has unknown or missing fields")
     from .catalog import load_catalog
 
-    resolved_catalog = load_catalog(snapshot["catalog_id"], reviewed_only=True)
+    # The caller may pass the server-owned catalog it already validated.
+    resolved_catalog = (
+        load_catalog(snapshot["catalog_id"], reviewed_only=True)
+        if catalog is None
+        else catalog
+    )
     snapshot, effective, source = (
         _snapshot(snapshot, resolved_catalog),
         freeze_policy(policy),
