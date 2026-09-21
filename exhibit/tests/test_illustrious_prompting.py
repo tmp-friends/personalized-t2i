@@ -7,6 +7,8 @@ from exhibit import domain
 QUALITY_PREFIX = (
     "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, "
 )
+# catalog-v2 dropped `amazing quality` to buy tokens for the four aspect phrases.
+V2_QUALITY_PREFIX = "masterpiece, best quality, very aesthetic, newest, safe, "
 
 
 def test_compose_prompt_places_quality_first_and_resolution_last():
@@ -72,8 +74,10 @@ def test_v2_catalog_prompts_keep_all_four_reference_phrases_in_the_quality_envel
 
     cards = build_catalog(read_json(ROOT / "configs/catalog-v2.json"))
     assert len(cards) == 64
+    assert "amazing quality" not in V2_QUALITY_PREFIX
     for card in cards:
-        assert card["prompt"].startswith(QUALITY_PREFIX), card["id"]
+        assert card["prompt"].startswith(V2_QUALITY_PREFIX), card["id"]
+        assert "amazing quality" not in card["prompt"], card["id"]
         assert card["prompt"].endswith(
             CONFIG["generation"]["positive_prompt_tail"] + "."
         )

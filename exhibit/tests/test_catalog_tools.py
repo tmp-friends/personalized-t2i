@@ -4,7 +4,7 @@ import subprocess
 from pathlib import Path
 
 import pytest
-from exhibit.catalog import build_catalog
+from exhibit.catalog import build_catalog, card_settings
 from exhibit.config import CONFIG, ROOT, read_json
 from exhibit.domain import digest, file_hash
 
@@ -19,6 +19,10 @@ def load_script(name):
 
 def v2_cards():
     return build_catalog(read_json(ROOT / "configs/catalog-v2.json"))
+
+
+def v2_settings():
+    return card_settings("catalog-v2")
 
 
 def fake_provenance():
@@ -96,9 +100,9 @@ def test_runtime_tokenizer_provenance_hashes_all_pinned_tokenizer_files(tmp_path
 def test_token_report_binds_prompts_generation_special_ids_files_and_legacy_evidence():
     cards = v2_cards()[:2]
     report = report_for(cards)
-    assert report["schema_version"] == 1
+    assert report["schema_version"] == 2
     assert report["catalog_id"] == "catalog-v2"
-    assert report["generation"] == CONFIG["generation"]
+    assert report["generation"] == v2_settings()
     assert report["prompt_set_hash"] == digest(
         [{"id": card["id"], "prompt": card["prompt"]} for card in cards]
     )
@@ -108,6 +112,14 @@ def test_token_report_binds_prompts_generation_special_ids_files_and_legacy_evid
     assert report["results"][0]["token_ids"][0] == 49406
     assert report["results"][0]["token_ids"][-1] == 49407
     assert report["results"][0]["prompt_hash"] == digest(cards[0]["prompt"])
+    negative = report["negative_validation"]
+    assert negative["prompt_hash"] == digest(v2_settings()["negative_prompt"])
+    assert {row["tokenizer"] for row in negative["results"]} == {
+        "tokenizer",
+        "tokenizer_2",
+    }
+    assert all(row["special_tokens"] is True for row in negative["results"])
+    assert negative["max_tokens"] == 3
     evidence = report["legacy_overflow_evidence"]
     assert evidence["over_limit_ids"] == [
         "girl-warm_soft",
@@ -189,7 +201,7 @@ def test_prepare_v2_writes_only_v2_manifest_with_bound_token_report(
                     "sha256": file_hash(path),
                     "seed": item["seed"],
                     "prompt": item["prompt"],
-                    "settings": CONFIG["generation"],
+                    "settings": request["settings"],
                 }
             )
         return events
@@ -207,3 +219,9 @@ def test_prepare_v2_writes_only_v2_manifest_with_bound_token_report(
     first = manifest["images"][cards[0]["id"]]
     assert first["aspects_ja"] == cards[0]["aspects_ja"]
     assert first["label"] == cards[0]["label"]
+    # The card-only negative prompt reaches the worker and the recorded settings.
+    assert manifest["generation"] == first["settings"] == v2_settings()
+    assert (
+        manifest["generation"]["negative_prompt"]
+        != CONFIG["generation"]["negative_prompt"]
+    )

@@ -112,12 +112,14 @@ def _description_hash(card):
 
 
 def _install_reviewed_v2(asset_tree):
-    from exhibit.catalog import build_catalog
+    from exhibit.catalog import build_catalog, card_settings
     from exhibit.config import ROOT, read_json
     from exhibit.domain import ASPECTS, digest, file_hash
 
     root = asset_tree["root"]
-    cards = build_catalog(read_json(ROOT / "configs/catalog-v2.json"))
+    definition = read_json(ROOT / "configs/catalog-v2.json")
+    cards = build_catalog(definition)
+    settings = card_settings("catalog-v2", definition)
     rows = []
     images = {}
     reviews = {}
@@ -135,7 +137,7 @@ def _install_reviewed_v2(asset_tree):
             "aspects_ja": card["aspects_ja"],
             "label": card["label"],
             "profile_label": card["profile_label"],
-            "settings": CONFIG["generation"],
+            "settings": settings,
         }
         reviews[card["id"]] = {
             "reviewed": True,
@@ -168,9 +170,9 @@ def _install_reviewed_v2(asset_tree):
         )
     }
     token_validation = {
-        "schema_version": 1,
+        "schema_version": 2,
         "catalog_id": "catalog-v2",
-        "generation": CONFIG["generation"],
+        "generation": settings,
         "prompt_set_hash": digest(
             [{"id": card["id"], "prompt": card["prompt"]} for card in cards]
         ),
@@ -181,6 +183,22 @@ def _install_reviewed_v2(asset_tree):
         },
         "results": rows,
         "max_tokens": 3,
+        "negative_validation": {
+            "prompt_hash": digest(settings["negative_prompt"]),
+            "results": [
+                {
+                    "prompt_hash": digest(settings["negative_prompt"]),
+                    "tokenizer": tokenizer,
+                    "token_ids": [49406, 42, 49407],
+                    "tokens": 3,
+                    "limit": 77,
+                    "overflow": False,
+                    "special_tokens": True,
+                }
+                for tokenizer in ("tokenizer", "tokenizer_2")
+            ],
+            "max_tokens": 3,
+        },
         "legacy_overflow_evidence": {
             "path": "configs/legacy-card-token-overflow.json",
             "sha256": "2" * 64,
@@ -196,7 +214,7 @@ def _install_reviewed_v2(asset_tree):
             {
                 "version": 2,
                 "catalog_id": "catalog-v2",
-                "generation": CONFIG["generation"],
+                "generation": settings,
                 "token_validation": token_validation,
                 "images": images,
             }

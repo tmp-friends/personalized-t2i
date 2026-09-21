@@ -1,17 +1,38 @@
 import copy
 import json
+from collections import Counter
 from itertools import combinations
 
 import pytest
-from exhibit.catalog import build_catalog, load_catalog, validate_card_tokens
+from exhibit.catalog import (
+    build_catalog,
+    card_settings,
+    load_catalog,
+    validate_card_tokens,
+    validate_negative_tokens,
+    validate_token_report,
+)
 from exhibit.config import CONFIG, ROOT, read_json
 from exhibit.domain import ASPECTS, digest, file_hash
 
 from exhibit import catalog as catalog_module
 
+# The pairs the phrase pilot found contradictory; catalog-v2.json states why.
+FORBIDDEN_PAIRS = (
+    ("lighting", "texture", 3, 0),
+    ("lighting", "texture", 3, 2),
+    ("lighting", "texture", 2, 3),
+    ("color", "lighting", 0, 1),
+    ("color", "lighting", 3, 0),
+)
+
 
 def definition():
     return copy.deepcopy(read_json(ROOT / "configs/catalog-v2.json"))
+
+
+def v2_settings():
+    return card_settings("catalog-v2", definition())
 
 
 def description_hash(card):
@@ -56,10 +77,23 @@ def token_validation(cards, *, overflow=False):
                     "special_tokens": True,
                 }
             )
+    settings = v2_settings()
+    negative = [
+        {
+            "prompt_hash": digest(settings["negative_prompt"]),
+            "tokenizer": tokenizer,
+            "token_ids": [49406, 100, 49407],
+            "tokens": 3,
+            "limit": 77,
+            "overflow": False,
+            "special_tokens": True,
+        }
+        for tokenizer in ("tokenizer", "tokenizer_2")
+    ]
     return {
-        "schema_version": 1,
+        "schema_version": 2,
         "catalog_id": "catalog-v2",
-        "generation": CONFIG["generation"],
+        "generation": settings,
         "prompt_set_hash": prompt_set_hash(cards),
         "tokenizers": {
             "repo_id": CONFIG["generation"]["pipeline_config"]["model"],
@@ -68,6 +102,11 @@ def token_validation(cards, *, overflow=False):
         },
         "results": rows,
         "max_tokens": max(row["tokens"] for row in rows),
+        "negative_validation": {
+            "prompt_hash": digest(settings["negative_prompt"]),
+            "results": negative,
+            "max_tokens": 3,
+        },
         "legacy_overflow_evidence": {
             "path": "configs/legacy-card-token-overflow.json",
             "sha256": "2" * 64,
@@ -82,6 +121,7 @@ def token_validation(cards, *, overflow=False):
 
 def write_v2_bundle(root, review_path, *, reviewed=True):
     cards = build_catalog(definition())
+    settings = v2_settings()
     images = {}
     reviews = {}
     for card in cards:
@@ -98,7 +138,7 @@ def write_v2_bundle(root, review_path, *, reviewed=True):
             "aspects_ja": card["aspects_ja"],
             "label": card["label"],
             "profile_label": card["profile_label"],
-            "settings": CONFIG["generation"],
+            "settings": settings,
         }
         reviews[card["id"]] = {
             "reviewed": reviewed,
@@ -112,7 +152,7 @@ def write_v2_bundle(root, review_path, *, reviewed=True):
             {
                 "version": 2,
                 "catalog_id": "catalog-v2",
-                "generation": CONFIG["generation"],
+                "generation": settings,
                 "token_validation": token_validation(cards),
                 "images": images,
             }
@@ -136,21 +176,36 @@ def reviewed_v2(tmp_path):
     }
 
 
-def test_v2_build_has_stable_orthogonal_64_card_layout():
+def test_v2_build_has_a_balanced_explicit_16_profile_design():
+    """The 16 profiles are listed, not derived; the list is balanced and legal."""
     cards = build_catalog(definition())
     assert len(cards) == 64
     assert cards[0]["id"] == "girl-c0-l0-t0-m0"
-    assert cards[-1]["id"] == "barista-c3-l3-t0-m2"
+    assert cards[-1]["id"] == "barista-c3-l3-t3-m1"
     assert len({card["id"] for card in cards}) == 64
     assert len({card["profile_id"] for card in cards}) == 16
     for subject in ("girl", "student", "traveler", "barista"):
         rows = [card for card in cards if card["subject_id"] == subject]
         assert len(rows) == 16
         assert len({card["seed"] for card in rows}) == 1
-        for left, right in combinations(ASPECTS, 2):
-            assert {
-                (card["axis_levels"][left], card["axis_levels"][right]) for card in rows
-            } == {(a, b) for a in range(4) for b in range(4)}
+        for axis in ASPECTS:
+            assert Counter(card["axis_levels"][axis] for card in rows) == Counter(
+                dict.fromkeys(range(4), 4)
+            )
+        for left, right, first, second in FORBIDDEN_PAIRS:
+            assert all(
+                (card["axis_levels"][left], card["axis_levels"][right])
+                != (first, second)
+                for card in rows
+            ), (left, right, first, second)
+        # 90 of the 96 level pairs occur, five of the six gaps being forbidden.
+        pairs = Counter(
+            (left, right, card["axis_levels"][left], card["axis_levels"][right])
+            for left, right in combinations(ASPECTS, 2)
+            for card in rows
+        )
+        assert len(pairs) == 90
+        assert max(pairs.values()) == 2
         assert all("c" not in card["profile_label"] for card in rows)
         assert all(card["label"].startswith(card["subject_label"]) for card in rows)
 
@@ -170,6 +225,18 @@ def test_v2_build_has_stable_orthogonal_64_card_layout():
         ),
         lambda value: value["subjects"][0].update(id=[]),
         lambda value: value.update(generation={**value["generation"], "steps": 1}),
+        lambda value: value.pop("card_negative_prompt"),
+        lambda value: value.update(card_negative_prompt="  "),
+        lambda value: value["profiles"].pop(),
+        lambda value: value["profiles"].__setitem__(
+            1, copy.deepcopy(value["profiles"][0])
+        ),
+        lambda value: value["profiles"][0].update(color=4),
+        lambda value: value["profiles"][0].update(mood=3),
+        lambda value: value["profiles"][0].update(lighting=1),
+        lambda value: value.update(forbidden_level_pairs=[]),
+        lambda value: value["forbidden_level_pairs"][0].pop("reason"),
+        lambda value: value["forbidden_level_pairs"][0].update(axes=["color", "color"]),
     ],
 )
 def test_build_catalog_rejects_malformed_or_noncanonical_definitions(mutate):
@@ -177,6 +244,35 @@ def test_build_catalog_rejects_malformed_or_noncanonical_definitions(mutate):
     mutate(value)
     with pytest.raises(ValueError):
         build_catalog(value)
+
+
+def test_v2_cards_are_generated_with_the_catalog_only_negative_prompt():
+    value = definition()
+    settings = card_settings("catalog-v2", value)
+    assert settings["negative_prompt"] == value["card_negative_prompt"]
+    assert settings["negative_prompt"] != CONFIG["generation"]["negative_prompt"]
+    assert "from behind" in settings["negative_prompt"]
+    # The override is the only difference; the exhibit's own settings are untouched.
+    assert {key: settings[key] for key in settings if key != "negative_prompt"} == {
+        key: item
+        for key, item in CONFIG["generation"].items()
+        if key != "negative_prompt"
+    }
+    assert card_settings("catalog-v1") == CONFIG["generation"]
+
+
+def test_v2_review_is_invalidated_when_cards_used_the_exhibit_negative_prompt(
+    reviewed_v2,
+):
+    card = reviewed_v2["cards"][0]
+    manifest_path = reviewed_v2["root"] / "catalog-v2.json"
+    manifest = json.loads(manifest_path.read_text())
+    manifest["images"][card["id"]]["settings"] = CONFIG["generation"]
+    manifest_path.write_text(json.dumps(manifest))
+    loaded = load_catalog(
+        "catalog-v2", assets=reviewed_v2["root"], review_path=reviewed_v2["review"]
+    )
+    assert card["id"] not in {item["id"] for item in loaded["cards"]}
 
 
 def test_v2_loader_accepts_a_fully_reviewed_synthetic_catalog(reviewed_v2):
@@ -340,3 +436,44 @@ def test_validate_card_tokens_records_special_token_ids_and_overflow():
     assert rows[-1]["overflow"] is True
     assert short.calls == [("short prompt", True), ("long prompt", True)]
     assert long.calls == [("short prompt", True), ("long prompt", True)]
+
+
+def test_validate_negative_tokens_checks_the_card_negative_against_the_same_limit():
+    short = FakeTokenizer([49406, 10, 49407])
+    long = FakeTokenizer(list(range(78)))
+    result = validate_negative_tokens(
+        "worst quality", {"tokenizer": short, "tokenizer_2": long}
+    )
+    assert result["prompt_hash"] == digest("worst quality")
+    assert result["max_tokens"] == 78
+    assert [row["tokenizer"] for row in result["results"]] == [
+        "tokenizer",
+        "tokenizer_2",
+    ]
+    assert [row["overflow"] for row in result["results"]] == [False, True]
+    assert short.calls == [("worst quality", True)]
+
+
+def test_token_report_binds_the_card_negative_prompt_and_rejects_its_overflow():
+    cards = build_catalog(definition())[:2]
+    report = token_validation(cards)
+    assert validate_token_report(report, cards, generation=v2_settings())
+
+    overflowing = copy.deepcopy(report)
+    row = overflowing["negative_validation"]["results"][0]
+    row.update(token_ids=list(range(78)), tokens=78, overflow=True)
+    overflowing["negative_validation"]["max_tokens"] = 78
+    with pytest.raises(ValueError, match="negative prompt token validation failed"):
+        validate_token_report(overflowing, cards, generation=v2_settings())
+
+    exhibit_negative = copy.deepcopy(report)
+    exhibit_negative["negative_validation"]["prompt_hash"] = digest(
+        CONFIG["generation"]["negative_prompt"]
+    )
+    with pytest.raises(ValueError, match="Negative prompt token validation"):
+        validate_token_report(exhibit_negative, cards, generation=v2_settings())
+
+    without = copy.deepcopy(report)
+    without.pop("negative_validation")
+    with pytest.raises(ValueError, match="does not match the catalog"):
+        validate_token_report(without, cards, generation=v2_settings())

@@ -7,17 +7,23 @@ from pathlib import Path
 
 from exhibit.catalog import (
     LEGACY_OVERFLOW_IDS,
+    build_catalog,
+    card_settings,
     load_catalog,
     prompt_set_hash,
     validate_card_tokens,
+    validate_negative_tokens,
 )
-from exhibit.config import CONFIG, ROOT
+from exhibit.config import CONFIG, ROOT, read_json
 from exhibit.domain import file_hash
 from exhibit.evaluation import runtime_tokenizer_provenance
 
 
-def build_token_report(catalog_id, cards, tokenizers, provenance, legacy_path):
+def build_token_report(
+    catalog_id, cards, tokenizers, provenance, legacy_path, generation=None
+):
     """Create an auditable report bound to prompts, special tokens, and files."""
+    generation = generation if generation is not None else card_settings(catalog_id)
     rows = validate_card_tokens(cards, tokenizers)
     legacy_path = Path(legacy_path)
     try:
@@ -35,13 +41,16 @@ def build_token_report(catalog_id, cards, tokenizers, provenance, legacy_path):
     except ValueError:
         relative = legacy_path
     return {
-        "schema_version": 1,
+        "schema_version": 2,
         "catalog_id": catalog_id,
-        "generation": CONFIG["generation"],
+        "generation": generation,
         "prompt_set_hash": prompt_set_hash(cards),
         "tokenizers": provenance,
         "results": rows,
         "max_tokens": max((row["tokens"] for row in rows), default=0),
+        "negative_validation": validate_negative_tokens(
+            generation["negative_prompt"], tokenizers
+        ),
         "legacy_overflow_evidence": {
             "path": str(relative),
             "sha256": file_hash(legacy_path),
@@ -69,20 +78,29 @@ def main(argv=None):
         for name in ("tokenizer", "tokenizer_2")
     }
     catalog_id = "catalog-" + args.catalog
-    cards = load_catalog(catalog_id, reviewed_only=False)["all_cards"]
+    if catalog_id == "catalog-v2":
+        # This gate runs before generation, so it never reads the assets it gates.
+        definition = read_json(ROOT / "configs/catalog-v2.json")
+        cards = build_catalog(definition)
+        generation = card_settings(catalog_id, definition)
+    else:
+        cards = load_catalog(catalog_id, reviewed_only=False)["all_cards"]
+        generation = card_settings(catalog_id)
     report = build_token_report(
         catalog_id,
         cards,
         tokenizers,
         runtime_tokenizer_provenance(CONFIG["generation"]),
         ROOT / "configs/legacy-card-token-overflow.json",
+        generation,
     )
     text = json.dumps(report, ensure_ascii=False, indent=2, allow_nan=False) + "\n"
     if args.output:
         args.output.parent.mkdir(parents=True, exist_ok=True)
         args.output.write_text(text)
     print(text, end="")
-    if any(row["overflow"] for row in report["results"]):
+    checked = report["results"] + report["negative_validation"]["results"]
+    if any(row["overflow"] for row in checked):
         raise SystemExit(1)
     return report
 

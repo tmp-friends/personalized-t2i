@@ -12,11 +12,16 @@ from .domain import (
 
 
 def check_assets(root=ASSETS, *, require_samples=True, review=None, catalog_id=None):
-    from .catalog import load_catalog, validate_token_report
+    from .catalog import card_settings, load_catalog, validate_token_report
 
     root = Path(root)
     catalog_id = catalog_id or CONFIG.get("catalog_id")
     errors = []
+    try:
+        # v2 cards carry the catalog's own protective negative prompt.
+        card_generation = card_settings(catalog_id)
+    except (OSError, TypeError, ValueError):
+        card_generation = CONFIG["generation"]
 
     def read(name, default):
         try:
@@ -52,7 +57,7 @@ def check_assets(root=ASSETS, *, require_samples=True, review=None, catalog_id=N
         card_manifest = read_object("catalog-v2.json")
         card_images = image_map(card_manifest, "catalog-v2.json")
         review_path = review
-        if card_manifest.get("generation") != CONFIG["generation"]:
+        if card_manifest.get("generation") != card_generation:
             errors.append("Generation settings mismatch: catalog-v2.json")
     else:
         errors.append(f"Unknown catalog: {catalog_id}")
@@ -89,7 +94,11 @@ def check_assets(root=ASSETS, *, require_samples=True, review=None, catalog_id=N
 
     if catalog_id == "catalog-v2" and catalog_cards:
         try:
-            validate_token_report(card_manifest.get("token_validation"), catalog_cards)
+            validate_token_report(
+                card_manifest.get("token_validation"),
+                catalog_cards,
+                generation=card_generation,
+            )
         except (TypeError, ValueError) as exc:
             errors.append(f"Invalid token validation: {exc}")
 
@@ -102,7 +111,7 @@ def check_assets(root=ASSETS, *, require_samples=True, review=None, catalog_id=N
         if check_image(card_id, image or {}) and (
             image.get("path") != card["path"]
             or any(image.get(field) != card[field] for field in card_fields)
-            or image.get("settings") != CONFIG["generation"]
+            or image.get("settings") != card_generation
         ):
             errors.append(f"Card contract mismatch: {card_id}")
         if card_id not in reviewed:

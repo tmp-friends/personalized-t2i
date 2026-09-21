@@ -4,54 +4,100 @@
     {
       "id": "girl",
       "label": "街角の少女",
-      "basic_prompt_en": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1girl, solo, brown hair, beret, coat, town square, upper body, detailed eyes, detailed illustration",
+      "basic_prompt_en": "masterpiece, best quality, very aesthetic, newest, safe, 1girl, solo, brown hair, beret, coat, town square, upper body",
       "seed": 601
     },
     {
       "id": "student",
       "label": "図書館の青年",
-      "basic_prompt_en": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1boy, solo, male focus, black hair, vest, white shirt, library, upper body, detailed eyes, detailed illustration",
+      "basic_prompt_en": "masterpiece, best quality, very aesthetic, newest, safe, 1boy, solo, male focus, black hair, vest, white shirt, library, upper body",
       "seed": 602
     },
     {
       "id": "traveler",
       "label": "草原の旅人",
-      "basic_prompt_en": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1girl, solo, silver hair, cloak, grassland, detailed eyes, detailed illustration",
+      "basic_prompt_en": "masterpiece, best quality, very aesthetic, newest, safe, 1girl, solo, silver hair, cloak, grassland, upper body",
       "seed": 603
     },
     {
       "id": "barista",
       "label": "カフェの店員",
-      "basic_prompt_en": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1boy, solo, male focus, brown hair, apron, white shirt, cafe, upper body, detailed eyes, detailed illustration",
+      "basic_prompt_en": "masterpiece, best quality, very aesthetic, newest, safe, 1boy, solo, male focus, brown hair, apron, white shirt, cafe, upper body",
       "seed": 604
     }
   ],
   "axes": {
     "color": [
       "warm color palette, amber tones",
-      "cool color palette, blue and teal tones",
-      "muted colors, low saturation",
-      "vivid colors, high saturation"
+      "cool color palette, blue background",
+      "muted colors, desaturated",
+      "vivid saturated colors"
     ],
     "lighting": [
-      "soft diffused light",
-      "hard directional light, strong shadows",
-      "backlighting, rim light",
-      "even lighting, gentle shadows"
+      "overcast, diffused light, soft shadows",
+      "night, dim lighting, lamplight, dark background",
+      "backlighting, rim light, sun glare",
+      "harsh sunlight, cast shadow, high contrast"
     ],
     "texture": [
-      "watercolor painting, soft brushwork",
-      "cel shading, clean lineart",
+      "watercolor (medium), soft wash",
+      "anime screencap, cel shading, crisp lineart",
       "flat color, minimal shading",
-      "painterly texture, detailed shading"
+      "oil painting (medium), thick brushstrokes"
     ],
     "mood": [
-      "calm atmosphere",
-      "cheerful expression, lively atmosphere",
-      "serious atmosphere",
-      "dreamlike atmosphere"
+      "calm, closed eyes, gentle smile",
+      "cheerful, open mouth smile, happy",
+      "serious, stern expression",
+      "dreamy, half-closed eyes, looking away"
     ]
   },
+  "forbidden_level_pairs": [
+    {
+      "axes": ["lighting", "texture"],
+      "levels": [3, 0],
+      "reason": "硬い直射光と落ち影は水彩の淡いにじみと同じ絵で両立しない"
+    },
+    {
+      "axes": ["lighting", "texture"],
+      "levels": [3, 2],
+      "reason": "硬い直射光と落ち影は平塗りの最小陰影と同じ絵で両立しない"
+    },
+    {
+      "axes": ["lighting", "texture"],
+      "levels": [2, 3],
+      "reason": "逆光のグレアが油彩の厚い筆致に埋もれて見えなくなる"
+    },
+    {
+      "axes": ["color", "lighting"],
+      "levels": [0, 1],
+      "reason": "夜の暗さが暖色のパレットを打ち消す"
+    },
+    {
+      "axes": ["color", "lighting"],
+      "levels": [3, 0],
+      "reason": "曇天の拡散光では高彩度が出ない"
+    }
+  ],
+  "profiles": [
+    {"color": 0, "lighting": 0, "texture": 0, "mood": 0},
+    {"color": 0, "lighting": 0, "texture": 1, "mood": 1},
+    {"color": 0, "lighting": 2, "texture": 2, "mood": 2},
+    {"color": 0, "lighting": 3, "texture": 3, "mood": 3},
+    {"color": 1, "lighting": 0, "texture": 2, "mood": 3},
+    {"color": 1, "lighting": 1, "texture": 3, "mood": 0},
+    {"color": 1, "lighting": 2, "texture": 0, "mood": 1},
+    {"color": 1, "lighting": 3, "texture": 1, "mood": 2},
+    {"color": 2, "lighting": 0, "texture": 3, "mood": 2},
+    {"color": 2, "lighting": 1, "texture": 2, "mood": 1},
+    {"color": 2, "lighting": 2, "texture": 0, "mood": 3},
+    {"color": 2, "lighting": 3, "texture": 1, "mood": 0},
+    {"color": 3, "lighting": 1, "texture": 0, "mood": 2},
+    {"color": 3, "lighting": 1, "texture": 1, "mood": 3},
+    {"color": 3, "lighting": 2, "texture": 2, "mood": 0},
+    {"color": 3, "lighting": 3, "texture": 3, "mood": 1}
+  ],
+  "card_negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, bad proportions, bad perspective, text, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude, from behind, facing away, back turned, faceless, scenery focus",
   "generation": {
     "model": "OnomaAIResearch/Illustrious-XL-v2.0",
     "revision": "69459c1fe6f46db41ab31e6114f05acc0e06bcaa",
@@ -80,27 +126,27 @@
   "axes_ja": {
     "color": [
       "暖かな琥珀色",
-      "涼しい青緑",
+      "青い背景の涼しい色",
       "低彩度の落ち着いた色",
       "鮮やかな高彩度色"
     ],
     "lighting": [
-      "柔らかな拡散光",
-      "強い方向光と影",
-      "逆光と輪郭光",
-      "均一で穏やかな光"
+      "曇りの日のやわらかな光",
+      "夜のランプの灯り",
+      "逆光とまぶしい輪郭の光",
+      "強い日差しとくっきりした影"
     ],
     "texture": [
       "水彩の柔らかな筆致",
       "セル塗りと線画",
       "平塗りの最小陰影",
-      "絵画的な細密陰影"
+      "油彩の厚い筆致"
     ],
     "mood": [
       "静かな雰囲気",
       "明るく活発な表情",
       "真剣な雰囲気",
-      "夢のような雰囲気"
+      "夢見るような半眼"
     ]
   }
 }

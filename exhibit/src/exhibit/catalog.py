@@ -21,6 +21,15 @@ TOKENIZER_FILES = tuple(
         "special_tokens_map.json",
     )
 )
+_TOKEN_ROW_FIELDS = (
+    "prompt_hash",
+    "tokenizer",
+    "token_ids",
+    "tokens",
+    "limit",
+    "overflow",
+    "special_tokens",
+)
 LEGACY_OVERFLOW_IDS = (
     "girl-warm_soft",
     "student-warm_soft",
@@ -65,15 +74,105 @@ def _axis_map(value, label):
     return value
 
 
+def _forbidden_pairs(value):
+    """Level pairs the phrase pilot found contradictory; each carries its reason."""
+    if not isinstance(value, list) or not value:
+        raise ValueError("forbidden_level_pairs requires at least one entry")
+    pairs = {}
+    for item in value:
+        axes = item.get("axes") if isinstance(item, dict) else None
+        levels = item.get("levels") if isinstance(item, dict) else None
+        if (
+            not isinstance(item, dict)
+            or set(item) != {"axes", "levels", "reason"}
+            or not isinstance(axes, list)
+            or len(axes) != 2
+            or any(axis not in ASPECTS for axis in axes)
+            or axes[0] == axes[1]
+            or not isinstance(levels, list)
+            or len(levels) != 2
+            or any(type(level) is not int or not 0 <= level <= 3 for level in levels)
+            or not isinstance(item["reason"], str)
+            or not item["reason"].strip()
+        ):
+            raise ValueError("Invalid forbidden level pair")
+        pairs.setdefault((axes[0], axes[1]), set()).add((levels[0], levels[1]))
+    return pairs
+
+
+def _profiles(definition):
+    """The 16 profiles are listed explicitly; nothing derives them from an axis."""
+    forbidden = _forbidden_pairs(definition["forbidden_level_pairs"])
+    profiles = definition["profiles"]
+    if not isinstance(profiles, list) or len(profiles) != 16:
+        raise ValueError("Catalog requires sixteen profiles")
+    levels = []
+    for profile in profiles:
+        if (
+            not isinstance(profile, dict)
+            or set(profile) != set(ASPECTS)
+            or any(
+                type(profile[axis]) is not int or not 0 <= profile[axis] <= 3
+                for axis in ASPECTS
+            )
+        ):
+            raise ValueError("Invalid profile")
+        for (left, right), banned in forbidden.items():
+            if (profile[left], profile[right]) in banned:
+                raise ValueError(f"Profile uses a forbidden {left}/{right} pair")
+        levels.append({axis: profile[axis] for axis in ASPECTS})
+    if len({tuple(item.values()) for item in levels}) != 16:
+        raise ValueError("Catalog profiles must be unique")
+    for axis in ASPECTS:
+        counts = [
+            sum(1 for item in levels if item[axis] == level) for level in range(4)
+        ]
+        if counts != [4, 4, 4, 4]:
+            raise ValueError(f"Catalog profiles are unbalanced on {axis}")
+    return levels
+
+
+def card_negative_prompt(definition):
+    """The card-only negative prompt; the exhibit's own negative never changes."""
+    value = (
+        definition.get("card_negative_prompt") if isinstance(definition, dict) else None
+    )
+    if not isinstance(value, str) or not value.strip():
+        raise ValueError("Catalog definition requires a card negative prompt")
+    return value
+
+
+def card_settings(catalog_id, definition=None):
+    """Exhibit generation settings, with v2's single card-only negative override."""
+    if catalog_id != "catalog-v2":
+        return _copy(CONFIG["generation"])
+    if definition is None:
+        definition = _read_json_value(V2, "catalog-v2 definition")
+    return {
+        **_copy(CONFIG["generation"]),
+        "negative_prompt": card_negative_prompt(definition),
+    }
+
+
 def build_catalog(definition):
-    """Build the deterministic 4-subject x 16-profile orthogonal catalog."""
-    required = {"catalog_id", "subjects", "axes", "axes_ja", "generation"}
+    """Build the deterministic 4-subject x 16-profile catalog from the listed profiles."""
+    required = {
+        "catalog_id",
+        "subjects",
+        "axes",
+        "axes_ja",
+        "forbidden_level_pairs",
+        "profiles",
+        "card_negative_prompt",
+        "generation",
+    }
     if not isinstance(definition, dict) or set(definition) != required:
         raise ValueError("Invalid catalog definition")
     if definition["catalog_id"] != "catalog-v2":
         raise ValueError("Catalog definition must identify catalog-v2")
     if definition["generation"] != CONFIG["generation"]:
         raise ValueError("Catalog generation settings are not canonical")
+    card_negative_prompt(definition)
 
     axes = _axis_map(definition["axes"], "axes")
     axes_ja = _axis_map(definition["axes_ja"], "axes_ja")
@@ -101,44 +200,35 @@ def build_catalog(definition):
         raise ValueError("Catalog requires four unique subjects")
 
     cards = []
-    multiply_by_two = (0, 2, 3, 1)
+    profiles = _profiles(definition)
     for subject in subjects:
-        for color in range(4):
-            for lighting in range(4):
-                levels = {
-                    "color": color,
-                    "lighting": lighting,
-                    "texture": color ^ lighting,
-                    "mood": color ^ multiply_by_two[lighting],
+        for levels in profiles:
+            profile_id = "c{color}-l{lighting}-t{texture}-m{mood}".format(**levels)
+            aspects = {axis: axes[axis][levels[axis]] for axis in ASPECTS}
+            aspects_ja = {axis: axes_ja[axis][levels[axis]] for axis in ASPECTS}
+            card_id = f"{subject['id']}-{profile_id}"
+            profile_label = f"{aspects_ja['color']}・{aspects_ja['texture']}"
+            cards.append(
+                {
+                    "id": card_id,
+                    "subject_id": subject["id"],
+                    "profile_id": profile_id,
+                    "subject_label": subject["label"],
+                    "profile_label": profile_label,
+                    "label": f"{subject['label']} · {profile_label}",
+                    "axis_levels": dict(levels),
+                    "aspects": aspects,
+                    "aspects_ja": aspects_ja,
+                    "ref_en": ", ".join(aspects.values()),
+                    "prompt": compose_prompt(
+                        subject["basic_prompt_en"],
+                        list(aspects.values()),
+                        definition["generation"],
+                    ),
+                    "seed": subject["seed"],
+                    "path": f"cards-v2/{card_id}.png",
                 }
-                profile_id = (
-                    f"c{color}-l{lighting}-t{levels['texture']}-m{levels['mood']}"
-                )
-                aspects = {axis: axes[axis][levels[axis]] for axis in ASPECTS}
-                aspects_ja = {axis: axes_ja[axis][levels[axis]] for axis in ASPECTS}
-                card_id = f"{subject['id']}-{profile_id}"
-                profile_label = f"{aspects_ja['color']}・{aspects_ja['texture']}"
-                cards.append(
-                    {
-                        "id": card_id,
-                        "subject_id": subject["id"],
-                        "profile_id": profile_id,
-                        "subject_label": subject["label"],
-                        "profile_label": profile_label,
-                        "label": f"{subject['label']} · {profile_label}",
-                        "axis_levels": levels,
-                        "aspects": aspects,
-                        "aspects_ja": aspects_ja,
-                        "ref_en": ", ".join(aspects.values()),
-                        "prompt": compose_prompt(
-                            subject["basic_prompt_en"],
-                            list(aspects.values()),
-                            definition["generation"],
-                        ),
-                        "seed": subject["seed"],
-                        "path": f"cards-v2/{card_id}.png",
-                    }
-                )
+            )
     if len({card["id"] for card in cards}) != 64:
         raise ValueError("Catalog card IDs must be unique")
     return cards
@@ -205,7 +295,7 @@ def _valid_v1(card, image, review, assets):
     )
 
 
-def _valid_v2(card, image, review, assets):
+def _valid_v2(card, image, review, assets, settings):
     if not isinstance(image, dict) or not isinstance(review, dict):
         return False
     fields = (
@@ -222,7 +312,7 @@ def _valid_v2(card, image, review, assets):
     return (
         _image_bytes_match(image, assets)
         and all(image.get(key) == card[key] for key in fields)
-        and image.get("settings") == CONFIG["generation"]
+        and image.get("settings") == settings
         and review.get("reviewed") is True
         and review.get("image_sha256") == image.get("sha256")
         and review.get("description_hash") == description_hash(card)
@@ -232,7 +322,7 @@ def _valid_v2(card, image, review, assets):
     )
 
 
-def _manifest_images(manifest, *, catalog_id):
+def _manifest_images(manifest, *, catalog_id, settings=None):
     if manifest is None:
         return {}
     if not isinstance(manifest, dict):
@@ -249,7 +339,7 @@ def _manifest_images(manifest, *, catalog_id):
             set(manifest) != required
             or manifest["version"] != 2
             or manifest["catalog_id"] != catalog_id
-            or manifest["generation"] != CONFIG["generation"]
+            or manifest["generation"] != settings
             or not isinstance(manifest["token_validation"], dict)
             or not isinstance(manifest["images"], dict)
         ):
@@ -281,10 +371,11 @@ def load_catalog(catalog_id, *, reviewed_only=True, assets=ASSETS, review_path=N
     elif catalog_id == "catalog-v2":
         definition = _read_json_value(V2, "catalog-v2 definition")
         all_cards = build_catalog(definition)
+        settings = card_settings(catalog_id, definition)
         manifest = _read_json_value(
             assets / "catalog-v2.json", "catalog-v2 manifest", missing=None
         )
-        images = _manifest_images(manifest, catalog_id=catalog_id)
+        images = _manifest_images(manifest, catalog_id=catalog_id, settings=settings)
         review = _read_json_value(
             review_path or V2_REVIEW, "catalog-v2 review", missing={}
         )
@@ -293,7 +384,9 @@ def load_catalog(catalog_id, *, reviewed_only=True, assets=ASSETS, review_path=N
         eligible = [
             card
             for card in all_cards
-            if _valid_v2(card, images.get(card["id"]), review.get(card["id"]), assets)
+            if _valid_v2(
+                card, images.get(card["id"]), review.get(card["id"]), assets, settings
+            )
         ]
     else:
         raise ValueError("Unknown catalog")
@@ -319,34 +412,79 @@ def load_catalog(catalog_id, *, reviewed_only=True, assets=ASSETS, review_path=N
     }
 
 
+def _token_row(text, name, tokenizer):
+    encoded = tokenizer(text, add_special_tokens=True)
+    ids = list(encoded["input_ids"] if isinstance(encoded, dict) else encoded.input_ids)
+    return {
+        "prompt_hash": digest(text),
+        "tokenizer": name,
+        "token_ids": ids,
+        "tokens": len(ids),
+        "limit": 77,
+        "overflow": len(ids) > 77,
+        "special_tokens": True,
+    }
+
+
 def validate_card_tokens(cards, tokenizers):
-    rows = []
-    for card in cards:
-        for name, tokenizer in tokenizers.items():
-            encoded = tokenizer(card["prompt"], add_special_tokens=True)
-            ids = (
-                encoded["input_ids"] if isinstance(encoded, dict) else encoded.input_ids
-            )
-            ids = list(ids)
-            rows.append(
-                {
-                    "card_id": card["id"],
-                    "prompt_hash": digest(card["prompt"]),
-                    "tokenizer": name,
-                    "token_ids": ids,
-                    "tokens": len(ids),
-                    "limit": 77,
-                    "overflow": len(ids) > 77,
-                    "special_tokens": True,
-                }
-            )
-    return rows
+    return [
+        {"card_id": card["id"], **_token_row(card["prompt"], name, tokenizer)}
+        for card in cards
+        for name, tokenizer in tokenizers.items()
+    ]
 
 
-def validate_token_report(report, cards, *, catalog_id="catalog-v2"):
+def validate_negative_tokens(negative_prompt, tokenizers):
+    """FAN truncates the negative prompt at 77 just as silently as the positive."""
+    rows = [
+        _token_row(negative_prompt, name, tokenizer)
+        for name, tokenizer in tokenizers.items()
+    ]
+    return {
+        "prompt_hash": digest(negative_prompt),
+        "results": rows,
+        "max_tokens": max((row["tokens"] for row in rows), default=0),
+    }
+
+
+def _validate_negative_report(negative, negative_prompt):
+    if (
+        not isinstance(negative, dict)
+        or set(negative) != {"prompt_hash", "results", "max_tokens"}
+        or negative["prompt_hash"] != digest(negative_prompt)
+        or not isinstance(negative["results"], list)
+    ):
+        raise ValueError("Negative prompt token validation does not match the catalog")
+    names = set()
+    for row in negative["results"]:
+        ids = row.get("token_ids") if isinstance(row, dict) else None
+        if (
+            not isinstance(row, dict)
+            or set(row) != set(_TOKEN_ROW_FIELDS)
+            or row["tokenizer"] not in ("tokenizer", "tokenizer_2")
+            or row["tokenizer"] in names
+            or row["prompt_hash"] != digest(negative_prompt)
+            or row["special_tokens"] is not True
+            or not isinstance(ids, list)
+            or any(type(item) is not int for item in ids)
+            or row["tokens"] != len(ids)
+            or row["limit"] != 77
+            or row["overflow"] is not (len(ids) > 77)
+        ):
+            raise TypeError("Invalid negative token validation row")
+        names.add(row["tokenizer"])
+    if names != {"tokenizer", "tokenizer_2"}:
+        raise ValueError("Negative prompt token validation rows are incomplete")
+    maximum = max(row["tokens"] for row in negative["results"])
+    if negative["max_tokens"] != maximum or maximum > 77:
+        raise ValueError("Card negative prompt token validation failed")
+
+
+def validate_token_report(report, cards, *, catalog_id="catalog-v2", generation=None):
     """Reject reports not bound to the exact prompts and pinned tokenizer files."""
     if not isinstance(report, dict):
         raise TypeError("Invalid token validation report")
+    generation = generation if generation is not None else card_settings(catalog_id)
     required = {
         "schema_version",
         "catalog_id",
@@ -355,16 +493,20 @@ def validate_token_report(report, cards, *, catalog_id="catalog-v2"):
         "tokenizers",
         "results",
         "max_tokens",
+        "negative_validation",
         "legacy_overflow_evidence",
     }
     if (
         set(report) != required
-        or report["schema_version"] != 1
+        or report["schema_version"] != 2
         or report["catalog_id"] != catalog_id
-        or report["generation"] != CONFIG["generation"]
+        or report["generation"] != generation
         or report["prompt_set_hash"] != prompt_set_hash(cards)
     ):
         raise ValueError("Token validation report does not match the catalog")
+    _validate_negative_report(
+        report["negative_validation"], generation["negative_prompt"]
+    )
     pipeline = CONFIG["generation"]["pipeline_config"]
     provenance = report["tokenizers"]
     if (

@@ -8,7 +8,7 @@ import threading
 import time
 from pathlib import Path
 
-from exhibit.catalog import build_catalog, validate_token_report
+from exhibit.catalog import build_catalog, card_settings, validate_token_report
 from exhibit.config import (
     ASSETS,
     CONFIG,
@@ -107,6 +107,8 @@ def prepare_cards(catalog="v1"):
     if catalog == "v2":
         definition = read_json(ROOT / "configs/catalog-v2.json")
         cards = {card["id"]: card for card in build_catalog(definition)}
+        # The cards keep their own protective negative prompt; demo.json is untouched.
+        settings = card_settings("catalog-v2", definition)
         token_path = OUTPUTS / "preparation" / "catalog-v2" / "token-counts.json"
         check = [
             str(ROOT.parent / CONFIG["fan"]["python"]),
@@ -126,7 +128,7 @@ def prepare_cards(catalog="v1"):
             )
         try:
             token_report = validate_token_report(
-                read_json(token_path), list(cards.values())
+                read_json(token_path), list(cards.values()), generation=settings
             )
         except (OSError, TypeError, ValueError) as exc:
             raise RuntimeError("v2 card token validation report is invalid") from exc
@@ -139,7 +141,10 @@ def prepare_cards(catalog="v1"):
             }
             for card in cards.values()
         ]
-        events = stage({"stage": "generate", "items": items}, "catalog-v2/card-images")
+        events = stage(
+            {"stage": "generate", "items": items, "settings": settings},
+            "catalog-v2/card-images",
+        )
         fields = (
             "ref_en",
             "aspects",
@@ -159,7 +164,7 @@ def prepare_cards(catalog="v1"):
             {
                 "version": 2,
                 "catalog_id": "catalog-v2",
-                "generation": CONFIG["generation"],
+                "generation": settings,
                 "token_validation": token_report,
                 "images": images,
             },
