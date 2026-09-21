@@ -12,6 +12,7 @@ from pathlib import Path
 
 from .config import CONFIG, FAN_UPSTREAM, write_json
 from .domain import digest, file_hash
+from .evaluation import runtime_file_provenance
 from .fan_adapter import (
     encode_conditioning,
     freeze_policy,
@@ -347,12 +348,16 @@ def _runtime_provenance(pipe, upstream, settings):
                 "workers.py",
                 "gpu.py",
                 "evaluation_worker.py",
+                "evaluation.py",
             )
         }
         | {
             "scripts/evaluate_fan.py": file_hash(
                 exhibit_root / "scripts/evaluate_fan.py"
-            )
+            ),
+            "scripts/prepare_evaluation.py": file_hash(
+                exhibit_root / "scripts/prepare_evaluation.py"
+            ),
         },
         "patch_series": {
             "series_hash": file_hash(series) if series.is_file() else None,
@@ -367,6 +372,7 @@ def _runtime_provenance(pipe, upstream, settings):
             key: copy.deepcopy(settings.get(key))
             for key in ("model", "revision", "checkpoint", "pipeline_config")
         },
+        "model_files": runtime_file_provenance(settings),
         "libraries": {
             "diffusers": diffusers.__version__,
             "transformers": transformers.__version__,
@@ -503,16 +509,60 @@ def _prompts(config):
     return result
 
 
+def encoding_cases(config):
+    """Expand explicit named prompts and histories without hiding coverage."""
+    prompts = _prompts(config)
+    histories = config.get("histories")
+    if histories is None:
+        refs = config.get("refs")
+        if not isinstance(refs, list) or not refs:
+            raise ValueError("refs or histories must be provided")
+        histories = [{"id": "default", "refs": refs}]
+    if not isinstance(histories, list) or not histories:
+        raise ValueError("histories must be a non-empty list")
+    seen = set()
+    result = []
+    for history in histories:
+        if not isinstance(history, dict):
+            raise TypeError("each history must be an object")
+        history_id, refs = history.get("id"), history.get("refs")
+        if (
+            not isinstance(history_id, str)
+            or not history_id
+            or history_id in seen
+            or not isinstance(refs, list)
+            or not refs
+        ):
+            raise ValueError("history id and refs must be present and unique")
+        seen.add(history_id)
+        for prompt in prompts:
+            result.append(
+                {
+                    "prompt_id": prompt["id"],
+                    "prompt": prompt["text"],
+                    "history_id": history_id,
+                    "refs": copy.deepcopy(refs),
+                }
+            )
+    return result
+
+
 def run_encoding(config):
     import torch
     from fan.wrapper import stable_diffusion_xl
 
     started = time.monotonic()
     policies = validate_policy_specs(config.get("policies"))
+    cases = encoding_cases(config)
     prompts = _prompts(config)
-    refs = config.get("refs")
-    if not isinstance(refs, list) or not refs:
-        raise ValueError("refs must be a non-empty list")
+    histories = []
+    seen_histories = set()
+    for case in cases:
+        if case["history_id"] not in seen_histories:
+            histories.append(
+                {"id": case["history_id"], "refs": copy.deepcopy(case["refs"])}
+            )
+            seen_histories.add(case["history_id"])
     settings = config.get("settings", CONFIG["generation"])
     upstream = config.get("upstream", str(FAN_UPSTREAM))
     output = Path(config["output"]).resolve()
@@ -524,40 +574,69 @@ def run_encoding(config):
     )
     results = {}
     for spec in policies:
-        prompt_results = {}
-        for prompt in prompts:
-            emit(
-                "diagnostic",
-                policy_id=spec["policy_id"],
-                policy_hash=spec["policy_hash"],
-                prompt_id=prompt["id"],
-            )
-            prompt_results[prompt["id"]] = _diagnose_prompt(
-                pipe, encoder, direct_encoder, prompt["text"], refs, spec
-            )
-        results[spec["policy_hash"]] = {
-            **spec,
-            "prompts": prompt_results,
-            "eligibility": {
-                "passed": all(
-                    item["eligibility"]["passed"] for item in prompt_results.values()
-                ),
-                "failures": {
-                    prompt_id: item["eligibility"]["failures"]
-                    for prompt_id, item in prompt_results.items()
-                    if item["eligibility"]["failures"]
+        history_results = {}
+        for history in histories:
+            prompt_results = {}
+            for case in cases:
+                if case["history_id"] != history["id"]:
+                    continue
+                emit(
+                    "diagnostic",
+                    policy_id=spec["policy_id"],
+                    policy_hash=spec["policy_hash"],
+                    prompt_id=case["prompt_id"],
+                    history_id=case["history_id"],
+                )
+                prompt_results[case["prompt_id"]] = _diagnose_prompt(
+                    pipe,
+                    encoder,
+                    direct_encoder,
+                    case["prompt"],
+                    case["refs"],
+                    spec,
+                )
+            history_results[history["id"]] = {
+                "refs": copy.deepcopy(history["refs"]),
+                "prompts": prompt_results,
+                "eligibility": {
+                    "passed": all(
+                        item["eligibility"]["passed"]
+                        for item in prompt_results.values()
+                    ),
+                    "failures": {
+                        prompt_id: item["eligibility"]["failures"]
+                        for prompt_id, item in prompt_results.items()
+                        if item["eligibility"]["failures"]
+                    },
                 },
-            },
+            }
+        failures = {
+            history_id: item["eligibility"]["failures"]
+            for history_id, item in history_results.items()
+            if item["eligibility"]["failures"]
         }
+        result = {
+            **spec,
+            "histories": history_results,
+            "eligibility": {"passed": not failures, "failures": failures},
+        }
+        if list(history_results) == ["default"]:
+            result["prompts"] = history_results["default"]["prompts"]
+        results[spec["policy_hash"]] = result
 
     detector_texts = [
         *[("prompt:" + item["id"], item["text"]) for item in prompts],
-        *[(f"ref:{index}", ref["text"]) for index, ref in enumerate(refs)],
+        *[
+            ("ref:" + history["id"] + ":" + str(index), ref["text"])
+            for history in histories
+            for index, ref in enumerate(history["refs"])
+        ],
     ]
+    first_case = cases[0]
     exception = _exception_restoration(
         encoder,
-        prompts[0]["text"],
-        refs,
+        first_case["prompt"],
+        first_case["refs"],
         policies[0]["effective_policy"],
     )
     if not exception["passed"]:
@@ -567,13 +646,14 @@ def run_encoding(config):
                 "exception_restoration"
             ]
     report = {
-        "schema_version": 1,
+        "schema_version": 2,
         "kind": "fan-encoding-diagnostic",
+        "diagnostic_identity": copy.deepcopy(config.get("diagnostic_identity")),
         "settings": settings,
         "upstream": upstream,
         "provenance": _runtime_provenance(pipe, upstream, settings),
         "prompts": prompts,
-        "refs": refs,
+        "histories": histories,
         "policies": results,
         "token_detector": _token_detector_report(pipe, encoder, detector_texts),
         "exception_restoration": exception,
@@ -591,10 +671,218 @@ def run_encoding(config):
         "encoding_report",
         path=str(output),
         policy_count=len(policies),
+        case_count=len(cases),
         all_eligible=all(item["eligibility"]["passed"] for item in results.values()),
         exception_restored=exception["passed"],
     )
     return report
+
+
+def validate_image_file(path, width, height):
+    """Decode as RGB and apply only the predeclared hard validity rules."""
+    from PIL import Image, ImageStat
+
+    path = Path(path)
+    if not path.is_file():
+        return {"valid": False, "invalid_reason": "missing_image"}
+    try:
+        with Image.open(path) as source:
+            source.load()
+            image = source.convert("RGB")
+    except (OSError, ValueError) as error:
+        return {
+            "valid": False,
+            "invalid_reason": "decode_error",
+            "error": str(error),
+        }
+    extrema = image.getextrema()
+    stats = ImageStat.Stat(image)
+    result = {
+        "valid": True,
+        "mode": "RGB",
+        "width": image.width,
+        "height": image.height,
+        "range": [[int(low), int(high)] for low, high in extrema],
+        "variance": [float(value) for value in stats.var],
+        "nonfinite_values": 0,
+    }
+    if image.size != (width, height):
+        result.update({"valid": False, "invalid_reason": "wrong_dimensions"})
+    elif all(high == 0 for _, high in extrema):
+        result.update({"valid": False, "invalid_reason": "all_zero_rgb"})
+    return result
+
+
+def _normalized_features(value):
+    import torch
+
+    if hasattr(value, "pooler_output"):
+        value = value.pooler_output
+    norms = torch.linalg.vector_norm(value.float(), dim=-1, keepdim=True)
+    if not bool(torch.isfinite(value).all()) or bool((norms == 0).any()):
+        raise ValueError("evaluator returned nonfinite or zero embeddings")
+    return value.float() / norms
+
+
+def embed_evaluation(items, preparation, settings, seconds):
+    """Encode validated images and frozen target/reference texts with local CLIP."""
+    import torch
+    from PIL import Image
+    from transformers import CLIPModel, CLIPProcessor
+
+    snapshot = preparation["snapshot_path"]
+    processor = CLIPProcessor.from_pretrained(
+        snapshot, local_files_only=True, use_fast=False
+    )
+    model = CLIPModel.from_pretrained(
+        snapshot,
+        local_files_only=True,
+        torch_dtype=torch.float16,
+        use_safetensors=True,
+    ).to("cuda")
+    model.eval()
+    images = {}
+    valid = []
+    for item in items:
+        validation = validate_image_file(
+            item["path"], settings["width"], settings["height"]
+        )
+        row = {
+            **validation,
+            "sha256": file_hash(item["path"]) if Path(item["path"]).is_file() else None,
+            "seconds": seconds.get(item["id"]),
+        }
+        images[item["id"]] = row
+        if validation["valid"]:
+            valid.append(item)
+    for offset in range(0, len(valid), 8):
+        batch_items = valid[offset : offset + 8]
+        opened = []
+        try:
+            for item in batch_items:
+                with Image.open(item["path"]) as source:
+                    opened.append(source.convert("RGB"))
+            inputs = processor(images=opened, return_tensors="pt")
+            inputs = {key: value.to("cuda") for key, value in inputs.items()}
+            with torch.no_grad():
+                features = _normalized_features(model.get_image_features(**inputs))
+            for item, feature in zip(batch_items, features.cpu().tolist()):
+                images[item["id"]]["embedding"] = feature
+        finally:
+            for image in opened:
+                image.close()
+
+    text_values = {}
+    for item in items:
+        target_id, target_text = item["target_text_id"], item["target_text"]
+        if target_id in text_values and text_values[target_id] != target_text:
+            raise ValueError("target text id maps to different text")
+        text_values[target_id] = target_text
+        for ref in item.get("refs", []):
+            ref_id = "ref:" + ref["ref_id"]
+            if ref_id in text_values and text_values[ref_id] != ref["text"]:
+                raise ValueError("reference id maps to different text")
+            text_values[ref_id] = ref["text"]
+    text_ids = sorted(text_values)
+    texts = {}
+    for offset in range(0, len(text_ids), 64):
+        batch_ids = text_ids[offset : offset + 64]
+        inputs = processor(
+            text=[text_values[text_id] for text_id in batch_ids],
+            padding=True,
+            return_tensors="pt",
+        )
+        inputs = {key: value.to("cuda") for key, value in inputs.items()}
+        with torch.no_grad():
+            features = _normalized_features(model.get_text_features(**inputs))
+        for text_id, feature in zip(batch_ids, features.cpu().tolist()):
+            texts[text_id] = feature
+    return {"images": images, "texts": texts}
+
+
+def _conditioning_alignment(candidate, plain):
+    result = {}
+    for name in ("hidden", "pooled"):
+        metrics = tensor_metrics(candidate[name], plain[name])
+        valid = (
+            metrics["finite"]
+            and metrics["candidate_zero_vectors"] == 0
+            and metrics["base_zero_vectors"] == 0
+        )
+        result[name] = {
+            "valid": valid,
+            "cosine": metrics["mean_cosine"] if valid else None,
+            "shape": metrics["shape"],
+        }
+    return result
+
+
+def run_matrix(request, *, generator=None, embedder=None):
+    """Reuse the generation worker, then score every registered artifact locally."""
+    from .workers import generate
+
+    generator = generator or generate
+    embedder = embedder or embed_evaluation
+    image_events = {}
+    conditioning = {
+        item["id"]: copy.deepcopy(item["prior_event"]["conditioning_target_align"])
+        for item in request.get("all_items", [])
+        if isinstance(item.get("prior_event"), dict)
+        and item["prior_event"].get("conditioning_target_align") is not None
+    }
+    seconds = {
+        item["id"]: item["prior_event"]["seconds"]
+        for item in request.get("all_items", [])
+        if isinstance(item.get("prior_event"), dict)
+        and item["prior_event"].get("seconds") is not None
+    }
+
+    def receive(kind, **data):
+        if kind == "image":
+            image_events[data["id"]] = copy.deepcopy(data)
+            seconds[data["id"]] = data.get("seconds")
+            if data.get("conditioning_target_align") is not None:
+                conditioning[data["id"]] = copy.deepcopy(
+                    data["conditioning_target_align"]
+                )
+        emit(kind, **data)
+
+    generation_request = {
+        "stage": "generate",
+        "settings": request["settings"],
+        "upstream": request.get("upstream", str(FAN_UPSTREAM)),
+        "items": request.get("items", []),
+        "emit_image_started": True,
+    }
+    if generation_request["items"]:
+        generator(
+            generation_request,
+            event_sink=receive,
+            conditioning_sink=_conditioning_alignment,
+        )
+
+    output = Path(request["embeddings_output"]).resolve()
+    previous = (
+        json.loads(output.read_text()) if output.is_file() else {"conditioning": {}}
+    )
+    result = embedder(
+        request["all_items"],
+        request["evaluator_preparation"],
+        request["settings"],
+        seconds,
+    )
+    result["conditioning"] = {
+        **copy.deepcopy(previous.get("conditioning", {})),
+        **conditioning,
+    }
+    json.dumps(result, ensure_ascii=False, allow_nan=False)
+    write_json(output, result)
+    emit(
+        "evaluation_embeddings",
+        path=str(output),
+        image_count=len(result["images"]),
+    )
+    return result
 
 
 def parse_args(argv=None):
@@ -602,14 +890,17 @@ def parse_args(argv=None):
     subparsers = parser.add_subparsers(dest="command", required=True)
     encoding = subparsers.add_parser("encoding")
     encoding.add_argument("--config", required=True)
+    matrix = subparsers.add_parser("matrix")
+    matrix.add_argument("--request", required=True)
     return parser.parse_args(argv)
 
 
 def main(argv=None):
     args = parse_args(argv)
-    config = json.loads(Path(args.config).read_text())
     if args.command == "encoding":
-        run_encoding(config)
+        run_encoding(json.loads(Path(args.config).read_text()))
+    elif args.command == "matrix":
+        run_matrix(json.loads(Path(args.request).read_text()))
 
 
 if __name__ == "__main__":

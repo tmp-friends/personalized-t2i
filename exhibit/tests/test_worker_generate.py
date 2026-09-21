@@ -355,6 +355,7 @@ def test_the_pinned_fp16_fix_vae_replaces_the_checkpoint_decoder(stubs, tmp_path
             {
                 "revision": "vae-revision",
                 "torch_dtype": "fp16",
+                "use_safetensors": True,
                 "local_files_only": True,
             },
         )
@@ -495,3 +496,44 @@ def test_generate_rejects_a_policy_hash_that_conflicts_with_effective_policy(
         workers.generate(request)
 
     assert stubs["pipeline"] == []
+
+
+def test_evaluation_can_observe_conditioning_without_duplicating_generation(
+    stubs, tmp_path
+):
+    effective = thaw_policy(resolve_policy("official_encoder", FAN_POLICIES))
+    personal = {
+        **personalization(alpha=effective["alpha"]),
+        "effective_policy": effective,
+        "policy_hash": workers.digest(effective),
+        "personalization_hash": "observed-personalization",
+    }
+    request = request_for(tmp_path, stubs["upstream"])
+    request["items"] = [{**request["items"][1], "personalization": personal}]
+    observed = []
+    forwarded = []
+
+    workers.generate(
+        request,
+        event_sink=lambda kind, **data: forwarded.append((kind, data)),
+        conditioning_sink=lambda item_id, candidate, plain: (
+            observed.append((item_id, candidate, plain))
+            or {
+                "hidden": {"valid": True, "cosine": 0.75},
+                "pooled": {"valid": True, "cosine": 0.5},
+            }
+        ),
+    )
+
+    assert len(stubs["pipeline"]) == 1
+    assert len(observed) == 1
+    item_id, candidate, plain = observed[0]
+    assert item_id == "v0-0"
+    assert candidate["hidden"].name == "cond-personalized"
+    assert plain["hidden"].name == "cond"
+    image = next(data for kind, data in forwarded if kind == "image")
+    assert image["conditioning_target_align"] == {
+        "hidden": {"valid": True, "cosine": 0.75},
+        "pooled": {"valid": True, "cosine": 0.5},
+    }
+    assert stubs["events"] == []

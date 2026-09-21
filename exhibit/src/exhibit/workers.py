@@ -70,6 +70,7 @@ def load_pipeline(settings):
             vae["model"],
             revision=vae["revision"],
             torch_dtype=torch.float16,
+            use_safetensors=True,
             local_files_only=True,
         ).to("cuda")
     name = settings.get("scheduler", "EulerAncestralDiscreteScheduler")
@@ -164,8 +165,10 @@ def effective_policy_id(personalization, policy, policy_hash):
     return "custom:" + policy_hash[:16]
 
 
-def generate(request):
+def generate(request, *, event_sink=None, conditioning_sink=None):
     import torch
+
+    send = event_sink or emit
 
     settings = request.get("settings", CONFIG["generation"])
     fan = request.get("fan") or CONFIG["fan"]
@@ -183,7 +186,7 @@ def generate(request):
     started = time.monotonic()
     pipe = load_pipeline(settings)
     encoder = build_encoder(pipe, request.get("upstream"))
-    emit(
+    send(
         "loaded",
         scheduler={
             "name": settings.get("scheduler", "EulerAncestralDiscreteScheduler"),
@@ -204,6 +207,8 @@ def generate(request):
         return plain[key]
 
     for item, personalization, policy, policy_hash, policy_id in resolved_items:
+        if request.get("emit_image_started"):
+            send("image_started", id=item["id"])
         t = time.monotonic()
         negative = plain_encode(settings["negative_prompt"], policy)
         if personalization:
@@ -216,6 +221,11 @@ def generate(request):
             )
         else:
             conditioning = plain_encode(item["prompt"], policy)
+        conditioning_metrics = None
+        if conditioning_sink is not None:
+            conditioning_metrics = conditioning_sink(
+                item["id"], conditioning, plain_encode(item["prompt"], policy)
+            )
         image = pipe(
             prompt_embeds=conditioning["hidden"],
             pooled_prompt_embeds=conditioning["pooled"],
@@ -239,7 +249,7 @@ def generate(request):
             if personalization
             else None
         )
-        emit(
+        send(
             "image",
             id=item["id"],
             path=str(path),
@@ -256,6 +266,7 @@ def generate(request):
             profiling_trace=conditioning["trace"],
             profiling_trace_path=str(trace_path),
             personalization_hash=personalization_hash,
+            conditioning_target_align=conditioning_metrics,
             seconds=round(time.monotonic() - t, 3),
         )
 
