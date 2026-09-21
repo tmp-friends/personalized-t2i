@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-09-21 20:10 JST",
+  "generated_at": "2026-09-22 03:16 JST",
   "configuration": {
     "default_policy_id": "legacy_exhibit",
     "policies": [
@@ -27,8 +27,7 @@
       },
       "reference_unit": "aspect_phrase"
     },
-    "catalog_id": "catalog-v1",
-    "sample_manifest_catalog_id": "catalog-v1",
+    "catalog_id": "catalog-v2",
     "selection": {
       "min": 3,
       "max": 10,
@@ -47,7 +46,7 @@
   },
   "sections": {
     "実装完了": {
-      "state": "合格",
+      "state": "不合格",
       "blocks": {
         "自動テスト": {
           "state": "合格",
@@ -62,33 +61,36 @@
           "source": "/home/tomoya/stable-diffusion/personalized-t2i/.worktrees/fan-personalization/exhibit/outputs"
         },
         "Preflight（資産・モデル）": {
-          "state": "合格",
-          "reasons": [],
+          "state": "不合格",
+          "reasons": [
+            "Unreviewed card: girl-c2-l2-t2-m1",
+            "Unreviewed card: student-c1-l0-t2-m3"
+          ],
           "detail": {
-            "catalog_id": "catalog-v1",
-            "reviewed_cards": 16,
-            "cards": 16,
-            "fixed_images": 40,
+            "catalog_id": "catalog-v2",
+            "reviewed_cards": 62,
+            "cards": 64,
+            "fixed_images": 64,
             "generic_images": 24,
             "samples": 6,
-            "models_checked": true,
-            "models_ready": true
+            "models_checked": false,
+            "models_ready": null
           },
           "missing_rate": null,
           "source": "/home/tomoya/stable-diffusion/personalized-t2i/.worktrees/fan-personalization/exhibit/outputs/preflight.json"
         },
-        "v1資産と個人化ハッシュの不変": {
+        "サンプルと個人化ハッシュの不変": {
           "state": "合格",
           "reasons": [],
           "detail": {
             "samples": 6,
             "sample_hashes": {
-              "s1-cat": "468e0bb1687af30c9d158da3bce8b94783cb0f7d6e7767d65a7cfee84dee4ed0",
-              "s1-tokyo": "468e0bb1687af30c9d158da3bce8b94783cb0f7d6e7767d65a7cfee84dee4ed0",
-              "s2-cat": "24582731cf6bf0274b8ba573dd70a0e2d731c2ba2b18c3c974dbfe79d2392040",
-              "s2-tokyo": "24582731cf6bf0274b8ba573dd70a0e2d731c2ba2b18c3c974dbfe79d2392040",
-              "s3-cat": "f56c5d79a35420f645220053a536467713b12de654be91fe4e3bf386ad7511a8",
-              "s3-tokyo": "f56c5d79a35420f645220053a536467713b12de654be91fe4e3bf386ad7511a8"
+              "s1-cat": "da3fd5bfbe74dc8b4ff5f0c9eb1dd68c237727a510becc7af42158b690b68906",
+              "s1-tokyo": "ef6ebb85705312ec1d5d5651b5fa4f2df600de32f38af80b3cab5529a492ebf2",
+              "s2-cat": "41fa0e7ada24f7086b3b241061c008c486dabe9fd6cd218ff4c5a2570b7e69a6",
+              "s2-tokyo": "74f2dd24a36ab68af9ac0490d31767180a00a38378a204d8fd9b3d4ef368dcda",
+              "s3-cat": "d1d4bbb84f2a05a40568b2733a12353d323db560bba7f6ab9aee304da2d6db94",
+              "s3-tokyo": "bd6aa7e3bbe4211f1bb812a78a7279a8714f39ec0850412df80cd7a4c19eedb1"
             },
             "policy_id": "legacy_exhibit",
             "effective_policy": {
@@ -110,9 +112,7 @@
                 "mode": "all"
               },
               "reference_unit": "aspect_phrase"
-            },
-            "frozen_assets_checked": true,
-            "frozen_assets_changed": []
+            }
           },
           "missing_rate": null,
           "source": "/home/tomoya/stable-diffusion/personalized-t2i/.worktrees/fan-personalization/exhibit/assets/samples.json"
@@ -171,14 +171,14 @@
           "state": "合格",
           "reasons": [],
           "detail": {
-            "url": "http://127.0.0.1:7860",
+            "url": "http://127.0.0.1:7861",
             "mock": false,
             "checks": 16,
             "page_errors": 0,
             "console_messages": 0,
             "external_requests": 0,
             "failed_requests": 0,
-            "generate_wait_seconds": 23.73
+            "generate_wait_seconds": 23.76
           },
           "missing_rate": null,
           "source": "/home/tomoya/stable-diffusion/personalized-t2i/.worktrees/fan-personalization/docs/reports/fan-personalization/browser-evidence.json"
@@ -191,9 +191,9 @@
             "successes": 20,
             "runs": 60,
             "runs_measured": 60,
-            "median_seconds": 24.046,
-            "p95_seconds": 24.078,
-            "max_seconds": 24.242,
+            "median_seconds": 24.075,
+            "p95_seconds": 24.105,
+            "max_seconds": 24.116,
             "deadline_seconds": 120.0,
             "peak_vram_mib": 9780.0,
             "exact_cache_runs": 20,
@@ -210,8 +210,8 @@
           "detail": {
             "generated": 64,
             "expected": 64,
-            "reviewed_entries": 0,
-            "usable_cards": 0,
+            "reviewed_entries": 62,
+            "usable_cards": 62,
             "findings_present": true,
             "decision": "not_reviewed: initial axis phrases do not render all four aspects distinguishably; revise phrases and regenerate before any review entry is written",
             "visual_findings": {
@@ -260,7 +260,7 @@
             "checked_by": "coding agent (visual contact sheets of all 4 subjects sampled: 8 of 16 sheets, plus frozen-CLIP probe of all 64)",
             "checked_at": "2026-09-21"
           },
-          "missing_rate": 1.0,
+          "missing_rate": 0.03125,
           "source": "/home/tomoya/stable-diffusion/personalized-t2i/.worktrees/fan-personalization/exhibit/outputs/preparation/catalog-v2/review-findings.json"
         }
       }
@@ -474,5 +474,5 @@
     "論文の定量結果をこの展示の性能として記載しない。",
     "人の回答は収集していない。代答もしない。"
   ],
-  "inputs_hash": "623454fec4401bb10ee12ca2f3f0504e71807ddbf7a09a23af6bf61ba0fdc55f"
+  "inputs_hash": "1b5067e6a6b02df47842225a32e5cf70f8e61f4bad4e302582676dd3940f5e49"
 }

@@ -8,8 +8,8 @@
 | 項目 | 状態 |
 |---|---|
 | 既定 encoder policy | `legacy_exhibit`（評価が揃うまで変更しない。設計 §3） |
-| 展示で使う catalog | `catalog-v1`（4被写体 × 4表現の16枚、確認済み） |
-| `catalog-v2`（64枚） | 生成済み 64 / 確認済み 0。初期の軸文言では4側面が見分けられず、**文言の見直しと再生成が先**（`outputs/preparation/catalog-v2/review-findings.json`） |
+| 展示で使う catalog | `catalog-v2`（4被写体 × 16表現の64枚）。**所有者判断 2026-09-22** で切り替え、`catalog-v1` は互換を残さず削除 |
+| `catalog-v2` の確認 | 生成済み 64 / 確認済みの枚数は `configs/cards-v2-review.json` が決めます。未確認のカードは `/api/config` に出ず、preflight も不合格になります |
 | encoding 数値検査 | 実施済み。`legacy_exhibit` は合格、公式 pooled の条件は α=0 基準で不合格（検出結果として保存） |
 | 画像評価（screen / refine / heldout） | 実行状況は [docs/reports/fan-personalization/](../docs/reports/fan-personalization/) を参照 |
 | 本人によるブラインド評価 | **未実施**。回答は収集していない（代答もしない） |
@@ -73,23 +73,23 @@ cd fan-repro && uv sync --locked && uv run python scripts/prepare_upstream.py
 
 **上流からの意図的な逸脱**: `legacy_exhibit` は個人化時の pooled 埋め込みに参照なし（plain）の値を使います（`pooled_mode: "plain"`）。公式の `ClassTokenDecoder` はpadding tokenを終端と誤検出するためで、`official_encoder` では公式 pooled（`"fan"`）をそのまま使い、その差を評価で比較します。画像イベントに `pooled` として記録します。
 
-## カタログ v1 / v2 と確認手順
+## カタログと確認手順
 
-- **v1**（`catalog-v1`）: 4被写体 × 4表現の16枚。画像は `assets/cards/`、確認記録は `configs/cards-review.json`、契約は `assets/manifest.json`。現在の展示はこちらを使います。
-- **v2**（`catalog-v2`）: 定義は `configs/catalog-v2.json`（4軸 × 4水準、決定的な16組 × 4被写体 = 64枚）。画像は `assets/cards-v2/`、生成後カタログは `assets/catalog-v2.json`、確認記録は `configs/cards-v2-review.json`、生成ログは `outputs/preparation/catalog-v2/`。
+展示が使うカタログは `catalog-v2` ひとつだけです（**所有者判断 2026-09-22**。旧 `catalog-v1` は互換を残さず削除しました。設計 §6.2 の「確認完了後に切り替える」ゲートを上書きした判断です）。定義は `configs/catalog-v2.json`（4軸 × 4水準、明示列挙した16組 × 4被写体 = 64枚）。画像は `assets/cards-v2/`、生成後カタログは `assets/catalog-v2.json`、確認記録は `configs/cards-v2-review.json`、生成ログは `outputs/preparation/catalog-v2/`。カタログは1つなので `catalog_id` の設定項目・`--catalog` 引数はありません。id 文字列 `catalog-v2` だけが manifest・確認記録・評価の同一性のために残っています。
 
 ```bash
-# v2 の生成（トークン検査に通らなければ生成前に失敗します）
-PYTHONPATH=exhibit/src fan-repro/.venv/bin/python exhibit/scripts/check_card_tokens.py --catalog v2
-PYTHONPATH=exhibit/src exhibit/.venv/bin/python exhibit/scripts/prepare.py cards --catalog v2
-# 実画像を見て4側面それぞれを確認し、合ったものだけ configs/cards-v2-review.json に書く
+# 生成（トークン検査に通らなければ生成前に失敗します）
+PYTHONPATH=exhibit/src fan-repro/.venv/bin/python exhibit/scripts/check_card_tokens.py
+PYTHONPATH=exhibit/src exhibit/.venv/bin/python exhibit/scripts/prepare.py cards
+# 1枚だけ差し替えるときは configs/catalog-v2.json の seed_overrides と
+PYTHONPATH=exhibit/src exhibit/.venv/bin/python exhibit/scripts/prepare.py cards --only <card_id>
+# 確認用ページを作り、実画像を見て4側面それぞれを確認してから export する
+PYTHONPATH=exhibit/src exhibit/.venv/bin/python exhibit/scripts/build_review_sheet.py
 ```
 
-確認記録は `reviewed` だけでなく**4側面それぞれの確認結果**と、対象の画像sha256・説明文hashを持ちます。画像や説明文を変えると確認は自動的に無効になります。未確認のカードは `/api/config` に出ず、preflightも不合格になります。埋め合わせのために未確認画像を表示しません。
+確認記録は `reviewed` だけでなく**4側面それぞれの確認結果**と、対象の画像sha256・説明文hashを持ちます。画像や説明文を変えると確認は自動的に無効になります。未確認のカードは `/api/config` に出ず、preflightも不合格になります。埋め合わせのために未確認画像を表示しません。64枚すべての確認は待たず、確認できたカードだけで展示を回します（設計 §6.1）。
 
-現在の v2 は64枚とも未確認です。目視と凍結CLIPの確認で、lighting はほぼ見分けられず、mood の `dreamlike` は0/16、texture も被写体によっては同一に見えました。**軸の文言を見直して再生成してから**確認を書きます。理由は `outputs/preparation/catalog-v2/review-findings.json` に残しています。
-
-v2が全数確認できたら `configs/demo.json` の `catalog_id` と `sample_manifest.catalog_id` を `catalog-v2` にし、代表3選択 × 2お題の6サンプルを新しいsnapshot/hashで作り直し、fallback・preflight・レポートを更新します。v1の資産は baseline として残し、再生成しません。
+`configs/cards-v2-review.json` は展示の所有者が確認ページから export したものだけを置きます。他の誰も（agentも）書きません。
 
 ## 固定assetの準備
 
@@ -113,12 +113,14 @@ PY
 ```
 
 ```bash
-PYTHONPATH=exhibit/src exhibit/.venv/bin/python exhibit/scripts/prepare.py cards      # v1の16枚
+PYTHONPATH=exhibit/src exhibit/.venv/bin/python exhibit/scripts/prepare.py cards      # catalog-v2 の64枚
 PYTHONPATH=exhibit/src exhibit/.venv/bin/python exhibit/scripts/prepare.py generic
 PYTHONPATH=exhibit/src exhibit/.venv/bin/python exhibit/scripts/prepare.py samples
 PYTHONPATH=exhibit/src exhibit/.venv/bin/python exhibit/scripts/build_fallback.py
 PYTHONPATH=exhibit/src exhibit/.venv/bin/python exhibit/scripts/preflight.py --models
 ```
+
+`prepare.py samples` は代表3選択 × 2お題の6サンプルを、確認済みカードと既定 policy の実際の参照から作ります（`configs/demo.json` の `sample_ids` が必須の6件を宣言します）。選択は `scripts/prepare.py` の `SAMPLE_SELECTIONS` にあり、いまは s1: 暖色 × 強い日差し（color+lighting）、s2: 寒色 × 油彩（color+texture）、s3: 逆光 × 線のない平塗り（lighting+texture, strength 2）です。サンプルは選択が参照しているカードが確認済みでないと作れず、参照・重み・hash が合わなければ preflight と `/api/config` から外れます。
 
 `assets/fallback.html` は実画像を埋め込んだ単独HTMLで、サーバーが停止していても開けます。サンプルは代表的な選択の事前生成であり、来場者の選択を反映した結果としては表示しません。固定展示画像とサンプルは配布用assetとしてGit対象、モデルとセッション一時生成物は `outputs/` 配下でGit対象外です。
 
@@ -140,14 +142,14 @@ PYTHONPATH=exhibit/src exhibit/.venv/bin/python exhibit/scripts/evaluate_fan.py 
 - 固定fixture: `configs/fan-evaluation.json`、`configs/evaluation-cases/`。準備manifest: `outputs/fan-evaluation/preparation.json`。
 - 実測: `outputs/fan-evaluation/<experiment_hash>/`（`records.json` / `metrics.json` / `decision.json` / `summary.json`）。
 - `--resume` は同じ manifest hash の完了済み画像だけを再利用します。1 experiment の上限は512枚で、超えるmatrixは実行前に失敗します。
-- 集計は成功例だけを抜き出しません。欠損率と理由を必ず出します。`heldout` は v2 が全数確認済みでないと実行できません。
+- 集計は成功例だけを抜き出しません。欠損率と理由を必ず出します。`heldout` は64枚全数の確認までは求めず、設計§9.2の3条件（参照カードが確認済み・各水準2枚以上・合計32枚以上）を満たせば実行できます。
 
 ### 人によるブラインド評価
 
 ```bash
 # 1. 回答収集ページと実施説明を作る（participants.json が無ければ「比較画像未生成」と記録）
 PYTHONPATH=exhibit/src exhibit/.venv/bin/python exhibit/scripts/build_preference_study.py \
-  --config exhibit/configs/fan-evaluation.json [--study-kind encoder|elicitation] [--study-dir DIR]
+  --config exhibit/configs/fan-evaluation.json [--study-dir DIR]
 # 2. 参加者のexportを検証してmergeする
 PYTHONPATH=exhibit/src exhibit/.venv/bin/python exhibit/scripts/build_preference_study.py \
   --config exhibit/configs/fan-evaluation.json --merge export1.json export2.json ...
@@ -162,7 +164,7 @@ PYTHONPATH=exhibit/src exhibit/.venv/bin/python exhibit/scripts/summarize_prefer
   --study exhibit/outputs/fan-evaluation/study
 ```
 
-収集 → merge → manifest → 画像生成 → 回答 → 集計の順です。`participants.json` の必須項目は `participant_id, catalog_id, selection, aspect_gains` で、各参加者につき1件（pool比較の追加studyでは `collection_condition` を持つ2件）。回答は参加者内で平均してから参加者間で平均し、seed数を人数に加算しません。95%区間は参加者単位のbootstrap（2,000回、seed=0）です。回答が無ければ「未実施」と出力し、勝率は作りません。方式の対応表は集計器だけが読む別ファイルです。
+収集 → merge → manifest → 画像生成 → 回答 → 集計の順です。`participants.json` の必須項目は `participant_id, catalog_id, selection, aspect_gains` で、各参加者につき1件。旧16枚 pool と比較する `elicitation` study（設計 §9.7）は、比較対象だった catalog-v1 の削除にともない削除しました。回答は参加者内で平均してから参加者間で平均し、seed数を人数に加算しません。95%区間は参加者単位のbootstrap（2,000回、seed=0）です。回答が無ければ「未実施」と出力し、勝率は作りません。方式の対応表は集計器だけが読む別ファイルです。
 
 既定値の変更は、heldoutの事前基準と本人評価の両方（候補vslegacy、本人vs別人のどちらも平均>0.5かつ95%区間下限>0.5、主評価は最低20人）を満たしたときに1回だけ行い、根拠の experiment / study hash を設定・README・レポートへ残します。満たさない間は `default_policy_id` を `legacy_exhibit` のままにします。
 
@@ -212,4 +214,5 @@ PYTHONPATH=exhibit/src exhibit/.venv/bin/python exhibit/scripts/build_report.py
 - 反映を強くするほど良いとは言いません。Attentionの値から「この色はこの画像由来」といった因果説明もしません。
 - 論文の定量結果をこの展示の性能として扱いません。Illustriousと選んだカードで公式encoder処理を再現しても「論文の定量結果を再現した」とは書きません。
 - 旧 `outputs/fan-probe/` と `docs/reports/fan-demo/evidence.json` は旧設定の実測です。現行設定の結果として引用しません。
+- 削除した catalog-v1 の実測（旧16枚のカード・旧6サンプル）も、現行 catalog-v2 の結果として引用しません。
 - 未実施の評価を成功として扱いません。人の回答が要る評価は代答しません。

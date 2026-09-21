@@ -1,14 +1,14 @@
 {
   "browser": "Chromium headless / actual localhost",
-  "url": "http://127.0.0.1:7860",
+  "url": "http://127.0.0.1:7861",
   "mock": false,
   "run": {
-    "id": "6d70ced5c26640a2807a0014fdc30872",
+    "id": "c77ae9d30dd94c4ba653fb419f104bab",
     "topic_id": "cat",
     "status": "done",
     "mode": "live",
     "message": "4枚ができました。",
-    "elapsed_seconds": 23.76,
+    "elapsed_seconds": 23.9,
     "error": null,
     "prompt": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1girl, solo, brown hair, green eyes, sweater, holding cat, window, upper body, detailed eyes, detailed illustration, absurdres, highres.",
     "plain": [
@@ -17,91 +17,84 @@
         "seed": 230923,
         "prompt": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1girl, solo, brown hair, green eyes, sweater, holding cat, window, upper body, detailed eyes, detailed illustration, absurdres, highres.",
         "sha256": "c0eb68156c831b0960b35596b06debc04c8814284273afc6c2342682b1ff1dc3",
-        "relative_path": "6d70ced5c26640a2807a0014fdc30872/plain-0.png",
-        "url": "/api/sessions/8ecdb3868c604a82bfb645cab90d1ab3/images/6d70ced5c26640a2807a0014fdc30872/plain-0.png"
+        "relative_path": "c77ae9d30dd94c4ba653fb419f104bab/plain-0.png",
+        "url": "/api/sessions/2c018f178fd64fb198f9a74800070ccf/images/c77ae9d30dd94c4ba653fb419f104bab/plain-0.png"
       },
       {
         "id": "plain-1",
         "seed": 230924,
         "prompt": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1girl, solo, brown hair, green eyes, sweater, holding cat, window, upper body, detailed eyes, detailed illustration, absurdres, highres.",
         "sha256": "40ced3fdc81515a66ea7c666b97ea6f05f55d8aeb058d59190e8eb29d5ae65cb",
-        "relative_path": "6d70ced5c26640a2807a0014fdc30872/plain-1.png",
-        "url": "/api/sessions/8ecdb3868c604a82bfb645cab90d1ab3/images/6d70ced5c26640a2807a0014fdc30872/plain-1.png"
+        "relative_path": "c77ae9d30dd94c4ba653fb419f104bab/plain-1.png",
+        "url": "/api/sessions/2c018f178fd64fb198f9a74800070ccf/images/c77ae9d30dd94c4ba653fb419f104bab/plain-1.png"
       },
       {
         "id": "plain-2",
         "seed": 230925,
         "prompt": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1girl, solo, brown hair, green eyes, sweater, holding cat, window, upper body, detailed eyes, detailed illustration, absurdres, highres.",
         "sha256": "b96700b2bd267dd559e8a5beca0f0c471070c14db3d4e3cd93fb36fbd9721974",
-        "relative_path": "6d70ced5c26640a2807a0014fdc30872/plain-2.png",
-        "url": "/api/sessions/8ecdb3868c604a82bfb645cab90d1ab3/images/6d70ced5c26640a2807a0014fdc30872/plain-2.png"
+        "relative_path": "c77ae9d30dd94c4ba653fb419f104bab/plain-2.png",
+        "url": "/api/sessions/2c018f178fd64fb198f9a74800070ccf/images/c77ae9d30dd94c4ba653fb419f104bab/plain-2.png"
       },
       {
         "id": "plain-3",
         "seed": 230926,
         "prompt": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1girl, solo, brown hair, green eyes, sweater, holding cat, window, upper body, detailed eyes, detailed illustration, absurdres, highres.",
         "sha256": "5ad2e5754d63e5bff1544af7c51183fb918eade33f5bad4f58ebe0cc8d517f11",
-        "relative_path": "6d70ced5c26640a2807a0014fdc30872/plain-3.png",
-        "url": "/api/sessions/8ecdb3868c604a82bfb645cab90d1ab3/images/6d70ced5c26640a2807a0014fdc30872/plain-3.png"
+        "relative_path": "c77ae9d30dd94c4ba653fb419f104bab/plain-3.png",
+        "url": "/api/sessions/2c018f178fd64fb198f9a74800070ccf/images/c77ae9d30dd94c4ba653fb419f104bab/plain-3.png"
       }
     ],
     "personal": [
       {
         "id": "personal-0",
         "seed": 230923,
-        "sha256": "efd32f33cf0953e76caaef163e9ea466cb3a03acceeee58235c350acd4860a1f",
-        "relative_path": "6d70ced5c26640a2807a0014fdc30872/personal/personal-0.png",
-        "url": "/api/sessions/8ecdb3868c604a82bfb645cab90d1ab3/images/6d70ced5c26640a2807a0014fdc30872/personal/personal-0.png",
+        "sha256": "5761f7cabdc75b77b23b5d6a68068a56c98edc614b620484635fa6dca688f409",
+        "relative_path": "c77ae9d30dd94c4ba653fb419f104bab/personal/personal-0.png",
+        "url": "/api/sessions/2c018f178fd64fb198f9a74800070ccf/images/c77ae9d30dd94c4ba653fb419f104bab/personal/personal-0.png",
         "policy_id": "legacy_exhibit",
         "policy_hash": "a99004b42358d1f822d223c5e68b33d28801e10fe97ea925c2216c365a8e3749",
-        "personalization_hash": "87007b1eccf86e76e25c1f42c67a1a04b1f047ab707219d2f4c859b304c9ee14"
+        "personalization_hash": "e9e445510f40c20d3a1fbf63f781fd1be731c8c048d275074b1e621a8f38cdc4"
       },
       {
         "id": "personal-1",
         "seed": 230924,
-        "sha256": "f63f5c7e2d1f3865ca9ad9c9a7cd880d38c9ea2b96f9b8d374be4b074eb29bb7",
-        "relative_path": "6d70ced5c26640a2807a0014fdc30872/personal/personal-1.png",
-        "url": "/api/sessions/8ecdb3868c604a82bfb645cab90d1ab3/images/6d70ced5c26640a2807a0014fdc30872/personal/personal-1.png",
+        "sha256": "db9b3c8a2f159527466bdb386a81b6ae0fc6535e3f02e4b87d65212aa617d68d",
+        "relative_path": "c77ae9d30dd94c4ba653fb419f104bab/personal/personal-1.png",
+        "url": "/api/sessions/2c018f178fd64fb198f9a74800070ccf/images/c77ae9d30dd94c4ba653fb419f104bab/personal/personal-1.png",
         "policy_id": "legacy_exhibit",
         "policy_hash": "a99004b42358d1f822d223c5e68b33d28801e10fe97ea925c2216c365a8e3749",
-        "personalization_hash": "87007b1eccf86e76e25c1f42c67a1a04b1f047ab707219d2f4c859b304c9ee14"
+        "personalization_hash": "e9e445510f40c20d3a1fbf63f781fd1be731c8c048d275074b1e621a8f38cdc4"
       },
       {
         "id": "personal-2",
         "seed": 230925,
-        "sha256": "9ee272ec1f181a2b88c5f4a9b790d6eae137fa3b9a156ede07d3f122f743a52d",
-        "relative_path": "6d70ced5c26640a2807a0014fdc30872/personal/personal-2.png",
-        "url": "/api/sessions/8ecdb3868c604a82bfb645cab90d1ab3/images/6d70ced5c26640a2807a0014fdc30872/personal/personal-2.png",
+        "sha256": "c9227a0eb1975a179dcf88afb1d249034a055472797c2924d565639fb502d506",
+        "relative_path": "c77ae9d30dd94c4ba653fb419f104bab/personal/personal-2.png",
+        "url": "/api/sessions/2c018f178fd64fb198f9a74800070ccf/images/c77ae9d30dd94c4ba653fb419f104bab/personal/personal-2.png",
         "policy_id": "legacy_exhibit",
         "policy_hash": "a99004b42358d1f822d223c5e68b33d28801e10fe97ea925c2216c365a8e3749",
-        "personalization_hash": "87007b1eccf86e76e25c1f42c67a1a04b1f047ab707219d2f4c859b304c9ee14"
+        "personalization_hash": "e9e445510f40c20d3a1fbf63f781fd1be731c8c048d275074b1e621a8f38cdc4"
       },
       {
         "id": "personal-3",
         "seed": 230926,
-        "sha256": "19c0c290d5e54ac84ce3ecf1fc33c50db19c592ceef4443dad711a59e8e26f38",
-        "relative_path": "6d70ced5c26640a2807a0014fdc30872/personal/personal-3.png",
-        "url": "/api/sessions/8ecdb3868c604a82bfb645cab90d1ab3/images/6d70ced5c26640a2807a0014fdc30872/personal/personal-3.png",
+        "sha256": "88fdd7716ea1d0c891597b82d316c1cf1620f927b8bdf7a9a9db3688c48956d4",
+        "relative_path": "c77ae9d30dd94c4ba653fb419f104bab/personal/personal-3.png",
+        "url": "/api/sessions/2c018f178fd64fb198f9a74800070ccf/images/c77ae9d30dd94c4ba653fb419f104bab/personal/personal-3.png",
         "policy_id": "legacy_exhibit",
         "policy_hash": "a99004b42358d1f822d223c5e68b33d28801e10fe97ea925c2216c365a8e3749",
-        "personalization_hash": "87007b1eccf86e76e25c1f42c67a1a04b1f047ab707219d2f4c859b304c9ee14"
+        "personalization_hash": "e9e445510f40c20d3a1fbf63f781fd1be731c8c048d275074b1e621a8f38cdc4"
       }
     ],
     "preference_revision": 4,
     "preference": {
       "revision": 4,
-      "catalog_id": "catalog-v1",
-      "catalog_hash": "1c0d4e9429bb5d058573a1f1f1428de89f4561e928b0b49752513f6eb3510e31",
+      "catalog_id": "catalog-v2",
+      "catalog_hash": "2623e1ce6d32488f812b51ed1c70e6dcee486a79138998e1ddaf42de31cb073d",
       "selection": [
         {
-          "card_id": "barista-cool_clean",
-          "strength": 2,
-          "aspects": [
-            "texture"
-          ]
-        },
-        {
-          "card_id": "barista-dramatic",
+          "card_id": "traveler-c1-l1-t3-m1",
           "strength": 1,
           "aspects": [
             "color",
@@ -111,14 +104,21 @@
           ]
         },
         {
-          "card_id": "barista-vivid_lively",
+          "card_id": "traveler-c1-l3-t1-m0",
           "strength": 1,
           "aspects": [
             "color"
           ]
         },
         {
-          "card_id": "student-cool_clean",
+          "card_id": "traveler-c2-l3-t3-m2",
+          "strength": 2,
+          "aspects": [
+            "texture"
+          ]
+        },
+        {
+          "card_id": "traveler-c3-l0-t0-m1",
           "strength": 1,
           "aspects": [
             "color",
@@ -137,107 +137,87 @@
     },
     "policy_id": "legacy_exhibit",
     "policy_hash": "a99004b42358d1f822d223c5e68b33d28801e10fe97ea925c2216c365a8e3749",
-    "personalization_hash": "87007b1eccf86e76e25c1f42c67a1a04b1f047ab707219d2f4c859b304c9ee14",
+    "personalization_hash": "e9e445510f40c20d3a1fbf63f781fd1be731c8c048d275074b1e621a8f38cdc4",
     "personalization": {
       "refs": [
         {
-          "ref_id": "18b20e81579d164066c4480cfbbbc2712798a9f005482136a9e760fa23ac8ef2",
-          "text": "calm atmosphere",
-          "weight": 1.0,
+          "ref_id": "178a1f30d0d47cc7db7ea9d694bf8a75ae570c7e575e7010de24bf1cf8104bdc",
+          "text": "cheerful, open mouth smile, happy",
+          "weight": 2.0,
           "card_ids": [
-            "student-cool_clean"
+            "traveler-c1-l1-t3-m1",
+            "traveler-c3-l0-t0-m1"
           ],
           "aspects": [
             "mood"
           ]
         },
         {
-          "ref_id": "7be6169c2604778551d791759b1e8d8c23bbc44e048008f4b4e0e3ebfbc4cd02",
-          "text": "cel shading, clean lineart, anime coloring",
+          "ref_id": "3135424ce6b11d4583fc6b2a7a536465566f0da9f0231962775ddc824242aa9c",
+          "text": "cool color palette, blue background",
+          "weight": 2.0,
+          "card_ids": [
+            "traveler-c1-l1-t3-m1",
+            "traveler-c1-l3-t1-m0"
+          ],
+          "aspects": [
+            "color"
+          ]
+        },
+        {
+          "ref_id": "f620a17fa2a1208195d3e27c59b336dcb65166d5c6462e78817de8bdb6004cb5",
+          "text": "night, dim lighting, lamplight, dark background",
+          "weight": 1.0,
+          "card_ids": [
+            "traveler-c1-l1-t3-m1"
+          ],
+          "aspects": [
+            "lighting"
+          ]
+        },
+        {
+          "ref_id": "7b0598c9c862379beef122c4690f4b16479a893582309de07a7c1e285a405936",
+          "text": "oil painting, thick brushstrokes",
           "weight": 3.0,
           "card_ids": [
-            "barista-cool_clean",
-            "student-cool_clean"
+            "traveler-c1-l1-t3-m1",
+            "traveler-c2-l3-t3-m2"
           ],
           "aspects": [
             "texture"
           ]
         },
         {
-          "ref_id": "7803d854ba6fb6820d855f9f579528c7b193d0969d46072229f24c7b2cde4969",
-          "text": "cool color palette, blue and teal tones",
+          "ref_id": "363ea959ec8f45bb5e9a20ef6c2a2184fc770b49a61f9886d098e357d9b4f7ca",
+          "text": "overcast, diffused light, soft shadows",
           "weight": 1.0,
           "card_ids": [
-            "student-cool_clean"
+            "traveler-c3-l0-t0-m1"
+          ],
+          "aspects": [
+            "lighting"
+          ]
+        },
+        {
+          "ref_id": "eba5513b932bd12afc04d933def6f7e356e338b9439afacd85556f3494d8b6ae",
+          "text": "pastel colors, soft pink and mint",
+          "weight": 1.0,
+          "card_ids": [
+            "traveler-c3-l0-t0-m1"
           ],
           "aspects": [
             "color"
           ]
         },
         {
-          "ref_id": "adeccfece180e81fa510f272f7b41d50397b028166dc3d3c5b1c65cf727d70f7",
-          "text": "detailed shading, painterly texture",
+          "ref_id": "def2b8461e831c00df8fac92e0087d6623d73c0ecc8a84e81caadc93621d5b61",
+          "text": "sketch, visible pencil lines, rough drawing",
           "weight": 1.0,
           "card_ids": [
-            "barista-dramatic"
+            "traveler-c3-l0-t0-m1"
           ],
           "aspects": [
             "texture"
-          ]
-        },
-        {
-          "ref_id": "7298bd1b176521cecf3233da291bf0040b355f094895b7c15ce78289cf52d038",
-          "text": "dramatic lighting, strong shadows, rim light",
-          "weight": 1.0,
-          "card_ids": [
-            "barista-dramatic"
-          ],
-          "aspects": [
-            "lighting"
-          ]
-        },
-        {
-          "ref_id": "93063d62da7db0d55da094e29a926fbe8d9c9bf78b86e7bd224991cc729b665b",
-          "text": "muted colors, dark background",
-          "weight": 1.0,
-          "card_ids": [
-            "barista-dramatic"
-          ],
-          "aspects": [
-            "color"
-          ]
-        },
-        {
-          "ref_id": "f8641bfaeec3f7a95495d9fa24c6e26981baa19c030c995a8135d8b514d76186",
-          "text": "serious atmosphere",
-          "weight": 1.0,
-          "card_ids": [
-            "barista-dramatic"
-          ],
-          "aspects": [
-            "mood"
-          ]
-        },
-        {
-          "ref_id": "2816141ed6b261609e1291adb2b7d2ea27851249b1b27012500e7dae70874dd4",
-          "text": "soft diffused light",
-          "weight": 1.0,
-          "card_ids": [
-            "student-cool_clean"
-          ],
-          "aspects": [
-            "lighting"
-          ]
-        },
-        {
-          "ref_id": "679764bc1f87590afd6f6a728dbce15603b1229136522eedd4d4668b9ef1c5fb",
-          "text": "vivid colors, colorful, high saturation",
-          "weight": 1.0,
-          "card_ids": [
-            "barista-vivid_lively"
-          ],
-          "aspects": [
-            "color"
           ]
         }
       ],
@@ -262,29 +242,29 @@
         "reference_unit": "aspect_phrase"
       },
       "policy_hash": "a99004b42358d1f822d223c5e68b33d28801e10fe97ea925c2216c365a8e3749",
-      "hash": "87007b1eccf86e76e25c1f42c67a1a04b1f047ab707219d2f4c859b304c9ee14",
-      "personalization_hash": "87007b1eccf86e76e25c1f42c67a1a04b1f047ab707219d2f4c859b304c9ee14",
+      "hash": "e9e445510f40c20d3a1fbf63f781fd1be731c8c048d275074b1e621a8f38cdc4",
+      "personalization_hash": "e9e445510f40c20d3a1fbf63f781fd1be731c8c048d275074b1e621a8f38cdc4",
       "policy_id": "legacy_exhibit"
     },
     "feedback": null,
     "timings": {
       "generation": {
         "returncode": 0,
-        "wall_seconds": 23.756
+        "wall_seconds": 23.902
       }
     }
   },
   "summary": {
-    "generate_wait_seconds": 23.73,
+    "generate_wait_seconds": 23.76,
     "checks": [
       "welcome renders and offers to start",
-      "round 1 shows 12 of 16 cards and 3 are chosen",
+      "round 1 shows 12 of 62 cards and 3 are chosen",
       "a newly selected card answers no aspect and blocks 決定",
       "aspects are explicit: one chip, 「全部好き」, and a strength of 2",
       "double clicking 「ほかの候補も見る」 asks for one round; earlier picks stay editable",
       "the round grid is 2-3 columns at 390px with no horizontal scroll",
       "a reload restores the round, the draft and the commit state",
-      "4 plain + 4 personalized within 150s (23.73s), refs match the answers, worker settings verified",
+      "4 plain + 4 personalized within 150s (23.76s), refs match the answers, worker settings verified",
       "the optional labelled answer is stored and can be replaced",
       "「強める」 commits a new revision and redraws the same topic with it",
       "returning to identical content reuses the images and says so",
