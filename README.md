@@ -1,4 +1,4 @@
-# personalized-t2i — 嗜好パーソナライズ × 画像生成
+# パーソナライズ × 画像生成
 
 数枚の評価や prompt 履歴からユーザーの美的嗜好を推定し、画像生成へ反映する
 preference personalization の公式実装・再現・比較をまとめた repository。
@@ -69,15 +69,38 @@ encoder 層    FAN                text encoder の self-attention を差し替�
                                   参照 prompt の嗜好を混ぜ、追加学習は不要
 ```
 
-9/23の展示は FAN を主役にした「好きな画像を選ぶ → 同じ一文でブラインド比較 → 反映強度と参照を操作」
-の構成に更新した。入力文も生成モデルも変えず、方式を伏せたまま通常生成と個人化生成を見比べてもらい、
-答えを見てから反映強度 `alpha` と参照ごとの重みを来場者自身が操作して描き直せる。
-LLMによるprompt書き換えとVLM解析、PIGRewardによる推薦は展示の主経路から外した。詳細は
-[FAN展示デモ設計](docs/superpowers/specs/2026-09-21-fan-exhibition-demo-design.md) を参照。
+## 展示デモ（`exhibit/`）
 
-[`exhibit/`](exhibit/) にローカル展示デモを実装。`uv run --project exhibit uvicorn exhibit.app:app --host 127.0.0.1 --port 7860` で起動します。
-通常4枚と好みを反映した4枚を同じseedで比較できます。個人化はFAN公式実装の `ClassTokenDecoder` を使い、
-来場者ごとの追加学習はしません。実機計測・localhost操作確認・未採用機能は [作業結果HTML](docs/reports/fan-demo/index.html) を参照。
+2026-09-23 の展示は FAN を主役にしたローカルデモ。来場者が好きな画像を選び、
+その画像の**どこが好きか**（色・光・描画・雰囲気）を指定すると、同じお題・同じ seed・同じ生成設定のまま
+パーソナライズなし 4 枚とパーソナライズあり 4 枚を並べて比較できる。結果の下で好みを調整し、同じお題で描き直せる。
+
+- 生成モデル: Illustrious XL v2.0（1024×1280、DPM++ 2M SDE Karras、fp16-fix VAE）
+- 個人化: FAN 公式実装（`ClassTokenDecoder` を含む）。**来場者ごとの追加学習なし**
+- 参照: 選んだカードに付けた確認済みの説明文（`catalog-v2`、4 被写体 × 16 表現）
+- 既定 encoder policy: `mask_skip8_v1`（所有者判断で `legacy_exhibit` → `mask_skip1_v1` → `mask_skip8_v1` と切り替え。事前基準は未達、本人評価は未実施。`exhibit/configs/fan-policies.json` が唯一の正）
+
+```bash
+uv sync --project exhibit --locked
+(cd fan-repro && uv sync --locked && uv run python scripts/prepare_upstream.py)
+uv run --project exhibit uvicorn exhibit.app:app --host 127.0.0.1 --port 7860
+```
+
+http://localhost:7860 が展示画面、`/tech` が技術解説、`/fallback` が事前生成サンプル（サーバー停止時も開ける単独 HTML）。
+準備・評価・API・説明上の注意は [`exhibit/README.md`](exhibit/README.md)、
+評価結果は [`docs/reports/fan-personalization/`](docs/reports/fan-personalization/) を参照。
+LLM による prompt 書き換え、VLM 解析、PIGReward による推薦は展示の主経路から外している
+（[`pigreward-repro/`](pigreward-repro/) は評価用 adapter として残置、ライブ推薦は無効）。
+
+## ドキュメント
+
+| パス | 内容 |
+|---|---|
+| [`docs/superpowers/specs/`](docs/superpowers/specs/) | 展示・FAN 個人化改善の設計書 |
+| [`docs/superpowers/plans/`](docs/superpowers/plans/) | 実装・強度実験の計画 |
+| [`docs/reports/fan-personalization/`](docs/reports/fan-personalization/) | 現行設定の評価・強度実験レポート |
+| [`docs/reports/fan-demo/`](docs/reports/fan-demo/)、[`docs/reports/zipp-demo/`](docs/reports/zipp-demo/) | 旧構成の記録（現行結果としては引用しない） |
+| [`docs/migrations/`](docs/migrations/) | layout 移行の記録 |
 
 ## Repository 方針
 
