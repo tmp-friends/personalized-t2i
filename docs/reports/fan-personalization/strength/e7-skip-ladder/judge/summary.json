@@ -1,0 +1,101 @@
+{
+  "experiment_id": "e7-skip-ladder",
+  "pair_count": 168,
+  "ai": {
+    "judges": [],
+    "answered_pairs": 0,
+    "pair_count": 168,
+    "policies": [
+      {
+        "policy_id": "ladder-skip0to0",
+        "policy_hash": "0cc84fda31f8cfe849ec5873be25f6c86f84283b5f8163fcf1a8d58a0a6f4f88",
+        "wins": 0,
+        "losses": 0,
+        "ties": 0,
+        "decided": 0,
+        "win_rate": null,
+        "target_yes": 0,
+        "target_answers": 0,
+        "target_kept_rate": null
+      },
+      {
+        "policy_id": "ladder-skip0to1",
+        "policy_hash": "2eb31dc6ce4b89abdbd4eb013ad4c8bb78af226a91fe4082906f09a8c6f39e1a",
+        "wins": 0,
+        "losses": 0,
+        "ties": 0,
+        "decided": 0,
+        "win_rate": null,
+        "target_yes": 0,
+        "target_answers": 0,
+        "target_kept_rate": null
+      },
+      {
+        "policy_id": "ladder-skip0to2",
+        "policy_hash": "73b7290838b2684189072a3302dcfaf60faddbf0713c88fff2b7e9751d748d28",
+        "wins": 0,
+        "losses": 0,
+        "ties": 0,
+        "decided": 0,
+        "win_rate": null,
+        "target_yes": 0,
+        "target_answers": 0,
+        "target_kept_rate": null
+      },
+      {
+        "policy_id": "ladder-skip0to3",
+        "policy_hash": "aacf22c4a6652a439f6c8c481784a3f8117750cfb5c29d5a55d9c8f5d0b103ae",
+        "wins": 0,
+        "losses": 0,
+        "ties": 0,
+        "decided": 0,
+        "win_rate": null,
+        "target_yes": 0,
+        "target_answers": 0,
+        "target_kept_rate": null
+      },
+      {
+        "policy_id": "ladder-skip0to4",
+        "policy_hash": "0224ea4e6e832933e205d39d0be69fffe44659e7d7430f5ca0ee38fb9b83bd2c",
+        "wins": 0,
+        "losses": 0,
+        "ties": 0,
+        "decided": 0,
+        "win_rate": null,
+        "target_yes": 0,
+        "target_answers": 0,
+        "target_kept_rate": null
+      },
+      {
+        "policy_id": "ladder-skip0to5",
+        "policy_hash": "fde4ca4de8358811e2713040ec43986608f92d150825fe720d8e3af32fe52a21",
+        "wins": 0,
+        "losses": 0,
+        "ties": 0,
+        "decided": 0,
+        "win_rate": null,
+        "target_yes": 0,
+        "target_answers": 0,
+        "target_kept_rate": null
+      },
+      {
+        "policy_id": "ladder-skip0to6",
+        "policy_hash": "c7272077c12eb2bdb8f92660e858d6e2c31151d08721c73b9c27878d69688193",
+        "wins": 0,
+        "losses": 0,
+        "ties": 0,
+        "decided": 0,
+        "win_rate": null,
+        "target_yes": 0,
+        "target_answers": 0,
+        "target_kept_rate": null
+      }
+    ],
+    "agreement": {
+      "pairs_with_multiple_judges": 0,
+      "pairs_in_agreement": 0,
+      "rate": null
+    }
+  },
+  "human": null
+}

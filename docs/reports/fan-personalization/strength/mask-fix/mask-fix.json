@@ -1,0 +1,234 @@
+{
+  "topic": "cat",
+  "prompt": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1girl, solo, brown hair, green eyes, sweater, holding cat, window, upper body, detailed eyes, detailed illustration, absurdres, highres.",
+  "refs": [
+    {
+      "text": "warm color palette, amber tones",
+      "weight": 3.0
+    },
+    {
+      "text": "harsh sunlight, hard cast shadow, high contrast",
+      "weight": 3.0
+    }
+  ],
+  "device": "cpu",
+  "dtype": "float32",
+  "fan_commit": "9d0b76843f6437718195accac9cf3f050a25d26b",
+  "semantics": "use_attn_mask excludes reference pad keys only",
+  "mask_shapes": {
+    "causal_attention_mask": [
+      4,
+      1,
+      77,
+      77
+    ],
+    "attention_mask": [
+      4,
+      1,
+      77,
+      77
+    ],
+    "weight": [
+      1,
+      79
+    ],
+    "n_token": 77,
+    "rows_per_item": 4
+  },
+  "reference_free": {
+    "real_tokens": 50,
+    "pad_positions": 27,
+    "rows": [
+      {
+        "encode": "adapter",
+        "hidden_max_abs_diff": 0.0,
+        "hidden_mean_cosine": 0.99999988,
+        "real_token_max_l2": 0.0,
+        "pad_mean_l2": 0.0,
+        "pad_max_l2": 0.0,
+        "pooled_max_abs_diff": 0.0
+      },
+      {
+        "encode": "upstream",
+        "hidden_max_abs_diff": 22.42300415,
+        "hidden_mean_cosine": 0.71854699,
+        "real_token_max_l2": 0.0,
+        "pad_mean_l2": 23.988726,
+        "pad_max_l2": 51.558697,
+        "pooled_max_abs_diff": 0.0
+      }
+    ]
+  },
+  "equivalence": [
+    {
+      "use_attn_mask": false,
+      "limits": {
+        "normalized_rmse": 0.005,
+        "mean_cosine": 0.999
+      },
+      "upstream": {
+        "hidden": {
+          "max_abs_diff": 0.00048828,
+          "normalized_rmse": 6.51e-06,
+          "mean_cosine": 0.99999988
+        },
+        "pooled": {
+          "max_abs_diff": 0.0,
+          "normalized_rmse": 0.0,
+          "mean_cosine": 0.99999988
+        }
+      },
+      "fixed": {
+        "hidden": {
+          "max_abs_diff": 0.00048828,
+          "normalized_rmse": 6.51e-06,
+          "mean_cosine": 0.99999988
+        },
+        "pooled": {
+          "max_abs_diff": 0.0,
+          "normalized_rmse": 0.0,
+          "mean_cosine": 0.99999988
+        }
+      }
+    },
+    {
+      "use_attn_mask": true,
+      "limits": {
+        "normalized_rmse": 0.005,
+        "mean_cosine": 0.999
+      },
+      "upstream": {
+        "hidden": {
+          "max_abs_diff": 22.42300415,
+          "normalized_rmse": 0.64964867,
+          "mean_cosine": 0.59051532
+        },
+        "pooled": {
+          "max_abs_diff": 0.0,
+          "normalized_rmse": 0.0,
+          "mean_cosine": 0.99999988
+        }
+      },
+      "fixed": {
+        "hidden": {
+          "max_abs_diff": 0.00048828,
+          "normalized_rmse": 6.51e-06,
+          "mean_cosine": 0.99999988
+        },
+        "pooled": {
+          "max_abs_diff": 0.0,
+          "normalized_rmse": 0.0,
+          "mean_cosine": 0.99999988
+        }
+      }
+    }
+  ],
+  "no_mask_identity": {
+    "hidden_max_abs_diff": 0.0,
+    "pooled_max_abs_diff": 0.0
+  },
+  "attention": [
+    {
+      "use_attn_mask": false,
+      "alpha": 0.5,
+      "layer": "clip_l layer 1 (first personalized layer with skip_pa=[0])",
+      "recomputed_weights_max_abs_diff": 0.0,
+      "reference_tokens": [
+        8,
+        11
+      ],
+      "positions": {
+        "5": {
+          "target_block": 0.5,
+          "ref_content": 0.5,
+          "ref_pad": 0.0
+        },
+        "20": {
+          "target_block": 0.5,
+          "ref_content": 0.37561,
+          "ref_pad": 0.12439
+        },
+        "45": {
+          "target_block": 0.5,
+          "ref_content": 0.434991,
+          "ref_pad": 0.065009
+        }
+      }
+    },
+    {
+      "use_attn_mask": true,
+      "alpha": 0.5,
+      "layer": "clip_l layer 1 (first personalized layer with skip_pa=[0])",
+      "recomputed_weights_max_abs_diff": 0.0,
+      "reference_tokens": [
+        8,
+        11
+      ],
+      "positions": {
+        "5": {
+          "target_block": 0.5,
+          "ref_content": 0.5,
+          "ref_pad": 0.0
+        },
+        "20": {
+          "target_block": 0.5,
+          "ref_content": 0.5,
+          "ref_pad": 0.0
+        },
+        "45": {
+          "target_block": 0.5,
+          "ref_content": 0.5,
+          "ref_pad": 0.0
+        }
+      }
+    }
+  ],
+  "strength": [
+    {
+      "skip_pa": [
+        0
+      ],
+      "use_attn_mask": false,
+      "cosine_vs_plain": 0.766487,
+      "hidden_max_abs_diff": 17.40197754
+    },
+    {
+      "skip_pa": [
+        0
+      ],
+      "use_attn_mask": true,
+      "cosine_vs_plain": 0.796556,
+      "hidden_max_abs_diff": 18.8984375
+    },
+    {
+      "skip_pa": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "use_attn_mask": false,
+      "cosine_vs_plain": 0.957523,
+      "hidden_max_abs_diff": 17.125
+    },
+    {
+      "skip_pa": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "use_attn_mask": true,
+      "cosine_vs_plain": 0.944982,
+      "hidden_max_abs_diff": 14.24902344
+    }
+  ]
+}

@@ -104,7 +104,7 @@ def main():
             )
         parts.append("</div>")
         parts.append(
-            "<details><summary>カードに付いている参照の説明文</summary><p>"
+            "<details><summary>カードに付いている Reference Prompt（説明文）</summary><p>"
             + "<br>".join(
                 f"{html.escape(card['label'])}: {html.escape(card['ref_en'])}"
                 for card in prepared
@@ -119,14 +119,14 @@ def main():
             + f'<p class="meta">お題：{html.escape(topic["label"])} / '
             f"policy {html.escape(sample['personalization']['policy_id'])} / "
             f"alpha {sample['personalization']['effective_policy']['alpha']} / "
-            f"参照 {len(refs)}件</p>"
+            f"Reference Prompt {len(refs)}件</p>"
         )
         for label, entries in [
             (
-                "通常生成",
+                "パーソナライズなし",
                 [topic_images.get(f"{sample['topic_id']}-{i}") for i in range(4)],
             ),
-            ("パーソナライズ生成", sample["images"]),
+            ("パーソナライズあり", sample["images"]),
         ]:
             parts.append(f'<h3>{label}</h3><div class="grid">')
             for entry in entries:
@@ -146,7 +146,7 @@ def main():
         )
         prompt = sample["images"][0]["prompt"] if sample["images"] else ""
         parts.append(
-            "<details><summary>使った参照の説明文とお題の文</summary>"
+            "<details><summary>使った Reference Prompt と Target Prompt</summary>"
             f"<p>{reference_lines}</p><p>{html.escape(prompt)}</p></details></section>"
         )
     parts.append(

@@ -208,9 +208,11 @@ def test_a_run_shows_the_plain_and_personalized_images_side_by_side(
     run = service.snapshot(sid)["run"]
     assert run["status"] == "done" and run["mode"] == "live"
     assert run["preference"]["selection"] == service.snapshot(sid)["selection"]
-    assert run["policy_id"] == "legacy_exhibit"
+    default_policy_id = service_module.FAN_POLICIES["default_policy_id"]
+    default_alpha = service_module.FAN_POLICIES["policies"][default_policy_id]["alpha"]
+    assert run["policy_id"] == default_policy_id
     assert run["personalization_hash"] == run["personalization"]["hash"]
-    assert run["personalization"]["effective_policy"]["alpha"] == 0.5
+    assert run["personalization"]["effective_policy"]["alpha"] == default_alpha
     assert "provenance" not in run["personalization"]
     assert [image["id"] for image in run["personal"]] == [
         f"personal-{i}" for i in range(4)
@@ -514,7 +516,8 @@ def test_another_policy_or_catalog_misses_the_cache_and_the_old_content_hits(
     settle(service)
     registered = service_module.FAN_POLICIES
     policies = copy.deepcopy(registered)
-    policies["policies"]["legacy_exhibit"]["alpha"] = 0.4
+    default_policy_id = policies["default_policy_id"]
+    policies["policies"][default_policy_id]["alpha"] = 0.4
     monkeypatch.setattr(service_module, "FAN_POLICIES", policies)
     start(service, sid, "r1")
     settle(service)

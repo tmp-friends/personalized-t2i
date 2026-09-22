@@ -33,12 +33,11 @@ from zoneinfo import ZoneInfo
 PROJECT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(PROJECT / "src"))
 
-from PIL import Image, ImageDraw, ImageFont
-
 from exhibit.evaluation import (
     list_strength_experiments,
     load_strength_config,
 )
+from PIL import Image, ImageDraw, ImageFont
 
 REPO = PROJECT.parent
 DEFAULT_CONFIG = PROJECT / "configs/fan-strength.json"
@@ -608,6 +607,7 @@ def policy_rows(columns, run):
                 "profiling": profile,
                 "use_attn_mask": policy.get("use_attn_mask"),
                 "embed_gain": policy.get("embed_gain"),
+                "hidden_norm": policy.get("hidden_norm"),
                 "history_vs_legacy": summary.get("mean_history_score_delta_vs_legacy"),
                 "history_vs_legacy_ci": bootstrap.get("history_delta_vs_legacy"),
                 "target_vs_legacy": summary.get("mean_target_score_delta_vs_legacy"),
@@ -632,10 +632,10 @@ def policy_rows(columns, run):
 def policy_table(rows):
     head = (
         "| policy_id | alpha | skip_pa | pooled | profiling | mask | embed_gain "
-        "| Δhistory vs legacy | Δtarget vs legacy | Δhistory vs plain "
+        "| hidden_norm | Δhistory vs legacy | Δtarget vs legacy | Δhistory vs plain "
         "| Δtarget vs plain | 判定 |"
     )
-    lines = [head, "|---|---|---|---|---|---|---|---|---|---|---|---|"]
+    lines = [head, "|---|---|---|---|---|---|---|---|---|---|---|---|---|"]
     for row in rows:
         verdict = VERDICT.get(row["status"], NOT_RUN)
         if row["reasons"]:
@@ -644,8 +644,8 @@ def policy_table(rows):
         skip = DASH if skip_pa is None else "[" + ",".join(str(item) for item in skip_pa) + "]"
         lines.append(
             "| `{policy}` | {alpha} | {skip} | {pooled} | {profile} | {mask} | {gain} "
-            "| {history}{history_ci} | {target}{target_ci} | {history_plain} | {target_plain} "
-            "| {verdict} |".format(
+            "| {norm} | {history}{history_ci} | {target}{target_ci} | {history_plain} "
+            "| {target_plain} | {verdict} |".format(
                 policy=row["policy_id"],
                 alpha=plain_number(row["alpha"], 2),
                 skip=skip,
@@ -653,6 +653,7 @@ def policy_table(rows):
                 profile=row["profiling"],
                 mask="あり" if row["use_attn_mask"] else "なし",
                 gain=plain_number(row["embed_gain"], 2),
+                norm=cell(row["hidden_norm"]),
                 history=number(row["history_vs_legacy"]),
                 history_ci=interval(row["history_vs_legacy_ci"]),
                 target=number(row["target_vs_legacy"]),
@@ -871,16 +872,16 @@ def settings_table(rows):
     """Every column of a sheet, left to right, with the settings that made it."""
     head = (
         "| 条件 | alpha | skip | skip_pa | pooled_mode | profiling | use_attn_mask "
-        "| embed_gain | reference_unit |"
+        "| embed_gain | hidden_norm | reference_unit |"
     )
-    lines = [head, "|---|---|---|---|---|---|---|---|---|"]
+    lines = [head, "|---|---|---|---|---|---|---|---|---|---|"]
     for name, policy in rows:
         if policy is None:
-            lines.append(f"| {name} |" + " — |" * 8)
+            lines.append(f"| {name} |" + f" {DASH} |" * 9)
             continue
         lines.append(
             "| {name} | {alpha} | {skip} | {skip_pa} | {pooled} | {profiling} "
-            "| {mask} | {gain} | {unit} |".format(
+            "| {mask} | {gain} | {norm} | {unit} |".format(
                 name=name,
                 alpha=plain_number(policy.get("alpha"), 2),
                 skip=cell(policy.get("skip")),
@@ -889,6 +890,7 @@ def settings_table(rows):
                 profiling=cell(policy.get("profiling")),
                 mask=cell(policy.get("use_attn_mask")),
                 gain=plain_number(policy.get("embed_gain"), 2),
+                norm=cell(policy.get("hidden_norm")),
                 unit=cell(policy.get("reference_unit")),
             )
         )

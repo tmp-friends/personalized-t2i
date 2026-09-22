@@ -7,10 +7,10 @@
 
 | 項目 | 状態 |
 |---|---|
-| 既定 encoder policy | `legacy_exhibit`（評価が揃うまで変更しない。設計 §3） |
+| 既定 encoder policy | `mask_skip8_v1`（**所有者判断**：2026-09-22 に legacy_exhibit → mask_skip1_v1、2026-09-23 に mask_skip1_v1 → mask_skip8_v1（e11-sampler と legacy-family 比較の後）；事前基準は未達、本人評価は未実施） |
 | 展示で使う catalog | `catalog-v2`（4被写体 × 16表現の64枚）。**所有者判断 2026-09-22** で切り替え、`catalog-v1` は互換を残さず削除 |
 | `catalog-v2` の確認 | 生成済み 64 / 確認済みの枚数は `configs/cards-v2-review.json` が決めます。未確認のカードは `/api/config` に出ず、preflight も不合格になります |
-| encoding 数値検査 | 実施済み。`legacy_exhibit` は合格、公式 pooled の条件は α=0 基準で不合格（検出結果として保存） |
+| encoding 数値検査 | 実施済み。`legacy_exhibit` は合格、`mask_skip8_v1` も両診断に合格（`fan_no_reference_vs_pipeline` cosine 1.0、`alpha_zero` cosine 0.99999。`mask_skip1_v1` と同じ仕組みで検査）。公式 pooled の条件は α=0 基準で不合格（検出結果として保存） |
 | 画像評価（screen / refine / heldout） | 実行状況は [docs/reports/fan-personalization/](../docs/reports/fan-personalization/) を参照 |
 | 本人によるブラインド評価 | **未実施**。回答は収集していない（代答もしない） |
 
@@ -161,7 +161,7 @@ PYTHONPATH=exhibit/src exhibit/.venv/bin/python exhibit/scripts/build_strength_r
 ```
 
 - 実測: `outputs/fan-evaluation/strength/<experiment_hash>/`（manifest の `display.experiment_id` で実験を引けます）。レポート: `docs/reports/fan-personalization/strength/`。
-- policy には任意項目 `embed_gain`（`hidden = plain + gain·(personalized − plain)`、1.0 は省略と同値で hash 不変）と、`pooled_mode: fan_eos`（bigG の個人化 pooled を EOS 位置で取る）が使えます。既定 policy は変えません。
+- policy には任意項目 `embed_gain`（`hidden = plain + gain·(personalized − plain)`、1.0 は省略と同値で hash 不変）と、`pooled_mode: fan_eos`（bigG の個人化 pooled を EOS 位置で取る）が使えます。これらの実験だけを理由に既定 policy を変えることはしません（切り替えの条件は下記）。
 
 ### 人によるブラインド評価
 
@@ -186,6 +186,7 @@ PYTHONPATH=exhibit/src exhibit/.venv/bin/python exhibit/scripts/summarize_prefer
 収集 → merge → manifest → 画像生成 → 回答 → 集計の順です。`participants.json` の必須項目は `participant_id, catalog_id, selection, aspect_gains` で、各参加者につき1件。旧16枚 pool と比較する `elicitation` study（設計 §9.7）は、比較対象だった catalog-v1 の削除にともない削除しました。回答は参加者内で平均してから参加者間で平均し、seed数を人数に加算しません。95%区間は参加者単位のbootstrap（2,000回、seed=0）です。回答が無ければ「未実施」と出力し、勝率は作りません。方式の対応表は集計器だけが読む別ファイルです。
 
 既定値の変更は、heldoutの事前基準と本人評価の両方（候補vslegacy、本人vs別人のどちらも平均>0.5かつ95%区間下限>0.5、主評価は最低20人）を満たしたときに1回だけ行い、根拠の experiment / study hash を設定・README・レポートへ残します。満たさない間は `default_policy_id` を `legacy_exhibit` のままにします。
+この基準の成立を待たず所有者判断で `default_policy_id` を2段階切り替えました：2026-09-22 に `legacy_exhibit` から `mask_skip1_v1` へ（実験 `e10-mask` run B、experiment hash `0bf81bf739ec880cd083aaaa1cd1e222cc3bfe8600765ef4d9914e03878de6b5`）、2026-09-23 に `mask_skip1_v1` から `mask_skip8_v1` へ（experiment hash `ead995b8787381d5b7daaf8081c820461a581bb58bb79961010d31052a2d523e`、e11-sampler と legacy-family 比較の後。`mask_skip1_v1` はどの Reference Prompt でも暖色に寄り、cat のお題で猫耳が増える傾向が見えたため）。heldout の事前基準は未達、本人評価は未実施のままです。
 
 ## 検証
 
@@ -205,7 +206,7 @@ PYTHONPATH=exhibit/src exhibit/.venv/bin/python exhibit/scripts/build_report.py
 
 ## 生成モデルとモチーフ
 
-[Illustrious XL v2.0-STABLE](https://huggingface.co/OnomaAIResearch/Illustrious-XL-v2.0)（revision `69459c1fe6f46db41ab31e6114f05acc0e06bcaa`）を使用します。1024×1280（縦長）・30 steps・DPM++ 2M SDE Karras（`DPMSolverMultistepScheduler` + `algorithm_type: sde-dpmsolver++` / `use_karras_sigmas`）・CFG 5.0・fp16。デコーダーは固定revisionの [sdxl-vae-fp16-fix](https://huggingface.co/madebyollin/sdxl-vae-fp16-fix)（`207b116dae70ace3637169f1ddd2434b91b3a8cd`）に差し替えます（チェックポイント同梱のVAEをfp16で使うと白っぽく低コントラストになるため）。単一safetensorsを `from_single_file` で読み込み、構成ファイルとtokenizerだけを初期Illustriousの固定revisionから読みます。`from_single_file` は `name_or_path` を残さないため、FANのSDXLエンコーダーは `FAN(text_encoder, tokenizer, L.pth)` と `FAN(text_encoder_2, tokenizer_2, bigG.pth)` を `fan.wrapper.stable_diffusion_xl` で束ねて手動で組み立てます。
+[Illustrious XL v2.0-STABLE](https://huggingface.co/OnomaAIResearch/Illustrious-XL-v2.0)（revision `69459c1fe6f46db41ab31e6114f05acc0e06bcaa`）を使用します。1024×1280（縦長）・30 steps・DPM++ 2M SDE Karras（`DPMSolverMultistepScheduler` + `algorithm_type: sde-dpmsolver++` / `use_karras_sigmas`）・CFG 5.0・fp16。非 SDE 版（`dpmsolver++`）は e11-sampler で試しましたが、plain の彩度が約29落ちるため採用しませんでした（`docs/reports/fan-personalization/strength/e11-sampler/`）。デコーダーは固定revisionの [sdxl-vae-fp16-fix](https://huggingface.co/madebyollin/sdxl-vae-fp16-fix)（`207b116dae70ace3637169f1ddd2434b91b3a8cd`）に差し替えます（チェックポイント同梱のVAEをfp16で使うと白っぽく低コントラストになるため）。単一safetensorsを `from_single_file` で読み込み、構成ファイルとtokenizerだけを初期Illustriousの固定revisionから読みます。`from_single_file` は `name_or_path` を残さないため、FANのSDXLエンコーダーは `FAN(text_encoder, tokenizer, L.pth)` と `FAN(text_encoder_2, tokenizer_2, bigG.pth)` を `fan.wrapper.stable_diffusion_xl` で束ねて手動で組み立てます。
 
 お題は「窓辺で猫と過ごす少女」「東京の夜景と青年」「森を旅する魔法使い」「海辺の灯台と船乗り」「雨の街角の少女」「カフェで迎える店員」の6件。カードの被写体（街角の少女・図書館の青年・草原の旅人・カフェの店員）はお題と重ねていないため、「被写体が好き」と「表現が好き」を切り分けられます。通常側と個人化側のモデル・設定・seedは一致させます。比較中は `generation` を固定し、変更した場合は別 experiment として扱い、過去の結果に追記しません。
 

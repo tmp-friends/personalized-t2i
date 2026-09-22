@@ -805,8 +805,9 @@ def test_both_comparisons_improved_reports_eligibility_without_changing_policies
     for participant in manifest["participants"]:
         answer_file(directory, manifest, keys, participant, subject_wins)
 
+    policies_before = read_json(ROOT / "configs/fan-policies.json")
     summary = study_lib.summarize_study(directory)
-    policies = read_json(ROOT / "configs/fan-policies.json")
+    policies_after = read_json(ROOT / "configs/fan-policies.json")
 
     assert set(summary["comparisons"]) == {"candidate_vs_legacy", "own_vs_other"}
     assert all(
@@ -815,7 +816,10 @@ def test_both_comparisons_improved_reports_eligibility_without_changing_policies
     )
     assert summary["default_policy_change"]["eligible"] is True
     # Eligibility is reported; the registry on disk is never touched.
-    assert policies["default_policy_id"] == "legacy_exhibit"
+    assert policies_after == policies_before
+    # The encoder study's "legacy" arm is always LEGACY_POLICY_ID, independent
+    # of whatever the exhibit currently serves as its default.
+    assert summary["default_policy_change"]["default_policy_id"] == "legacy_exhibit"
     assert "fan-policies.jsonを変更しない" in summary["default_policy_change"]["note"]
     assert "`legacy_exhibit` のまま" in study_lib.summary_markdown(summary)
 

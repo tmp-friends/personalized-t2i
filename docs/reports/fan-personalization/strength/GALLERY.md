@@ -1,6 +1,6 @@
 # FAN 強度実験 · 設定と画像の一覧
 
-生成日時: 2026-09-22 15:44:19 JST
+生成日時: 2026-09-22 20:50:24 JST
 
 1 枚のシートは 1 ケース（topic × history × seed）です。列は左から plain（個人化なし）、legacy_exhibit（現行既定）、設定表の順に並ぶ候補 policy。各タイルの下の帯に policy_id と、そのケースでの legacy_exhibit に対する Δhistory（dHist）・Δtarget（dTgt）が入っています。タイルは 1024×1280 の生成画像を 320×400 に縮小したものです。
 
@@ -1017,6 +1017,512 @@ A6: 公式の生成設定に寄せた対照 (negative なし、非 SDE の DPM++
 **topic=rain / history=sparse / seed=230924**
 
 ![topic=rain history=sparse seed=230924](e5-official-sampler/sheet-rain-sparse-seed230924.jpg)
+
+</details>
+
+## `e6-skip1-only`
+
+legacy_exhibit から skip_pa だけ [0] に変えた設定（alpha 0.5・plain pooled・profiling all）。strong_v1 の目視結果が芳しくなかったため、profiling を legacy のまま skip_pa の効果だけを見る。
+
+- plan 項目: B2
+- experiment hash: `abca68252fcc115649eb2b44a3096f16e7a5e63d618da56e7b6b5e49985a84ab`
+
+### 条件の設定
+
+| 条件 | alpha | skip | skip_pa | pooled_mode | profiling | use_attn_mask | embed_gain | reference_unit |
+|---|---|---|---|---|---|---|---|---|
+| plain（個人化なし） | — | — | — | — | — | — | — | — |
+| `legacy_exhibit` | 0.50 | -2 | [0,1,2,3,4,5,6,7] | plain | all | なし | — | aspect_phrase |
+| `legacy-skip1` | 0.50 | -2 | [0] | plain | all | なし | — | aspect_phrase |
+| `strong_v1` | 0.50 | -2 | [0] | plain | ratio 0.1 | なし | — | aspect_phrase |
+
+![e6-skip1-only の概観](e6-skip1-only/overview.jpg)
+
+### 履歴 `warm`
+
+| ref_id | 重み | 参照テキスト |
+|---|---|---|
+| `warm-color` | 3.0 | warm color palette, amber and orange tones |
+| `warm-light` | 3.0 | warm golden hour light, gentle shadows |
+| `warm-texture` | 3.0 | watercolor painting, soft brushwork, painterly texture |
+| `warm-mood` | 3.0 | calm atmosphere |
+
+**topic=cat / history=warm / seed=230923**
+
+![topic=cat history=warm seed=230923](e6-skip1-only/sheet-cat-warm-seed230923.jpg)
+
+**topic=tokyo / history=warm / seed=230923**
+
+![topic=tokyo history=warm seed=230923](e6-skip1-only/sheet-tokyo-warm-seed230923.jpg)
+
+**topic=rain / history=warm / seed=230923**
+
+![topic=rain history=warm seed=230923](e6-skip1-only/sheet-rain-warm-seed230923.jpg)
+
+<details><summary>seed 230924 のシート（3 枚）</summary>
+
+**topic=cat / history=warm / seed=230924**
+
+![topic=cat history=warm seed=230924](e6-skip1-only/sheet-cat-warm-seed230924.jpg)
+
+**topic=tokyo / history=warm / seed=230924**
+
+![topic=tokyo history=warm seed=230924](e6-skip1-only/sheet-tokyo-warm-seed230924.jpg)
+
+**topic=rain / history=warm / seed=230924**
+
+![topic=rain history=warm seed=230924](e6-skip1-only/sheet-rain-warm-seed230924.jpg)
+
+</details>
+
+### 履歴 `cool`
+
+| ref_id | 重み | 参照テキスト |
+|---|---|---|
+| `cool-color` | 3.0 | cool color palette, blue and teal tones |
+| `cool-light` | 3.0 | soft diffused light |
+| `cool-texture` | 3.0 | cel shading, clean lineart, anime coloring |
+| `cool-mood` | 3.0 | calm atmosphere |
+
+**topic=cat / history=cool / seed=230923**
+
+![topic=cat history=cool seed=230923](e6-skip1-only/sheet-cat-cool-seed230923.jpg)
+
+**topic=tokyo / history=cool / seed=230923**
+
+![topic=tokyo history=cool seed=230923](e6-skip1-only/sheet-tokyo-cool-seed230923.jpg)
+
+**topic=rain / history=cool / seed=230923**
+
+![topic=rain history=cool seed=230923](e6-skip1-only/sheet-rain-cool-seed230923.jpg)
+
+<details><summary>seed 230924 のシート（3 枚）</summary>
+
+**topic=cat / history=cool / seed=230924**
+
+![topic=cat history=cool seed=230924](e6-skip1-only/sheet-cat-cool-seed230924.jpg)
+
+**topic=tokyo / history=cool / seed=230924**
+
+![topic=tokyo history=cool seed=230924](e6-skip1-only/sheet-tokyo-cool-seed230924.jpg)
+
+**topic=rain / history=cool / seed=230924**
+
+![topic=rain history=cool seed=230924](e6-skip1-only/sheet-rain-cool-seed230924.jpg)
+
+</details>
+
+### 履歴 `mixed`
+
+| ref_id | 重み | 参照テキスト |
+|---|---|---|
+| `mixed-warm-color` | 2.0 | warm color palette, amber and orange tones |
+| `mixed-warm-light` | 2.0 | warm golden hour light, gentle shadows |
+| `mixed-warm-texture` | 2.0 | watercolor painting, soft brushwork, painterly texture |
+| `mixed-cool-color` | 1.0 | cool color palette, blue and teal tones |
+| `mixed-cool-light` | 1.0 | soft diffused light |
+| `mixed-cool-texture` | 1.0 | cel shading, clean lineart, anime coloring |
+| `mixed-mood` | 3.0 | calm atmosphere |
+
+**topic=cat / history=mixed / seed=230923**
+
+![topic=cat history=mixed seed=230923](e6-skip1-only/sheet-cat-mixed-seed230923.jpg)
+
+**topic=tokyo / history=mixed / seed=230923**
+
+![topic=tokyo history=mixed seed=230923](e6-skip1-only/sheet-tokyo-mixed-seed230923.jpg)
+
+**topic=rain / history=mixed / seed=230923**
+
+![topic=rain history=mixed seed=230923](e6-skip1-only/sheet-rain-mixed-seed230923.jpg)
+
+<details><summary>seed 230924 のシート（3 枚）</summary>
+
+**topic=cat / history=mixed / seed=230924**
+
+![topic=cat history=mixed seed=230924](e6-skip1-only/sheet-cat-mixed-seed230924.jpg)
+
+**topic=tokyo / history=mixed / seed=230924**
+
+![topic=tokyo history=mixed seed=230924](e6-skip1-only/sheet-tokyo-mixed-seed230924.jpg)
+
+**topic=rain / history=mixed / seed=230924**
+
+![topic=rain history=mixed seed=230924](e6-skip1-only/sheet-rain-mixed-seed230924.jpg)
+
+</details>
+
+### 履歴 `sparse`
+
+| ref_id | 重み | 参照テキスト |
+|---|---|---|
+| `sparse-warm` | 2.0 | warm color palette, amber and orange tones |
+| `sparse-cool` | 1.0 | cool color palette, blue and teal tones |
+
+**topic=cat / history=sparse / seed=230923**
+
+![topic=cat history=sparse seed=230923](e6-skip1-only/sheet-cat-sparse-seed230923.jpg)
+
+**topic=tokyo / history=sparse / seed=230923**
+
+![topic=tokyo history=sparse seed=230923](e6-skip1-only/sheet-tokyo-sparse-seed230923.jpg)
+
+**topic=rain / history=sparse / seed=230923**
+
+![topic=rain history=sparse seed=230923](e6-skip1-only/sheet-rain-sparse-seed230923.jpg)
+
+<details><summary>seed 230924 のシート（3 枚）</summary>
+
+**topic=cat / history=sparse / seed=230924**
+
+![topic=cat history=sparse seed=230924](e6-skip1-only/sheet-cat-sparse-seed230924.jpg)
+
+**topic=tokyo / history=sparse / seed=230924**
+
+![topic=tokyo history=sparse seed=230924](e6-skip1-only/sheet-tokyo-sparse-seed230924.jpg)
+
+**topic=rain / history=sparse / seed=230924**
+
+![topic=rain history=sparse seed=230924](e6-skip1-only/sheet-rain-sparse-seed230924.jpg)
+
+</details>
+
+## `e7-skip-ladder`
+
+skip_pa の階段。legacy_exhibit（alpha 0.5・plain・profiling all）から skip_pa を [0] → [0..7] まで 1 層ずつ増やし、霞が消えて効きが残る境目を探す。 [0..7] は legacy_exhibit そのもの（暗黙の比較列）。
+
+- plan 項目: B1
+- experiment hash: `c255fdc72c8f4d95729225da7d5327d00b1ff4fbcc6257504dd00c8163f45930`
+
+### 条件の設定
+
+| 条件 | alpha | skip | skip_pa | pooled_mode | profiling | use_attn_mask | embed_gain | reference_unit |
+|---|---|---|---|---|---|---|---|---|
+| plain（個人化なし） | — | — | — | — | — | — | — | — |
+| `legacy_exhibit` | 0.50 | -2 | [0,1,2,3,4,5,6,7] | plain | all | なし | — | aspect_phrase |
+| `ladder-skip0to0` | 0.50 | -2 | [0] | plain | all | なし | — | aspect_phrase |
+| `ladder-skip0to1` | 0.50 | -2 | [0,1] | plain | all | なし | — | aspect_phrase |
+| `ladder-skip0to2` | 0.50 | -2 | [0,1,2] | plain | all | なし | — | aspect_phrase |
+| `ladder-skip0to3` | 0.50 | -2 | [0,1,2,3] | plain | all | なし | — | aspect_phrase |
+| `ladder-skip0to4` | 0.50 | -2 | [0,1,2,3,4] | plain | all | なし | — | aspect_phrase |
+| `ladder-skip0to5` | 0.50 | -2 | [0,1,2,3,4,5] | plain | all | なし | — | aspect_phrase |
+| `ladder-skip0to6` | 0.50 | -2 | [0,1,2,3,4,5,6] | plain | all | なし | — | aspect_phrase |
+
+![e7-skip-ladder の概観](e7-skip-ladder/overview.jpg)
+
+### 履歴 `warm`
+
+| ref_id | 重み | 参照テキスト |
+|---|---|---|
+| `warm-color` | 3.0 | warm color palette, amber and orange tones |
+| `warm-light` | 3.0 | warm golden hour light, gentle shadows |
+| `warm-texture` | 3.0 | watercolor painting, soft brushwork, painterly texture |
+| `warm-mood` | 3.0 | calm atmosphere |
+
+**topic=cat / history=warm / seed=230923**
+
+![topic=cat history=warm seed=230923](e7-skip-ladder/sheet-cat-warm-seed230923.jpg)
+
+**topic=tokyo / history=warm / seed=230923**
+
+![topic=tokyo history=warm seed=230923](e7-skip-ladder/sheet-tokyo-warm-seed230923.jpg)
+
+**topic=rain / history=warm / seed=230923**
+
+![topic=rain history=warm seed=230923](e7-skip-ladder/sheet-rain-warm-seed230923.jpg)
+
+<details><summary>seed 230924 のシート（3 枚）</summary>
+
+**topic=cat / history=warm / seed=230924**
+
+![topic=cat history=warm seed=230924](e7-skip-ladder/sheet-cat-warm-seed230924.jpg)
+
+**topic=tokyo / history=warm / seed=230924**
+
+![topic=tokyo history=warm seed=230924](e7-skip-ladder/sheet-tokyo-warm-seed230924.jpg)
+
+**topic=rain / history=warm / seed=230924**
+
+![topic=rain history=warm seed=230924](e7-skip-ladder/sheet-rain-warm-seed230924.jpg)
+
+</details>
+
+### 履歴 `cool`
+
+| ref_id | 重み | 参照テキスト |
+|---|---|---|
+| `cool-color` | 3.0 | cool color palette, blue and teal tones |
+| `cool-light` | 3.0 | soft diffused light |
+| `cool-texture` | 3.0 | cel shading, clean lineart, anime coloring |
+| `cool-mood` | 3.0 | calm atmosphere |
+
+**topic=cat / history=cool / seed=230923**
+
+![topic=cat history=cool seed=230923](e7-skip-ladder/sheet-cat-cool-seed230923.jpg)
+
+**topic=tokyo / history=cool / seed=230923**
+
+![topic=tokyo history=cool seed=230923](e7-skip-ladder/sheet-tokyo-cool-seed230923.jpg)
+
+**topic=rain / history=cool / seed=230923**
+
+![topic=rain history=cool seed=230923](e7-skip-ladder/sheet-rain-cool-seed230923.jpg)
+
+<details><summary>seed 230924 のシート（3 枚）</summary>
+
+**topic=cat / history=cool / seed=230924**
+
+![topic=cat history=cool seed=230924](e7-skip-ladder/sheet-cat-cool-seed230924.jpg)
+
+**topic=tokyo / history=cool / seed=230924**
+
+![topic=tokyo history=cool seed=230924](e7-skip-ladder/sheet-tokyo-cool-seed230924.jpg)
+
+**topic=rain / history=cool / seed=230924**
+
+![topic=rain history=cool seed=230924](e7-skip-ladder/sheet-rain-cool-seed230924.jpg)
+
+</details>
+
+### 履歴 `mixed`
+
+| ref_id | 重み | 参照テキスト |
+|---|---|---|
+| `mixed-warm-color` | 2.0 | warm color palette, amber and orange tones |
+| `mixed-warm-light` | 2.0 | warm golden hour light, gentle shadows |
+| `mixed-warm-texture` | 2.0 | watercolor painting, soft brushwork, painterly texture |
+| `mixed-cool-color` | 1.0 | cool color palette, blue and teal tones |
+| `mixed-cool-light` | 1.0 | soft diffused light |
+| `mixed-cool-texture` | 1.0 | cel shading, clean lineart, anime coloring |
+| `mixed-mood` | 3.0 | calm atmosphere |
+
+**topic=cat / history=mixed / seed=230923**
+
+![topic=cat history=mixed seed=230923](e7-skip-ladder/sheet-cat-mixed-seed230923.jpg)
+
+**topic=tokyo / history=mixed / seed=230923**
+
+![topic=tokyo history=mixed seed=230923](e7-skip-ladder/sheet-tokyo-mixed-seed230923.jpg)
+
+**topic=rain / history=mixed / seed=230923**
+
+![topic=rain history=mixed seed=230923](e7-skip-ladder/sheet-rain-mixed-seed230923.jpg)
+
+<details><summary>seed 230924 のシート（3 枚）</summary>
+
+**topic=cat / history=mixed / seed=230924**
+
+![topic=cat history=mixed seed=230924](e7-skip-ladder/sheet-cat-mixed-seed230924.jpg)
+
+**topic=tokyo / history=mixed / seed=230924**
+
+![topic=tokyo history=mixed seed=230924](e7-skip-ladder/sheet-tokyo-mixed-seed230924.jpg)
+
+**topic=rain / history=mixed / seed=230924**
+
+![topic=rain history=mixed seed=230924](e7-skip-ladder/sheet-rain-mixed-seed230924.jpg)
+
+</details>
+
+### 履歴 `sparse`
+
+| ref_id | 重み | 参照テキスト |
+|---|---|---|
+| `sparse-warm` | 2.0 | warm color palette, amber and orange tones |
+| `sparse-cool` | 1.0 | cool color palette, blue and teal tones |
+
+**topic=cat / history=sparse / seed=230923**
+
+![topic=cat history=sparse seed=230923](e7-skip-ladder/sheet-cat-sparse-seed230923.jpg)
+
+**topic=tokyo / history=sparse / seed=230923**
+
+![topic=tokyo history=sparse seed=230923](e7-skip-ladder/sheet-tokyo-sparse-seed230923.jpg)
+
+**topic=rain / history=sparse / seed=230923**
+
+![topic=rain history=sparse seed=230923](e7-skip-ladder/sheet-rain-sparse-seed230923.jpg)
+
+<details><summary>seed 230924 のシート（3 枚）</summary>
+
+**topic=cat / history=sparse / seed=230924**
+
+![topic=cat history=sparse seed=230924](e7-skip-ladder/sheet-cat-sparse-seed230924.jpg)
+
+**topic=tokyo / history=sparse / seed=230924**
+
+![topic=tokyo history=sparse seed=230924](e7-skip-ladder/sheet-tokyo-sparse-seed230924.jpg)
+
+**topic=rain / history=sparse / seed=230924**
+
+![topic=rain history=sparse seed=230924](e7-skip-ladder/sheet-rain-sparse-seed230924.jpg)
+
+</details>
+
+## `e8-skip1-alpha`
+
+skip_pa [0]（全層で個人化）のまま alpha を 0.3 / 0.4 に下げ、霞が alpha に比例して薄まるかを見る。e7 の階段と対になる実験。
+
+- plan 項目: B2
+- experiment hash: `654e07cc2ce5d1559b97b02415494b528aec416a620b60291b0c2cf85ce782c5`
+
+### 条件の設定
+
+| 条件 | alpha | skip | skip_pa | pooled_mode | profiling | use_attn_mask | embed_gain | reference_unit |
+|---|---|---|---|---|---|---|---|---|
+| plain（個人化なし） | — | — | — | — | — | — | — | — |
+| `legacy_exhibit` | 0.50 | -2 | [0,1,2,3,4,5,6,7] | plain | all | なし | — | aspect_phrase |
+| `skip1-alpha0.3` | 0.30 | -2 | [0] | plain | all | なし | — | aspect_phrase |
+| `skip1-alpha0.4` | 0.40 | -2 | [0] | plain | all | なし | — | aspect_phrase |
+
+![e8-skip1-alpha の概観](e8-skip1-alpha/overview.jpg)
+
+### 履歴 `warm`
+
+| ref_id | 重み | 参照テキスト |
+|---|---|---|
+| `warm-color` | 3.0 | warm color palette, amber and orange tones |
+| `warm-light` | 3.0 | warm golden hour light, gentle shadows |
+| `warm-texture` | 3.0 | watercolor painting, soft brushwork, painterly texture |
+| `warm-mood` | 3.0 | calm atmosphere |
+
+**topic=cat / history=warm / seed=230923**
+
+![topic=cat history=warm seed=230923](e8-skip1-alpha/sheet-cat-warm-seed230923.jpg)
+
+**topic=tokyo / history=warm / seed=230923**
+
+![topic=tokyo history=warm seed=230923](e8-skip1-alpha/sheet-tokyo-warm-seed230923.jpg)
+
+**topic=rain / history=warm / seed=230923**
+
+![topic=rain history=warm seed=230923](e8-skip1-alpha/sheet-rain-warm-seed230923.jpg)
+
+<details><summary>seed 230924 のシート（3 枚）</summary>
+
+**topic=cat / history=warm / seed=230924**
+
+![topic=cat history=warm seed=230924](e8-skip1-alpha/sheet-cat-warm-seed230924.jpg)
+
+**topic=tokyo / history=warm / seed=230924**
+
+![topic=tokyo history=warm seed=230924](e8-skip1-alpha/sheet-tokyo-warm-seed230924.jpg)
+
+**topic=rain / history=warm / seed=230924**
+
+![topic=rain history=warm seed=230924](e8-skip1-alpha/sheet-rain-warm-seed230924.jpg)
+
+</details>
+
+### 履歴 `cool`
+
+| ref_id | 重み | 参照テキスト |
+|---|---|---|
+| `cool-color` | 3.0 | cool color palette, blue and teal tones |
+| `cool-light` | 3.0 | soft diffused light |
+| `cool-texture` | 3.0 | cel shading, clean lineart, anime coloring |
+| `cool-mood` | 3.0 | calm atmosphere |
+
+**topic=cat / history=cool / seed=230923**
+
+![topic=cat history=cool seed=230923](e8-skip1-alpha/sheet-cat-cool-seed230923.jpg)
+
+**topic=tokyo / history=cool / seed=230923**
+
+![topic=tokyo history=cool seed=230923](e8-skip1-alpha/sheet-tokyo-cool-seed230923.jpg)
+
+**topic=rain / history=cool / seed=230923**
+
+![topic=rain history=cool seed=230923](e8-skip1-alpha/sheet-rain-cool-seed230923.jpg)
+
+<details><summary>seed 230924 のシート（3 枚）</summary>
+
+**topic=cat / history=cool / seed=230924**
+
+![topic=cat history=cool seed=230924](e8-skip1-alpha/sheet-cat-cool-seed230924.jpg)
+
+**topic=tokyo / history=cool / seed=230924**
+
+![topic=tokyo history=cool seed=230924](e8-skip1-alpha/sheet-tokyo-cool-seed230924.jpg)
+
+**topic=rain / history=cool / seed=230924**
+
+![topic=rain history=cool seed=230924](e8-skip1-alpha/sheet-rain-cool-seed230924.jpg)
+
+</details>
+
+### 履歴 `mixed`
+
+| ref_id | 重み | 参照テキスト |
+|---|---|---|
+| `mixed-warm-color` | 2.0 | warm color palette, amber and orange tones |
+| `mixed-warm-light` | 2.0 | warm golden hour light, gentle shadows |
+| `mixed-warm-texture` | 2.0 | watercolor painting, soft brushwork, painterly texture |
+| `mixed-cool-color` | 1.0 | cool color palette, blue and teal tones |
+| `mixed-cool-light` | 1.0 | soft diffused light |
+| `mixed-cool-texture` | 1.0 | cel shading, clean lineart, anime coloring |
+| `mixed-mood` | 3.0 | calm atmosphere |
+
+**topic=cat / history=mixed / seed=230923**
+
+![topic=cat history=mixed seed=230923](e8-skip1-alpha/sheet-cat-mixed-seed230923.jpg)
+
+**topic=tokyo / history=mixed / seed=230923**
+
+![topic=tokyo history=mixed seed=230923](e8-skip1-alpha/sheet-tokyo-mixed-seed230923.jpg)
+
+**topic=rain / history=mixed / seed=230923**
+
+![topic=rain history=mixed seed=230923](e8-skip1-alpha/sheet-rain-mixed-seed230923.jpg)
+
+<details><summary>seed 230924 のシート（3 枚）</summary>
+
+**topic=cat / history=mixed / seed=230924**
+
+![topic=cat history=mixed seed=230924](e8-skip1-alpha/sheet-cat-mixed-seed230924.jpg)
+
+**topic=tokyo / history=mixed / seed=230924**
+
+![topic=tokyo history=mixed seed=230924](e8-skip1-alpha/sheet-tokyo-mixed-seed230924.jpg)
+
+**topic=rain / history=mixed / seed=230924**
+
+![topic=rain history=mixed seed=230924](e8-skip1-alpha/sheet-rain-mixed-seed230924.jpg)
+
+</details>
+
+### 履歴 `sparse`
+
+| ref_id | 重み | 参照テキスト |
+|---|---|---|
+| `sparse-warm` | 2.0 | warm color palette, amber and orange tones |
+| `sparse-cool` | 1.0 | cool color palette, blue and teal tones |
+
+**topic=cat / history=sparse / seed=230923**
+
+![topic=cat history=sparse seed=230923](e8-skip1-alpha/sheet-cat-sparse-seed230923.jpg)
+
+**topic=tokyo / history=sparse / seed=230923**
+
+![topic=tokyo history=sparse seed=230923](e8-skip1-alpha/sheet-tokyo-sparse-seed230923.jpg)
+
+**topic=rain / history=sparse / seed=230923**
+
+![topic=rain history=sparse seed=230923](e8-skip1-alpha/sheet-rain-sparse-seed230923.jpg)
+
+<details><summary>seed 230924 のシート（3 枚）</summary>
+
+**topic=cat / history=sparse / seed=230924**
+
+![topic=cat history=sparse seed=230924](e8-skip1-alpha/sheet-cat-sparse-seed230924.jpg)
+
+**topic=tokyo / history=sparse / seed=230924**
+
+![topic=tokyo history=sparse seed=230924](e8-skip1-alpha/sheet-tokyo-sparse-seed230924.jpg)
+
+**topic=rain / history=sparse / seed=230924**
+
+![topic=rain history=sparse seed=230924](e8-skip1-alpha/sheet-rain-sparse-seed230924.jpg)
 
 </details>
 

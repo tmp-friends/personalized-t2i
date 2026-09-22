@@ -61,6 +61,7 @@
       },
       "fan": {
         "commit": "9d0b76843f6437718195accac9cf3f050a25d26b",
+        "alpha": 0.5,
         "pooled": "plain",
         "skip": -2,
         "sample_size": 0,
@@ -77,8 +78,39 @@
         "use_attn_mask": false
       },
       "pooled": "plain",
+      "policy_id": "legacy_exhibit",
+      "effective_policy": {
+        "alpha": 0.5,
+        "skip": -2,
+        "skip_pa": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "use_attn_mask": false,
+        "pooled_mode": "plain",
+        "profiling": {
+          "mode": "all"
+        },
+        "reference_unit": "aspect_phrase"
+      },
+      "policy_hash": "a99004b42358d1f822d223c5e68b33d28801e10fe97ea925c2216c365a8e3749",
+      "profiling_trace": {
+        "calls": [],
+        "pooled_source": "plain",
+        "profiling": {
+          "mode": "all"
+        }
+      },
+      "profiling_trace_path": "/home/tomoya/stable-diffusion/personalized-t2i/exhibit/assets/generic/cat-0.trace.json",
       "personalization_hash": null,
-      "seconds": 5.023,
+      "conditioning_target_align": null,
+      "seconds": 5.177,
       "source": "local-illustrious-xl-v2.0",
       "license": "creativeml-openrail-m",
       "asset_version": 5
@@ -118,6 +150,7 @@
       },
       "fan": {
         "commit": "9d0b76843f6437718195accac9cf3f050a25d26b",
+        "alpha": 0.5,
         "pooled": "plain",
         "skip": -2,
         "sample_size": 0,
@@ -134,8 +167,39 @@
         "use_attn_mask": false
       },
       "pooled": "plain",
+      "policy_id": "legacy_exhibit",
+      "effective_policy": {
+        "alpha": 0.5,
+        "skip": -2,
+        "skip_pa": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "use_attn_mask": false,
+        "pooled_mode": "plain",
+        "profiling": {
+          "mode": "all"
+        },
+        "reference_unit": "aspect_phrase"
+      },
+      "policy_hash": "a99004b42358d1f822d223c5e68b33d28801e10fe97ea925c2216c365a8e3749",
+      "profiling_trace": {
+        "calls": [],
+        "pooled_source": "plain",
+        "profiling": {
+          "mode": "all"
+        }
+      },
+      "profiling_trace_path": "/home/tomoya/stable-diffusion/personalized-t2i/exhibit/assets/generic/cat-1.trace.json",
       "personalization_hash": null,
-      "seconds": 4.928,
+      "conditioning_target_align": null,
+      "seconds": 4.92,
       "source": "local-illustrious-xl-v2.0",
       "license": "creativeml-openrail-m",
       "asset_version": 5
@@ -175,6 +239,7 @@
       },
       "fan": {
         "commit": "9d0b76843f6437718195accac9cf3f050a25d26b",
+        "alpha": 0.5,
         "pooled": "plain",
         "skip": -2,
         "sample_size": 0,
@@ -191,8 +256,39 @@
         "use_attn_mask": false
       },
       "pooled": "plain",
+      "policy_id": "legacy_exhibit",
+      "effective_policy": {
+        "alpha": 0.5,
+        "skip": -2,
+        "skip_pa": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "use_attn_mask": false,
+        "pooled_mode": "plain",
+        "profiling": {
+          "mode": "all"
+        },
+        "reference_unit": "aspect_phrase"
+      },
+      "policy_hash": "a99004b42358d1f822d223c5e68b33d28801e10fe97ea925c2216c365a8e3749",
+      "profiling_trace": {
+        "calls": [],
+        "pooled_source": "plain",
+        "profiling": {
+          "mode": "all"
+        }
+      },
+      "profiling_trace_path": "/home/tomoya/stable-diffusion/personalized-t2i/exhibit/assets/generic/cat-2.trace.json",
       "personalization_hash": null,
-      "seconds": 4.964,
+      "conditioning_target_align": null,
+      "seconds": 4.96,
       "source": "local-illustrious-xl-v2.0",
       "license": "creativeml-openrail-m",
       "asset_version": 5
@@ -232,6 +328,7 @@
       },
       "fan": {
         "commit": "9d0b76843f6437718195accac9cf3f050a25d26b",
+        "alpha": 0.5,
         "pooled": "plain",
         "skip": -2,
         "sample_size": 0,
@@ -248,8 +345,39 @@
         "use_attn_mask": false
       },
       "pooled": "plain",
+      "policy_id": "legacy_exhibit",
+      "effective_policy": {
+        "alpha": 0.5,
+        "skip": -2,
+        "skip_pa": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "use_attn_mask": false,
+        "pooled_mode": "plain",
+        "profiling": {
+          "mode": "all"
+        },
+        "reference_unit": "aspect_phrase"
+      },
+      "policy_hash": "a99004b42358d1f822d223c5e68b33d28801e10fe97ea925c2216c365a8e3749",
+      "profiling_trace": {
+        "calls": [],
+        "pooled_source": "plain",
+        "profiling": {
+          "mode": "all"
+        }
+      },
+      "profiling_trace_path": "/home/tomoya/stable-diffusion/personalized-t2i/exhibit/assets/generic/cat-3.trace.json",
       "personalization_hash": null,
-      "seconds": 4.951,
+      "conditioning_target_align": null,
+      "seconds": 4.953,
       "source": "local-illustrious-xl-v2.0",
       "license": "creativeml-openrail-m",
       "asset_version": 5
@@ -289,6 +417,7 @@
       },
       "fan": {
         "commit": "9d0b76843f6437718195accac9cf3f050a25d26b",
+        "alpha": 0.5,
         "pooled": "plain",
         "skip": -2,
         "sample_size": 0,
@@ -305,7 +434,38 @@
         "use_attn_mask": false
       },
       "pooled": "plain",
+      "policy_id": "legacy_exhibit",
+      "effective_policy": {
+        "alpha": 0.5,
+        "skip": -2,
+        "skip_pa": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "use_attn_mask": false,
+        "pooled_mode": "plain",
+        "profiling": {
+          "mode": "all"
+        },
+        "reference_unit": "aspect_phrase"
+      },
+      "policy_hash": "a99004b42358d1f822d223c5e68b33d28801e10fe97ea925c2216c365a8e3749",
+      "profiling_trace": {
+        "calls": [],
+        "pooled_source": "plain",
+        "profiling": {
+          "mode": "all"
+        }
+      },
+      "profiling_trace_path": "/home/tomoya/stable-diffusion/personalized-t2i/exhibit/assets/generic/tokyo-0.trace.json",
       "personalization_hash": null,
+      "conditioning_target_align": null,
       "seconds": 4.983,
       "source": "local-illustrious-xl-v2.0",
       "license": "creativeml-openrail-m",
@@ -346,6 +506,7 @@
       },
       "fan": {
         "commit": "9d0b76843f6437718195accac9cf3f050a25d26b",
+        "alpha": 0.5,
         "pooled": "plain",
         "skip": -2,
         "sample_size": 0,
@@ -362,8 +523,39 @@
         "use_attn_mask": false
       },
       "pooled": "plain",
+      "policy_id": "legacy_exhibit",
+      "effective_policy": {
+        "alpha": 0.5,
+        "skip": -2,
+        "skip_pa": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "use_attn_mask": false,
+        "pooled_mode": "plain",
+        "profiling": {
+          "mode": "all"
+        },
+        "reference_unit": "aspect_phrase"
+      },
+      "policy_hash": "a99004b42358d1f822d223c5e68b33d28801e10fe97ea925c2216c365a8e3749",
+      "profiling_trace": {
+        "calls": [],
+        "pooled_source": "plain",
+        "profiling": {
+          "mode": "all"
+        }
+      },
+      "profiling_trace_path": "/home/tomoya/stable-diffusion/personalized-t2i/exhibit/assets/generic/tokyo-1.trace.json",
       "personalization_hash": null,
-      "seconds": 4.998,
+      "conditioning_target_align": null,
+      "seconds": 4.999,
       "source": "local-illustrious-xl-v2.0",
       "license": "creativeml-openrail-m",
       "asset_version": 5
@@ -403,6 +595,7 @@
       },
       "fan": {
         "commit": "9d0b76843f6437718195accac9cf3f050a25d26b",
+        "alpha": 0.5,
         "pooled": "plain",
         "skip": -2,
         "sample_size": 0,
@@ -419,8 +612,39 @@
         "use_attn_mask": false
       },
       "pooled": "plain",
+      "policy_id": "legacy_exhibit",
+      "effective_policy": {
+        "alpha": 0.5,
+        "skip": -2,
+        "skip_pa": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "use_attn_mask": false,
+        "pooled_mode": "plain",
+        "profiling": {
+          "mode": "all"
+        },
+        "reference_unit": "aspect_phrase"
+      },
+      "policy_hash": "a99004b42358d1f822d223c5e68b33d28801e10fe97ea925c2216c365a8e3749",
+      "profiling_trace": {
+        "calls": [],
+        "pooled_source": "plain",
+        "profiling": {
+          "mode": "all"
+        }
+      },
+      "profiling_trace_path": "/home/tomoya/stable-diffusion/personalized-t2i/exhibit/assets/generic/tokyo-2.trace.json",
       "personalization_hash": null,
-      "seconds": 4.961,
+      "conditioning_target_align": null,
+      "seconds": 4.963,
       "source": "local-illustrious-xl-v2.0",
       "license": "creativeml-openrail-m",
       "asset_version": 5
@@ -460,6 +684,7 @@
       },
       "fan": {
         "commit": "9d0b76843f6437718195accac9cf3f050a25d26b",
+        "alpha": 0.5,
         "pooled": "plain",
         "skip": -2,
         "sample_size": 0,
@@ -476,8 +701,39 @@
         "use_attn_mask": false
       },
       "pooled": "plain",
+      "policy_id": "legacy_exhibit",
+      "effective_policy": {
+        "alpha": 0.5,
+        "skip": -2,
+        "skip_pa": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "use_attn_mask": false,
+        "pooled_mode": "plain",
+        "profiling": {
+          "mode": "all"
+        },
+        "reference_unit": "aspect_phrase"
+      },
+      "policy_hash": "a99004b42358d1f822d223c5e68b33d28801e10fe97ea925c2216c365a8e3749",
+      "profiling_trace": {
+        "calls": [],
+        "pooled_source": "plain",
+        "profiling": {
+          "mode": "all"
+        }
+      },
+      "profiling_trace_path": "/home/tomoya/stable-diffusion/personalized-t2i/exhibit/assets/generic/tokyo-3.trace.json",
       "personalization_hash": null,
-      "seconds": 4.972,
+      "conditioning_target_align": null,
+      "seconds": 4.968,
       "source": "local-illustrious-xl-v2.0",
       "license": "creativeml-openrail-m",
       "asset_version": 5
@@ -517,6 +773,7 @@
       },
       "fan": {
         "commit": "9d0b76843f6437718195accac9cf3f050a25d26b",
+        "alpha": 0.5,
         "pooled": "plain",
         "skip": -2,
         "sample_size": 0,
@@ -533,8 +790,39 @@
         "use_attn_mask": false
       },
       "pooled": "plain",
+      "policy_id": "legacy_exhibit",
+      "effective_policy": {
+        "alpha": 0.5,
+        "skip": -2,
+        "skip_pa": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "use_attn_mask": false,
+        "pooled_mode": "plain",
+        "profiling": {
+          "mode": "all"
+        },
+        "reference_unit": "aspect_phrase"
+      },
+      "policy_hash": "a99004b42358d1f822d223c5e68b33d28801e10fe97ea925c2216c365a8e3749",
+      "profiling_trace": {
+        "calls": [],
+        "pooled_source": "plain",
+        "profiling": {
+          "mode": "all"
+        }
+      },
+      "profiling_trace_path": "/home/tomoya/stable-diffusion/personalized-t2i/exhibit/assets/generic/forest-0.trace.json",
       "personalization_hash": null,
-      "seconds": 4.979,
+      "conditioning_target_align": null,
+      "seconds": 4.976,
       "source": "local-illustrious-xl-v2.0",
       "license": "creativeml-openrail-m",
       "asset_version": 5
@@ -574,6 +862,7 @@
       },
       "fan": {
         "commit": "9d0b76843f6437718195accac9cf3f050a25d26b",
+        "alpha": 0.5,
         "pooled": "plain",
         "skip": -2,
         "sample_size": 0,
@@ -590,8 +879,39 @@
         "use_attn_mask": false
       },
       "pooled": "plain",
+      "policy_id": "legacy_exhibit",
+      "effective_policy": {
+        "alpha": 0.5,
+        "skip": -2,
+        "skip_pa": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "use_attn_mask": false,
+        "pooled_mode": "plain",
+        "profiling": {
+          "mode": "all"
+        },
+        "reference_unit": "aspect_phrase"
+      },
+      "policy_hash": "a99004b42358d1f822d223c5e68b33d28801e10fe97ea925c2216c365a8e3749",
+      "profiling_trace": {
+        "calls": [],
+        "pooled_source": "plain",
+        "profiling": {
+          "mode": "all"
+        }
+      },
+      "profiling_trace_path": "/home/tomoya/stable-diffusion/personalized-t2i/exhibit/assets/generic/forest-1.trace.json",
       "personalization_hash": null,
-      "seconds": 4.956,
+      "conditioning_target_align": null,
+      "seconds": 4.959,
       "source": "local-illustrious-xl-v2.0",
       "license": "creativeml-openrail-m",
       "asset_version": 5
@@ -631,6 +951,7 @@
       },
       "fan": {
         "commit": "9d0b76843f6437718195accac9cf3f050a25d26b",
+        "alpha": 0.5,
         "pooled": "plain",
         "skip": -2,
         "sample_size": 0,
@@ -647,8 +968,39 @@
         "use_attn_mask": false
       },
       "pooled": "plain",
+      "policy_id": "legacy_exhibit",
+      "effective_policy": {
+        "alpha": 0.5,
+        "skip": -2,
+        "skip_pa": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "use_attn_mask": false,
+        "pooled_mode": "plain",
+        "profiling": {
+          "mode": "all"
+        },
+        "reference_unit": "aspect_phrase"
+      },
+      "policy_hash": "a99004b42358d1f822d223c5e68b33d28801e10fe97ea925c2216c365a8e3749",
+      "profiling_trace": {
+        "calls": [],
+        "pooled_source": "plain",
+        "profiling": {
+          "mode": "all"
+        }
+      },
+      "profiling_trace_path": "/home/tomoya/stable-diffusion/personalized-t2i/exhibit/assets/generic/forest-2.trace.json",
       "personalization_hash": null,
-      "seconds": 4.955,
+      "conditioning_target_align": null,
+      "seconds": 4.952,
       "source": "local-illustrious-xl-v2.0",
       "license": "creativeml-openrail-m",
       "asset_version": 5
@@ -688,6 +1040,7 @@
       },
       "fan": {
         "commit": "9d0b76843f6437718195accac9cf3f050a25d26b",
+        "alpha": 0.5,
         "pooled": "plain",
         "skip": -2,
         "sample_size": 0,
@@ -704,8 +1057,39 @@
         "use_attn_mask": false
       },
       "pooled": "plain",
+      "policy_id": "legacy_exhibit",
+      "effective_policy": {
+        "alpha": 0.5,
+        "skip": -2,
+        "skip_pa": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "use_attn_mask": false,
+        "pooled_mode": "plain",
+        "profiling": {
+          "mode": "all"
+        },
+        "reference_unit": "aspect_phrase"
+      },
+      "policy_hash": "a99004b42358d1f822d223c5e68b33d28801e10fe97ea925c2216c365a8e3749",
+      "profiling_trace": {
+        "calls": [],
+        "pooled_source": "plain",
+        "profiling": {
+          "mode": "all"
+        }
+      },
+      "profiling_trace_path": "/home/tomoya/stable-diffusion/personalized-t2i/exhibit/assets/generic/forest-3.trace.json",
       "personalization_hash": null,
-      "seconds": 4.97,
+      "conditioning_target_align": null,
+      "seconds": 4.964,
       "source": "local-illustrious-xl-v2.0",
       "license": "creativeml-openrail-m",
       "asset_version": 5
@@ -745,6 +1129,7 @@
       },
       "fan": {
         "commit": "9d0b76843f6437718195accac9cf3f050a25d26b",
+        "alpha": 0.5,
         "pooled": "plain",
         "skip": -2,
         "sample_size": 0,
@@ -761,7 +1146,38 @@
         "use_attn_mask": false
       },
       "pooled": "plain",
+      "policy_id": "legacy_exhibit",
+      "effective_policy": {
+        "alpha": 0.5,
+        "skip": -2,
+        "skip_pa": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "use_attn_mask": false,
+        "pooled_mode": "plain",
+        "profiling": {
+          "mode": "all"
+        },
+        "reference_unit": "aspect_phrase"
+      },
+      "policy_hash": "a99004b42358d1f822d223c5e68b33d28801e10fe97ea925c2216c365a8e3749",
+      "profiling_trace": {
+        "calls": [],
+        "pooled_source": "plain",
+        "profiling": {
+          "mode": "all"
+        }
+      },
+      "profiling_trace_path": "/home/tomoya/stable-diffusion/personalized-t2i/exhibit/assets/generic/lighthouse-0.trace.json",
       "personalization_hash": null,
+      "conditioning_target_align": null,
       "seconds": 4.966,
       "source": "local-illustrious-xl-v2.0",
       "license": "creativeml-openrail-m",
@@ -802,6 +1218,7 @@
       },
       "fan": {
         "commit": "9d0b76843f6437718195accac9cf3f050a25d26b",
+        "alpha": 0.5,
         "pooled": "plain",
         "skip": -2,
         "sample_size": 0,
@@ -818,8 +1235,39 @@
         "use_attn_mask": false
       },
       "pooled": "plain",
+      "policy_id": "legacy_exhibit",
+      "effective_policy": {
+        "alpha": 0.5,
+        "skip": -2,
+        "skip_pa": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "use_attn_mask": false,
+        "pooled_mode": "plain",
+        "profiling": {
+          "mode": "all"
+        },
+        "reference_unit": "aspect_phrase"
+      },
+      "policy_hash": "a99004b42358d1f822d223c5e68b33d28801e10fe97ea925c2216c365a8e3749",
+      "profiling_trace": {
+        "calls": [],
+        "pooled_source": "plain",
+        "profiling": {
+          "mode": "all"
+        }
+      },
+      "profiling_trace_path": "/home/tomoya/stable-diffusion/personalized-t2i/exhibit/assets/generic/lighthouse-1.trace.json",
       "personalization_hash": null,
-      "seconds": 4.946,
+      "conditioning_target_align": null,
+      "seconds": 4.944,
       "source": "local-illustrious-xl-v2.0",
       "license": "creativeml-openrail-m",
       "asset_version": 5
@@ -859,6 +1307,7 @@
       },
       "fan": {
         "commit": "9d0b76843f6437718195accac9cf3f050a25d26b",
+        "alpha": 0.5,
         "pooled": "plain",
         "skip": -2,
         "sample_size": 0,
@@ -875,8 +1324,39 @@
         "use_attn_mask": false
       },
       "pooled": "plain",
+      "policy_id": "legacy_exhibit",
+      "effective_policy": {
+        "alpha": 0.5,
+        "skip": -2,
+        "skip_pa": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "use_attn_mask": false,
+        "pooled_mode": "plain",
+        "profiling": {
+          "mode": "all"
+        },
+        "reference_unit": "aspect_phrase"
+      },
+      "policy_hash": "a99004b42358d1f822d223c5e68b33d28801e10fe97ea925c2216c365a8e3749",
+      "profiling_trace": {
+        "calls": [],
+        "pooled_source": "plain",
+        "profiling": {
+          "mode": "all"
+        }
+      },
+      "profiling_trace_path": "/home/tomoya/stable-diffusion/personalized-t2i/exhibit/assets/generic/lighthouse-2.trace.json",
       "personalization_hash": null,
-      "seconds": 4.956,
+      "conditioning_target_align": null,
+      "seconds": 4.955,
       "source": "local-illustrious-xl-v2.0",
       "license": "creativeml-openrail-m",
       "asset_version": 5
@@ -916,6 +1396,7 @@
       },
       "fan": {
         "commit": "9d0b76843f6437718195accac9cf3f050a25d26b",
+        "alpha": 0.5,
         "pooled": "plain",
         "skip": -2,
         "sample_size": 0,
@@ -932,8 +1413,39 @@
         "use_attn_mask": false
       },
       "pooled": "plain",
+      "policy_id": "legacy_exhibit",
+      "effective_policy": {
+        "alpha": 0.5,
+        "skip": -2,
+        "skip_pa": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "use_attn_mask": false,
+        "pooled_mode": "plain",
+        "profiling": {
+          "mode": "all"
+        },
+        "reference_unit": "aspect_phrase"
+      },
+      "policy_hash": "a99004b42358d1f822d223c5e68b33d28801e10fe97ea925c2216c365a8e3749",
+      "profiling_trace": {
+        "calls": [],
+        "pooled_source": "plain",
+        "profiling": {
+          "mode": "all"
+        }
+      },
+      "profiling_trace_path": "/home/tomoya/stable-diffusion/personalized-t2i/exhibit/assets/generic/lighthouse-3.trace.json",
       "personalization_hash": null,
-      "seconds": 4.968,
+      "conditioning_target_align": null,
+      "seconds": 4.969,
       "source": "local-illustrious-xl-v2.0",
       "license": "creativeml-openrail-m",
       "asset_version": 5
@@ -973,6 +1485,7 @@
       },
       "fan": {
         "commit": "9d0b76843f6437718195accac9cf3f050a25d26b",
+        "alpha": 0.5,
         "pooled": "plain",
         "skip": -2,
         "sample_size": 0,
@@ -989,8 +1502,39 @@
         "use_attn_mask": false
       },
       "pooled": "plain",
+      "policy_id": "legacy_exhibit",
+      "effective_policy": {
+        "alpha": 0.5,
+        "skip": -2,
+        "skip_pa": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "use_attn_mask": false,
+        "pooled_mode": "plain",
+        "profiling": {
+          "mode": "all"
+        },
+        "reference_unit": "aspect_phrase"
+      },
+      "policy_hash": "a99004b42358d1f822d223c5e68b33d28801e10fe97ea925c2216c365a8e3749",
+      "profiling_trace": {
+        "calls": [],
+        "pooled_source": "plain",
+        "profiling": {
+          "mode": "all"
+        }
+      },
+      "profiling_trace_path": "/home/tomoya/stable-diffusion/personalized-t2i/exhibit/assets/generic/rain-0.trace.json",
       "personalization_hash": null,
-      "seconds": 4.996,
+      "conditioning_target_align": null,
+      "seconds": 4.997,
       "source": "local-illustrious-xl-v2.0",
       "license": "creativeml-openrail-m",
       "asset_version": 5
@@ -1030,6 +1574,7 @@
       },
       "fan": {
         "commit": "9d0b76843f6437718195accac9cf3f050a25d26b",
+        "alpha": 0.5,
         "pooled": "plain",
         "skip": -2,
         "sample_size": 0,
@@ -1046,8 +1591,39 @@
         "use_attn_mask": false
       },
       "pooled": "plain",
+      "policy_id": "legacy_exhibit",
+      "effective_policy": {
+        "alpha": 0.5,
+        "skip": -2,
+        "skip_pa": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "use_attn_mask": false,
+        "pooled_mode": "plain",
+        "profiling": {
+          "mode": "all"
+        },
+        "reference_unit": "aspect_phrase"
+      },
+      "policy_hash": "a99004b42358d1f822d223c5e68b33d28801e10fe97ea925c2216c365a8e3749",
+      "profiling_trace": {
+        "calls": [],
+        "pooled_source": "plain",
+        "profiling": {
+          "mode": "all"
+        }
+      },
+      "profiling_trace_path": "/home/tomoya/stable-diffusion/personalized-t2i/exhibit/assets/generic/rain-1.trace.json",
       "personalization_hash": null,
-      "seconds": 4.963,
+      "conditioning_target_align": null,
+      "seconds": 4.965,
       "source": "local-illustrious-xl-v2.0",
       "license": "creativeml-openrail-m",
       "asset_version": 5
@@ -1087,6 +1663,7 @@
       },
       "fan": {
         "commit": "9d0b76843f6437718195accac9cf3f050a25d26b",
+        "alpha": 0.5,
         "pooled": "plain",
         "skip": -2,
         "sample_size": 0,
@@ -1103,8 +1680,39 @@
         "use_attn_mask": false
       },
       "pooled": "plain",
+      "policy_id": "legacy_exhibit",
+      "effective_policy": {
+        "alpha": 0.5,
+        "skip": -2,
+        "skip_pa": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "use_attn_mask": false,
+        "pooled_mode": "plain",
+        "profiling": {
+          "mode": "all"
+        },
+        "reference_unit": "aspect_phrase"
+      },
+      "policy_hash": "a99004b42358d1f822d223c5e68b33d28801e10fe97ea925c2216c365a8e3749",
+      "profiling_trace": {
+        "calls": [],
+        "pooled_source": "plain",
+        "profiling": {
+          "mode": "all"
+        }
+      },
+      "profiling_trace_path": "/home/tomoya/stable-diffusion/personalized-t2i/exhibit/assets/generic/rain-2.trace.json",
       "personalization_hash": null,
-      "seconds": 4.97,
+      "conditioning_target_align": null,
+      "seconds": 4.973,
       "source": "local-illustrious-xl-v2.0",
       "license": "creativeml-openrail-m",
       "asset_version": 5
@@ -1144,6 +1752,7 @@
       },
       "fan": {
         "commit": "9d0b76843f6437718195accac9cf3f050a25d26b",
+        "alpha": 0.5,
         "pooled": "plain",
         "skip": -2,
         "sample_size": 0,
@@ -1160,8 +1769,39 @@
         "use_attn_mask": false
       },
       "pooled": "plain",
+      "policy_id": "legacy_exhibit",
+      "effective_policy": {
+        "alpha": 0.5,
+        "skip": -2,
+        "skip_pa": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "use_attn_mask": false,
+        "pooled_mode": "plain",
+        "profiling": {
+          "mode": "all"
+        },
+        "reference_unit": "aspect_phrase"
+      },
+      "policy_hash": "a99004b42358d1f822d223c5e68b33d28801e10fe97ea925c2216c365a8e3749",
+      "profiling_trace": {
+        "calls": [],
+        "pooled_source": "plain",
+        "profiling": {
+          "mode": "all"
+        }
+      },
+      "profiling_trace_path": "/home/tomoya/stable-diffusion/personalized-t2i/exhibit/assets/generic/rain-3.trace.json",
       "personalization_hash": null,
-      "seconds": 4.976,
+      "conditioning_target_align": null,
+      "seconds": 4.979,
       "source": "local-illustrious-xl-v2.0",
       "license": "creativeml-openrail-m",
       "asset_version": 5
@@ -1201,6 +1841,7 @@
       },
       "fan": {
         "commit": "9d0b76843f6437718195accac9cf3f050a25d26b",
+        "alpha": 0.5,
         "pooled": "plain",
         "skip": -2,
         "sample_size": 0,
@@ -1217,8 +1858,39 @@
         "use_attn_mask": false
       },
       "pooled": "plain",
+      "policy_id": "legacy_exhibit",
+      "effective_policy": {
+        "alpha": 0.5,
+        "skip": -2,
+        "skip_pa": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "use_attn_mask": false,
+        "pooled_mode": "plain",
+        "profiling": {
+          "mode": "all"
+        },
+        "reference_unit": "aspect_phrase"
+      },
+      "policy_hash": "a99004b42358d1f822d223c5e68b33d28801e10fe97ea925c2216c365a8e3749",
+      "profiling_trace": {
+        "calls": [],
+        "pooled_source": "plain",
+        "profiling": {
+          "mode": "all"
+        }
+      },
+      "profiling_trace_path": "/home/tomoya/stable-diffusion/personalized-t2i/exhibit/assets/generic/cafe-0.trace.json",
       "personalization_hash": null,
-      "seconds": 4.96,
+      "conditioning_target_align": null,
+      "seconds": 4.967,
       "source": "local-illustrious-xl-v2.0",
       "license": "creativeml-openrail-m",
       "asset_version": 5
@@ -1258,6 +1930,7 @@
       },
       "fan": {
         "commit": "9d0b76843f6437718195accac9cf3f050a25d26b",
+        "alpha": 0.5,
         "pooled": "plain",
         "skip": -2,
         "sample_size": 0,
@@ -1274,7 +1947,38 @@
         "use_attn_mask": false
       },
       "pooled": "plain",
+      "policy_id": "legacy_exhibit",
+      "effective_policy": {
+        "alpha": 0.5,
+        "skip": -2,
+        "skip_pa": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "use_attn_mask": false,
+        "pooled_mode": "plain",
+        "profiling": {
+          "mode": "all"
+        },
+        "reference_unit": "aspect_phrase"
+      },
+      "policy_hash": "a99004b42358d1f822d223c5e68b33d28801e10fe97ea925c2216c365a8e3749",
+      "profiling_trace": {
+        "calls": [],
+        "pooled_source": "plain",
+        "profiling": {
+          "mode": "all"
+        }
+      },
+      "profiling_trace_path": "/home/tomoya/stable-diffusion/personalized-t2i/exhibit/assets/generic/cafe-1.trace.json",
       "personalization_hash": null,
+      "conditioning_target_align": null,
       "seconds": 4.949,
       "source": "local-illustrious-xl-v2.0",
       "license": "creativeml-openrail-m",
@@ -1315,6 +2019,7 @@
       },
       "fan": {
         "commit": "9d0b76843f6437718195accac9cf3f050a25d26b",
+        "alpha": 0.5,
         "pooled": "plain",
         "skip": -2,
         "sample_size": 0,
@@ -1331,8 +2036,39 @@
         "use_attn_mask": false
       },
       "pooled": "plain",
+      "policy_id": "legacy_exhibit",
+      "effective_policy": {
+        "alpha": 0.5,
+        "skip": -2,
+        "skip_pa": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "use_attn_mask": false,
+        "pooled_mode": "plain",
+        "profiling": {
+          "mode": "all"
+        },
+        "reference_unit": "aspect_phrase"
+      },
+      "policy_hash": "a99004b42358d1f822d223c5e68b33d28801e10fe97ea925c2216c365a8e3749",
+      "profiling_trace": {
+        "calls": [],
+        "pooled_source": "plain",
+        "profiling": {
+          "mode": "all"
+        }
+      },
+      "profiling_trace_path": "/home/tomoya/stable-diffusion/personalized-t2i/exhibit/assets/generic/cafe-2.trace.json",
       "personalization_hash": null,
-      "seconds": 4.964,
+      "conditioning_target_align": null,
+      "seconds": 4.966,
       "source": "local-illustrious-xl-v2.0",
       "license": "creativeml-openrail-m",
       "asset_version": 5
@@ -1372,6 +2108,7 @@
       },
       "fan": {
         "commit": "9d0b76843f6437718195accac9cf3f050a25d26b",
+        "alpha": 0.5,
         "pooled": "plain",
         "skip": -2,
         "sample_size": 0,
@@ -1388,8 +2125,39 @@
         "use_attn_mask": false
       },
       "pooled": "plain",
+      "policy_id": "legacy_exhibit",
+      "effective_policy": {
+        "alpha": 0.5,
+        "skip": -2,
+        "skip_pa": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "use_attn_mask": false,
+        "pooled_mode": "plain",
+        "profiling": {
+          "mode": "all"
+        },
+        "reference_unit": "aspect_phrase"
+      },
+      "policy_hash": "a99004b42358d1f822d223c5e68b33d28801e10fe97ea925c2216c365a8e3749",
+      "profiling_trace": {
+        "calls": [],
+        "pooled_source": "plain",
+        "profiling": {
+          "mode": "all"
+        }
+      },
+      "profiling_trace_path": "/home/tomoya/stable-diffusion/personalized-t2i/exhibit/assets/generic/cafe-3.trace.json",
       "personalization_hash": null,
-      "seconds": 4.957,
+      "conditioning_target_align": null,
+      "seconds": 4.956,
       "source": "local-illustrious-xl-v2.0",
       "license": "creativeml-openrail-m",
       "asset_version": 5
@@ -1444,6 +2212,20 @@
       "worker_seconds": 121.856,
       "peak_vram_mib": 9781.5,
       "peak_rss_mib": 7934.3
+    },
+    {
+      "type": "metrics",
+      "stage": "generate",
+      "worker_seconds": 122.466,
+      "peak_vram_mib": 9781.5,
+      "peak_rss_mib": 7933.9
+    },
+    {
+      "type": "metrics",
+      "stage": "generate",
+      "worker_seconds": 121.909,
+      "peak_vram_mib": 9781.5,
+      "peak_rss_mib": 7934.2
     }
   ]
 }

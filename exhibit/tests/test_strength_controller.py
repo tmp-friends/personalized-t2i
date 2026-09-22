@@ -21,7 +21,7 @@ def _load_module(name):
     return module
 
 
-def test_list_covers_the_four_declared_strength_experiments(capsys):
+def test_list_covers_every_declared_strength_experiment(capsys):
     module = _load_module("test_strength_list_evaluate_fan")
 
     module.main(["strength", "--config", str(STRENGTH_CONFIG_PATH), "--list"])
@@ -31,7 +31,11 @@ def test_list_covers_the_four_declared_strength_experiments(capsys):
         for line in capsys.readouterr().out.splitlines()
         if line.strip()
     ]
-    assert {item["experiment_id"] for item in lines} == {
+    # New experiments keep being declared, so the listing is compared against
+    # the config itself; the first four must never disappear from it.
+    declared = set(json.loads(STRENGTH_CONFIG_PATH.read_text())["experiments"])
+    assert {item["experiment_id"] for item in lines} == declared
+    assert declared >= {
         "e1-settings",
         "e2-adapter",
         "e3-references",

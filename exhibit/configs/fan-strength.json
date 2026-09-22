@@ -385,6 +385,777 @@
           "reference_unit": "aspect_phrase"
         }
       }
+    },
+    "e6-skip1-only": {
+      "description": "legacy_exhibit から skip_pa だけ [0] に変えた設定（alpha 0.5・plain pooled・profiling all）。strong_v1 の目視結果が芳しくなかったため、profiling を legacy のまま skip_pa の効果だけを見る。",
+      "plan_items": [
+        "B2"
+      ],
+      "topics": [
+        "cat",
+        "tokyo",
+        "rain"
+      ],
+      "histories": [
+        "warm",
+        "cool",
+        "mixed",
+        "sparse"
+      ],
+      "seeds": [
+        230923,
+        230924
+      ],
+      "policies": {
+        "legacy-skip1": {
+          "alpha": 0.5,
+          "skip": -2,
+          "skip_pa": [
+            0
+          ],
+          "use_attn_mask": false,
+          "pooled_mode": "plain",
+          "profiling": {
+            "mode": "all"
+          },
+          "reference_unit": "aspect_phrase"
+        },
+        "strong_v1": "strong_v1"
+      }
+    },
+    "e7-skip-ladder": {
+      "description": "skip_pa の階段。legacy_exhibit（alpha 0.5・plain・profiling all）から skip_pa を [0] → [0..7] まで 1 層ずつ増やし、霞が消えて効きが残る境目を探す。 [0..7] は legacy_exhibit そのもの（暗黙の比較列）。",
+      "plan_items": [
+        "B1"
+      ],
+      "topics": [
+        "cat",
+        "tokyo",
+        "rain"
+      ],
+      "histories": [
+        "warm",
+        "cool",
+        "mixed",
+        "sparse"
+      ],
+      "seeds": [
+        230923,
+        230924
+      ],
+      "policies": {
+        "ladder-skip0to0": {
+          "alpha": 0.5,
+          "skip": -2,
+          "skip_pa": [
+            0
+          ],
+          "use_attn_mask": false,
+          "pooled_mode": "plain",
+          "profiling": {
+            "mode": "all"
+          },
+          "reference_unit": "aspect_phrase"
+        },
+        "ladder-skip0to1": {
+          "alpha": 0.5,
+          "skip": -2,
+          "skip_pa": [
+            0,
+            1
+          ],
+          "use_attn_mask": false,
+          "pooled_mode": "plain",
+          "profiling": {
+            "mode": "all"
+          },
+          "reference_unit": "aspect_phrase"
+        },
+        "ladder-skip0to2": {
+          "alpha": 0.5,
+          "skip": -2,
+          "skip_pa": [
+            0,
+            1,
+            2
+          ],
+          "use_attn_mask": false,
+          "pooled_mode": "plain",
+          "profiling": {
+            "mode": "all"
+          },
+          "reference_unit": "aspect_phrase"
+        },
+        "ladder-skip0to3": {
+          "alpha": 0.5,
+          "skip": -2,
+          "skip_pa": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "use_attn_mask": false,
+          "pooled_mode": "plain",
+          "profiling": {
+            "mode": "all"
+          },
+          "reference_unit": "aspect_phrase"
+        },
+        "ladder-skip0to4": {
+          "alpha": 0.5,
+          "skip": -2,
+          "skip_pa": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ],
+          "use_attn_mask": false,
+          "pooled_mode": "plain",
+          "profiling": {
+            "mode": "all"
+          },
+          "reference_unit": "aspect_phrase"
+        },
+        "ladder-skip0to5": {
+          "alpha": 0.5,
+          "skip": -2,
+          "skip_pa": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "use_attn_mask": false,
+          "pooled_mode": "plain",
+          "profiling": {
+            "mode": "all"
+          },
+          "reference_unit": "aspect_phrase"
+        },
+        "ladder-skip0to6": {
+          "alpha": 0.5,
+          "skip": -2,
+          "skip_pa": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "use_attn_mask": false,
+          "pooled_mode": "plain",
+          "profiling": {
+            "mode": "all"
+          },
+          "reference_unit": "aspect_phrase"
+        }
+      }
+    },
+    "e8-skip1-alpha": {
+      "description": "skip_pa [0]（全層で個人化）のまま alpha を 0.3 / 0.4 に下げ、霞が alpha に比例して薄まるかを見る。e7 の階段と対になる実験。",
+      "plan_items": [
+        "B2"
+      ],
+      "topics": [
+        "cat",
+        "tokyo",
+        "rain"
+      ],
+      "histories": [
+        "warm",
+        "cool",
+        "mixed",
+        "sparse"
+      ],
+      "seeds": [
+        230923,
+        230924
+      ],
+      "policies": {
+        "skip1-alpha0.3": {
+          "alpha": 0.3,
+          "skip": -2,
+          "skip_pa": [
+            0
+          ],
+          "use_attn_mask": false,
+          "pooled_mode": "plain",
+          "profiling": {
+            "mode": "all"
+          },
+          "reference_unit": "aspect_phrase"
+        },
+        "skip1-alpha0.4": {
+          "alpha": 0.4,
+          "skip": -2,
+          "skip_pa": [
+            0
+          ],
+          "use_attn_mask": false,
+          "pooled_mode": "plain",
+          "profiling": {
+            "mode": "all"
+          },
+          "reference_unit": "aspect_phrase"
+        }
+      }
+    },
+    "e9-texture-flat": {
+      "description": "texture level 2 の言い換え候補。現行の `flat color, lineless, no lineart` は CLIP で `line less` / `no line art` に割れ、否定が効かず逆に線を足す。line を含まず否定もしない候補を FAN 参照として比べ、線の量（画素の輪郭率）で判定する。warm-sun は個人化が暗く・寒色に寄る問題（明るさ・暖色・コントラストが上がるか）を同じ枠で見るための対照。",
+      "plan_items": [
+        "A3"
+      ],
+      "topics": [
+        "cat",
+        "forest",
+        "cafe"
+      ],
+      "histories": [
+        "t2-current",
+        "t2-cel-contrast",
+        "t2-flat-smooth",
+        "t2-flat-minimal",
+        "t2-flat-vector",
+        "t2-flat-borderless",
+        "t2-flat-matte",
+        "t2-flat-fill",
+        "t2-flat-graphic",
+        "warm-sun"
+      ],
+      "seeds": [
+        230923,
+        230924
+      ],
+      "policies": {
+        "strong_v1": "strong_v1",
+        "skip1-all-alpha0.5": {
+          "alpha": 0.5,
+          "skip": -2,
+          "skip_pa": [
+            0
+          ],
+          "use_attn_mask": false,
+          "pooled_mode": "plain",
+          "profiling": {
+            "mode": "all"
+          },
+          "reference_unit": "aspect_phrase"
+        }
+      }
+    },
+    "e10-mask": {
+      "description": "参照だけを mask する新しい use_attn_mask のもとでの alpha 再掃引。参照の pad を key から外し、target と参照なしの encode には padding mask を掛けない。mask あり skip_pa [0] を alpha 0.5/0.7/0.85/1.0、skip_pa [0..7] を 0.5/0.7、pooled を EOS で個人化する fan_eos を 0.7/0.85 でも見る。同 alpha の対照は `nomask-skip1-alpha0.7` と `nomask-skip1-alpha0.7-faneos`、legacy_exhibit は暗黙。history は方向の出る単一タグ（warm/cool）、pad 比率の仮説を見る自然文（warm-sentence/cool-sentence）、描画句 2 本、warm-sun。policy が 10 本あるため 8 history では 534 枚となり 512 枚の上限を超える。どの contrast にも使わない `t2-current` を外して 7 history・468 枚にした（e9 で描画句どうしは区別できないことが分かっている）。",
+      "plan_items": [
+        "B4",
+        "B2",
+        "C2"
+      ],
+      "topics": [
+        "cat",
+        "forest",
+        "cafe"
+      ],
+      "histories": [
+        "warm",
+        "cool",
+        "warm-sentence",
+        "cool-sentence",
+        "t2-flat-graphic",
+        "t2-cel-contrast",
+        "warm-sun"
+      ],
+      "seeds": [
+        230923,
+        230924
+      ],
+      "policies": {
+        "mask-skip1-alpha0.5": {
+          "alpha": 0.5,
+          "skip": -2,
+          "skip_pa": [
+            0
+          ],
+          "use_attn_mask": true,
+          "pooled_mode": "plain",
+          "profiling": {
+            "mode": "all"
+          },
+          "reference_unit": "aspect_phrase"
+        },
+        "mask-skip1-alpha0.7": {
+          "alpha": 0.7,
+          "skip": -2,
+          "skip_pa": [
+            0
+          ],
+          "use_attn_mask": true,
+          "pooled_mode": "plain",
+          "profiling": {
+            "mode": "all"
+          },
+          "reference_unit": "aspect_phrase"
+        },
+        "mask-skip1-alpha0.85": {
+          "alpha": 0.85,
+          "skip": -2,
+          "skip_pa": [
+            0
+          ],
+          "use_attn_mask": true,
+          "pooled_mode": "plain",
+          "profiling": {
+            "mode": "all"
+          },
+          "reference_unit": "aspect_phrase"
+        },
+        "mask-skip1-alpha1.0": {
+          "alpha": 1.0,
+          "skip": -2,
+          "skip_pa": [
+            0
+          ],
+          "use_attn_mask": true,
+          "pooled_mode": "plain",
+          "profiling": {
+            "mode": "all"
+          },
+          "reference_unit": "aspect_phrase"
+        },
+        "mask-skip8-alpha0.5": {
+          "alpha": 0.5,
+          "skip": -2,
+          "skip_pa": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "use_attn_mask": true,
+          "pooled_mode": "plain",
+          "profiling": {
+            "mode": "all"
+          },
+          "reference_unit": "aspect_phrase"
+        },
+        "mask-skip8-alpha0.7": {
+          "alpha": 0.7,
+          "skip": -2,
+          "skip_pa": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "use_attn_mask": true,
+          "pooled_mode": "plain",
+          "profiling": {
+            "mode": "all"
+          },
+          "reference_unit": "aspect_phrase"
+        },
+        "nomask-skip1-alpha0.7": {
+          "alpha": 0.7,
+          "skip": -2,
+          "skip_pa": [
+            0
+          ],
+          "use_attn_mask": false,
+          "pooled_mode": "plain",
+          "profiling": {
+            "mode": "all"
+          },
+          "reference_unit": "aspect_phrase"
+        },
+        "mask-skip1-alpha0.7-faneos": {
+          "alpha": 0.7,
+          "skip": -2,
+          "skip_pa": [
+            0
+          ],
+          "use_attn_mask": true,
+          "pooled_mode": "fan_eos",
+          "profiling": {
+            "mode": "all"
+          },
+          "reference_unit": "aspect_phrase"
+        },
+        "mask-skip1-alpha0.85-faneos": {
+          "alpha": 0.85,
+          "skip": -2,
+          "skip_pa": [
+            0
+          ],
+          "use_attn_mask": true,
+          "pooled_mode": "fan_eos",
+          "profiling": {
+            "mode": "all"
+          },
+          "reference_unit": "aspect_phrase"
+        },
+        "nomask-skip1-alpha0.7-faneos": {
+          "alpha": 0.7,
+          "skip": -2,
+          "skip_pa": [
+            0
+          ],
+          "use_attn_mask": false,
+          "pooled_mode": "fan_eos",
+          "profiling": {
+            "mode": "all"
+          },
+          "reference_unit": "aspect_phrase"
+        }
+      }
+    },
+    "e11a-guidance7": {
+      "description": "mask ありの画像が原寸で「二重の輪郭・髪の筋・白飛び」を出す件の生成設定側の切り分け。policy は mask-skip1-alpha0.5 と 0.7 に固定し、生成設定だけを変える。対照（現行設定）は e10-mask の同一セルを再利用する。生成設定を上書きしているので experiment_kind は generation、rules は参考値。 この実験は guidance_scale を 5.0 から 7.0 に上げる。",
+      "plan_items": [
+        "A6"
+      ],
+      "topics": [
+        "cat",
+        "forest",
+        "cafe"
+      ],
+      "histories": [
+        "warm",
+        "cool",
+        "t2-flat-graphic",
+        "warm-sun"
+      ],
+      "seeds": [
+        230923,
+        230924
+      ],
+      "policies": {
+        "mask-skip1-alpha0.5": {
+          "alpha": 0.5,
+          "skip": -2,
+          "skip_pa": [
+            0
+          ],
+          "use_attn_mask": true,
+          "pooled_mode": "plain",
+          "profiling": {
+            "mode": "all"
+          },
+          "reference_unit": "aspect_phrase"
+        },
+        "mask-skip1-alpha0.7": {
+          "alpha": 0.7,
+          "skip": -2,
+          "skip_pa": [
+            0
+          ],
+          "use_attn_mask": true,
+          "pooled_mode": "plain",
+          "profiling": {
+            "mode": "all"
+          },
+          "reference_unit": "aspect_phrase"
+        }
+      },
+      "generation": {
+        "guidance_scale": 7.0
+      }
+    },
+    "e11b-nonsde": {
+      "description": "mask ありの画像が原寸で「二重の輪郭・髪の筋・白飛び」を出す件の生成設定側の切り分け。policy は mask-skip1-alpha0.5 と 0.7 に固定し、生成設定だけを変える。対照（現行設定）は e10-mask の同一セルを再利用する。生成設定を上書きしているので experiment_kind は generation、rules は参考値。 この実験は sampler を非 SDE の DPM++ 2M（Karras）に替える。steps は 30 のまま。",
+      "plan_items": [
+        "A6"
+      ],
+      "topics": [
+        "cat",
+        "forest",
+        "cafe"
+      ],
+      "histories": [
+        "warm",
+        "cool",
+        "t2-flat-graphic",
+        "warm-sun"
+      ],
+      "seeds": [
+        230923,
+        230924
+      ],
+      "policies": {
+        "mask-skip1-alpha0.5": {
+          "alpha": 0.5,
+          "skip": -2,
+          "skip_pa": [
+            0
+          ],
+          "use_attn_mask": true,
+          "pooled_mode": "plain",
+          "profiling": {
+            "mode": "all"
+          },
+          "reference_unit": "aspect_phrase"
+        },
+        "mask-skip1-alpha0.7": {
+          "alpha": 0.7,
+          "skip": -2,
+          "skip_pa": [
+            0
+          ],
+          "use_attn_mask": true,
+          "pooled_mode": "plain",
+          "profiling": {
+            "mode": "all"
+          },
+          "reference_unit": "aspect_phrase"
+        }
+      },
+      "generation": {
+        "scheduler_kwargs": {
+          "algorithm_type": "dpmsolver++",
+          "use_karras_sigmas": true
+        }
+      }
+    },
+    "e11c-steps50": {
+      "description": "mask ありの画像が原寸で「二重の輪郭・髪の筋・白飛び」を出す件の生成設定側の切り分け。policy は mask-skip1-alpha0.5 と 0.7 に固定し、生成設定だけを変える。対照（現行設定）は e10-mask の同一セルを再利用する。生成設定を上書きしているので experiment_kind は generation、rules は参考値。 この実験は現行 sampler のまま steps を 30 から 50 に増やす。",
+      "plan_items": [
+        "A6"
+      ],
+      "topics": [
+        "cat",
+        "forest",
+        "cafe"
+      ],
+      "histories": [
+        "warm",
+        "cool",
+        "t2-flat-graphic",
+        "warm-sun"
+      ],
+      "seeds": [
+        230923,
+        230924
+      ],
+      "policies": {
+        "mask-skip1-alpha0.5": {
+          "alpha": 0.5,
+          "skip": -2,
+          "skip_pa": [
+            0
+          ],
+          "use_attn_mask": true,
+          "pooled_mode": "plain",
+          "profiling": {
+            "mode": "all"
+          },
+          "reference_unit": "aspect_phrase"
+        },
+        "mask-skip1-alpha0.7": {
+          "alpha": 0.7,
+          "skip": -2,
+          "skip_pa": [
+            0
+          ],
+          "use_attn_mask": true,
+          "pooled_mode": "plain",
+          "profiling": {
+            "mode": "all"
+          },
+          "reference_unit": "aspect_phrase"
+        }
+      },
+      "generation": {
+        "steps": 50
+      }
+    },
+    "e12-hidden-norm": {
+      "description": "参照だけを mask すると target の pad 27 個が plain の 0.58 倍に縮み、UNet はそこも読む。plain の pad を差し戻す hidden_norm で、白茶け・線の消失が消えて steering が残るかを見る。生成設定は現行のまま（e11 で非 SDE sampler が有効と分かったが、既定 policy の比較基準を e10 と揃えるため）。対照の `mask-skip1-alpha0.5` は既定 policy `mask_skip1_v1` と同一設定。",
+      "plan_items": [
+        "C3"
+      ],
+      "topics": [
+        "cat",
+        "forest",
+        "cafe"
+      ],
+      "histories": [
+        "warm",
+        "cool",
+        "t2-flat-graphic",
+        "warm-sun"
+      ],
+      "seeds": [
+        230923,
+        230924
+      ],
+      "policies": {
+        "mask-skip1-alpha0.5": {
+          "alpha": 0.5,
+          "skip": -2,
+          "skip_pa": [
+            0
+          ],
+          "use_attn_mask": true,
+          "pooled_mode": "plain",
+          "profiling": {
+            "mode": "all"
+          },
+          "reference_unit": "aspect_phrase"
+        },
+        "mask-skip1-alpha0.5-plainpad": {
+          "alpha": 0.5,
+          "skip": -2,
+          "skip_pa": [
+            0
+          ],
+          "use_attn_mask": true,
+          "pooled_mode": "plain",
+          "profiling": {
+            "mode": "all"
+          },
+          "reference_unit": "aspect_phrase",
+          "hidden_norm": "plain_pad"
+        },
+        "mask-skip1-alpha0.5-plainpadtoken": {
+          "alpha": 0.5,
+          "skip": -2,
+          "skip_pa": [
+            0
+          ],
+          "use_attn_mask": true,
+          "pooled_mode": "plain",
+          "profiling": {
+            "mode": "all"
+          },
+          "reference_unit": "aspect_phrase",
+          "hidden_norm": "plain_pad_token"
+        },
+        "mask-skip1-alpha0.7-plainpad": {
+          "alpha": 0.7,
+          "skip": -2,
+          "skip_pa": [
+            0
+          ],
+          "use_attn_mask": true,
+          "pooled_mode": "plain",
+          "profiling": {
+            "mode": "all"
+          },
+          "reference_unit": "aspect_phrase",
+          "hidden_norm": "plain_pad"
+        },
+        "mask-skip1-alpha0.7-plainpadtoken": {
+          "alpha": 0.7,
+          "skip": -2,
+          "skip_pa": [
+            0
+          ],
+          "use_attn_mask": true,
+          "pooled_mode": "plain",
+          "profiling": {
+            "mode": "all"
+          },
+          "reference_unit": "aspect_phrase",
+          "hidden_norm": "plain_pad_token"
+        },
+        "mask-skip1-alpha0.7-plaintoken": {
+          "alpha": 0.7,
+          "skip": -2,
+          "skip_pa": [
+            0
+          ],
+          "use_attn_mask": true,
+          "pooled_mode": "plain",
+          "profiling": {
+            "mode": "all"
+          },
+          "reference_unit": "aspect_phrase",
+          "hidden_norm": "plain_token"
+        }
+      }
+    },
+    "e13-nonsde-skip8": {
+      "description": "非 SDE sampler（DPM++ 2M・Karras・30 steps）のもとで「legacy + mask」を見る。展示の既定を legacy_exhibit と mask-skip8 のどちらにするかの判断材料。mask_skip1_v1 は一定の暖色ドリフトと cat topic の猫耳のため取り下げ。生成設定を上書きしているので rules は参考値。",
+      "plan_items": [
+        "A6",
+        "B4"
+      ],
+      "topics": [
+        "cat",
+        "forest",
+        "cafe"
+      ],
+      "histories": [
+        "warm",
+        "cool",
+        "t2-flat-graphic",
+        "warm-sun"
+      ],
+      "seeds": [
+        230923,
+        230924
+      ],
+      "generation": {
+        "scheduler_kwargs": {
+          "algorithm_type": "dpmsolver++",
+          "use_karras_sigmas": true
+        }
+      },
+      "policies": {
+        "mask-skip8-alpha0.5": {
+          "alpha": 0.5,
+          "skip": -2,
+          "skip_pa": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "use_attn_mask": true,
+          "pooled_mode": "plain",
+          "profiling": {
+            "mode": "all"
+          },
+          "reference_unit": "aspect_phrase"
+        },
+        "mask-skip8-alpha0.7": {
+          "alpha": 0.7,
+          "skip": -2,
+          "skip_pa": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "use_attn_mask": true,
+          "pooled_mode": "plain",
+          "profiling": {
+            "mode": "all"
+          },
+          "reference_unit": "aspect_phrase"
+        }
+      }
     }
   }
 }

@@ -1,0 +1,341 @@
+{
+  "experiment_id": "e6-skip1-only",
+  "tasks": [
+    {
+      "pair_id": "0ad8692c5329",
+      "image": "pairs/0ad8692c5329.jpg",
+      "history_id": "sparse",
+      "history_text": "warm color palette, amber and orange tones（重み 2.0） / cool color palette, blue and teal tones（重み 1.0）",
+      "target_text": "A brown-haired girl with green eyes wearing a sweater, holding a cat by a window."
+    },
+    {
+      "pair_id": "14dd725045cf",
+      "image": "pairs/14dd725045cf.jpg",
+      "history_id": "sparse",
+      "history_text": "warm color palette, amber and orange tones（重み 2.0） / cool color palette, blue and teal tones（重み 1.0）",
+      "target_text": "A blue-haired girl wearing a raincoat on a rainy city street."
+    },
+    {
+      "pair_id": "189f5cb4ce7d",
+      "image": "pairs/189f5cb4ce7d.jpg",
+      "history_id": "mixed",
+      "history_text": "warm color palette, amber and orange tones（重み 2.0） / warm golden hour light, gentle shadows（重み 2.0） / watercolor painting, soft brushwork, painterly texture（重み 2.0） / cool color palette, blue and teal tones（重み 1.0） / soft diffused light（重み 1.0） / cel shading, clean lineart, anime coloring（重み 1.0） / calm atmosphere（重み 3.0）",
+      "target_text": "A young man with short black hair wearing a jacket, with the Tokyo skyline at night."
+    },
+    {
+      "pair_id": "1a354ddf993b",
+      "image": "pairs/1a354ddf993b.jpg",
+      "history_id": "cool",
+      "history_text": "cool color palette, blue and teal tones（重み 3.0） / soft diffused light（重み 3.0） / cel shading, clean lineart, anime coloring（重み 3.0） / calm atmosphere（重み 3.0）",
+      "target_text": "A brown-haired girl with green eyes wearing a sweater, holding a cat by a window."
+    },
+    {
+      "pair_id": "1b115e5d3cdd",
+      "image": "pairs/1b115e5d3cdd.jpg",
+      "history_id": "mixed",
+      "history_text": "warm color palette, amber and orange tones（重み 2.0） / warm golden hour light, gentle shadows（重み 2.0） / watercolor painting, soft brushwork, painterly texture（重み 2.0） / cool color palette, blue and teal tones（重み 1.0） / soft diffused light（重み 1.0） / cel shading, clean lineart, anime coloring（重み 1.0） / calm atmosphere（重み 3.0）",
+      "target_text": "A young man with short black hair wearing a jacket, with the Tokyo skyline at night."
+    },
+    {
+      "pair_id": "238a67a6d2b3",
+      "image": "pairs/238a67a6d2b3.jpg",
+      "history_id": "mixed",
+      "history_text": "warm color palette, amber and orange tones（重み 2.0） / warm golden hour light, gentle shadows（重み 2.0） / watercolor painting, soft brushwork, painterly texture（重み 2.0） / cool color palette, blue and teal tones（重み 1.0） / soft diffused light（重み 1.0） / cel shading, clean lineart, anime coloring（重み 1.0） / calm atmosphere（重み 3.0）",
+      "target_text": "A brown-haired girl with green eyes wearing a sweater, holding a cat by a window."
+    },
+    {
+      "pair_id": "32c193755ca9",
+      "image": "pairs/32c193755ca9.jpg",
+      "history_id": "warm",
+      "history_text": "warm color palette, amber and orange tones（重み 3.0） / warm golden hour light, gentle shadows（重み 3.0） / watercolor painting, soft brushwork, painterly texture（重み 3.0） / calm atmosphere（重み 3.0）",
+      "target_text": "A brown-haired girl with green eyes wearing a sweater, holding a cat by a window."
+    },
+    {
+      "pair_id": "35083caf77d4",
+      "image": "pairs/35083caf77d4.jpg",
+      "history_id": "sparse",
+      "history_text": "warm color palette, amber and orange tones（重み 2.0） / cool color palette, blue and teal tones（重み 1.0）",
+      "target_text": "A young man with short black hair wearing a jacket, with the Tokyo skyline at night."
+    },
+    {
+      "pair_id": "469cabb54925",
+      "image": "pairs/469cabb54925.jpg",
+      "history_id": "warm",
+      "history_text": "warm color palette, amber and orange tones（重み 3.0） / warm golden hour light, gentle shadows（重み 3.0） / watercolor painting, soft brushwork, painterly texture（重み 3.0） / calm atmosphere（重み 3.0）",
+      "target_text": "A blue-haired girl wearing a raincoat on a rainy city street."
+    },
+    {
+      "pair_id": "478c2c291a36",
+      "image": "pairs/478c2c291a36.jpg",
+      "history_id": "sparse",
+      "history_text": "warm color palette, amber and orange tones（重み 2.0） / cool color palette, blue and teal tones（重み 1.0）",
+      "target_text": "A blue-haired girl wearing a raincoat on a rainy city street."
+    },
+    {
+      "pair_id": "47ce9d4cb866",
+      "image": "pairs/47ce9d4cb866.jpg",
+      "history_id": "cool",
+      "history_text": "cool color palette, blue and teal tones（重み 3.0） / soft diffused light（重み 3.0） / cel shading, clean lineart, anime coloring（重み 3.0） / calm atmosphere（重み 3.0）",
+      "target_text": "A brown-haired girl with green eyes wearing a sweater, holding a cat by a window."
+    },
+    {
+      "pair_id": "492d7a90170a",
+      "image": "pairs/492d7a90170a.jpg",
+      "history_id": "cool",
+      "history_text": "cool color palette, blue and teal tones（重み 3.0） / soft diffused light（重み 3.0） / cel shading, clean lineart, anime coloring（重み 3.0） / calm atmosphere（重み 3.0）",
+      "target_text": "A young man with short black hair wearing a jacket, with the Tokyo skyline at night."
+    },
+    {
+      "pair_id": "4a17d3047104",
+      "image": "pairs/4a17d3047104.jpg",
+      "history_id": "cool",
+      "history_text": "cool color palette, blue and teal tones（重み 3.0） / soft diffused light（重み 3.0） / cel shading, clean lineart, anime coloring（重み 3.0） / calm atmosphere（重み 3.0）",
+      "target_text": "A blue-haired girl wearing a raincoat on a rainy city street."
+    },
+    {
+      "pair_id": "4b1a2114961b",
+      "image": "pairs/4b1a2114961b.jpg",
+      "history_id": "mixed",
+      "history_text": "warm color palette, amber and orange tones（重み 2.0） / warm golden hour light, gentle shadows（重み 2.0） / watercolor painting, soft brushwork, painterly texture（重み 2.0） / cool color palette, blue and teal tones（重み 1.0） / soft diffused light（重み 1.0） / cel shading, clean lineart, anime coloring（重み 1.0） / calm atmosphere（重み 3.0）",
+      "target_text": "A brown-haired girl with green eyes wearing a sweater, holding a cat by a window."
+    },
+    {
+      "pair_id": "54b3ec4add00",
+      "image": "pairs/54b3ec4add00.jpg",
+      "history_id": "mixed",
+      "history_text": "warm color palette, amber and orange tones（重み 2.0） / warm golden hour light, gentle shadows（重み 2.0） / watercolor painting, soft brushwork, painterly texture（重み 2.0） / cool color palette, blue and teal tones（重み 1.0） / soft diffused light（重み 1.0） / cel shading, clean lineart, anime coloring（重み 1.0） / calm atmosphere（重み 3.0）",
+      "target_text": "A blue-haired girl wearing a raincoat on a rainy city street."
+    },
+    {
+      "pair_id": "5a5f51b11b76",
+      "image": "pairs/5a5f51b11b76.jpg",
+      "history_id": "mixed",
+      "history_text": "warm color palette, amber and orange tones（重み 2.0） / warm golden hour light, gentle shadows（重み 2.0） / watercolor painting, soft brushwork, painterly texture（重み 2.0） / cool color palette, blue and teal tones（重み 1.0） / soft diffused light（重み 1.0） / cel shading, clean lineart, anime coloring（重み 1.0） / calm atmosphere（重み 3.0）",
+      "target_text": "A blue-haired girl wearing a raincoat on a rainy city street."
+    },
+    {
+      "pair_id": "5a87dd8006c5",
+      "image": "pairs/5a87dd8006c5.jpg",
+      "history_id": "cool",
+      "history_text": "cool color palette, blue and teal tones（重み 3.0） / soft diffused light（重み 3.0） / cel shading, clean lineart, anime coloring（重み 3.0） / calm atmosphere（重み 3.0）",
+      "target_text": "A brown-haired girl with green eyes wearing a sweater, holding a cat by a window."
+    },
+    {
+      "pair_id": "5d4c85ec9627",
+      "image": "pairs/5d4c85ec9627.jpg",
+      "history_id": "warm",
+      "history_text": "warm color palette, amber and orange tones（重み 3.0） / warm golden hour light, gentle shadows（重み 3.0） / watercolor painting, soft brushwork, painterly texture（重み 3.0） / calm atmosphere（重み 3.0）",
+      "target_text": "A brown-haired girl with green eyes wearing a sweater, holding a cat by a window."
+    },
+    {
+      "pair_id": "645230a5aba7",
+      "image": "pairs/645230a5aba7.jpg",
+      "history_id": "warm",
+      "history_text": "warm color palette, amber and orange tones（重み 3.0） / warm golden hour light, gentle shadows（重み 3.0） / watercolor painting, soft brushwork, painterly texture（重み 3.0） / calm atmosphere（重み 3.0）",
+      "target_text": "A brown-haired girl with green eyes wearing a sweater, holding a cat by a window."
+    },
+    {
+      "pair_id": "6cf42deb0d23",
+      "image": "pairs/6cf42deb0d23.jpg",
+      "history_id": "mixed",
+      "history_text": "warm color palette, amber and orange tones（重み 2.0） / warm golden hour light, gentle shadows（重み 2.0） / watercolor painting, soft brushwork, painterly texture（重み 2.0） / cool color palette, blue and teal tones（重み 1.0） / soft diffused light（重み 1.0） / cel shading, clean lineart, anime coloring（重み 1.0） / calm atmosphere（重み 3.0）",
+      "target_text": "A young man with short black hair wearing a jacket, with the Tokyo skyline at night."
+    },
+    {
+      "pair_id": "716b125f5ceb",
+      "image": "pairs/716b125f5ceb.jpg",
+      "history_id": "cool",
+      "history_text": "cool color palette, blue and teal tones（重み 3.0） / soft diffused light（重み 3.0） / cel shading, clean lineart, anime coloring（重み 3.0） / calm atmosphere（重み 3.0）",
+      "target_text": "A brown-haired girl with green eyes wearing a sweater, holding a cat by a window."
+    },
+    {
+      "pair_id": "7883e34fe0c4",
+      "image": "pairs/7883e34fe0c4.jpg",
+      "history_id": "sparse",
+      "history_text": "warm color palette, amber and orange tones（重み 2.0） / cool color palette, blue and teal tones（重み 1.0）",
+      "target_text": "A brown-haired girl with green eyes wearing a sweater, holding a cat by a window."
+    },
+    {
+      "pair_id": "7a86f7cc8482",
+      "image": "pairs/7a86f7cc8482.jpg",
+      "history_id": "warm",
+      "history_text": "warm color palette, amber and orange tones（重み 3.0） / warm golden hour light, gentle shadows（重み 3.0） / watercolor painting, soft brushwork, painterly texture（重み 3.0） / calm atmosphere（重み 3.0）",
+      "target_text": "A young man with short black hair wearing a jacket, with the Tokyo skyline at night."
+    },
+    {
+      "pair_id": "7dd094f51bce",
+      "image": "pairs/7dd094f51bce.jpg",
+      "history_id": "mixed",
+      "history_text": "warm color palette, amber and orange tones（重み 2.0） / warm golden hour light, gentle shadows（重み 2.0） / watercolor painting, soft brushwork, painterly texture（重み 2.0） / cool color palette, blue and teal tones（重み 1.0） / soft diffused light（重み 1.0） / cel shading, clean lineart, anime coloring（重み 1.0） / calm atmosphere（重み 3.0）",
+      "target_text": "A brown-haired girl with green eyes wearing a sweater, holding a cat by a window."
+    },
+    {
+      "pair_id": "84c71ba7ff9d",
+      "image": "pairs/84c71ba7ff9d.jpg",
+      "history_id": "sparse",
+      "history_text": "warm color palette, amber and orange tones（重み 2.0） / cool color palette, blue and teal tones（重み 1.0）",
+      "target_text": "A young man with short black hair wearing a jacket, with the Tokyo skyline at night."
+    },
+    {
+      "pair_id": "98370594f38b",
+      "image": "pairs/98370594f38b.jpg",
+      "history_id": "warm",
+      "history_text": "warm color palette, amber and orange tones（重み 3.0） / warm golden hour light, gentle shadows（重み 3.0） / watercolor painting, soft brushwork, painterly texture（重み 3.0） / calm atmosphere（重み 3.0）",
+      "target_text": "A blue-haired girl wearing a raincoat on a rainy city street."
+    },
+    {
+      "pair_id": "98643e6dab32",
+      "image": "pairs/98643e6dab32.jpg",
+      "history_id": "sparse",
+      "history_text": "warm color palette, amber and orange tones（重み 2.0） / cool color palette, blue and teal tones（重み 1.0）",
+      "target_text": "A brown-haired girl with green eyes wearing a sweater, holding a cat by a window."
+    },
+    {
+      "pair_id": "9d209420a898",
+      "image": "pairs/9d209420a898.jpg",
+      "history_id": "sparse",
+      "history_text": "warm color palette, amber and orange tones（重み 2.0） / cool color palette, blue and teal tones（重み 1.0）",
+      "target_text": "A young man with short black hair wearing a jacket, with the Tokyo skyline at night."
+    },
+    {
+      "pair_id": "9facc6c4095a",
+      "image": "pairs/9facc6c4095a.jpg",
+      "history_id": "warm",
+      "history_text": "warm color palette, amber and orange tones（重み 3.0） / warm golden hour light, gentle shadows（重み 3.0） / watercolor painting, soft brushwork, painterly texture（重み 3.0） / calm atmosphere（重み 3.0）",
+      "target_text": "A brown-haired girl with green eyes wearing a sweater, holding a cat by a window."
+    },
+    {
+      "pair_id": "a1dd35664794",
+      "image": "pairs/a1dd35664794.jpg",
+      "history_id": "mixed",
+      "history_text": "warm color palette, amber and orange tones（重み 2.0） / warm golden hour light, gentle shadows（重み 2.0） / watercolor painting, soft brushwork, painterly texture（重み 2.0） / cool color palette, blue and teal tones（重み 1.0） / soft diffused light（重み 1.0） / cel shading, clean lineart, anime coloring（重み 1.0） / calm atmosphere（重み 3.0）",
+      "target_text": "A young man with short black hair wearing a jacket, with the Tokyo skyline at night."
+    },
+    {
+      "pair_id": "a266414cfb7c",
+      "image": "pairs/a266414cfb7c.jpg",
+      "history_id": "mixed",
+      "history_text": "warm color palette, amber and orange tones（重み 2.0） / warm golden hour light, gentle shadows（重み 2.0） / watercolor painting, soft brushwork, painterly texture（重み 2.0） / cool color palette, blue and teal tones（重み 1.0） / soft diffused light（重み 1.0） / cel shading, clean lineart, anime coloring（重み 1.0） / calm atmosphere（重み 3.0）",
+      "target_text": "A blue-haired girl wearing a raincoat on a rainy city street."
+    },
+    {
+      "pair_id": "a753891babb3",
+      "image": "pairs/a753891babb3.jpg",
+      "history_id": "cool",
+      "history_text": "cool color palette, blue and teal tones（重み 3.0） / soft diffused light（重み 3.0） / cel shading, clean lineart, anime coloring（重み 3.0） / calm atmosphere（重み 3.0）",
+      "target_text": "A blue-haired girl wearing a raincoat on a rainy city street."
+    },
+    {
+      "pair_id": "b30b53a36219",
+      "image": "pairs/b30b53a36219.jpg",
+      "history_id": "mixed",
+      "history_text": "warm color palette, amber and orange tones（重み 2.0） / warm golden hour light, gentle shadows（重み 2.0） / watercolor painting, soft brushwork, painterly texture（重み 2.0） / cool color palette, blue and teal tones（重み 1.0） / soft diffused light（重み 1.0） / cel shading, clean lineart, anime coloring（重み 1.0） / calm atmosphere（重み 3.0）",
+      "target_text": "A blue-haired girl wearing a raincoat on a rainy city street."
+    },
+    {
+      "pair_id": "b5494747a9f3",
+      "image": "pairs/b5494747a9f3.jpg",
+      "history_id": "sparse",
+      "history_text": "warm color palette, amber and orange tones（重み 2.0） / cool color palette, blue and teal tones（重み 1.0）",
+      "target_text": "A blue-haired girl wearing a raincoat on a rainy city street."
+    },
+    {
+      "pair_id": "b86c6bf6a16a",
+      "image": "pairs/b86c6bf6a16a.jpg",
+      "history_id": "cool",
+      "history_text": "cool color palette, blue and teal tones（重み 3.0） / soft diffused light（重み 3.0） / cel shading, clean lineart, anime coloring（重み 3.0） / calm atmosphere（重み 3.0）",
+      "target_text": "A young man with short black hair wearing a jacket, with the Tokyo skyline at night."
+    },
+    {
+      "pair_id": "b8b380e099cb",
+      "image": "pairs/b8b380e099cb.jpg",
+      "history_id": "warm",
+      "history_text": "warm color palette, amber and orange tones（重み 3.0） / warm golden hour light, gentle shadows（重み 3.0） / watercolor painting, soft brushwork, painterly texture（重み 3.0） / calm atmosphere（重み 3.0）",
+      "target_text": "A young man with short black hair wearing a jacket, with the Tokyo skyline at night."
+    },
+    {
+      "pair_id": "ba71ecfc6a0f",
+      "image": "pairs/ba71ecfc6a0f.jpg",
+      "history_id": "warm",
+      "history_text": "warm color palette, amber and orange tones（重み 3.0） / warm golden hour light, gentle shadows（重み 3.0） / watercolor painting, soft brushwork, painterly texture（重み 3.0） / calm atmosphere（重み 3.0）",
+      "target_text": "A blue-haired girl wearing a raincoat on a rainy city street."
+    },
+    {
+      "pair_id": "c0a6597bc4f1",
+      "image": "pairs/c0a6597bc4f1.jpg",
+      "history_id": "sparse",
+      "history_text": "warm color palette, amber and orange tones（重み 2.0） / cool color palette, blue and teal tones（重み 1.0）",
+      "target_text": "A brown-haired girl with green eyes wearing a sweater, holding a cat by a window."
+    },
+    {
+      "pair_id": "c0acadceef83",
+      "image": "pairs/c0acadceef83.jpg",
+      "history_id": "warm",
+      "history_text": "warm color palette, amber and orange tones（重み 3.0） / warm golden hour light, gentle shadows（重み 3.0） / watercolor painting, soft brushwork, painterly texture（重み 3.0） / calm atmosphere（重み 3.0）",
+      "target_text": "A blue-haired girl wearing a raincoat on a rainy city street."
+    },
+    {
+      "pair_id": "c2b5fa856fba",
+      "image": "pairs/c2b5fa856fba.jpg",
+      "history_id": "warm",
+      "history_text": "warm color palette, amber and orange tones（重み 3.0） / warm golden hour light, gentle shadows（重み 3.0） / watercolor painting, soft brushwork, painterly texture（重み 3.0） / calm atmosphere（重み 3.0）",
+      "target_text": "A young man with short black hair wearing a jacket, with the Tokyo skyline at night."
+    },
+    {
+      "pair_id": "c3330078cee7",
+      "image": "pairs/c3330078cee7.jpg",
+      "history_id": "sparse",
+      "history_text": "warm color palette, amber and orange tones（重み 2.0） / cool color palette, blue and teal tones（重み 1.0）",
+      "target_text": "A young man with short black hair wearing a jacket, with the Tokyo skyline at night."
+    },
+    {
+      "pair_id": "c7264b38689e",
+      "image": "pairs/c7264b38689e.jpg",
+      "history_id": "warm",
+      "history_text": "warm color palette, amber and orange tones（重み 3.0） / warm golden hour light, gentle shadows（重み 3.0） / watercolor painting, soft brushwork, painterly texture（重み 3.0） / calm atmosphere（重み 3.0）",
+      "target_text": "A young man with short black hair wearing a jacket, with the Tokyo skyline at night."
+    },
+    {
+      "pair_id": "ccc67409d881",
+      "image": "pairs/ccc67409d881.jpg",
+      "history_id": "sparse",
+      "history_text": "warm color palette, amber and orange tones（重み 2.0） / cool color palette, blue and teal tones（重み 1.0）",
+      "target_text": "A blue-haired girl wearing a raincoat on a rainy city street."
+    },
+    {
+      "pair_id": "d43d8fcdc1c4",
+      "image": "pairs/d43d8fcdc1c4.jpg",
+      "history_id": "cool",
+      "history_text": "cool color palette, blue and teal tones（重み 3.0） / soft diffused light（重み 3.0） / cel shading, clean lineart, anime coloring（重み 3.0） / calm atmosphere（重み 3.0）",
+      "target_text": "A young man with short black hair wearing a jacket, with the Tokyo skyline at night."
+    },
+    {
+      "pair_id": "e9aaeda01cbe",
+      "image": "pairs/e9aaeda01cbe.jpg",
+      "history_id": "cool",
+      "history_text": "cool color palette, blue and teal tones（重み 3.0） / soft diffused light（重み 3.0） / cel shading, clean lineart, anime coloring（重み 3.0） / calm atmosphere（重み 3.0）",
+      "target_text": "A blue-haired girl wearing a raincoat on a rainy city street."
+    },
+    {
+      "pair_id": "eaf55de17889",
+      "image": "pairs/eaf55de17889.jpg",
+      "history_id": "cool",
+      "history_text": "cool color palette, blue and teal tones（重み 3.0） / soft diffused light（重み 3.0） / cel shading, clean lineart, anime coloring（重み 3.0） / calm atmosphere（重み 3.0）",
+      "target_text": "A blue-haired girl wearing a raincoat on a rainy city street."
+    },
+    {
+      "pair_id": "ee0cc7f531e1",
+      "image": "pairs/ee0cc7f531e1.jpg",
+      "history_id": "cool",
+      "history_text": "cool color palette, blue and teal tones（重み 3.0） / soft diffused light（重み 3.0） / cel shading, clean lineart, anime coloring（重み 3.0） / calm atmosphere（重み 3.0）",
+      "target_text": "A young man with short black hair wearing a jacket, with the Tokyo skyline at night."
+    },
+    {
+      "pair_id": "efacbb9fe17f",
+      "image": "pairs/efacbb9fe17f.jpg",
+      "history_id": "mixed",
+      "history_text": "warm color palette, amber and orange tones（重み 2.0） / warm golden hour light, gentle shadows（重み 2.0） / watercolor painting, soft brushwork, painterly texture（重み 2.0） / cool color palette, blue and teal tones（重み 1.0） / soft diffused light（重み 1.0） / cel shading, clean lineart, anime coloring（重み 1.0） / calm atmosphere（重み 3.0）",
+      "target_text": "A brown-haired girl with green eyes wearing a sweater, holding a cat by a window."
+    }
+  ]
+}

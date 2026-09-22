@@ -420,3 +420,195 @@ def test_the_supported_pooled_modes_are_plain_fan_and_fan_eos():
     assert embed_gain(freeze_policy({**policy(), "embed_gain": 0})) == 0.0
     with pytest.raises(ValueError, match="pooled_mode"):
         freeze_policy(policy(pooled_mode="eos"))
+
+
+def test_the_attention_mask_reaches_only_the_encodes_that_have_references(fake_torch):
+    """``use_attn_mask`` excludes reference pads, so a plain encode never gets it."""
+    encoder, calls, _ = make_encoder(lambda *args, **kwargs: [[0]])
+    masked = {**policy(pooled_mode="plain"), "use_attn_mask": True}
+
+    encode_conditioning(encoder, "target", refs(), masked)
+    encode_conditioning(encoder, "negative", None, masked)
+
+    assert [(call["refs"] is not None, call["use_attn_mask"]) for call in calls] == [
+        (True, True),
+        (False, False),
+        (False, False),
+    ]
+
+
+@pytest.fixture
+def recorded_norm(monkeypatch):
+    from exhibit import fan_adapter
+
+    applied = []
+
+    def match(hidden, plain_hidden):
+        applied.append((hidden, plain_hidden))
+        return Tensor("hidden-renormalized")
+
+    monkeypatch.setattr(fan_adapter, "_match_plain_token_norms", match)
+    return applied
+
+
+@pytest.fixture
+def recorded_splice(monkeypatch):
+    from exhibit import fan_adapter
+
+    applied = []
+
+    def splice(hidden, plain_hidden, encoder, prompt):
+        applied.append((hidden, plain_hidden, prompt))
+        return Tensor("hidden-plain-pads")
+
+    monkeypatch.setattr(fan_adapter, "_splice_plain_pads", splice)
+    return applied
+
+
+def test_plain_pad_hidden_norm_splices_without_rescaling(
+    fake_torch, recorded_norm, recorded_splice
+):
+    encoder, calls, _ = make_encoder(lambda *args, **kwargs: [[0]])
+
+    result = encode_conditioning(
+        encoder,
+        "target",
+        refs(),
+        {**policy(), "hidden_norm": "plain_pad"},
+        collect_trace=True,
+    )
+
+    assert recorded_norm == []
+    ((hidden, plain_hidden, prompt),) = recorded_splice
+    assert hidden.name == "hidden-personal"
+    assert plain_hidden.name == "hidden-plain"
+    assert prompt == "target"
+    assert result["hidden"].name == "hidden-plain-pads"
+    assert result["trace"]["hidden_norm"] == "plain_pad"
+    assert [call["refs"] for call in calls] == [
+        ["warm palette", "cool palette"],
+        None,
+    ]
+
+
+def test_plain_pad_token_rescales_first_and_splices_after(
+    fake_torch, recorded_norm, recorded_splice
+):
+    encoder, _, _ = make_encoder(lambda *args, **kwargs: [[0]])
+
+    result = encode_conditioning(
+        encoder, "target", refs(), {**policy(), "hidden_norm": "plain_pad_token"}
+    )
+
+    assert recorded_norm[0][0].name == "hidden-personal"
+    # The splice runs on the rescaled tensor, so the pads end up plain either way.
+    assert recorded_splice[0][0].name == "hidden-renormalized"
+    assert result["hidden"].name == "hidden-plain-pads"
+
+
+def test_a_neutral_hidden_norm_leaves_the_encoding_and_the_trace_untouched(
+    fake_torch, recorded_norm
+):
+    encoder, calls, _ = make_encoder(lambda *args, **kwargs: [[0]])
+
+    result = encode_conditioning(
+        encoder,
+        "target",
+        refs(),
+        {**policy(), "hidden_norm": "none"},
+        collect_trace=True,
+    )
+
+    assert "hidden_norm" not in result["effective_policy"]
+    assert "hidden_norm" not in result["trace"]
+    assert result["hidden"].name == "hidden-personal"
+    assert recorded_norm == []
+    assert len(calls) == 1
+
+
+def test_plain_token_hidden_norm_adds_the_reference_free_encoding(
+    fake_torch, recorded_norm
+):
+    encoder, calls, _ = make_encoder(lambda *args, **kwargs: [[0]])
+
+    result = encode_conditioning(
+        encoder,
+        "target",
+        refs(),
+        {**policy(), "hidden_norm": "plain_token"},
+        collect_trace=True,
+    )
+
+    assert result["effective_policy"]["hidden_norm"] == "plain_token"
+    assert [call["refs"] for call in calls] == [
+        ["warm palette", "cool palette"],
+        None,
+    ]
+    ((hidden, plain_hidden),) = recorded_norm
+    assert hidden.name == "hidden-personal"
+    assert plain_hidden.name == "hidden-plain"
+    assert result["hidden"].name == "hidden-renormalized"
+    # Only the hidden states are rescaled; the pooled channel is left alone.
+    assert result["pooled"].name == "pooled-personal"
+    assert result["trace"]["hidden_norm"] == "plain_token"
+
+
+def test_hidden_norm_runs_after_the_embed_gain(
+    fake_torch, recorded_gain, recorded_norm
+):
+    encoder, _, _ = make_encoder(lambda *args, **kwargs: [[0]])
+
+    result = encode_conditioning(
+        encoder,
+        "target",
+        refs(),
+        {**policy(), "embed_gain": 2.0, "hidden_norm": "plain_token"},
+    )
+
+    assert recorded_gain[0][0].name == "hidden-personal"
+    assert recorded_norm[0][0].name == "hidden-gained"
+    assert result["hidden"].name == "hidden-renormalized"
+
+
+def test_a_reference_free_encoding_is_never_renormalized(fake_torch, recorded_norm):
+    encoder, calls, _ = make_encoder(lambda *args, **kwargs: [[0]])
+
+    result = encode_conditioning(
+        encoder, "negative", None, {**policy(), "hidden_norm": "plain_token"}
+    )
+
+    assert result["hidden"].name == "hidden-plain"
+    assert recorded_norm == []
+    assert len(calls) == 1
+
+
+@pytest.mark.parametrize("mode", ["token", "pad", "", None, 1, ["plain_token"]])
+def test_unknown_hidden_norm_modes_are_rejected(fake_torch, mode):
+    encoder, calls, _ = make_encoder(lambda *args, **kwargs: [[0]])
+
+    with pytest.raises(ValueError, match="hidden_norm"):
+        encode_conditioning(
+            encoder, "target", refs(), {**policy(), "hidden_norm": mode}
+        )
+    assert calls == []
+
+
+def test_the_hidden_norm_field_changes_the_policy_hash_only_when_it_is_set():
+    from exhibit.domain import digest
+    from exhibit.fan_adapter import freeze_policy, hidden_norm, thaw_policy
+
+    base = digest(thaw_policy(freeze_policy(policy())))
+    neutral = digest(thaw_policy(freeze_policy({**policy(), "hidden_norm": "none"})))
+    hashes = {
+        mode: digest(thaw_policy(freeze_policy({**policy(), "hidden_norm": mode})))
+        for mode in ("plain_token", "plain_pad", "plain_pad_token")
+    }
+
+    assert neutral == base
+    assert base not in hashes.values()
+    assert len(set(hashes.values())) == len(hashes)
+    assert hidden_norm(freeze_policy(policy())) == "none"
+    assert (
+        hidden_norm(freeze_policy({**policy(), "hidden_norm": "plain_token"}))
+        == "plain_token"
+    )

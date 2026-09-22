@@ -14,9 +14,13 @@ from .config import CONFIG, FAN_UPSTREAM, write_json
 from .domain import digest, file_hash
 from .evaluation import runtime_file_provenance
 from .fan_adapter import (
+    HIDDEN_NORM_NEUTRAL,
+    _match_plain_token_norms,
+    _splice_plain_pads,
     embed_gain,
     encode_conditioning,
     freeze_policy,
+    hidden_norm,
     profiling_argument,
     thaw_policy,
 )
@@ -149,7 +153,8 @@ def _raw_official(encoder, prompt, refs, policy):
             skip=policy["skip"],
             sample_size=profiling_argument(policy),
             skip_pa=list(policy["skip_pa"]),
-            use_attn_mask=policy["use_attn_mask"],
+            # Reference-free encodes stay off the masked path; see fan_adapter.
+            use_attn_mask=policy["use_attn_mask"] and bool(refs),
         )
     return {"hidden": hidden.to(torch.float16), "pooled": pooled.to(torch.float16)}
 
@@ -186,8 +191,13 @@ def _expected_direct(encoder, direct_encoder, prompt, refs, policy):
     hidden = direct_fan["hidden"]
     pooled = direct_fan["pooled"]
     gain = embed_gain(policy)
+    normalization = hidden_norm(policy)
     direct_plain = None
-    if policy["pooled_mode"] != "fan" or gain != 1.0:
+    if (
+        policy["pooled_mode"] != "fan"
+        or gain != 1.0
+        or normalization != HIDDEN_NORM_NEUTRAL
+    ):
         direct_plain = _raw_official(direct_encoder, prompt, None, policy)
     if policy["pooled_mode"] == "plain":
         pooled = direct_plain["pooled"]
@@ -198,6 +208,10 @@ def _expected_direct(encoder, direct_encoder, prompt, refs, policy):
     if gain != 1.0:
         base = direct_plain["hidden"].float()
         hidden = (base + gain * (hidden.float() - base)).to(torch.float16)
+    if normalization in ("plain_token", "plain_pad_token"):
+        hidden = _match_plain_token_norms(hidden, direct_plain["hidden"])
+    if normalization in ("plain_pad", "plain_pad_token"):
+        hidden = _splice_plain_pads(hidden, direct_plain["hidden"], encoder, prompt)
     return {"hidden": hidden, "pooled": pooled, "official": direct_fan}
 
 

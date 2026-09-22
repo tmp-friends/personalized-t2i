@@ -171,9 +171,11 @@ def test_run_comparison_over_http(client, stage_stub):
     )
     assert response.status_code == 200
     run = wait(client, sid)["run"]
+    from exhibit.config import FAN_POLICIES
+
     assert "blind" not in run and run["mode"] == "live"
     assert run["preference_revision"] == 1
-    assert run["policy_id"] == "legacy_exhibit" and run["policy_hash"]
+    assert run["policy_id"] == FAN_POLICIES["default_policy_id"] and run["policy_hash"]
     assert len(run["plain"]) == 4 and len(run["personal"]) == 4
     image = client.get(run["plain"][0]["url"])
     assert image.status_code == 200
@@ -261,8 +263,10 @@ def test_health_and_config_are_available_without_loading_gpu(client):
         "round_size": 12,
         "max_rounds": 3,
     }
+    from exhibit.config import FAN_POLICIES
+
     # The displayed alpha comes from the resolved policy, not from the root config.
-    assert config["policy"]["policy_id"] == "legacy_exhibit"
+    assert config["policy"]["policy_id"] == FAN_POLICIES["default_policy_id"]
     assert config["alpha"] == config["policy"]["alpha"] == 0.5
     assert config["policy"]["profiling"] == {"mode": "all"}
     assert "alphas" not in config and "max_variants" not in config
@@ -356,20 +360,25 @@ def test_tech_page_is_rebuilt_from_the_current_configs():
 
     from exhibit.config import ASSETS, FAN_POLICIES
 
-    page = build_tech_script().render()
+    script = build_tech_script()
+    page = script.render()
     assert (ASSETS / "tech.html").read_text() == page, (
         "assets/tech.html is stale: run exhibit/scripts/build_tech.py"
     )
     generation = CONFIG["generation"]
     policy = FAN_POLICIES["policies"][FAN_POLICIES["default_policy_id"]]
+    layer_coverage = [
+        f"{n}層のうち {script.layer_range(script.pa_layers(n, policy))} 層目の"
+        f"{len(script.pa_layers(n, policy))}層"
+        for n in script.ENCODER_LAYERS.values()
+    ]
     for value in (
         f"{generation['width']}×{generation['height']}",
         f"<dt>steps</dt><dd>{generation['steps']}</dd>",
         f"<dt>CFG</dt><dd>{generation['guidance_scale']}</dd>",
         f"<code>alpha</code> = {policy['alpha']}",
         f"<code>pooled_mode</code> = {policy['pooled_mode']}",
-        "12層のうち 8〜10 層目の3層",
-        "32層のうち 8〜30 層目の23層",
+        *layer_coverage,
         CONFIG["fan"]["decoders"]["bigG.pth"][:12],
         "data:image/png;base64,",
         generation["revision"][:12],

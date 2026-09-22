@@ -816,7 +816,8 @@ inputs {E(evidence["inputs_hash"][:16])}</div></header>
 <h2>現在の設定</h2>
 <p>エンコーダー設定の正は <code>exhibit/configs/fan-policies.json</code> の一箇所です。
 <code>configs/demo.json</code> にはパス・pin・decoder hash だけが残り、alpha や skip_pa は
-持ちません。評価が揃うまで既定 policy は <code>legacy_exhibit</code> のままです。展示の
+持ちません。既定 policy は現在 <code>{E(configuration["default_policy_id"])}</code> です
+（所有者判断による切り替えは事前基準の成立を待たないことがあります）。展示の
 catalog は所有者判断（2026-09-22）で <code>catalog-v2</code> に切り替え、
 <code>catalog-v1</code> は互換を残さず削除しました。</p>
 <div class="scroll"><table><thead><tr><th>項目</th><th>値</th></tr></thead>
@@ -882,7 +883,7 @@ def readme(evidence):
         "",
         (
             f"- 既定 policy: `{configuration['default_policy_id']}`"
-            "（評価が揃うまで変更しない）"
+            "（所有者判断による切り替えは事前基準の成立を待たないことがある）"
         ),
         f"- 展示の catalog: `{configuration['catalog_id']}`",
         (

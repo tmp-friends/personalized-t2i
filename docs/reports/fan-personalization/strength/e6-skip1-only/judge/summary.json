@@ -1,0 +1,41 @@
+{
+  "experiment_id": "e6-skip1-only",
+  "pair_count": 48,
+  "ai": {
+    "judges": [],
+    "answered_pairs": 0,
+    "pair_count": 48,
+    "policies": [
+      {
+        "policy_id": "legacy-skip1",
+        "policy_hash": "0cc84fda31f8cfe849ec5873be25f6c86f84283b5f8163fcf1a8d58a0a6f4f88",
+        "wins": 0,
+        "losses": 0,
+        "ties": 0,
+        "decided": 0,
+        "win_rate": null,
+        "target_yes": 0,
+        "target_answers": 0,
+        "target_kept_rate": null
+      },
+      {
+        "policy_id": "strong_v1",
+        "policy_hash": "5f2a92f3cbbcf32de330f0fa9ca2a07c51de1c59da53fd393d399a3ac651c9c0",
+        "wins": 0,
+        "losses": 0,
+        "ties": 0,
+        "decided": 0,
+        "win_rate": null,
+        "target_yes": 0,
+        "target_answers": 0,
+        "target_kept_rate": null
+      }
+    ],
+    "agreement": {
+      "pairs_with_multiple_judges": 0,
+      "pairs_in_agreement": 0,
+      "rate": null
+    }
+  },
+  "human": null
+}

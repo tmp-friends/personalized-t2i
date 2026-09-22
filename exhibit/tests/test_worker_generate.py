@@ -7,6 +7,8 @@ from pathlib import Path
 from types import ModuleType, SimpleNamespace
 
 import pytest
+
+from exhibit import workers
 from exhibit.config import CONFIG, FAN_POLICIES
 from exhibit.fan_adapter import (
     freeze_policy,
@@ -14,8 +16,6 @@ from exhibit.fan_adapter import (
     resolve_policy,
     thaw_policy,
 )
-
-from exhibit import workers
 
 SETTINGS = {
     "model": "demo/weights",
@@ -159,6 +159,9 @@ def stubs(monkeypatch, tmp_path):
 
     model_module = ModuleType("fan.model")
     model_module.sample_reference = lambda *args, **kwargs: None
+    # `build_encoder` installs the causal+padding mask fix, which wraps this
+    # attribute; the real `fan.model` always has it.
+    model_module.wrapper_forward = lambda old_forward, *args, **kwargs: old_forward
 
     def stable_diffusion_xl(large, bigG):
         calls["wrapper"].append((large, bigG))
