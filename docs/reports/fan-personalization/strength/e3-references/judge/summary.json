@@ -1,0 +1,43 @@
+{
+  "experiment_id": "e3-references",
+  "pair_count": 108,
+  "ai": {
+    "judges": [
+      "claude-sonnet"
+    ],
+    "answered_pairs": 108,
+    "pair_count": 108,
+    "policies": [
+      {
+        "policy_id": "b2-skip1-alpha0.7",
+        "policy_hash": "400dd45b37ddcffdb734a08a7fbc55c8fe747c0523805d1d5a3c9b17d94e561f",
+        "wins": 44,
+        "losses": 10,
+        "ties": 0,
+        "decided": 54,
+        "win_rate": 0.8148148148148148,
+        "target_yes": 4,
+        "target_answers": 54,
+        "target_kept_rate": 0.07407407407407407
+      },
+      {
+        "policy_id": "strong_v1",
+        "policy_hash": "5f2a92f3cbbcf32de330f0fa9ca2a07c51de1c59da53fd393d399a3ac651c9c0",
+        "wins": 39,
+        "losses": 10,
+        "ties": 5,
+        "decided": 49,
+        "win_rate": 0.7959183673469388,
+        "target_yes": 23,
+        "target_answers": 54,
+        "target_kept_rate": 0.42592592592592593
+      }
+    ],
+    "agreement": {
+      "pairs_with_multiple_judges": 0,
+      "pairs_in_agreement": 0,
+      "rate": null
+    }
+  },
+  "human": null
+}
