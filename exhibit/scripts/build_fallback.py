@@ -60,14 +60,15 @@ def main():
             "<title>FAN · 事前生成サンプル</title>"
             f"<style>{STYLE}</style><main>"
             '<span class="badge">事前生成サンプル · オフライン表示</span>'
-            "<h1>同じ一文から、あなたの一枚を。</h1>"
-            "<p>このページは代表的な選択から事前に生成したサンプルです。いま選んだ内容を反映した結果ではありません。"
+            "<h1>パーソナライズ画像生成 — FAN 体験展示</h1>"
+            "<p>好みを選ぶだけで、あなた向けの画像を生成する展示です。"
+            "このページは代表的な選択から事前に生成したサンプルです。いま選んだ内容を反映した結果ではありません。"
             "画像はすべてローカルの Illustrious XL v2.0 で生成しています。</p>"
             f"<p>好きな画像を{limits['min']}〜{limits['max']}枚選ぶ"
             f"（1画面{limits['round_size']}枚・最大{limits['max_rounds']}回）→ "
             "選んだ画像の好きな側面（色・光・描画・雰囲気）を指定する → "
             "その側面に付いた確認済みの説明文を参照にする → "
-            "同じお題・同じ seed・同じ生成設定で、参照なしの通常生成と FAN 個人化生成を並べる。"
+            "同じお題・同じ seed・同じ生成設定で、通常生成とパーソナライズ生成を並べる。"
             "来場者ごとの追加学習はありません。ただし FAN 公式実装の ClassTokenDecoder"
             "（<code>weight/L.pth</code> / <code>weight/bigG.pth</code>）を使います。</p>"
             "<p>変わるのは参照の内容・重み <code>weight</code>・反映の強さ <code>alpha</code> だけで、"
@@ -115,10 +116,10 @@ def main():
         )
         for label, entries in [
             (
-                "参照なしの通常生成",
+                "通常生成",
                 [topic_images.get(f"{sample['topic_id']}-{i}") for i in range(4)],
             ),
-            ("参照ありの個人化生成", sample["images"]),
+            ("パーソナライズ生成", sample["images"]),
         ]:
             parts.append(f'<h3>{label}</h3><div class="grid">')
             for entry in entries:
