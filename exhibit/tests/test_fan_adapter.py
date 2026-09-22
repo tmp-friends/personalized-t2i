@@ -420,3 +420,19 @@ def test_the_supported_pooled_modes_are_plain_fan_and_fan_eos():
     assert embed_gain(freeze_policy({**policy(), "embed_gain": 0})) == 0.0
     with pytest.raises(ValueError, match="pooled_mode"):
         freeze_policy(policy(pooled_mode="eos"))
+
+
+def test_the_attention_mask_reaches_only_the_encodes_that_have_references(fake_torch):
+    """``use_attn_mask`` excludes reference pads, so a plain encode never gets it."""
+    encoder, calls, _ = make_encoder(lambda *args, **kwargs: [[0]])
+    masked = {**policy(pooled_mode="plain"), "use_attn_mask": True}
+
+    encode_conditioning(encoder, "target", refs(), masked)
+    encode_conditioning(encoder, "negative", None, masked)
+
+    assert [(call["refs"] is not None, call["use_attn_mask"]) for call in calls] == [
+        (True, True),
+        (False, False),
+        (False, False),
+    ]
+

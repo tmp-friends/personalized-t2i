@@ -18,6 +18,10 @@ POLICY_KEYS = frozenset(
         "reference_unit",
     }
 )
+# ``use_attn_mask`` excludes the *references'* pad tokens from the personalized
+# attention and nothing else: the target prompt keeps the encoding the plain
+# pipeline produces, pads included, so a reference-free encode never sees a
+# padding mask. See ``exhibit.fan_mask`` for why the target must stay untouched.
 # Optional strength settings. They are dropped from the effective policy at
 # their neutral value so every policy registered before them keeps its hash.
 OPTIONAL_POLICY_KEYS = frozenset({"embed_gain"})
@@ -242,7 +246,9 @@ def _encode_once(encoder, prompt, refs, effective, collect_trace):
                 skip=effective["skip"],
                 sample_size=sample_size,
                 skip_pa=list(effective["skip_pa"]),
-                use_attn_mask=effective["use_attn_mask"],
+                # A reference-free encode has no reference pads to exclude, and
+                # a mask there would change the target's own pad positions.
+                use_attn_mask=effective["use_attn_mask"] and bool(ref_values),
             )
     finally:
         if original is not None:
@@ -347,7 +353,9 @@ def encode_conditioning(encoder, prompt, refs, policy, *, collect_trace=False):
         pooled_source = "fan_eos"
     if ref_values and gain != 1.0:
         hidden = _apply_embed_gain(hidden, plain_hidden, gain)
-
+    # The causal+padding mask fix is installed once, on the encoder itself, in
+    # `workers.build_encoder`; every caller of that builder gets it, including
+    # the ones that reach the encoder without passing through this function.
     trace = {
         "calls": calls,
         "pooled_source": pooled_source,

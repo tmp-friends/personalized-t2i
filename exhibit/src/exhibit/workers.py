@@ -16,6 +16,7 @@ from .fan_adapter import (
     resolve_policy,
     thaw_policy,
 )
+from .fan_mask import install_mask_fix
 
 
 def emit(kind, **data):
@@ -113,6 +114,13 @@ def build_encoder(pipe, upstream=None):
     encoder = stable_diffusion_xl(large, bigG)
     encoder._fan_components = {"clip_l": large, "clip_g": bigG}
     encoder._fan_model_module = importlib.import_module("fan.model")
+    # Upstream drops the causal mask as soon as a padding mask exists, and it
+    # masks the target prompt's own pads as well as the references'. Install the
+    # fix here rather than at encode time: it patches `fan.model` globally, and
+    # callers that reach the encoder directly must get it too. It is a
+    # documented no-op when only one mask is present, so `use_attn_mask=False`
+    # stays bit-for-bit identical.
+    install_mask_fix(encoder)
     return encoder
 
 

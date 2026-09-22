@@ -149,7 +149,8 @@ def _raw_official(encoder, prompt, refs, policy):
             skip=policy["skip"],
             sample_size=profiling_argument(policy),
             skip_pa=list(policy["skip_pa"]),
-            use_attn_mask=policy["use_attn_mask"],
+            # Reference-free encodes stay off the masked path; see fan_adapter.
+            use_attn_mask=policy["use_attn_mask"] and bool(refs),
         )
     return {"hidden": hidden.to(torch.float16), "pooled": pooled.to(torch.float16)}
 
