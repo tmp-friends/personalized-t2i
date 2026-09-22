@@ -65,6 +65,30 @@ def parse_args():
         default=CONFIG.get("fan", {}).get("skip", -2),
         help="CLIP skip layer",
     )
+    p.add_argument(
+        "--skip-pa",
+        type=int,
+        nargs="*",
+        default=[0],
+        help="perceiver-attention layer indices FAN skips personalizing",
+    )
+    p.add_argument(
+        "--use-attn-mask",
+        action="store_true",
+        help="pass an attention mask into the FAN encoder call",
+    )
+    p.add_argument(
+        "--pooled",
+        choices=("plain", "fan"),
+        default="fan",
+        help="substitute the plain pooled embedding for every FAN job",
+    )
+    p.add_argument(
+        "--profiling",
+        type=float,
+        default=0,
+        help="reference profiling sample_size passed to the FAN encoder",
+    )
     p.add_argument("--no-generate", action="store_true", help="encoder checks only")
     return p.parse_args()
 
@@ -156,14 +180,40 @@ def build_encoder(pipe, weight_dir):
     return stable_diffusion_xl(large, bigG), large, bigG
 
 
-def encode_fan(encoder, prompt, refs, weights, alpha, skip):
+def encode_fan(
+    encoder,
+    prompt,
+    refs,
+    weights,
+    alpha,
+    skip,
+    *,
+    skip_pa=(0,),
+    use_attn_mask=False,
+    sample_size=0,
+):
     torch.cuda.synchronize()
     started = time.monotonic()
     with torch.no_grad():
         cond, pool = (
-            encoder(prompt, refs, weight=weights, alpha=alpha, skip=skip)
+            encoder(
+                prompt,
+                refs,
+                weight=weights,
+                alpha=alpha,
+                skip=skip,
+                skip_pa=skip_pa,
+                use_attn_mask=use_attn_mask,
+                sample_size=sample_size,
+            )
             if refs
-            else encoder(prompt, None, skip=skip)
+            else encoder(
+                prompt,
+                None,
+                skip=skip,
+                skip_pa=skip_pa,
+                use_attn_mask=use_attn_mask,
+            )
         )
     torch.cuda.synchronize()
     return (
@@ -237,6 +287,12 @@ def main():
         "negative_prompt": negative,
         "seeds": seeds,
         "skip": args.skip,
+        "policy": {
+            "skip_pa": args.skip_pa,
+            "use_attn_mask": args.use_attn_mask,
+            "pooled_mode": args.pooled,
+            "profiling_sample_size": args.profiling,
+        },
         "references": {"preference": PREFERENCE_REFS, "opposite": OPPOSITE_REFS},
         "versions": {
             "python": sys.version.split()[0],
@@ -307,10 +363,25 @@ def main():
             do_classifier_free_guidance=False,
         )
     plain_cond, plain_pool, plain_seconds = encode_fan(
-        encoder, prompt, None, None, 0.0, args.skip
+        encoder,
+        prompt,
+        None,
+        None,
+        0.0,
+        args.skip,
+        skip_pa=args.skip_pa,
+        use_attn_mask=args.use_attn_mask,
     )
     zero_cond, zero_pool, zero_seconds = encode_fan(
-        encoder, prompt, PREFERENCE_REFS[:1], [1.0], 0.0, args.skip
+        encoder,
+        prompt,
+        PREFERENCE_REFS[:1],
+        [1.0],
+        0.0,
+        args.skip,
+        skip_pa=args.skip_pa,
+        use_attn_mask=args.use_attn_mask,
+        sample_size=args.profiling,
     )
     report["equivalence"] = {
         "fan_plain_vs_pipeline": {
@@ -329,7 +400,15 @@ def main():
         },
     }
     alpha_cond, alpha_pool, alpha_seconds = encode_fan(
-        encoder, prompt, PREFERENCE_REFS, [1.0, 1.0, 1.0], args.alpha, args.skip
+        encoder,
+        prompt,
+        PREFERENCE_REFS,
+        [1.0, 1.0, 1.0],
+        args.alpha,
+        args.skip,
+        skip_pa=args.skip_pa,
+        use_attn_mask=args.use_attn_mask,
+        sample_size=args.profiling,
     )
     report["equivalence"][f"fan_alpha{args.alpha}_vs_fan_plain"] = {
         "hidden": compare(alpha_cond, plain_cond),
@@ -350,7 +429,14 @@ def main():
             do_classifier_free_guidance=True,
         )
     neg_cond, neg_pool, neg_seconds = encode_fan(
-        encoder, negative, None, None, 0.0, args.skip
+        encoder,
+        negative,
+        None,
+        None,
+        0.0,
+        args.skip,
+        skip_pa=args.skip_pa,
+        use_attn_mask=args.use_attn_mask,
     )
     report["equivalence"]["negative_fan_vs_pipeline"] = {
         "hidden": compare(neg_cond, ref_neg_cond),
@@ -450,8 +536,14 @@ def main():
                 job.get("weights"),
                 job.get("alpha", 0.0),
                 args.skip,
+                skip_pa=args.skip_pa,
+                use_attn_mask=args.use_attn_mask,
+                sample_size=args.profiling,
             )
-            if job.get("pooled") == "plain":
+            effective_pooled = (
+                "plain" if job.get("pooled") == "plain" or args.pooled == "plain" else "fan"
+            )
+            if effective_pooled == "plain":
                 # FAN's reference branch pools with its class-token detector; on long
                 # tag prompts that misses the EOS token, so optionally substitute the
                 # unpersonalized pooled embedding.
@@ -475,7 +567,7 @@ def main():
                 "mode": job.get("mode", "fan-embeds"),
                 "pooled": None
                 if job.get("mode") == "string"
-                else job.get("pooled", "fan"),
+                else effective_pooled,
                 "file": path.name,
                 "seconds": seconds,
                 "encode_seconds": encode_seconds,
@@ -513,7 +605,16 @@ def main():
     }
 
     # (f) also compare the encoder numerically before/after the FAN calls.
-    after_cond, after_pool, _ = encode_fan(encoder, prompt, None, None, 0.0, args.skip)
+    after_cond, after_pool, _ = encode_fan(
+        encoder,
+        prompt,
+        None,
+        None,
+        0.0,
+        args.skip,
+        skip_pa=args.skip_pa,
+        use_attn_mask=args.use_attn_mask,
+    )
     with torch.no_grad():
         after_ref_cond, _, after_ref_pool, _ = pipe.encode_prompt(
             prompt=prompt,
