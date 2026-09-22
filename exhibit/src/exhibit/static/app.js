@@ -531,7 +531,7 @@ function inputsPanel(run) {
   const policy = p.effective_policy || {};
   return `<details class="prompt-details"><summary>パーソナライズに渡したもの</summary><p class="kv"><b>お題の一文（全員に共通・変えていません）</b></p><code class="block">${esc(run.prompt || "—")}</code><p class="kv"><b>参照した好み（選んだ画像に付けた確認済みの説明文）</b>　同じ説明文を複数の画像が持つと、その分だけ重みが大きくなります。</p><div class="ref-used">${refRows(
     p.refs || [],
-  )}</div><p class="kv"><b>設定</b>　alpha ${esc(p.alpha ?? cfg.policy?.alpha ?? "—")} / policy ${esc(run.policy_id || "—")} / pooled ${esc(policy.pooled_mode || "—")} / 参照単位 ${esc(policy.reference_unit || "—")}</p><p class="kv"><b>内容ハッシュ</b>　<code>${esc(run.personalization_hash || "—")}</code></p><p>生成モデル・seed・負のプロンプト・生成設定は、パーソナライズなしの4枚とまったく同じです。</p></details>`;
+  )}</div><p class="kv"><b>設定</b>　alpha ${esc(p.alpha ?? cfg.policy?.alpha ?? "—")} / policy ${esc(run.policy_id || "—")} / pooled ${esc(policy.pooled_mode || "—")} / Reference Prompt 単位 ${esc(policy.reference_unit || "—")}</p><p class="kv"><b>内容ハッシュ</b>　<code>${esc(run.personalization_hash || "—")}</code></p><p>生成モデル・seed・Negative Prompt・生成設定は、パーソナライズなしの4枚とまったく同じです。</p></details>`;
 }
 function gainBlock() {
   return `<div class="gains" role="group" aria-label="側面ごとの強さ">${aspectKeys()
@@ -597,7 +597,7 @@ function compareScreen() {
       : ""
   }${adjustBlock(run)}<div class="action-row"><button id="reselect" class="secondary">好きな画像を選ぶ</button><button id="another" class="secondary" ${working ? "disabled" : ""}>別のお題で描く</button>${
     working ? '<button id="cancel" class="secondary">描くのを中止する</button>' : ""
-  }<button id="finish" class="primary">体験を終了</button></div><p class="note">終了すると、この体験の選択・参照・生成画像は削除されます。${cfg.idle_seconds}秒の無操作でも終了します。${working ? "処理中は無操作リセットを止めています。" : ""}</p>`;
+  }<button id="finish" class="primary">体験を終了</button></div><p class="note">終了すると、この体験の選択・ Reference Prompt ・生成画像は削除されます。${cfg.idle_seconds}秒の無操作でも終了します。${working ? "処理中は無操作リセットを止めています。" : ""}</p>`;
   bindAdjust(run);
   bind("reselect", async () => {
     say("");
