@@ -78,7 +78,7 @@ encoder 層    FAN                text encoder の self-attention を差し替�
 - 生成モデル: Illustrious XL v2.0（1024×1280、DPM++ 2M SDE Karras、fp16-fix VAE）
 - 個人化: FAN 公式実装（`ClassTokenDecoder` を含む）。**来場者ごとの追加学習なし**
 - 参照: 選んだカードに付けた確認済みの説明文（`catalog-v2`、4 被写体 × 16 表現）
-- 既定 encoder policy: `legacy_exhibit`（`configs/fan-policies.json` が唯一の正）
+- 既定 encoder policy: `mask_skip8_v1`（所有者判断で `legacy_exhibit` → `mask_skip1_v1` → `mask_skip8_v1` と切り替え。事前基準は未達、本人評価は未実施。`exhibit/configs/fan-policies.json` が唯一の正）
 
 ```bash
 uv sync --project exhibit --locked
