@@ -26,7 +26,7 @@ PYTHONPATH=exhibit/src exhibit/.venv/bin/python exhibit/scripts/preflight.py --m
 uv run --project exhibit uvicorn exhibit.app:app --host 127.0.0.1 --port 7860
 ```
 
-ブラウザーで **http://localhost:7860** を開きます。検証記録はサーバー経由では http://localhost:7860/report/ 、ファイルでは [docs/reports/fan-personalization/](../docs/reports/fan-personalization/)。旧構成の記録は [docs/reports/fan-demo/](../docs/reports/fan-demo/)、さらに旧い ZIPP 構成は [docs/reports/zipp-demo/](../docs/reports/zipp-demo/index.html) に履歴として残しています（どちらも旧設定の実測なので、現行設定の結果として引用しません）。
+ブラウザーで **http://localhost:7860** を開きます。仕組みの説明は http://localhost:7860/tech 、事前生成サンプルは http://localhost:7860/fallback 。検証記録はサーバー経由では http://localhost:7860/report/ 、ファイルでは [docs/reports/fan-personalization/](../docs/reports/fan-personalization/)。旧構成の記録は [docs/reports/fan-demo/](../docs/reports/fan-demo/)、さらに旧い ZIPP 構成は [docs/reports/zipp-demo/](../docs/reports/zipp-demo/index.html) に履歴として残しています（どちらも旧設定の実測なので、現行設定の結果として引用しません）。
 
 GPU推論は FAN 環境 `fan-repro/.venv/bin/python` を別プロセスで使います（FAN の attention monkey-patch は transformers 5 系と非互換）。初回は FAN 環境を用意します。
 
@@ -117,12 +117,13 @@ PYTHONPATH=exhibit/src exhibit/.venv/bin/python exhibit/scripts/prepare.py cards
 PYTHONPATH=exhibit/src exhibit/.venv/bin/python exhibit/scripts/prepare.py generic
 PYTHONPATH=exhibit/src exhibit/.venv/bin/python exhibit/scripts/prepare.py samples
 PYTHONPATH=exhibit/src exhibit/.venv/bin/python exhibit/scripts/build_fallback.py
+PYTHONPATH=exhibit/src exhibit/.venv/bin/python exhibit/scripts/build_tech.py
 PYTHONPATH=exhibit/src exhibit/.venv/bin/python exhibit/scripts/preflight.py --models
 ```
 
 `prepare.py samples` は代表3選択 × 2お題の6サンプルを、確認済みカードと既定 policy の実際の参照から作ります（`configs/demo.json` の `sample_ids` が必須の6件を宣言します）。選択は `scripts/prepare.py` の `SAMPLE_SELECTIONS` にあり、いまは s1: 暖色 × 強い日差し（color+lighting）、s2: 寒色 × 油彩（color+texture）、s3: 逆光 × 線のない平塗り（lighting+texture, strength 2）です。サンプルは選択が参照しているカードが確認済みでないと作れず、参照・重み・hash が合わなければ preflight と `/api/config` から外れます。
 
-`assets/fallback.html` は実画像を埋め込んだ単独HTMLで、サーバーが停止していても開けます。サンプルは代表的な選択の事前生成であり、来場者の選択を反映した結果としては表示しません。固定展示画像とサンプルは配布用assetとしてGit対象、モデルとセッション一時生成物は `outputs/` 配下でGit対象外です。
+`assets/fallback.html` は実画像を埋め込んだ単独HTMLで、サーバーが停止していても開けます。サンプルは代表的な選択の事前生成であり、来場者の選択を反映した結果としては表示しません。`assets/tech.html`（`/tech`）は実装の技術解説ページで、`build_tech.py` が `configs/demo.json`・`configs/fan-policies.json`・`assets/manifest.json`・確認済みカタログから設定値を読んで生成します（フォント同梱・外部リクエストなし・`file://` でも表示可）。設定を変えたら再生成してください（`test_api.py` が古いページを検出します）。固定展示画像とサンプルは配布用assetとしてGit対象、モデルとセッション一時生成物は `outputs/` 配下でGit対象外です。
 
 ## 評価（設計 §10）
 

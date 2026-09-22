@@ -78,6 +78,8 @@ def main():
             f"pooled {html.escape(policy['pooled_mode'])} / "
             f"参照単位 {html.escape(policy['reference_unit'])} / "
             f"profiling {html.escape(policy['profiling']['mode'])}）です。</p>"
+            '<p>仕組みと設定の詳しい説明は <a href="/tech" data-file="tech.html">'
+            "技術解説ページ</a>にあります。</p>"
         )
     ]
     prepared = [card for card in catalog["cards"] if card["id"] in card_images]
@@ -146,7 +148,11 @@ def main():
         '<p>モデル・出典：<a href="https://huggingface.co/OnomaAIResearch/Illustrious-XL-v2.0">'
         "Illustrious XL v2.0</a> / FAN (Foundation Encoders Are All You Need for "
         "Preference-Aware Personalization, CVPR 2026) 公式実装。"
-        "論文の定量結果はこの展示の性能ではありません。</p></main></html>"
+        "論文の定量結果はこの展示の性能ではありません。</p></main>"
+        # On file:// the server path /tech is the sibling tech.html.
+        '<script>if(location.protocol==="file:")'
+        'for(const a of document.querySelectorAll("a[data-file]"))a.href=a.dataset.file'
+        "</script></html>"
     )
     (ASSETS / "fallback.html").write_text("".join(parts))
 
