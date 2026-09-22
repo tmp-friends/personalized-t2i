@@ -35,6 +35,20 @@
         "value": 0.1
       },
       "reference_unit": "aspect_phrase"
+    },
+    "strong_v1": {
+      "alpha": 0.5,
+      "skip": -2,
+      "skip_pa": [
+        0
+      ],
+      "use_attn_mask": false,
+      "pooled_mode": "plain",
+      "profiling": {
+        "mode": "ratio",
+        "value": 0.1
+      },
+      "reference_unit": "aspect_phrase"
     }
   }
 }
