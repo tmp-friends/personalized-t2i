@@ -14,7 +14,7 @@ from pathlib import Path
 
 from exhibit.catalog import load_catalog
 from exhibit.config import ASSETS, CONFIG, FAN_POLICIES, ROOT, read_json
-from exhibit.domain import GAINS, LEGACY_POLICY_ID, STRENGTHS
+from exhibit.domain import GAINS, STRENGTHS
 from exhibit.fan_adapter import profiling_argument, resolve_policy, thaw_policy
 
 STATIC = ROOT / "src/exhibit/static"
@@ -72,12 +72,15 @@ def pa_layers(n_layers, policy):
 def sampler_label(generation):
     """The common name of the configured scheduler, derived from its kwargs."""
     kwargs = generation.get("scheduler_kwargs", {})
+    names = {"sde-dpmsolver++": "DPM++ 2M SDE", "dpmsolver++": "DPM++ 2M"}
     if (
         generation["scheduler"] == "DPMSolverMultistepScheduler"
-        and kwargs.get("algorithm_type") == "sde-dpmsolver++"
+        and kwargs.get("algorithm_type") in names
         and kwargs.get("solver_order", 2) == 2
     ):
-        return "DPM++ 2M SDE" + (" Karras" if kwargs.get("use_karras_sigmas") else "")
+        return names[kwargs["algorithm_type"]] + (
+            " Karras" if kwargs.get("use_karras_sigmas") else ""
+        )
     return generation["scheduler"]
 
 
@@ -222,11 +225,6 @@ def facts():
     catalog_config = read_json(ROOT / "configs/catalog-v2.json", {}) or {}
     catalog = load_catalog(reviewed_only=True)
     default_id = FAN_POLICIES["default_policy_id"]
-    if default_id != LEGACY_POLICY_ID:
-        # The reasons in section 4 were measured for legacy_exhibit only.
-        raise SystemExit(
-            f"Section 4 explains {LEGACY_POLICY_ID}; update build_tech.py for {default_id}"
-        )
     return {
         "generation": generation,
         "model_name": generation["model"].split("/")[-1].replace("-", " "),
@@ -250,8 +248,12 @@ def facts():
 def share_bar(alpha, weights=EXAMPLE_WEIGHTS):
     """One target token's attention budget: 1 − α on the prompt, α split by weight."""
     total = sum(weights)
-    shares = [("t", "お題", 1 - alpha)] + [
-        ("r alt" if index % 2 else "r", f"参照{index + 1}", alpha * weight / total)
+    shares = [("t", "Target Prompt", 1 - alpha)] + [
+        (
+            "r alt" if index % 2 else "r",
+            f"Reference Prompt {index + 1}",
+            alpha * weight / total,
+        )
         for index, weight in enumerate(weights)
     ]
     bar = "".join(
@@ -260,9 +262,9 @@ def share_bar(alpha, weights=EXAMPLE_WEIGHTS):
     )
     listed = " / ".join(number(float(weight)) for weight in weights)
     return (
-        f'<figure class="share" aria-label="お題の1トークンの注意の配分の例"><div class="bar">{bar}</div>'
-        f'<figcaption class="legend"><span>例：α = {number(alpha)}、参照3つの weight が {listed} のとき</span>'
-        "<span>参照の中でどのトークンを見るかは、Query と Key の近さで決まります</span></figcaption></figure>"
+        f'<figure class="share" aria-label="Target Prompt の1トークンの PA の配分の例"><div class="bar">{bar}</div>'
+        f'<figcaption class="legend"><span>例：α = {number(alpha)}、Reference Prompt 3つの weight が {listed} のとき</span>'
+        "<span>Reference Prompt の中でどのトークンを見るかは、Query と Key の近さで決まります</span></figcaption></figure>"
     )
 
 
@@ -288,89 +290,89 @@ def fan_section(f):
         "（CLIP-L と OpenCLIP bigG）の両方に適用しています。</p>"
         '<figure class="paper">'
         f'<img src="data:image/png;base64,{figure}" width="470" height="412" '
-        'alt="FAN の構成図。(a) 好みの参照の分布と、その中からの選別。(b) お題の Query と、'
-        "お題・参照を連結した Key/Value で計算する personalized attention。"
+        'alt="FAN の構成図。(a) 好みの Reference Prompt の分布と、その中からの選別。(b) Target Prompt の Query と、'
+        "Target Prompt ・ Reference Prompt を連結した Key/Value で計算する personalized attention。"
         '(c) personalized attention の層と通常の self-attention の層を重ねたエンコーダー。">'
         "<figcaption>論文の手法図。3つの要素でできています。<dl>"
-        "<dt>(a)</dt><dd><strong>Tailored profiling</strong>：たくさんの参照（青）の中から、"
-        "お題（赤）に対して好みを代表する参照を選ぶ。</dd>"
-        "<dt>(b)</dt><dd><strong>Personalized attention (PA)</strong>：お題のトークンが、"
-        "自分の文に加えて参照の文にも注意を向ける。重みは元の self-attention と共有。</dd>"
+        "<dt>(a)</dt><dd><strong>Tailored profiling</strong>：たくさんの Reference Prompt（青）の中から、"
+        "Target Prompt（赤）に対して好みを代表する Reference Prompt を選ぶ。</dd>"
+        "<dt>(b)</dt><dd><strong>Personalized attention (PA)</strong>：Target Prompt のトークンが、"
+        "自分の文に加えて Reference Prompt にも self-attention を向ける。重みは元の self-attention と共有。</dd>"
         "<dt>(c)</dt><dd><strong>Conditioning optimization</strong>：PA の層と通常の "
-        "self-attention (SA) の層を組み合わせ、お題を保ったまま好みを反映した条件を作る。</dd>"
+        "self-attention (SA) の層を組み合わせ、Target Prompt を保ったまま好みを反映した条件を作る。</dd>"
         "</dl>"
         '<p class="credit">出典：Kim, Ahn, Seo, CVPR 2026。図は公式リポジトリの '
         "<code>asset/method.png</code>（© 2026 Hyungjin Kim, MIT License）。</p>"
         "</figcaption></figure>"
         # ---------------------------------------------------------------- batch
         "<h3>1回のエンコードで起きること</h3>"
-        "<p>お題の文と参照の文をそれぞれ77トークンにそろえ、次の並びで1つのバッチにして"
+        "<p>Target Prompt と Reference Prompt をそれぞれ77トークンにそろえ、次の並びで1つのバッチにして"
         "テキストエンコーダーへ入れます。</p>"
         '<div class="batch">'
-        '<div class="q"><b>お題</b>PA で参照を混ぜる本体。最後にこの出力だけを使う</div>'
-        "<div><b>お題のコピー</b>通常の self-attention のまま進む</div>"
-        "<div><b>参照 1 … R</b>それぞれ通常の self-attention のまま進む</div>"
+        '<div class="q"><b>Target Prompt</b>PA で Reference Prompt を混ぜる本体。最後にこの出力だけを使う</div>'
+        "<div><b>Target Prompt の複製</b>通常の self-attention のまま進む</div>"
+        "<div><b>Reference Prompt 1 … R</b>それぞれ通常の self-attention のまま進む</div>"
         "</div>"
         '<ol class="steps">'
-        '<li data-n="1"><b>コピーと参照は、ふつうにエンコードされる</b>'
-        "<span>各層で元の self-attention をそのまま通ります。参照どうしが混ざることもありません。</span></li>"
-        '<li data-n="2"><b>お題だけが personalized attention を行う</b>'
-        "<span>Query はお題自身から、Key と Value は<strong>同じ層</strong>の「お題のコピー」と"
-        "「全参照」を連結したものから作ります（図 (b) の ‖）。"
+        '<li data-n="1"><b>複製と Reference Prompt は、ふつうにエンコードされる</b>'
+        "<span>各層で元の self-attention をそのまま通ります。Reference Prompt どうしが混ざることもありません。</span></li>"
+        '<li data-n="2"><b>Target Prompt だけが personalized attention を行う</b>'
+        "<span>Query は Target Prompt 自身から、Key と Value は<strong>同じ層</strong>の「Target Prompt の複製」と"
+        "「全 Reference Prompt」を連結したものから作ります（図 (b) の ‖）。"
         "Q・K・V の射影には元の層の重みをそのまま使います。</span></li>"
-        '<li data-n="3"><b>お題の出力だけを取り出す</b>'
-        "<span>エンコードが終わったら、お題の hidden states を <code>prompt_embeds</code> "
+        '<li data-n="3"><b>Target Prompt の出力だけを取り出す</b>'
+        "<span>エンコードが終わったら、Target Prompt の hidden states を <code>prompt_embeds</code> "
         "として生成モデルへ渡します。差し替えたメソッドはエンコードのたびに元へ戻します。</span></li>"
         "</ol>"
         # ---------------------------------------------------------------- share
-        "<h3>注意の配分</h3>"
-        "<p>お題の各トークンの注意は、お題の文と参照の文に次の割合で分けられます。</p>"
-        '<div class="formula">注意 = (1 − α) × softmax(お題の文) ‖ α × Σ<sub>r</sub> '
-        "(w<sub>r</sub> / Σw) × softmax(参照 r の文)"
-        "<small>softmax は文ごとに別々に計算し、‖ は連結。w<sub>r</sub> は参照 r の weight</small></div>"
-        "<p>お題の文への注意は通常どおり softmax して合計 <strong>1 − α</strong>。"
-        "参照の側は、参照ごとにその77トークンの中で softmax してから weight を掛け、"
-        "参照全体の合計が <strong>α</strong> になるように割り直します。"
-        "つまり α は「参照全体にどれだけ回すか」、weight は「その中で参照どうしをどう分けるか」を決めます。"
+        "<h3>Personalized Attention (PA) の配分</h3>"
+        "<p>Target Prompt の各トークンの attention（PA）は、Target Prompt と Reference Prompt に次の割合で分けられます。</p>"
+        '<div class="formula">PA = (1 − α) × softmax(Target Prompt) ‖ α × Σ<sub>r</sub> '
+        "(w<sub>r</sub> / Σw) × softmax(Reference Prompt r)"
+        "<small>softmax は文ごとに別々に計算し、‖ は連結。w<sub>r</sub> は Reference Prompt r の weight</small></div>"
+        "<p>Target Prompt への attention は通常どおり softmax して合計 <strong>1 − α</strong>。"
+        "Reference Prompt の側は、Reference Prompt ごとにその77トークンの中で softmax してから weight を掛け、"
+        "Reference Prompt 全体の合計が <strong>α</strong> になるように割り直します。"
+        "つまり α は「Reference Prompt 全体にどれだけ回すか」、weight は「その中で Reference Prompt どうしをどう分けるか」を決めます。"
         f"展示の α は <strong>{alpha}</strong> です。</p>"
         + share_bar(policy["alpha"])
-        + "<p>α = 0 なら、お題のコピー（参照なしでエンコードされた文）だけを見ることになり、"
-        "参照なしのエンコードと同じ結果になります。"
+        + "<p>α = 0 なら、Target Prompt の複製（Reference Prompt を使わずにエンコードされた文）だけを見ることになり、"
+        "Reference Prompt を使わないエンコードと同じ結果になります。"
         "また CLIP のテキストエンコーダーは前のトークンしか見ない因果マスクを持つため、"
-        "お題の i 番目のトークンが見られるのは、コピーと各参照でも先頭から i 番目までのトークンです。</p>"
+        "Target Prompt の i 番目のトークンが見られるのは、複製と各 Reference Prompt でも先頭から i 番目までのトークンです。</p>"
         # ---------------------------------------------------------------- layers
         "<h3>どの層で混ぜるか</h3>"
         "<p>公式実装では <code>skip_pa</code> で「PA を行わず通常の self-attention のままにする層」"
         f"を指定できます（図 (c) の SA の層）。展示では入力側の {e(skip_pa)} 層目を SA のままにし、"
-        "それより出力側の層だけで参照を混ぜます。"
+        "それより出力側の層だけで Reference Prompt を混ぜます。"
         "hidden states は最終層の1つ手前から取るので、画像に効いている PA の層は次のとおりです。</p>"
         f'<dl class="kv">{layers}</dl>'
         # ---------------------------------------------------------------- pooled
         "<h3>pooled 埋め込みと ClassTokenDecoder</h3>"
         "<p>SDXL はトークンごとの hidden states に加えて、文全体を1本にまとめた pooled 埋め込みも使います。"
-        "通常は文末トークンの位置から取りますが、参照を混ぜた系列ではどの位置が文全体を代表するかが変わります。"
+        "通常は文末トークンの位置から取りますが、Reference Prompt を混ぜた系列ではどの位置が文全体を代表するかが変わります。"
         "そこで FAN は、最終層の hidden states から各トークンの得点を出す小さな分類器 "
         "<strong>ClassTokenDecoder</strong>（2層の MLP）を使い、得点が最も高い位置から pooled を取ります。"
         "重みは公式リポジトリ同梱の <code>weight/L.pth</code> と <code>weight/bigG.pth</code> で"
         f"（sha256 は設定に固定：L <code>{e(decoders['L.pth'][:12])}…</code> / "
         f"bigG <code>{e(decoders['bigG.pth'][:12])}…</code>）、"
-        "エンコーダー本体は学習し直しません。展示の既定設定では pooled を参照なしの値に置き換えるため（4章）、"
+        "エンコーダー本体は学習し直しません。展示の既定設定では pooled を Reference Prompt を使わない値に置き換えるため（4章）、"
         "画像に効いているのは hidden states 側の混合です。</p>"
         # ---------------------------------------------------------------- profiling
-        "<h3>Tailored profiling（参照の選別）</h3>"
-        "<p>参照が多いとき、公式実装は <code>sample_size</code> の割合だけ参照を選びます。"
-        "まずお題とのトークン単位の類似度に weight を掛けた値で候補を絞り、"
-        "次にその中から、お題やすでに選んだ参照と似ていないものを順に選びます"
-        "（weight が大きい参照ほど選ばれやすくなります）。"
-        "近いものだけを集めるのではなく、好みの幅を少ない参照で覆うための選び方です。"
+        "<h3>Tailored profiling（Reference Prompt の選別）</h3>"
+        "<p>Reference Prompt が多いとき、公式実装は <code>sample_size</code> の割合だけ Reference Prompt を選びます。"
+        "まず Target Prompt とのトークン単位の類似度に weight を掛けた値で候補を絞り、"
+        "次にその中から、Target Prompt やすでに選んだ Reference Prompt と似ていないものを順に選びます"
+        "（weight が大きい Reference Prompt ほど選ばれやすくなります）。"
+        "近いものだけを集めるのではなく、好みの幅を少ない Reference Prompt で覆うための選び方です。"
         + (
-            "展示では選別せず、選ばれた参照をすべて使います（4章）。</p>"
+            "展示では選別せず、選ばれた Reference Prompt をすべて使います（4章）。</p>"
             if sample_size == 0
             else f"展示では <code>sample_size</code> = <code>{e(sample_size)}</code> で使っています。</p>"
         )
         + '<div class="callout"><p><strong>来場者ごとの追加学習はしません。</strong>'
         "生成モデルもテキストエンコーダーも更新しません。好みはエンコードのたびに、"
-        "参照の文として attention に混ぜるだけです。</p></div>"
+        "Reference Prompt として attention に混ぜるだけです。</p></div>"
         "</section>"
     )
 
@@ -414,32 +416,32 @@ def render(f=None):
             # ------------------------------------------------------------ 1
             '<section id="flow"><h2><span class="n">1</span>全体の流れ</h2>'
             "<p>来場者が決めるのは「どの画像のどこが好きか」だけです。"
-            "それが参照の文になり、テキストエンコーダーの段階でお題の文に混ざります。</p>"
+            "それが Reference Prompt（カードに付けた説明文）になり、テキストエンコーダーの段階で Target Prompt（お題の文）に混ざります。</p>"
             '<ol class="steps">'
             f'<li data-n="1"><b>好きな画像を選ぶ</b><span>最大{sel["round_size"] * sel["max_rounds"]}枚の'
             f"候補の一覧から、合計{sel['min']}〜{sel['max']}枚。</span></li>"
             f'<li data-n="2"><b>好きな側面を指定する</b><span>選んだ画像は最初「全部好き」'
             f"（{e(aspect_names)}のすべて）になっていて、好きなところだけに絞れます。"
             f"強さ <code>strength</code> は {strengths}。</span></li>"
-            '<li data-n="3"><b>確認済みの説明文を参照にする</b><span>'
-            "指定した側面に付いた短い英語の句を集めて、重み付きの参照リストにします。</span></li>"
-            '<li data-n="4"><b>FAN でお題の文をエンコードする</b><span>'
-            "お題の文と参照リストを一緒にテキストエンコーダーへ入れ、好みを混ぜた埋め込みを作ります。</span></li>"
+            '<li data-n="3"><b>確認済みの説明文を Reference Prompt にする</b><span>'
+            "指定した側面に付いた短い英語の句を集めて、重み付きの Reference Prompt リストにします。</span></li>"
+            '<li data-n="4"><b>FAN で Target Prompt をエンコードする</b><span>'
+            "Target Prompt と Reference Prompt リストを一緒にテキストエンコーダーへ入れ、好みを混ぜた埋め込みを作ります。</span></li>"
             '<li data-n="5"><b>SDXL で生成する</b><span>'
             f"{model} が {seeds}つの seed で1枚ずつ描きます。</span></li>"
             "</ol>"
-            '<figure class="split" aria-label="通常生成とパーソナライズ生成の比較の構成">'
-            '<div class="shared"><b>共通</b>：お題の文 ・ 負のプロンプト ・ '
+            '<figure class="split" aria-label="パーソナライズなしとパーソナライズありの比較の構成">'
+            '<div class="shared"><b>共通</b>：Target Prompt ・ Negative Prompt ・ '
             f"seed {seeds}つ ・ 生成モデルと生成設定</div>"
             '<div class="fork">'
-            '<div class="lane"><h4>通常生成</h4><ul>'
-            "<li>参照なしでエンコード</li>"
+            '<div class="lane"><h4>パーソナライズなし</h4><ul>'
+            "<li>Reference Prompt を使わずにエンコード</li>"
             "<li>お題ごとに事前生成した画像を表示</li></ul></div>"
-            '<div class="lane personal"><h4>パーソナライズ生成</h4><ul>'
-            "<li>参照ありで FAN エンコード</li>"
+            '<div class="lane personal"><h4>パーソナライズあり</h4><ul>'
+            "<li>Reference Prompt を渡して FAN でエンコード</li>"
             "<li>その場で生成し、できた順に表示</li></ul></div>"
             "</div>"
-            '<figcaption class="note">左右で違うのは、参照の内容・重み <code>weight</code>・'
+            '<figcaption class="note">左右で違うのは、Reference Prompt の内容・重み <code>weight</code>・'
             "反映の強さ <code>alpha</code> だけです。同じ seed の順に並べるので、"
             "同じ位置の2枚は同じ seed から描かれています。</figcaption></figure>"
             "</section>"
@@ -462,8 +464,8 @@ def render(f=None):
             f'<p class="note">被写体「{e(example["subject_label"])}」を表す語は、句に含まれていません。</p>'
         )
     parts.append(
-        '<section id="refs"><h2><span class="n">3</span>参照の作り方</h2>'
-        "<p>参照にするのは<strong>画像そのものではなく、画像に付けた説明文</strong>です。"
+        '<section id="refs"><h2><span class="n">3</span>Reference Prompt の作り方</h2>'
+        "<p>Reference Prompt にするのは<strong>画像そのものではなく、画像に付けた説明文</strong>です。"
         f"カードは <code>{e(f['catalog_id'])}</code> の {f['card_total']}枚"
         f"（{f['subjects']}被写体 × {f['profiles']}表現）で、"
         f"{e(aspect_names)}の側面ごとに短い英語の句を持っています。"
@@ -476,17 +478,17 @@ def render(f=None):
         "<dt>重みの付け方</dt><dd>句ごとの weight = カードの <code>strength</code>"
         f"（{strengths}）× 側面ごとの倍率 <code>aspect_gain</code>（{gains}）。</dd>"
         "<dt>重複は1件にまとめる</dt><dd>複数のカードで同じ句が選ばれたら、"
-        "参照は1件にまとめて weight を合算します。</dd>"
-        "<dt>「外す」は除去</dt><dd>外した画像や側面は重み0で残すのではなく、参照リストから取り除きます。"
+        "Reference Prompt は1件にまとめて weight を合算します。</dd>"
+        "<dt>「外す」は除去</dt><dd>外した画像や側面は重み0で残すのではなく、Reference Prompt リストから取り除きます。"
         "選ばなかった画像を負の重みに変えることもしません。</dd>"
         "</dl></section>"
     )
     # ---------------------------------------------------------------- 4
     others = ", ".join(f"<code>{e(name)}</code>" for name in f["other_policies"])
     profiling = (
-        "参照をすべて使う（選別しない）"
+        "Reference Prompt をすべて使う（選別しない）"
         if sample_size == 0
-        else f"公式の profiling で参照を選別（<code>{e(sample_size)}</code>）"
+        else f"公式の profiling で Reference Prompt を選別（<code>{e(sample_size)}</code>）"
     )
     parts.append(
         '<section id="settings"><h2><span class="n">4</span>検証で決めた設定</h2>'
@@ -497,25 +499,44 @@ def render(f=None):
         f"<dt><code>skip_pa</code> = {e(skip_pa)}</dt>"
         f"<dd>入力側の {len(policy['skip_pa'])} 層では personalized attention を行いません"
         "（CLIP-L・bigG の両方に同じ番号を適用）。"
-        "<small>入力側の層で混ぜると参照由来の全体的な「もや」がかかり、"
+        "<small>入力側の層で混ぜると Reference Prompt 由来の全体的な「もや」がかかり、"
         "お題の被写体・構図・衣装の指定が崩れやすかったため。</small></dd>"
         f"<dt><code>use_attn_mask</code> = {str(policy['use_attn_mask']).lower()}</dt>"
-        "<dd>attention mask を使いません。"
-        "<small>true にすると α=0（参照の影響がないはず）でもお題の文のエンコードが変わってしまったため。</small></dd>"
+        "<dd>Reference Prompt の padding トークンを personalized attention から除外します。"
+        "<small>上流の FAN は padding マスクがあると causal mask を外す実装になっており、"
+        "これが旧設定（false）の理由だった：マスクを使うと α=0（Reference Prompt の影響がないはず）でも"
+        "Target Prompt のエンコードが変わってしまっていた。<code>exhibit/src/exhibit/fan_mask.py</code> が"
+        "これを修正し、Reference Prompt 側だけをマスクするので、Target Prompt のエンコードは plain のパイプラインと"
+        "同一になる（Reference Prompt なしで確認：最大絶対差 0.0）。e10 run B（SDE）で legacy_exhibit と比較すると、"
+        "暖色−寒色の差は +5.0（legacy +4.4、どちらも有意差なし）、彩度は −10.9（legacy −1.5）、"
+        "Δtarget は −0.006（legacy 0.000）——見た目は legacy とほぼ変わらず、"
+        "修正済みのマスクを使う設定を既定にするために選びました。</small></dd>"
         f"<dt><code>alpha</code> = {alpha}</dt>"
         "<dd>反映の強さ。"
         "<small>当初の確認で α=0.6 までお題の指定が保たれたため、その上限の内側に置いています。"
-        "強く反映するほど良いとは限りません。</small></dd>"
+        "0.7 では衣装とポーズが変わる（e10）。強く反映するほど良いとは限りません。</small></dd>"
         f"<dt><code>pooled_mode</code> = {e(policy['pooled_mode'])}</dt>"
-        "<dd>pooled 埋め込みは参照なし（plain）の値を使います。<strong>上流からの意図的な逸脱</strong>です。"
+        "<dd>pooled 埋め込みは Reference Prompt を使わない（plain）値を使います。<strong>上流からの意図的な逸脱</strong>です。"
         "<small>公式の ClassTokenDecoder が padding トークンを終端と誤検出するため。"
+        "pooled を EOS 位置でパーソナライズする <code>fan_eos</code> も e10-faneos で試したが、"
+        "暖色方向のドリフトが増えるだけで双方向の反応性は改善しなかった。"
         "公式どおりの pooled は別の登録 policy で評価と比較に使っています。</small></dd>"
         f"<dt><code>skip</code> = {e(policy['skip'])}</dt>"
         "<dd>hidden states は最終層の1つ手前から取ります（公式の SDXL 設定と同じ）。</dd>"
         f"<dt>profiling</dt><dd>{profiling}。</dd>"
         "</dl>"
         + (
-            f'<p class="note">登録済みの別 policy：{others}。既定は評価の事前基準と本人評価の両方を満たすまで変えません。</p>'
+            f'<p class="note">登録済みの別 policy：{others}。'
+            "既定は所有者判断で2段階切り替えました：2026-09-22 に <code>legacy_exhibit</code> から "
+            "<code>mask_skip1_v1</code> へ（実験 <code>e10-mask</code> run B、experiment hash "
+            "<code>0bf81bf739ec880cd083aaaa1cd1e222cc3bfe8600765ef4d9914e03878de6b5</code>）、"
+            "2026-09-23 に <code>mask_skip1_v1</code> から "
+            f"<code>{e(f['default_id'])}</code> へ（experiment hash "
+            "<code>ead995b8787381d5b7daaf8081c820461a581bb58bb79961010d31052a2d523e</code>、"
+            "<code>e11-sampler</code> と legacy-family 比較のあと）。"
+            "legacy-family 比較（<code>docs/reports/fan-personalization/strength/e10-mask/legacy-family-*.jpg</code>）で "
+            "<code>mask_skip1_v1</code> はどの Reference Prompt でも暖色に寄り、cat のお題では猫耳が増える傾向が見えました。"
+            "事前登録した heldout ＋ 本人評価の基準は満たしておらず、本人評価は未実施です。</p>"
             if others
             else ""
         )
@@ -535,7 +556,7 @@ def render(f=None):
     )
     parts.append(
         '<section id="generation"><h2><span class="n">5</span>生成設定</h2>'
-        "<p>通常生成とパーソナライズ生成で同じ値を使います。値は <code>configs/demo.json</code> の "
+        "<p>パーソナライズなし・ありで同じ値を使います。値は <code>configs/demo.json</code> の "
         "<code>generation</code> から、このページの生成時に読み込んでいます。</p>"
         '<dl class="kv">'
         f'<dt>生成モデル</dt><dd><a href="{e(MODEL_PAGE.format(g["model"]))}">{e(g["model"])}</a>'
@@ -545,12 +566,14 @@ def render(f=None):
         f"<dt>解像度</dt><dd>{size}（縦長）</dd>"
         f"<dt>steps</dt><dd>{g['steps']}</dd>"
         f"<dt>sampler</dt><dd>{e(f['sampler'])}"
-        f"<small><code>{e(g['scheduler'])}</code>（{e(kwargs)}）</small></dd>"
+        f"<small><code>{e(g['scheduler'])}</code>（{e(kwargs)}）。"
+        "非 SDE 版（<code>dpmsolver++</code>）は e11-sampler で試したが"
+        "plain の彩度が約29落ちるため採用しなかった。</small></dd>"
         f"<dt>CFG</dt><dd>{g['guidance_scale']}</dd>"
         f"<dt>精度</dt><dd>{e(g['precision'])}</dd>"
         + vae_row
         + f"<dt>seed</dt><dd>{', '.join(str(seed) for seed in f['seeds'])}</dd>"
-        "<dt>負のプロンプト</dt><dd>固定。常に参照なしでエンコードします。</dd>"
+        "<dt>Negative Prompt</dt><dd>固定。常に Reference Prompt を使わずにエンコードします。</dd>"
         "</dl>"
         + (
             '<p class="note">事前生成した固定画像（<code>assets/manifest.json</code>）も、'

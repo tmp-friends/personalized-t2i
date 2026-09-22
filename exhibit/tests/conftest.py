@@ -8,14 +8,13 @@ from exhibit.catalog import build_catalog, card_settings, description_hash, load
 from exhibit.config import CONFIG, ROOT, read_json, write_json
 from exhibit.domain import (
     ASPECTS,
-    LEGACY_POLICY_ID,
     build_personalization,
     digest,
     file_hash,
-    legacy_policy,
     target_prompt,
 )
 from exhibit.elicitation import normalize_preferences
+from exhibit.service import default_policy
 
 # Injected so a CPU test never needs the Hub cache; the shape is the real one.
 # Only the two source hashes are fabricated: the rest is the shipped contract.
@@ -161,7 +160,7 @@ def write_catalog_bundle(root, review_path, *, reviewed=True):
 def sample_records(root, review_path):
     """Three selections x two topics, built exactly as prepare.py builds them."""
     catalog = load_catalog(reviewed_only=True, assets=root, review_path=review_path)
-    policy = legacy_policy()
+    policy_id, policy = default_policy()
     ids = [card["id"] for card in catalog["cards"]]
     samples = []
     for number in range(3):
@@ -193,7 +192,7 @@ def sample_records(root, review_path):
                 provenance=PROVENANCE,
                 catalog=catalog,
             )
-            personalization["policy_id"] = LEGACY_POLICY_ID
+            personalization["policy_id"] = policy_id
             images = []
             for index, seed in enumerate(CONFIG["seeds"]):
                 relative = f"samples/{sample_id}-{index}.png"

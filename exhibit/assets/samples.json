@@ -82,16 +82,16 @@
           6,
           7
         ],
-        "use_attn_mask": false,
+        "use_attn_mask": true,
         "pooled_mode": "plain",
         "profiling": {
           "mode": "all"
         },
         "reference_unit": "aspect_phrase"
       },
-      "policy_hash": "a99004b42358d1f822d223c5e68b33d28801e10fe97ea925c2216c365a8e3749",
+      "policy_hash": "ead995b8787381d5b7daaf8081c820461a581bb58bb79961010d31052a2d523e",
       "provenance": {
-        "adapter_hash": "af3c2df08a32e12572a713a61c44fa0a30b11198d61a95cea348c2ab7bd45a9b",
+        "adapter_hash": "81b111a2c20e90bc72483c18e751e399d1f2ed6aa900eb2bd8c572aac62de0dc",
         "decoder_hash": "daae1b646698c61efc205c68d563e4f314727fe2912cc91e73844219a414898a",
         "fan_pin": "9d0b76843f6437718195accac9cf3f050a25d26b",
         "generation": {
@@ -128,9 +128,9 @@
         "tokenizer_hash": "b744d13dd481f326a999cb66135d192fc2d854669e07f0605fb97ae867a41d10"
       },
       "sample_size": 0,
-      "hash": "da3fd5bfbe74dc8b4ff5f0c9eb1dd68c237727a510becc7af42158b690b68906",
-      "personalization_hash": "da3fd5bfbe74dc8b4ff5f0c9eb1dd68c237727a510becc7af42158b690b68906",
-      "policy_id": "legacy_exhibit"
+      "hash": "fc07f79485365bc0215a036fc2562628f9de66a96c2c415dfd882ee3b7c39903",
+      "personalization_hash": "fc07f79485365bc0215a036fc2562628f9de66a96c2c415dfd882ee3b7c39903",
+      "policy_id": "mask_skip8_v1"
     },
     "mode": "sample",
     "images": [
@@ -138,7 +138,7 @@
         "type": "image",
         "id": "s1-cat-0",
         "path": "samples/s1-cat-0.png",
-        "sha256": "ab07c502988462b427fde1c7e4a8f49bb7bfd8c6bc4fa8e6de3d96dc2bd0cbd3",
+        "sha256": "5e9f65a40988df7982284c53c5d054154395c6557dcafc190a628ceb93f64dfc",
         "seed": 230923,
         "prompt": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1girl, solo, brown hair, green eyes, sweater, holding cat, window, upper body, detailed eyes, detailed illustration, absurdres, highres.",
         "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
@@ -169,6 +169,7 @@
         },
         "fan": {
           "commit": "9d0b76843f6437718195accac9cf3f050a25d26b",
+          "alpha": 0.5,
           "pooled": "plain",
           "skip": -2,
           "sample_size": 0,
@@ -182,10 +183,10 @@
             6,
             7
           ],
-          "use_attn_mask": false
+          "use_attn_mask": true
         },
         "pooled": "plain",
-        "policy_id": "legacy_exhibit",
+        "policy_id": "mask_skip8_v1",
         "effective_policy": {
           "alpha": 0.5,
           "skip": -2,
@@ -199,14 +200,14 @@
             6,
             7
           ],
-          "use_attn_mask": false,
+          "use_attn_mask": true,
           "pooled_mode": "plain",
           "profiling": {
             "mode": "all"
           },
           "reference_unit": "aspect_phrase"
         },
-        "policy_hash": "a99004b42358d1f822d223c5e68b33d28801e10fe97ea925c2216c365a8e3749",
+        "policy_hash": "ead995b8787381d5b7daaf8081c820461a581bb58bb79961010d31052a2d523e",
         "profiling_trace": {
           "calls": [
             {
@@ -398,16 +399,16 @@
             "mode": "all"
           }
         },
-        "profiling_trace_path": "/home/tomoya/stable-diffusion/personalized-t2i/.worktrees/fan-personalization/exhibit/assets/samples/s1-cat-0.trace.json",
-        "personalization_hash": "da3fd5bfbe74dc8b4ff5f0c9eb1dd68c237727a510becc7af42158b690b68906",
+        "profiling_trace_path": "/home/tomoya/stable-diffusion/personalized-t2i/exhibit/assets/samples/s1-cat-0.trace.json",
+        "personalization_hash": "fc07f79485365bc0215a036fc2562628f9de66a96c2c415dfd882ee3b7c39903",
         "conditioning_target_align": null,
-        "seconds": 5.223
+        "seconds": 5.292
       },
       {
         "type": "image",
         "id": "s1-cat-1",
         "path": "samples/s1-cat-1.png",
-        "sha256": "9283094d9911dcfdaae1db2074b90a5bdd388f161bfba29271d881c497b23976",
+        "sha256": "6eec26d0b83c591788c94c5f4d67dc43240b0bfe198bc425156c045eff4612ea",
         "seed": 230924,
         "prompt": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1girl, solo, brown hair, green eyes, sweater, holding cat, window, upper body, detailed eyes, detailed illustration, absurdres, highres.",
         "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
@@ -438,6 +439,7 @@
         },
         "fan": {
           "commit": "9d0b76843f6437718195accac9cf3f050a25d26b",
+          "alpha": 0.5,
           "pooled": "plain",
           "skip": -2,
           "sample_size": 0,
@@ -451,10 +453,10 @@
             6,
             7
           ],
-          "use_attn_mask": false
+          "use_attn_mask": true
         },
         "pooled": "plain",
-        "policy_id": "legacy_exhibit",
+        "policy_id": "mask_skip8_v1",
         "effective_policy": {
           "alpha": 0.5,
           "skip": -2,
@@ -468,14 +470,14 @@
             6,
             7
           ],
-          "use_attn_mask": false,
+          "use_attn_mask": true,
           "pooled_mode": "plain",
           "profiling": {
             "mode": "all"
           },
           "reference_unit": "aspect_phrase"
         },
-        "policy_hash": "a99004b42358d1f822d223c5e68b33d28801e10fe97ea925c2216c365a8e3749",
+        "policy_hash": "ead995b8787381d5b7daaf8081c820461a581bb58bb79961010d31052a2d523e",
         "profiling_trace": {
           "calls": [
             {
@@ -667,16 +669,16 @@
             "mode": "all"
           }
         },
-        "profiling_trace_path": "/home/tomoya/stable-diffusion/personalized-t2i/.worktrees/fan-personalization/exhibit/assets/samples/s1-cat-1.trace.json",
-        "personalization_hash": "da3fd5bfbe74dc8b4ff5f0c9eb1dd68c237727a510becc7af42158b690b68906",
+        "profiling_trace_path": "/home/tomoya/stable-diffusion/personalized-t2i/exhibit/assets/samples/s1-cat-1.trace.json",
+        "personalization_hash": "fc07f79485365bc0215a036fc2562628f9de66a96c2c415dfd882ee3b7c39903",
         "conditioning_target_align": null,
-        "seconds": 4.959
+        "seconds": 5.025
       },
       {
         "type": "image",
         "id": "s1-cat-2",
         "path": "samples/s1-cat-2.png",
-        "sha256": "4ac2b1e54a02503a53fa2f408c796a9eb893244d0f94dfb0be18204c288912a3",
+        "sha256": "7152e026aded64b6263aa4add62b98213cebd74bf3426983b39f899dda6fbc1d",
         "seed": 230925,
         "prompt": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1girl, solo, brown hair, green eyes, sweater, holding cat, window, upper body, detailed eyes, detailed illustration, absurdres, highres.",
         "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
@@ -707,6 +709,7 @@
         },
         "fan": {
           "commit": "9d0b76843f6437718195accac9cf3f050a25d26b",
+          "alpha": 0.5,
           "pooled": "plain",
           "skip": -2,
           "sample_size": 0,
@@ -720,10 +723,10 @@
             6,
             7
           ],
-          "use_attn_mask": false
+          "use_attn_mask": true
         },
         "pooled": "plain",
-        "policy_id": "legacy_exhibit",
+        "policy_id": "mask_skip8_v1",
         "effective_policy": {
           "alpha": 0.5,
           "skip": -2,
@@ -737,14 +740,14 @@
             6,
             7
           ],
-          "use_attn_mask": false,
+          "use_attn_mask": true,
           "pooled_mode": "plain",
           "profiling": {
             "mode": "all"
           },
           "reference_unit": "aspect_phrase"
         },
-        "policy_hash": "a99004b42358d1f822d223c5e68b33d28801e10fe97ea925c2216c365a8e3749",
+        "policy_hash": "ead995b8787381d5b7daaf8081c820461a581bb58bb79961010d31052a2d523e",
         "profiling_trace": {
           "calls": [
             {
@@ -936,16 +939,16 @@
             "mode": "all"
           }
         },
-        "profiling_trace_path": "/home/tomoya/stable-diffusion/personalized-t2i/.worktrees/fan-personalization/exhibit/assets/samples/s1-cat-2.trace.json",
-        "personalization_hash": "da3fd5bfbe74dc8b4ff5f0c9eb1dd68c237727a510becc7af42158b690b68906",
+        "profiling_trace_path": "/home/tomoya/stable-diffusion/personalized-t2i/exhibit/assets/samples/s1-cat-2.trace.json",
+        "personalization_hash": "fc07f79485365bc0215a036fc2562628f9de66a96c2c415dfd882ee3b7c39903",
         "conditioning_target_align": null,
-        "seconds": 4.989
+        "seconds": 5.03
       },
       {
         "type": "image",
         "id": "s1-cat-3",
         "path": "samples/s1-cat-3.png",
-        "sha256": "7c379c506334b96a03a4c2e19448032ea8c16cfd0fe1c43918aca85a198f8694",
+        "sha256": "835730d055eca7a87eed19bf33e2dbc40bc38b863bcf17218b462d1c9087e525",
         "seed": 230926,
         "prompt": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1girl, solo, brown hair, green eyes, sweater, holding cat, window, upper body, detailed eyes, detailed illustration, absurdres, highres.",
         "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
@@ -976,6 +979,7 @@
         },
         "fan": {
           "commit": "9d0b76843f6437718195accac9cf3f050a25d26b",
+          "alpha": 0.5,
           "pooled": "plain",
           "skip": -2,
           "sample_size": 0,
@@ -989,10 +993,10 @@
             6,
             7
           ],
-          "use_attn_mask": false
+          "use_attn_mask": true
         },
         "pooled": "plain",
-        "policy_id": "legacy_exhibit",
+        "policy_id": "mask_skip8_v1",
         "effective_policy": {
           "alpha": 0.5,
           "skip": -2,
@@ -1006,14 +1010,14 @@
             6,
             7
           ],
-          "use_attn_mask": false,
+          "use_attn_mask": true,
           "pooled_mode": "plain",
           "profiling": {
             "mode": "all"
           },
           "reference_unit": "aspect_phrase"
         },
-        "policy_hash": "a99004b42358d1f822d223c5e68b33d28801e10fe97ea925c2216c365a8e3749",
+        "policy_hash": "ead995b8787381d5b7daaf8081c820461a581bb58bb79961010d31052a2d523e",
         "profiling_trace": {
           "calls": [
             {
@@ -1205,10 +1209,10 @@
             "mode": "all"
           }
         },
-        "profiling_trace_path": "/home/tomoya/stable-diffusion/personalized-t2i/.worktrees/fan-personalization/exhibit/assets/samples/s1-cat-3.trace.json",
-        "personalization_hash": "da3fd5bfbe74dc8b4ff5f0c9eb1dd68c237727a510becc7af42158b690b68906",
+        "profiling_trace_path": "/home/tomoya/stable-diffusion/personalized-t2i/exhibit/assets/samples/s1-cat-3.trace.json",
+        "personalization_hash": "fc07f79485365bc0215a036fc2562628f9de66a96c2c415dfd882ee3b7c39903",
         "conditioning_target_align": null,
-        "seconds": 4.965
+        "seconds": 5.019
       }
     ]
   },
@@ -1295,16 +1299,16 @@
           6,
           7
         ],
-        "use_attn_mask": false,
+        "use_attn_mask": true,
         "pooled_mode": "plain",
         "profiling": {
           "mode": "all"
         },
         "reference_unit": "aspect_phrase"
       },
-      "policy_hash": "a99004b42358d1f822d223c5e68b33d28801e10fe97ea925c2216c365a8e3749",
+      "policy_hash": "ead995b8787381d5b7daaf8081c820461a581bb58bb79961010d31052a2d523e",
       "provenance": {
-        "adapter_hash": "af3c2df08a32e12572a713a61c44fa0a30b11198d61a95cea348c2ab7bd45a9b",
+        "adapter_hash": "81b111a2c20e90bc72483c18e751e399d1f2ed6aa900eb2bd8c572aac62de0dc",
         "decoder_hash": "daae1b646698c61efc205c68d563e4f314727fe2912cc91e73844219a414898a",
         "fan_pin": "9d0b76843f6437718195accac9cf3f050a25d26b",
         "generation": {
@@ -1341,9 +1345,9 @@
         "tokenizer_hash": "b744d13dd481f326a999cb66135d192fc2d854669e07f0605fb97ae867a41d10"
       },
       "sample_size": 0,
-      "hash": "ef6ebb85705312ec1d5d5651b5fa4f2df600de32f38af80b3cab5529a492ebf2",
-      "personalization_hash": "ef6ebb85705312ec1d5d5651b5fa4f2df600de32f38af80b3cab5529a492ebf2",
-      "policy_id": "legacy_exhibit"
+      "hash": "459ef3641b48229ab290e1ad21e9cfb6242051f46dc78469d8566315db6e98f4",
+      "personalization_hash": "459ef3641b48229ab290e1ad21e9cfb6242051f46dc78469d8566315db6e98f4",
+      "policy_id": "mask_skip8_v1"
     },
     "mode": "sample",
     "images": [
@@ -1351,7 +1355,7 @@
         "type": "image",
         "id": "s1-tokyo-0",
         "path": "samples/s1-tokyo-0.png",
-        "sha256": "7e97cdfb1cabdf991fbbd5b4550d58c7c4a6c3d2e4a76fdfb224dcfe01556fcb",
+        "sha256": "4145eb6f6ee72d981f5ee888a2d37046d906af5eac7832a2f07b0331959b9aea",
         "seed": 230923,
         "prompt": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1boy, solo, male focus, short black hair, jacket, Tokyo skyline, night, portrait, detailed eyes, detailed illustration, absurdres, highres.",
         "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
@@ -1382,6 +1386,7 @@
         },
         "fan": {
           "commit": "9d0b76843f6437718195accac9cf3f050a25d26b",
+          "alpha": 0.5,
           "pooled": "plain",
           "skip": -2,
           "sample_size": 0,
@@ -1395,10 +1400,10 @@
             6,
             7
           ],
-          "use_attn_mask": false
+          "use_attn_mask": true
         },
         "pooled": "plain",
-        "policy_id": "legacy_exhibit",
+        "policy_id": "mask_skip8_v1",
         "effective_policy": {
           "alpha": 0.5,
           "skip": -2,
@@ -1412,14 +1417,14 @@
             6,
             7
           ],
-          "use_attn_mask": false,
+          "use_attn_mask": true,
           "pooled_mode": "plain",
           "profiling": {
             "mode": "all"
           },
           "reference_unit": "aspect_phrase"
         },
-        "policy_hash": "a99004b42358d1f822d223c5e68b33d28801e10fe97ea925c2216c365a8e3749",
+        "policy_hash": "ead995b8787381d5b7daaf8081c820461a581bb58bb79961010d31052a2d523e",
         "profiling_trace": {
           "calls": [
             {
@@ -1611,16 +1616,16 @@
             "mode": "all"
           }
         },
-        "profiling_trace_path": "/home/tomoya/stable-diffusion/personalized-t2i/.worktrees/fan-personalization/exhibit/assets/samples/s1-tokyo-0.trace.json",
-        "personalization_hash": "ef6ebb85705312ec1d5d5651b5fa4f2df600de32f38af80b3cab5529a492ebf2",
+        "profiling_trace_path": "/home/tomoya/stable-diffusion/personalized-t2i/exhibit/assets/samples/s1-tokyo-0.trace.json",
+        "personalization_hash": "459ef3641b48229ab290e1ad21e9cfb6242051f46dc78469d8566315db6e98f4",
         "conditioning_target_align": null,
-        "seconds": 4.982
+        "seconds": 5.027
       },
       {
         "type": "image",
         "id": "s1-tokyo-1",
         "path": "samples/s1-tokyo-1.png",
-        "sha256": "e2346ec83d92362c5e6a30dc6ea8c8b4f51ec835eb46537132b8e03563695b87",
+        "sha256": "383c6d304ae1204bde92a533b58a0838918add5fea6615690fc05ae390575c84",
         "seed": 230924,
         "prompt": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1boy, solo, male focus, short black hair, jacket, Tokyo skyline, night, portrait, detailed eyes, detailed illustration, absurdres, highres.",
         "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
@@ -1651,6 +1656,7 @@
         },
         "fan": {
           "commit": "9d0b76843f6437718195accac9cf3f050a25d26b",
+          "alpha": 0.5,
           "pooled": "plain",
           "skip": -2,
           "sample_size": 0,
@@ -1664,10 +1670,10 @@
             6,
             7
           ],
-          "use_attn_mask": false
+          "use_attn_mask": true
         },
         "pooled": "plain",
-        "policy_id": "legacy_exhibit",
+        "policy_id": "mask_skip8_v1",
         "effective_policy": {
           "alpha": 0.5,
           "skip": -2,
@@ -1681,14 +1687,14 @@
             6,
             7
           ],
-          "use_attn_mask": false,
+          "use_attn_mask": true,
           "pooled_mode": "plain",
           "profiling": {
             "mode": "all"
           },
           "reference_unit": "aspect_phrase"
         },
-        "policy_hash": "a99004b42358d1f822d223c5e68b33d28801e10fe97ea925c2216c365a8e3749",
+        "policy_hash": "ead995b8787381d5b7daaf8081c820461a581bb58bb79961010d31052a2d523e",
         "profiling_trace": {
           "calls": [
             {
@@ -1880,16 +1886,16 @@
             "mode": "all"
           }
         },
-        "profiling_trace_path": "/home/tomoya/stable-diffusion/personalized-t2i/.worktrees/fan-personalization/exhibit/assets/samples/s1-tokyo-1.trace.json",
-        "personalization_hash": "ef6ebb85705312ec1d5d5651b5fa4f2df600de32f38af80b3cab5529a492ebf2",
+        "profiling_trace_path": "/home/tomoya/stable-diffusion/personalized-t2i/exhibit/assets/samples/s1-tokyo-1.trace.json",
+        "personalization_hash": "459ef3641b48229ab290e1ad21e9cfb6242051f46dc78469d8566315db6e98f4",
         "conditioning_target_align": null,
-        "seconds": 5.032
+        "seconds": 5.001
       },
       {
         "type": "image",
         "id": "s1-tokyo-2",
         "path": "samples/s1-tokyo-2.png",
-        "sha256": "fb82559a4ede2d9b453678c97cf1af0198626df844c547e970237505fc8e9830",
+        "sha256": "79f21c278c0648b84eab5318c9aafc837d8e99d977133295cf088517fa7c051f",
         "seed": 230925,
         "prompt": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1boy, solo, male focus, short black hair, jacket, Tokyo skyline, night, portrait, detailed eyes, detailed illustration, absurdres, highres.",
         "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
@@ -1920,6 +1926,7 @@
         },
         "fan": {
           "commit": "9d0b76843f6437718195accac9cf3f050a25d26b",
+          "alpha": 0.5,
           "pooled": "plain",
           "skip": -2,
           "sample_size": 0,
@@ -1933,10 +1940,10 @@
             6,
             7
           ],
-          "use_attn_mask": false
+          "use_attn_mask": true
         },
         "pooled": "plain",
-        "policy_id": "legacy_exhibit",
+        "policy_id": "mask_skip8_v1",
         "effective_policy": {
           "alpha": 0.5,
           "skip": -2,
@@ -1950,14 +1957,14 @@
             6,
             7
           ],
-          "use_attn_mask": false,
+          "use_attn_mask": true,
           "pooled_mode": "plain",
           "profiling": {
             "mode": "all"
           },
           "reference_unit": "aspect_phrase"
         },
-        "policy_hash": "a99004b42358d1f822d223c5e68b33d28801e10fe97ea925c2216c365a8e3749",
+        "policy_hash": "ead995b8787381d5b7daaf8081c820461a581bb58bb79961010d31052a2d523e",
         "profiling_trace": {
           "calls": [
             {
@@ -2149,16 +2156,16 @@
             "mode": "all"
           }
         },
-        "profiling_trace_path": "/home/tomoya/stable-diffusion/personalized-t2i/.worktrees/fan-personalization/exhibit/assets/samples/s1-tokyo-2.trace.json",
-        "personalization_hash": "ef6ebb85705312ec1d5d5651b5fa4f2df600de32f38af80b3cab5529a492ebf2",
+        "profiling_trace_path": "/home/tomoya/stable-diffusion/personalized-t2i/exhibit/assets/samples/s1-tokyo-2.trace.json",
+        "personalization_hash": "459ef3641b48229ab290e1ad21e9cfb6242051f46dc78469d8566315db6e98f4",
         "conditioning_target_align": null,
-        "seconds": 4.972
+        "seconds": 4.997
       },
       {
         "type": "image",
         "id": "s1-tokyo-3",
         "path": "samples/s1-tokyo-3.png",
-        "sha256": "ca3c37db905cc60b4272ba8d5fd7aa90e72af54d71596a3e3748e2956cebc8dd",
+        "sha256": "124f10ceaa8abaec7b694c4166c37a020a6fa0b6b233ea056f83ed60251fb218",
         "seed": 230926,
         "prompt": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1boy, solo, male focus, short black hair, jacket, Tokyo skyline, night, portrait, detailed eyes, detailed illustration, absurdres, highres.",
         "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
@@ -2189,6 +2196,7 @@
         },
         "fan": {
           "commit": "9d0b76843f6437718195accac9cf3f050a25d26b",
+          "alpha": 0.5,
           "pooled": "plain",
           "skip": -2,
           "sample_size": 0,
@@ -2202,10 +2210,10 @@
             6,
             7
           ],
-          "use_attn_mask": false
+          "use_attn_mask": true
         },
         "pooled": "plain",
-        "policy_id": "legacy_exhibit",
+        "policy_id": "mask_skip8_v1",
         "effective_policy": {
           "alpha": 0.5,
           "skip": -2,
@@ -2219,14 +2227,14 @@
             6,
             7
           ],
-          "use_attn_mask": false,
+          "use_attn_mask": true,
           "pooled_mode": "plain",
           "profiling": {
             "mode": "all"
           },
           "reference_unit": "aspect_phrase"
         },
-        "policy_hash": "a99004b42358d1f822d223c5e68b33d28801e10fe97ea925c2216c365a8e3749",
+        "policy_hash": "ead995b8787381d5b7daaf8081c820461a581bb58bb79961010d31052a2d523e",
         "profiling_trace": {
           "calls": [
             {
@@ -2418,10 +2426,10 @@
             "mode": "all"
           }
         },
-        "profiling_trace_path": "/home/tomoya/stable-diffusion/personalized-t2i/.worktrees/fan-personalization/exhibit/assets/samples/s1-tokyo-3.trace.json",
-        "personalization_hash": "ef6ebb85705312ec1d5d5651b5fa4f2df600de32f38af80b3cab5529a492ebf2",
+        "profiling_trace_path": "/home/tomoya/stable-diffusion/personalized-t2i/exhibit/assets/samples/s1-tokyo-3.trace.json",
+        "personalization_hash": "459ef3641b48229ab290e1ad21e9cfb6242051f46dc78469d8566315db6e98f4",
         "conditioning_target_align": null,
-        "seconds": 4.986
+        "seconds": 5.011
       }
     ]
   },
@@ -2508,16 +2516,16 @@
           6,
           7
         ],
-        "use_attn_mask": false,
+        "use_attn_mask": true,
         "pooled_mode": "plain",
         "profiling": {
           "mode": "all"
         },
         "reference_unit": "aspect_phrase"
       },
-      "policy_hash": "a99004b42358d1f822d223c5e68b33d28801e10fe97ea925c2216c365a8e3749",
+      "policy_hash": "ead995b8787381d5b7daaf8081c820461a581bb58bb79961010d31052a2d523e",
       "provenance": {
-        "adapter_hash": "af3c2df08a32e12572a713a61c44fa0a30b11198d61a95cea348c2ab7bd45a9b",
+        "adapter_hash": "81b111a2c20e90bc72483c18e751e399d1f2ed6aa900eb2bd8c572aac62de0dc",
         "decoder_hash": "daae1b646698c61efc205c68d563e4f314727fe2912cc91e73844219a414898a",
         "fan_pin": "9d0b76843f6437718195accac9cf3f050a25d26b",
         "generation": {
@@ -2554,9 +2562,9 @@
         "tokenizer_hash": "b744d13dd481f326a999cb66135d192fc2d854669e07f0605fb97ae867a41d10"
       },
       "sample_size": 0,
-      "hash": "41fa0e7ada24f7086b3b241061c008c486dabe9fd6cd218ff4c5a2570b7e69a6",
-      "personalization_hash": "41fa0e7ada24f7086b3b241061c008c486dabe9fd6cd218ff4c5a2570b7e69a6",
-      "policy_id": "legacy_exhibit"
+      "hash": "46b71427db1e66fb0bfe79897bc585579607fdbe0ce3ddf59c70e39857225647",
+      "personalization_hash": "46b71427db1e66fb0bfe79897bc585579607fdbe0ce3ddf59c70e39857225647",
+      "policy_id": "mask_skip8_v1"
     },
     "mode": "sample",
     "images": [
@@ -2564,7 +2572,7 @@
         "type": "image",
         "id": "s2-cat-0",
         "path": "samples/s2-cat-0.png",
-        "sha256": "d6fc8eaf061926f9504e5e3aa7ad42e1cdc470f43a7fd02248e6d217b07ed56f",
+        "sha256": "dea5092e4ed64759c37598861fd9f88c58aa0779bb1c122d0204daa80746ad9f",
         "seed": 230923,
         "prompt": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1girl, solo, brown hair, green eyes, sweater, holding cat, window, upper body, detailed eyes, detailed illustration, absurdres, highres.",
         "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
@@ -2595,6 +2603,7 @@
         },
         "fan": {
           "commit": "9d0b76843f6437718195accac9cf3f050a25d26b",
+          "alpha": 0.5,
           "pooled": "plain",
           "skip": -2,
           "sample_size": 0,
@@ -2608,10 +2617,10 @@
             6,
             7
           ],
-          "use_attn_mask": false
+          "use_attn_mask": true
         },
         "pooled": "plain",
-        "policy_id": "legacy_exhibit",
+        "policy_id": "mask_skip8_v1",
         "effective_policy": {
           "alpha": 0.5,
           "skip": -2,
@@ -2625,14 +2634,14 @@
             6,
             7
           ],
-          "use_attn_mask": false,
+          "use_attn_mask": true,
           "pooled_mode": "plain",
           "profiling": {
             "mode": "all"
           },
           "reference_unit": "aspect_phrase"
         },
-        "policy_hash": "a99004b42358d1f822d223c5e68b33d28801e10fe97ea925c2216c365a8e3749",
+        "policy_hash": "ead995b8787381d5b7daaf8081c820461a581bb58bb79961010d31052a2d523e",
         "profiling_trace": {
           "calls": [
             {
@@ -2824,16 +2833,16 @@
             "mode": "all"
           }
         },
-        "profiling_trace_path": "/home/tomoya/stable-diffusion/personalized-t2i/.worktrees/fan-personalization/exhibit/assets/samples/s2-cat-0.trace.json",
-        "personalization_hash": "41fa0e7ada24f7086b3b241061c008c486dabe9fd6cd218ff4c5a2570b7e69a6",
+        "profiling_trace_path": "/home/tomoya/stable-diffusion/personalized-t2i/exhibit/assets/samples/s2-cat-0.trace.json",
+        "personalization_hash": "46b71427db1e66fb0bfe79897bc585579607fdbe0ce3ddf59c70e39857225647",
         "conditioning_target_align": null,
-        "seconds": 4.978
+        "seconds": 5.018
       },
       {
         "type": "image",
         "id": "s2-cat-1",
         "path": "samples/s2-cat-1.png",
-        "sha256": "73cd590ec24d7362e595380e67504a120f3014b2dfdcaea1a2af0f0d1b05d2b0",
+        "sha256": "9ecbd6f19ba945cbeaf086a4ccb6a0ba9cf779572b503af464782ed041f9195a",
         "seed": 230924,
         "prompt": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1girl, solo, brown hair, green eyes, sweater, holding cat, window, upper body, detailed eyes, detailed illustration, absurdres, highres.",
         "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
@@ -2864,6 +2873,7 @@
         },
         "fan": {
           "commit": "9d0b76843f6437718195accac9cf3f050a25d26b",
+          "alpha": 0.5,
           "pooled": "plain",
           "skip": -2,
           "sample_size": 0,
@@ -2877,10 +2887,10 @@
             6,
             7
           ],
-          "use_attn_mask": false
+          "use_attn_mask": true
         },
         "pooled": "plain",
-        "policy_id": "legacy_exhibit",
+        "policy_id": "mask_skip8_v1",
         "effective_policy": {
           "alpha": 0.5,
           "skip": -2,
@@ -2894,14 +2904,14 @@
             6,
             7
           ],
-          "use_attn_mask": false,
+          "use_attn_mask": true,
           "pooled_mode": "plain",
           "profiling": {
             "mode": "all"
           },
           "reference_unit": "aspect_phrase"
         },
-        "policy_hash": "a99004b42358d1f822d223c5e68b33d28801e10fe97ea925c2216c365a8e3749",
+        "policy_hash": "ead995b8787381d5b7daaf8081c820461a581bb58bb79961010d31052a2d523e",
         "profiling_trace": {
           "calls": [
             {
@@ -3093,16 +3103,16 @@
             "mode": "all"
           }
         },
-        "profiling_trace_path": "/home/tomoya/stable-diffusion/personalized-t2i/.worktrees/fan-personalization/exhibit/assets/samples/s2-cat-1.trace.json",
-        "personalization_hash": "41fa0e7ada24f7086b3b241061c008c486dabe9fd6cd218ff4c5a2570b7e69a6",
+        "profiling_trace_path": "/home/tomoya/stable-diffusion/personalized-t2i/exhibit/assets/samples/s2-cat-1.trace.json",
+        "personalization_hash": "46b71427db1e66fb0bfe79897bc585579607fdbe0ce3ddf59c70e39857225647",
         "conditioning_target_align": null,
-        "seconds": 4.989
+        "seconds": 5.021
       },
       {
         "type": "image",
         "id": "s2-cat-2",
         "path": "samples/s2-cat-2.png",
-        "sha256": "5955ae55f71af6c82bea74cafaad8689ae34c7635c76529d2c3d43ae9bd140c1",
+        "sha256": "8d4c513ad90b6786945d2436e96229c02c5b6108156e6ac08e2350f70ca4249f",
         "seed": 230925,
         "prompt": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1girl, solo, brown hair, green eyes, sweater, holding cat, window, upper body, detailed eyes, detailed illustration, absurdres, highres.",
         "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
@@ -3133,6 +3143,7 @@
         },
         "fan": {
           "commit": "9d0b76843f6437718195accac9cf3f050a25d26b",
+          "alpha": 0.5,
           "pooled": "plain",
           "skip": -2,
           "sample_size": 0,
@@ -3146,10 +3157,10 @@
             6,
             7
           ],
-          "use_attn_mask": false
+          "use_attn_mask": true
         },
         "pooled": "plain",
-        "policy_id": "legacy_exhibit",
+        "policy_id": "mask_skip8_v1",
         "effective_policy": {
           "alpha": 0.5,
           "skip": -2,
@@ -3163,14 +3174,14 @@
             6,
             7
           ],
-          "use_attn_mask": false,
+          "use_attn_mask": true,
           "pooled_mode": "plain",
           "profiling": {
             "mode": "all"
           },
           "reference_unit": "aspect_phrase"
         },
-        "policy_hash": "a99004b42358d1f822d223c5e68b33d28801e10fe97ea925c2216c365a8e3749",
+        "policy_hash": "ead995b8787381d5b7daaf8081c820461a581bb58bb79961010d31052a2d523e",
         "profiling_trace": {
           "calls": [
             {
@@ -3362,16 +3373,16 @@
             "mode": "all"
           }
         },
-        "profiling_trace_path": "/home/tomoya/stable-diffusion/personalized-t2i/.worktrees/fan-personalization/exhibit/assets/samples/s2-cat-2.trace.json",
-        "personalization_hash": "41fa0e7ada24f7086b3b241061c008c486dabe9fd6cd218ff4c5a2570b7e69a6",
+        "profiling_trace_path": "/home/tomoya/stable-diffusion/personalized-t2i/exhibit/assets/samples/s2-cat-2.trace.json",
+        "personalization_hash": "46b71427db1e66fb0bfe79897bc585579607fdbe0ce3ddf59c70e39857225647",
         "conditioning_target_align": null,
-        "seconds": 5.01
+        "seconds": 5.035
       },
       {
         "type": "image",
         "id": "s2-cat-3",
         "path": "samples/s2-cat-3.png",
-        "sha256": "c87aecad605f26c2776d5011f5f462a3651622d93053fefde58d21fa51a41e02",
+        "sha256": "9cf3bdab2c888f9a748d6fb804d3619330133b191983908de809faf7754962ec",
         "seed": 230926,
         "prompt": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1girl, solo, brown hair, green eyes, sweater, holding cat, window, upper body, detailed eyes, detailed illustration, absurdres, highres.",
         "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
@@ -3402,6 +3413,7 @@
         },
         "fan": {
           "commit": "9d0b76843f6437718195accac9cf3f050a25d26b",
+          "alpha": 0.5,
           "pooled": "plain",
           "skip": -2,
           "sample_size": 0,
@@ -3415,10 +3427,10 @@
             6,
             7
           ],
-          "use_attn_mask": false
+          "use_attn_mask": true
         },
         "pooled": "plain",
-        "policy_id": "legacy_exhibit",
+        "policy_id": "mask_skip8_v1",
         "effective_policy": {
           "alpha": 0.5,
           "skip": -2,
@@ -3432,14 +3444,14 @@
             6,
             7
           ],
-          "use_attn_mask": false,
+          "use_attn_mask": true,
           "pooled_mode": "plain",
           "profiling": {
             "mode": "all"
           },
           "reference_unit": "aspect_phrase"
         },
-        "policy_hash": "a99004b42358d1f822d223c5e68b33d28801e10fe97ea925c2216c365a8e3749",
+        "policy_hash": "ead995b8787381d5b7daaf8081c820461a581bb58bb79961010d31052a2d523e",
         "profiling_trace": {
           "calls": [
             {
@@ -3631,10 +3643,10 @@
             "mode": "all"
           }
         },
-        "profiling_trace_path": "/home/tomoya/stable-diffusion/personalized-t2i/.worktrees/fan-personalization/exhibit/assets/samples/s2-cat-3.trace.json",
-        "personalization_hash": "41fa0e7ada24f7086b3b241061c008c486dabe9fd6cd218ff4c5a2570b7e69a6",
+        "profiling_trace_path": "/home/tomoya/stable-diffusion/personalized-t2i/exhibit/assets/samples/s2-cat-3.trace.json",
+        "personalization_hash": "46b71427db1e66fb0bfe79897bc585579607fdbe0ce3ddf59c70e39857225647",
         "conditioning_target_align": null,
-        "seconds": 4.99
+        "seconds": 5.016
       }
     ]
   },
@@ -3721,16 +3733,16 @@
           6,
           7
         ],
-        "use_attn_mask": false,
+        "use_attn_mask": true,
         "pooled_mode": "plain",
         "profiling": {
           "mode": "all"
         },
         "reference_unit": "aspect_phrase"
       },
-      "policy_hash": "a99004b42358d1f822d223c5e68b33d28801e10fe97ea925c2216c365a8e3749",
+      "policy_hash": "ead995b8787381d5b7daaf8081c820461a581bb58bb79961010d31052a2d523e",
       "provenance": {
-        "adapter_hash": "af3c2df08a32e12572a713a61c44fa0a30b11198d61a95cea348c2ab7bd45a9b",
+        "adapter_hash": "81b111a2c20e90bc72483c18e751e399d1f2ed6aa900eb2bd8c572aac62de0dc",
         "decoder_hash": "daae1b646698c61efc205c68d563e4f314727fe2912cc91e73844219a414898a",
         "fan_pin": "9d0b76843f6437718195accac9cf3f050a25d26b",
         "generation": {
@@ -3767,9 +3779,9 @@
         "tokenizer_hash": "b744d13dd481f326a999cb66135d192fc2d854669e07f0605fb97ae867a41d10"
       },
       "sample_size": 0,
-      "hash": "74f2dd24a36ab68af9ac0490d31767180a00a38378a204d8fd9b3d4ef368dcda",
-      "personalization_hash": "74f2dd24a36ab68af9ac0490d31767180a00a38378a204d8fd9b3d4ef368dcda",
-      "policy_id": "legacy_exhibit"
+      "hash": "014cf19f5f12433384e8ddf4eaff7495454aa40e9292af628bec9ff96813d32a",
+      "personalization_hash": "014cf19f5f12433384e8ddf4eaff7495454aa40e9292af628bec9ff96813d32a",
+      "policy_id": "mask_skip8_v1"
     },
     "mode": "sample",
     "images": [
@@ -3777,7 +3789,7 @@
         "type": "image",
         "id": "s2-tokyo-0",
         "path": "samples/s2-tokyo-0.png",
-        "sha256": "b46c65c5264799464627c42de6f4d4b5e72b241ea669dda95ea9a0d64660fee1",
+        "sha256": "a8938384a820f88921878e6b36649c4f9ba79dbe400cff733ab9d88e1b017e32",
         "seed": 230923,
         "prompt": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1boy, solo, male focus, short black hair, jacket, Tokyo skyline, night, portrait, detailed eyes, detailed illustration, absurdres, highres.",
         "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
@@ -3808,6 +3820,7 @@
         },
         "fan": {
           "commit": "9d0b76843f6437718195accac9cf3f050a25d26b",
+          "alpha": 0.5,
           "pooled": "plain",
           "skip": -2,
           "sample_size": 0,
@@ -3821,10 +3834,10 @@
             6,
             7
           ],
-          "use_attn_mask": false
+          "use_attn_mask": true
         },
         "pooled": "plain",
-        "policy_id": "legacy_exhibit",
+        "policy_id": "mask_skip8_v1",
         "effective_policy": {
           "alpha": 0.5,
           "skip": -2,
@@ -3838,14 +3851,14 @@
             6,
             7
           ],
-          "use_attn_mask": false,
+          "use_attn_mask": true,
           "pooled_mode": "plain",
           "profiling": {
             "mode": "all"
           },
           "reference_unit": "aspect_phrase"
         },
-        "policy_hash": "a99004b42358d1f822d223c5e68b33d28801e10fe97ea925c2216c365a8e3749",
+        "policy_hash": "ead995b8787381d5b7daaf8081c820461a581bb58bb79961010d31052a2d523e",
         "profiling_trace": {
           "calls": [
             {
@@ -4037,16 +4050,16 @@
             "mode": "all"
           }
         },
-        "profiling_trace_path": "/home/tomoya/stable-diffusion/personalized-t2i/.worktrees/fan-personalization/exhibit/assets/samples/s2-tokyo-0.trace.json",
-        "personalization_hash": "74f2dd24a36ab68af9ac0490d31767180a00a38378a204d8fd9b3d4ef368dcda",
+        "profiling_trace_path": "/home/tomoya/stable-diffusion/personalized-t2i/exhibit/assets/samples/s2-tokyo-0.trace.json",
+        "personalization_hash": "014cf19f5f12433384e8ddf4eaff7495454aa40e9292af628bec9ff96813d32a",
         "conditioning_target_align": null,
-        "seconds": 5.002
+        "seconds": 5.022
       },
       {
         "type": "image",
         "id": "s2-tokyo-1",
         "path": "samples/s2-tokyo-1.png",
-        "sha256": "10b3c452d6fa8de758d03ab208f3f906f532a49417b5e0220760f0b129499e00",
+        "sha256": "51869aaad998692b80b8ef0184699b90cba828ba2c3f9859b134f508aa614c94",
         "seed": 230924,
         "prompt": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1boy, solo, male focus, short black hair, jacket, Tokyo skyline, night, portrait, detailed eyes, detailed illustration, absurdres, highres.",
         "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
@@ -4077,6 +4090,7 @@
         },
         "fan": {
           "commit": "9d0b76843f6437718195accac9cf3f050a25d26b",
+          "alpha": 0.5,
           "pooled": "plain",
           "skip": -2,
           "sample_size": 0,
@@ -4090,10 +4104,10 @@
             6,
             7
           ],
-          "use_attn_mask": false
+          "use_attn_mask": true
         },
         "pooled": "plain",
-        "policy_id": "legacy_exhibit",
+        "policy_id": "mask_skip8_v1",
         "effective_policy": {
           "alpha": 0.5,
           "skip": -2,
@@ -4107,14 +4121,14 @@
             6,
             7
           ],
-          "use_attn_mask": false,
+          "use_attn_mask": true,
           "pooled_mode": "plain",
           "profiling": {
             "mode": "all"
           },
           "reference_unit": "aspect_phrase"
         },
-        "policy_hash": "a99004b42358d1f822d223c5e68b33d28801e10fe97ea925c2216c365a8e3749",
+        "policy_hash": "ead995b8787381d5b7daaf8081c820461a581bb58bb79961010d31052a2d523e",
         "profiling_trace": {
           "calls": [
             {
@@ -4306,16 +4320,16 @@
             "mode": "all"
           }
         },
-        "profiling_trace_path": "/home/tomoya/stable-diffusion/personalized-t2i/.worktrees/fan-personalization/exhibit/assets/samples/s2-tokyo-1.trace.json",
-        "personalization_hash": "74f2dd24a36ab68af9ac0490d31767180a00a38378a204d8fd9b3d4ef368dcda",
+        "profiling_trace_path": "/home/tomoya/stable-diffusion/personalized-t2i/exhibit/assets/samples/s2-tokyo-1.trace.json",
+        "personalization_hash": "014cf19f5f12433384e8ddf4eaff7495454aa40e9292af628bec9ff96813d32a",
         "conditioning_target_align": null,
-        "seconds": 5.038
+        "seconds": 5.07
       },
       {
         "type": "image",
         "id": "s2-tokyo-2",
         "path": "samples/s2-tokyo-2.png",
-        "sha256": "eec3be86e0a20915256bad6cc3cf62960f349d89eb37e514f2a3aa72c6c7975d",
+        "sha256": "5e38fbd1a5950384030ce8cea42368127770ecc47e001119e2fd6069338ca5a7",
         "seed": 230925,
         "prompt": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1boy, solo, male focus, short black hair, jacket, Tokyo skyline, night, portrait, detailed eyes, detailed illustration, absurdres, highres.",
         "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
@@ -4346,6 +4360,7 @@
         },
         "fan": {
           "commit": "9d0b76843f6437718195accac9cf3f050a25d26b",
+          "alpha": 0.5,
           "pooled": "plain",
           "skip": -2,
           "sample_size": 0,
@@ -4359,10 +4374,10 @@
             6,
             7
           ],
-          "use_attn_mask": false
+          "use_attn_mask": true
         },
         "pooled": "plain",
-        "policy_id": "legacy_exhibit",
+        "policy_id": "mask_skip8_v1",
         "effective_policy": {
           "alpha": 0.5,
           "skip": -2,
@@ -4376,14 +4391,14 @@
             6,
             7
           ],
-          "use_attn_mask": false,
+          "use_attn_mask": true,
           "pooled_mode": "plain",
           "profiling": {
             "mode": "all"
           },
           "reference_unit": "aspect_phrase"
         },
-        "policy_hash": "a99004b42358d1f822d223c5e68b33d28801e10fe97ea925c2216c365a8e3749",
+        "policy_hash": "ead995b8787381d5b7daaf8081c820461a581bb58bb79961010d31052a2d523e",
         "profiling_trace": {
           "calls": [
             {
@@ -4575,16 +4590,16 @@
             "mode": "all"
           }
         },
-        "profiling_trace_path": "/home/tomoya/stable-diffusion/personalized-t2i/.worktrees/fan-personalization/exhibit/assets/samples/s2-tokyo-2.trace.json",
-        "personalization_hash": "74f2dd24a36ab68af9ac0490d31767180a00a38378a204d8fd9b3d4ef368dcda",
+        "profiling_trace_path": "/home/tomoya/stable-diffusion/personalized-t2i/exhibit/assets/samples/s2-tokyo-2.trace.json",
+        "personalization_hash": "014cf19f5f12433384e8ddf4eaff7495454aa40e9292af628bec9ff96813d32a",
         "conditioning_target_align": null,
-        "seconds": 5.025
+        "seconds": 5.019
       },
       {
         "type": "image",
         "id": "s2-tokyo-3",
         "path": "samples/s2-tokyo-3.png",
-        "sha256": "5c8b22a9f5661bbf9b8640250601dd8cd17769ddc497772d6a07ce84d100cdf8",
+        "sha256": "f37b9368b0e1f262d3931a23df2697e8df44aa4cc1f85f64e8eb1667a34b6a53",
         "seed": 230926,
         "prompt": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1boy, solo, male focus, short black hair, jacket, Tokyo skyline, night, portrait, detailed eyes, detailed illustration, absurdres, highres.",
         "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
@@ -4615,6 +4630,7 @@
         },
         "fan": {
           "commit": "9d0b76843f6437718195accac9cf3f050a25d26b",
+          "alpha": 0.5,
           "pooled": "plain",
           "skip": -2,
           "sample_size": 0,
@@ -4628,10 +4644,10 @@
             6,
             7
           ],
-          "use_attn_mask": false
+          "use_attn_mask": true
         },
         "pooled": "plain",
-        "policy_id": "legacy_exhibit",
+        "policy_id": "mask_skip8_v1",
         "effective_policy": {
           "alpha": 0.5,
           "skip": -2,
@@ -4645,14 +4661,14 @@
             6,
             7
           ],
-          "use_attn_mask": false,
+          "use_attn_mask": true,
           "pooled_mode": "plain",
           "profiling": {
             "mode": "all"
           },
           "reference_unit": "aspect_phrase"
         },
-        "policy_hash": "a99004b42358d1f822d223c5e68b33d28801e10fe97ea925c2216c365a8e3749",
+        "policy_hash": "ead995b8787381d5b7daaf8081c820461a581bb58bb79961010d31052a2d523e",
         "profiling_trace": {
           "calls": [
             {
@@ -4844,10 +4860,10 @@
             "mode": "all"
           }
         },
-        "profiling_trace_path": "/home/tomoya/stable-diffusion/personalized-t2i/.worktrees/fan-personalization/exhibit/assets/samples/s2-tokyo-3.trace.json",
-        "personalization_hash": "74f2dd24a36ab68af9ac0490d31767180a00a38378a204d8fd9b3d4ef368dcda",
+        "profiling_trace_path": "/home/tomoya/stable-diffusion/personalized-t2i/exhibit/assets/samples/s2-tokyo-3.trace.json",
+        "personalization_hash": "014cf19f5f12433384e8ddf4eaff7495454aa40e9292af628bec9ff96813d32a",
         "conditioning_target_align": null,
-        "seconds": 4.998
+        "seconds": 5.021
       }
     ]
   },
@@ -4934,16 +4950,16 @@
           6,
           7
         ],
-        "use_attn_mask": false,
+        "use_attn_mask": true,
         "pooled_mode": "plain",
         "profiling": {
           "mode": "all"
         },
         "reference_unit": "aspect_phrase"
       },
-      "policy_hash": "a99004b42358d1f822d223c5e68b33d28801e10fe97ea925c2216c365a8e3749",
+      "policy_hash": "ead995b8787381d5b7daaf8081c820461a581bb58bb79961010d31052a2d523e",
       "provenance": {
-        "adapter_hash": "af3c2df08a32e12572a713a61c44fa0a30b11198d61a95cea348c2ab7bd45a9b",
+        "adapter_hash": "81b111a2c20e90bc72483c18e751e399d1f2ed6aa900eb2bd8c572aac62de0dc",
         "decoder_hash": "daae1b646698c61efc205c68d563e4f314727fe2912cc91e73844219a414898a",
         "fan_pin": "9d0b76843f6437718195accac9cf3f050a25d26b",
         "generation": {
@@ -4980,9 +4996,9 @@
         "tokenizer_hash": "b744d13dd481f326a999cb66135d192fc2d854669e07f0605fb97ae867a41d10"
       },
       "sample_size": 0,
-      "hash": "d1d4bbb84f2a05a40568b2733a12353d323db560bba7f6ab9aee304da2d6db94",
-      "personalization_hash": "d1d4bbb84f2a05a40568b2733a12353d323db560bba7f6ab9aee304da2d6db94",
-      "policy_id": "legacy_exhibit"
+      "hash": "633fa01d0395e8f5f20797bc6d1dee626077be9a41a9d09321f35b3275e64849",
+      "personalization_hash": "633fa01d0395e8f5f20797bc6d1dee626077be9a41a9d09321f35b3275e64849",
+      "policy_id": "mask_skip8_v1"
     },
     "mode": "sample",
     "images": [
@@ -4990,7 +5006,7 @@
         "type": "image",
         "id": "s3-cat-0",
         "path": "samples/s3-cat-0.png",
-        "sha256": "686660ad79de16f2674d6cff11a09fae2ddc24e483f1495a6f2cc9f8620784f9",
+        "sha256": "0670563fd3e7e17edb8f5e547ea25b03d4fcf27133f15a963705ec7a1f512858",
         "seed": 230923,
         "prompt": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1girl, solo, brown hair, green eyes, sweater, holding cat, window, upper body, detailed eyes, detailed illustration, absurdres, highres.",
         "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
@@ -5021,6 +5037,7 @@
         },
         "fan": {
           "commit": "9d0b76843f6437718195accac9cf3f050a25d26b",
+          "alpha": 0.5,
           "pooled": "plain",
           "skip": -2,
           "sample_size": 0,
@@ -5034,10 +5051,10 @@
             6,
             7
           ],
-          "use_attn_mask": false
+          "use_attn_mask": true
         },
         "pooled": "plain",
-        "policy_id": "legacy_exhibit",
+        "policy_id": "mask_skip8_v1",
         "effective_policy": {
           "alpha": 0.5,
           "skip": -2,
@@ -5051,14 +5068,14 @@
             6,
             7
           ],
-          "use_attn_mask": false,
+          "use_attn_mask": true,
           "pooled_mode": "plain",
           "profiling": {
             "mode": "all"
           },
           "reference_unit": "aspect_phrase"
         },
-        "policy_hash": "a99004b42358d1f822d223c5e68b33d28801e10fe97ea925c2216c365a8e3749",
+        "policy_hash": "ead995b8787381d5b7daaf8081c820461a581bb58bb79961010d31052a2d523e",
         "profiling_trace": {
           "calls": [
             {
@@ -5250,16 +5267,16 @@
             "mode": "all"
           }
         },
-        "profiling_trace_path": "/home/tomoya/stable-diffusion/personalized-t2i/.worktrees/fan-personalization/exhibit/assets/samples/s3-cat-0.trace.json",
-        "personalization_hash": "d1d4bbb84f2a05a40568b2733a12353d323db560bba7f6ab9aee304da2d6db94",
+        "profiling_trace_path": "/home/tomoya/stable-diffusion/personalized-t2i/exhibit/assets/samples/s3-cat-0.trace.json",
+        "personalization_hash": "633fa01d0395e8f5f20797bc6d1dee626077be9a41a9d09321f35b3275e64849",
         "conditioning_target_align": null,
-        "seconds": 4.985
+        "seconds": 5.014
       },
       {
         "type": "image",
         "id": "s3-cat-1",
         "path": "samples/s3-cat-1.png",
-        "sha256": "f276749bb28325cb9af995d839e9e0761d530f4c523a058c6231c0e4a472f6b4",
+        "sha256": "cd5b6f9956a34fc8e4f99a48c2d6b7a2dcdd9c6436815a3a7d0bf2b7e4927098",
         "seed": 230924,
         "prompt": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1girl, solo, brown hair, green eyes, sweater, holding cat, window, upper body, detailed eyes, detailed illustration, absurdres, highres.",
         "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
@@ -5290,6 +5307,7 @@
         },
         "fan": {
           "commit": "9d0b76843f6437718195accac9cf3f050a25d26b",
+          "alpha": 0.5,
           "pooled": "plain",
           "skip": -2,
           "sample_size": 0,
@@ -5303,10 +5321,10 @@
             6,
             7
           ],
-          "use_attn_mask": false
+          "use_attn_mask": true
         },
         "pooled": "plain",
-        "policy_id": "legacy_exhibit",
+        "policy_id": "mask_skip8_v1",
         "effective_policy": {
           "alpha": 0.5,
           "skip": -2,
@@ -5320,14 +5338,14 @@
             6,
             7
           ],
-          "use_attn_mask": false,
+          "use_attn_mask": true,
           "pooled_mode": "plain",
           "profiling": {
             "mode": "all"
           },
           "reference_unit": "aspect_phrase"
         },
-        "policy_hash": "a99004b42358d1f822d223c5e68b33d28801e10fe97ea925c2216c365a8e3749",
+        "policy_hash": "ead995b8787381d5b7daaf8081c820461a581bb58bb79961010d31052a2d523e",
         "profiling_trace": {
           "calls": [
             {
@@ -5519,16 +5537,16 @@
             "mode": "all"
           }
         },
-        "profiling_trace_path": "/home/tomoya/stable-diffusion/personalized-t2i/.worktrees/fan-personalization/exhibit/assets/samples/s3-cat-1.trace.json",
-        "personalization_hash": "d1d4bbb84f2a05a40568b2733a12353d323db560bba7f6ab9aee304da2d6db94",
+        "profiling_trace_path": "/home/tomoya/stable-diffusion/personalized-t2i/exhibit/assets/samples/s3-cat-1.trace.json",
+        "personalization_hash": "633fa01d0395e8f5f20797bc6d1dee626077be9a41a9d09321f35b3275e64849",
         "conditioning_target_align": null,
-        "seconds": 4.999
+        "seconds": 5.019
       },
       {
         "type": "image",
         "id": "s3-cat-2",
         "path": "samples/s3-cat-2.png",
-        "sha256": "e0cf62774a3766737e24b931e686b51d6553d761cce09aac36928372204c4a5a",
+        "sha256": "7fabd4c71203ca08ae3f23cfbb0f412b5f9c1b2fb8a0c5176a543870342ff764",
         "seed": 230925,
         "prompt": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1girl, solo, brown hair, green eyes, sweater, holding cat, window, upper body, detailed eyes, detailed illustration, absurdres, highres.",
         "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
@@ -5559,6 +5577,7 @@
         },
         "fan": {
           "commit": "9d0b76843f6437718195accac9cf3f050a25d26b",
+          "alpha": 0.5,
           "pooled": "plain",
           "skip": -2,
           "sample_size": 0,
@@ -5572,10 +5591,10 @@
             6,
             7
           ],
-          "use_attn_mask": false
+          "use_attn_mask": true
         },
         "pooled": "plain",
-        "policy_id": "legacy_exhibit",
+        "policy_id": "mask_skip8_v1",
         "effective_policy": {
           "alpha": 0.5,
           "skip": -2,
@@ -5589,14 +5608,14 @@
             6,
             7
           ],
-          "use_attn_mask": false,
+          "use_attn_mask": true,
           "pooled_mode": "plain",
           "profiling": {
             "mode": "all"
           },
           "reference_unit": "aspect_phrase"
         },
-        "policy_hash": "a99004b42358d1f822d223c5e68b33d28801e10fe97ea925c2216c365a8e3749",
+        "policy_hash": "ead995b8787381d5b7daaf8081c820461a581bb58bb79961010d31052a2d523e",
         "profiling_trace": {
           "calls": [
             {
@@ -5788,16 +5807,16 @@
             "mode": "all"
           }
         },
-        "profiling_trace_path": "/home/tomoya/stable-diffusion/personalized-t2i/.worktrees/fan-personalization/exhibit/assets/samples/s3-cat-2.trace.json",
-        "personalization_hash": "d1d4bbb84f2a05a40568b2733a12353d323db560bba7f6ab9aee304da2d6db94",
+        "profiling_trace_path": "/home/tomoya/stable-diffusion/personalized-t2i/exhibit/assets/samples/s3-cat-2.trace.json",
+        "personalization_hash": "633fa01d0395e8f5f20797bc6d1dee626077be9a41a9d09321f35b3275e64849",
         "conditioning_target_align": null,
-        "seconds": 5.018
+        "seconds": 5.057
       },
       {
         "type": "image",
         "id": "s3-cat-3",
         "path": "samples/s3-cat-3.png",
-        "sha256": "73f16b93d050e8b93edf3e666512a9c992559a199cd21583a63710cb275df3c7",
+        "sha256": "f7f0ead9c16ce8725a3a7e33be900d577e3302b49bac91795bf42ce3b3d948bf",
         "seed": 230926,
         "prompt": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1girl, solo, brown hair, green eyes, sweater, holding cat, window, upper body, detailed eyes, detailed illustration, absurdres, highres.",
         "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
@@ -5828,6 +5847,7 @@
         },
         "fan": {
           "commit": "9d0b76843f6437718195accac9cf3f050a25d26b",
+          "alpha": 0.5,
           "pooled": "plain",
           "skip": -2,
           "sample_size": 0,
@@ -5841,10 +5861,10 @@
             6,
             7
           ],
-          "use_attn_mask": false
+          "use_attn_mask": true
         },
         "pooled": "plain",
-        "policy_id": "legacy_exhibit",
+        "policy_id": "mask_skip8_v1",
         "effective_policy": {
           "alpha": 0.5,
           "skip": -2,
@@ -5858,14 +5878,14 @@
             6,
             7
           ],
-          "use_attn_mask": false,
+          "use_attn_mask": true,
           "pooled_mode": "plain",
           "profiling": {
             "mode": "all"
           },
           "reference_unit": "aspect_phrase"
         },
-        "policy_hash": "a99004b42358d1f822d223c5e68b33d28801e10fe97ea925c2216c365a8e3749",
+        "policy_hash": "ead995b8787381d5b7daaf8081c820461a581bb58bb79961010d31052a2d523e",
         "profiling_trace": {
           "calls": [
             {
@@ -6057,10 +6077,10 @@
             "mode": "all"
           }
         },
-        "profiling_trace_path": "/home/tomoya/stable-diffusion/personalized-t2i/.worktrees/fan-personalization/exhibit/assets/samples/s3-cat-3.trace.json",
-        "personalization_hash": "d1d4bbb84f2a05a40568b2733a12353d323db560bba7f6ab9aee304da2d6db94",
+        "profiling_trace_path": "/home/tomoya/stable-diffusion/personalized-t2i/exhibit/assets/samples/s3-cat-3.trace.json",
+        "personalization_hash": "633fa01d0395e8f5f20797bc6d1dee626077be9a41a9d09321f35b3275e64849",
         "conditioning_target_align": null,
-        "seconds": 4.987
+        "seconds": 5.006
       }
     ]
   },
@@ -6147,16 +6167,16 @@
           6,
           7
         ],
-        "use_attn_mask": false,
+        "use_attn_mask": true,
         "pooled_mode": "plain",
         "profiling": {
           "mode": "all"
         },
         "reference_unit": "aspect_phrase"
       },
-      "policy_hash": "a99004b42358d1f822d223c5e68b33d28801e10fe97ea925c2216c365a8e3749",
+      "policy_hash": "ead995b8787381d5b7daaf8081c820461a581bb58bb79961010d31052a2d523e",
       "provenance": {
-        "adapter_hash": "af3c2df08a32e12572a713a61c44fa0a30b11198d61a95cea348c2ab7bd45a9b",
+        "adapter_hash": "81b111a2c20e90bc72483c18e751e399d1f2ed6aa900eb2bd8c572aac62de0dc",
         "decoder_hash": "daae1b646698c61efc205c68d563e4f314727fe2912cc91e73844219a414898a",
         "fan_pin": "9d0b76843f6437718195accac9cf3f050a25d26b",
         "generation": {
@@ -6193,9 +6213,9 @@
         "tokenizer_hash": "b744d13dd481f326a999cb66135d192fc2d854669e07f0605fb97ae867a41d10"
       },
       "sample_size": 0,
-      "hash": "bd6aa7e3bbe4211f1bb812a78a7279a8714f39ec0850412df80cd7a4c19eedb1",
-      "personalization_hash": "bd6aa7e3bbe4211f1bb812a78a7279a8714f39ec0850412df80cd7a4c19eedb1",
-      "policy_id": "legacy_exhibit"
+      "hash": "5bbc233f5333d82b5bbfe62bb63dfc6e6476c1f4ce492a193f2ceb5e8c07b6f7",
+      "personalization_hash": "5bbc233f5333d82b5bbfe62bb63dfc6e6476c1f4ce492a193f2ceb5e8c07b6f7",
+      "policy_id": "mask_skip8_v1"
     },
     "mode": "sample",
     "images": [
@@ -6203,7 +6223,7 @@
         "type": "image",
         "id": "s3-tokyo-0",
         "path": "samples/s3-tokyo-0.png",
-        "sha256": "e794cf7f1a174cb2de30d5f80a10fabd01955b564a1e4914c57035b58ba64405",
+        "sha256": "efef3e6fa9f6e94e1a696345b3f4df067b5c02a03b45ac294b0907b02d2f9c3d",
         "seed": 230923,
         "prompt": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1boy, solo, male focus, short black hair, jacket, Tokyo skyline, night, portrait, detailed eyes, detailed illustration, absurdres, highres.",
         "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
@@ -6234,6 +6254,7 @@
         },
         "fan": {
           "commit": "9d0b76843f6437718195accac9cf3f050a25d26b",
+          "alpha": 0.5,
           "pooled": "plain",
           "skip": -2,
           "sample_size": 0,
@@ -6247,10 +6268,10 @@
             6,
             7
           ],
-          "use_attn_mask": false
+          "use_attn_mask": true
         },
         "pooled": "plain",
-        "policy_id": "legacy_exhibit",
+        "policy_id": "mask_skip8_v1",
         "effective_policy": {
           "alpha": 0.5,
           "skip": -2,
@@ -6264,14 +6285,14 @@
             6,
             7
           ],
-          "use_attn_mask": false,
+          "use_attn_mask": true,
           "pooled_mode": "plain",
           "profiling": {
             "mode": "all"
           },
           "reference_unit": "aspect_phrase"
         },
-        "policy_hash": "a99004b42358d1f822d223c5e68b33d28801e10fe97ea925c2216c365a8e3749",
+        "policy_hash": "ead995b8787381d5b7daaf8081c820461a581bb58bb79961010d31052a2d523e",
         "profiling_trace": {
           "calls": [
             {
@@ -6463,16 +6484,16 @@
             "mode": "all"
           }
         },
-        "profiling_trace_path": "/home/tomoya/stable-diffusion/personalized-t2i/.worktrees/fan-personalization/exhibit/assets/samples/s3-tokyo-0.trace.json",
-        "personalization_hash": "bd6aa7e3bbe4211f1bb812a78a7279a8714f39ec0850412df80cd7a4c19eedb1",
+        "profiling_trace_path": "/home/tomoya/stable-diffusion/personalized-t2i/exhibit/assets/samples/s3-tokyo-0.trace.json",
+        "personalization_hash": "5bbc233f5333d82b5bbfe62bb63dfc6e6476c1f4ce492a193f2ceb5e8c07b6f7",
         "conditioning_target_align": null,
-        "seconds": 4.986
+        "seconds": 5.016
       },
       {
         "type": "image",
         "id": "s3-tokyo-1",
         "path": "samples/s3-tokyo-1.png",
-        "sha256": "efb9acb94c01e22bbf983c6c170a810016fbc2c309dcd485403052923e53b0bd",
+        "sha256": "94f9fed1aaf26b6cc0cef5c43eb56da76773220da51f78f5e14863a4c1548807",
         "seed": 230924,
         "prompt": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1boy, solo, male focus, short black hair, jacket, Tokyo skyline, night, portrait, detailed eyes, detailed illustration, absurdres, highres.",
         "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
@@ -6503,6 +6524,7 @@
         },
         "fan": {
           "commit": "9d0b76843f6437718195accac9cf3f050a25d26b",
+          "alpha": 0.5,
           "pooled": "plain",
           "skip": -2,
           "sample_size": 0,
@@ -6516,10 +6538,10 @@
             6,
             7
           ],
-          "use_attn_mask": false
+          "use_attn_mask": true
         },
         "pooled": "plain",
-        "policy_id": "legacy_exhibit",
+        "policy_id": "mask_skip8_v1",
         "effective_policy": {
           "alpha": 0.5,
           "skip": -2,
@@ -6533,14 +6555,14 @@
             6,
             7
           ],
-          "use_attn_mask": false,
+          "use_attn_mask": true,
           "pooled_mode": "plain",
           "profiling": {
             "mode": "all"
           },
           "reference_unit": "aspect_phrase"
         },
-        "policy_hash": "a99004b42358d1f822d223c5e68b33d28801e10fe97ea925c2216c365a8e3749",
+        "policy_hash": "ead995b8787381d5b7daaf8081c820461a581bb58bb79961010d31052a2d523e",
         "profiling_trace": {
           "calls": [
             {
@@ -6732,16 +6754,16 @@
             "mode": "all"
           }
         },
-        "profiling_trace_path": "/home/tomoya/stable-diffusion/personalized-t2i/.worktrees/fan-personalization/exhibit/assets/samples/s3-tokyo-1.trace.json",
-        "personalization_hash": "bd6aa7e3bbe4211f1bb812a78a7279a8714f39ec0850412df80cd7a4c19eedb1",
+        "profiling_trace_path": "/home/tomoya/stable-diffusion/personalized-t2i/exhibit/assets/samples/s3-tokyo-1.trace.json",
+        "personalization_hash": "5bbc233f5333d82b5bbfe62bb63dfc6e6476c1f4ce492a193f2ceb5e8c07b6f7",
         "conditioning_target_align": null,
-        "seconds": 5.034
+        "seconds": 5.004
       },
       {
         "type": "image",
         "id": "s3-tokyo-2",
         "path": "samples/s3-tokyo-2.png",
-        "sha256": "002c9364cae64595ca6031e3e58c0a98f0dc5cdbc88c02a70d31a4b1e7660adf",
+        "sha256": "d5b90dfab537d2b0b07d406b7fa831bea985c4721a33ec1834619ddf14bb9d8c",
         "seed": 230925,
         "prompt": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1boy, solo, male focus, short black hair, jacket, Tokyo skyline, night, portrait, detailed eyes, detailed illustration, absurdres, highres.",
         "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
@@ -6772,6 +6794,7 @@
         },
         "fan": {
           "commit": "9d0b76843f6437718195accac9cf3f050a25d26b",
+          "alpha": 0.5,
           "pooled": "plain",
           "skip": -2,
           "sample_size": 0,
@@ -6785,10 +6808,10 @@
             6,
             7
           ],
-          "use_attn_mask": false
+          "use_attn_mask": true
         },
         "pooled": "plain",
-        "policy_id": "legacy_exhibit",
+        "policy_id": "mask_skip8_v1",
         "effective_policy": {
           "alpha": 0.5,
           "skip": -2,
@@ -6802,14 +6825,14 @@
             6,
             7
           ],
-          "use_attn_mask": false,
+          "use_attn_mask": true,
           "pooled_mode": "plain",
           "profiling": {
             "mode": "all"
           },
           "reference_unit": "aspect_phrase"
         },
-        "policy_hash": "a99004b42358d1f822d223c5e68b33d28801e10fe97ea925c2216c365a8e3749",
+        "policy_hash": "ead995b8787381d5b7daaf8081c820461a581bb58bb79961010d31052a2d523e",
         "profiling_trace": {
           "calls": [
             {
@@ -7001,16 +7024,16 @@
             "mode": "all"
           }
         },
-        "profiling_trace_path": "/home/tomoya/stable-diffusion/personalized-t2i/.worktrees/fan-personalization/exhibit/assets/samples/s3-tokyo-2.trace.json",
-        "personalization_hash": "bd6aa7e3bbe4211f1bb812a78a7279a8714f39ec0850412df80cd7a4c19eedb1",
+        "profiling_trace_path": "/home/tomoya/stable-diffusion/personalized-t2i/exhibit/assets/samples/s3-tokyo-2.trace.json",
+        "personalization_hash": "5bbc233f5333d82b5bbfe62bb63dfc6e6476c1f4ce492a193f2ceb5e8c07b6f7",
         "conditioning_target_align": null,
-        "seconds": 4.986
+        "seconds": 4.984
       },
       {
         "type": "image",
         "id": "s3-tokyo-3",
         "path": "samples/s3-tokyo-3.png",
-        "sha256": "6a0ccd71b87958dcf4d6b7bec1df37bf7c99a66120843159813a7a0bedf34118",
+        "sha256": "856ca334d6dc023b11f96e8d2c6655201c101054e78e3c250de9617296515d18",
         "seed": 230926,
         "prompt": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1boy, solo, male focus, short black hair, jacket, Tokyo skyline, night, portrait, detailed eyes, detailed illustration, absurdres, highres.",
         "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
@@ -7041,6 +7064,7 @@
         },
         "fan": {
           "commit": "9d0b76843f6437718195accac9cf3f050a25d26b",
+          "alpha": 0.5,
           "pooled": "plain",
           "skip": -2,
           "sample_size": 0,
@@ -7054,10 +7078,10 @@
             6,
             7
           ],
-          "use_attn_mask": false
+          "use_attn_mask": true
         },
         "pooled": "plain",
-        "policy_id": "legacy_exhibit",
+        "policy_id": "mask_skip8_v1",
         "effective_policy": {
           "alpha": 0.5,
           "skip": -2,
@@ -7071,14 +7095,14 @@
             6,
             7
           ],
-          "use_attn_mask": false,
+          "use_attn_mask": true,
           "pooled_mode": "plain",
           "profiling": {
             "mode": "all"
           },
           "reference_unit": "aspect_phrase"
         },
-        "policy_hash": "a99004b42358d1f822d223c5e68b33d28801e10fe97ea925c2216c365a8e3749",
+        "policy_hash": "ead995b8787381d5b7daaf8081c820461a581bb58bb79961010d31052a2d523e",
         "profiling_trace": {
           "calls": [
             {
@@ -7270,10 +7294,10 @@
             "mode": "all"
           }
         },
-        "profiling_trace_path": "/home/tomoya/stable-diffusion/personalized-t2i/.worktrees/fan-personalization/exhibit/assets/samples/s3-tokyo-3.trace.json",
-        "personalization_hash": "bd6aa7e3bbe4211f1bb812a78a7279a8714f39ec0850412df80cd7a4c19eedb1",
+        "profiling_trace_path": "/home/tomoya/stable-diffusion/personalized-t2i/exhibit/assets/samples/s3-tokyo-3.trace.json",
+        "personalization_hash": "5bbc233f5333d82b5bbfe62bb63dfc6e6476c1f4ce492a193f2ceb5e8c07b6f7",
         "conditioning_target_align": null,
-        "seconds": 5.003
+        "seconds": 5.013
       }
     ]
   }

@@ -5,7 +5,7 @@ import json
 import re
 
 import pytest
-from exhibit.config import ROOT
+from exhibit.config import FAN_POLICIES, ROOT
 
 
 def load_script(name):
@@ -348,7 +348,8 @@ def test_the_page_is_self_contained_and_states_every_verdict(tree, tmp_path):
     assert not re.search(r'href="[^"]*fan-(probe|demo)', page)
     assert "引用していません" in page
     # The default policy and catalog are stated, not implied.
-    assert "legacy_exhibit" in page and "catalog-v2" in page
+    default_policy_id = FAN_POLICIES["default_policy_id"]
+    assert default_policy_id in page and "catalog-v2" in page
     text = report.readme(evidence)
-    assert "未実施" in text and "legacy_exhibit" in text
+    assert "未実施" in text and default_policy_id in text
     assert "catalog-v2" in text
