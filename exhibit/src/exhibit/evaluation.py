@@ -333,6 +333,123 @@ def load_evaluation_config(path, phase, *, parents=None):
     raise ValueError(f"unknown evaluation phase: {phase}")
 
 
+def _history_pool(evaluation_raw, base, extra_fixture):
+    """Every named history a strength experiment may cite.
+
+    Screen histories and the strength fixture share the plain id space; heldout
+    histories are reachable as ``heldout:<id>`` because they reuse screen ids.
+    """
+    pool = {}
+    sources = [(base / evaluation_raw["fixtures"]["screen_histories"], "")]
+    if extra_fixture:
+        sources.append((extra_fixture, ""))
+    sources.append((base / evaluation_raw["fixtures"]["heldout_histories"], "heldout:"))
+    for source, prefix in sources:
+        for history in _read(source)["histories"]:
+            key = prefix + history["id"]
+            if key in pool:
+                raise ValueError(f"duplicate history id across fixtures: {key}")
+            pool[key] = {"id": key, "refs": copy.deepcopy(history["refs"])}
+    return pool
+
+
+def _strength_policy(policy_id, value, registry):
+    """An explicit effective policy, or the name of a registered one."""
+    if isinstance(value, str):
+        return _policy_spec(policy_id, thaw_policy(resolve_policy(value, registry)))
+    return _policy_spec(policy_id, value)
+
+
+def list_strength_experiments(path):
+    raw = _read(Path(path).resolve())
+    return {
+        key: value.get("description", "") for key, value in raw["experiments"].items()
+    }
+
+
+def load_strength_config(path, experiment_id):
+    """Resolve one declared strength experiment on top of the evaluation config.
+
+    The experiment names its policies explicitly (any validated policy, or a
+    registered policy id), picks topics, histories and seeds from the fixed
+    fixtures, and may override generation settings. A generation override makes
+    the experiment diagnostic: its rules are reported but not binding, because
+    the exhibit compares policies only under the production generation settings.
+    """
+    path = Path(path).resolve()
+    raw = _read(path)
+    if raw.get("schema_version") != 1:
+        raise ValueError("unsupported strength config schema")
+    base = path.parent
+    experiments = raw.get("experiments")
+    if not isinstance(experiments, dict) or experiment_id not in experiments:
+        raise ValueError(f"unknown strength experiment: {experiment_id}")
+    spec = experiments[experiment_id]
+    evaluation_path = (base / raw["evaluation_config"]).resolve()
+    evaluation_raw = _read(evaluation_path)
+    evaluation = load_evaluation_config(evaluation_path, "screen")
+    generation = copy.deepcopy(evaluation["generation"])
+    override = spec.get("generation") or {}
+    if not isinstance(override, dict):
+        raise TypeError("generation override must be an object")
+    unknown = set(override) - set(generation)
+    if unknown:
+        raise ValueError(f"generation override has unknown keys: {sorted(unknown)}")
+    generation.update(copy.deepcopy(override))
+    kind = "generation" if override else "policy"
+    # The evaluation config names its fixtures relative to its own directory.
+    topics_all = _read(evaluation_path.parent / evaluation_raw["fixtures"]["topics"])[
+        "topics"
+    ]
+    extra = raw.get("fixtures", {}).get("histories")
+    pool = _history_pool(
+        evaluation_raw, evaluation_path.parent, base / extra if extra else None
+    )
+    histories = []
+    for history_id in spec["histories"]:
+        if history_id not in pool:
+            raise ValueError(f"unknown history: {history_id}")
+        histories.append(copy.deepcopy(pool[history_id]))
+    registry = _read(evaluation_path.parent / "fan-policies.json")
+    policies = [
+        _strength_policy(policy_id, value, registry)
+        for policy_id, value in spec["policies"].items()
+    ]
+    if not policies:
+        raise ValueError("a strength experiment needs at least one policy")
+    hashes = [item["policy_hash"] for item in policies]
+    if len(hashes) != len(set(hashes)):
+        raise ValueError("strength experiment repeats an effective policy")
+    legacy = evaluation["legacy_policy"]
+    if legacy["policy_hash"] in hashes:
+        raise ValueError("legacy_exhibit is compared implicitly; do not list it")
+    seeds = copy.deepcopy(spec["seeds"])
+    if not seeds or len(seeds) != len(set(seeds)):
+        raise ValueError("seeds must be unique and non-empty")
+    return {
+        "schema_version": 1,
+        "phase": "strength",
+        "experiment_id": experiment_id,
+        "experiment_kind": kind,
+        "description": spec.get("description", ""),
+        "plan_items": list(spec.get("plan_items", [])),
+        "evaluation_config_path": str(evaluation_path),
+        "output_root": str((base / raw["output_root"]).resolve()),
+        "preparation_manifest": evaluation["preparation_manifest"],
+        "generation": generation,
+        "generation_override": copy.deepcopy(override),
+        "evaluator": copy.deepcopy(evaluation["evaluator"]),
+        "limits": copy.deepcopy(evaluation["limits"]),
+        "rules": {**copy.deepcopy(evaluation["rules"]), "binding": kind == "policy"},
+        "legacy_policy": legacy,
+        "parents": {},
+        "topics": _select(topics_all, spec["topics"], "topic"),
+        "histories": histories,
+        "seeds": seeds,
+        "policies": policies,
+    }
+
+
 def _job(contract):
     contract = copy.deepcopy(contract)
     contract_hash = digest(contract)
@@ -478,6 +595,7 @@ def build_experiment(config, provenance):
         "screen",
         "refine",
         "heldout",
+        "strength",
     }:
         raise ValueError("an image evaluation phase is required")
     if not isinstance(provenance, dict) or not provenance:
@@ -502,7 +620,7 @@ def build_experiment(config, provenance):
     jobs = []
     plain = {}
     legacy = {}
-    if phase in {"screen", "heldout"}:
+    if phase in {"screen", "heldout", "strength"}:
         for topic in config["topics"]:
             for seed in config["seeds"]:
                 item = _job(
@@ -575,7 +693,7 @@ def build_experiment(config, provenance):
                         "personalization": personalization,
                     }
                     item = _job(contract)
-                    if phase in {"screen", "heldout"}:
+                    if phase in {"screen", "heldout", "strength"}:
                         item["plain_job_id"] = plain[(topic["id"], seed)]
                         item["legacy_job_id"] = legacy[
                             (topic["id"], history["id"], seed)
@@ -620,13 +738,25 @@ def build_experiment(config, provenance):
         "provenance": copy.deepcopy(provenance),
         "jobs": identity_jobs,
     }
-    return {
+    if phase == "strength":
+        identity["experiment_kind"] = config.get("experiment_kind", "policy")
+    result = {
         "schema_version": 1,
         "experiment_hash": digest(identity),
         "identity": identity,
         "jobs": jobs,
         "policy_labels": labels,
     }
+    if phase == "strength":
+        # Display metadata only; the identity above decides the directory.
+        result["display"] = {
+            "experiment_id": config.get("experiment_id"),
+            "experiment_kind": config.get("experiment_kind", "policy"),
+            "description": config.get("description", ""),
+            "plan_items": list(config.get("plan_items", [])),
+            "generation_override": copy.deepcopy(config.get("generation_override", {})),
+        }
+    return result
 
 
 def register_experiment(root, experiment, *, resume):
@@ -651,6 +781,8 @@ def register_experiment(root, experiment, *, resume):
             "identity": experiment["identity"],
             "policy_labels": experiment.get("policy_labels", {}),
         }
+        if experiment.get("display"):
+            manifest["display"] = copy.deepcopy(experiment["display"])
         checkpoint = {
             "schema_version": 1,
             "manifest_hash": experiment["experiment_hash"],
@@ -946,8 +1078,8 @@ def _mean(values):
 def select_candidates(records, rules):
     """Apply fixed completeness, numerical, target, and history gates."""
     stage = rules.get("stage")
-    if stage not in {"screen", "refine", "heldout"}:
-        raise ValueError("selection stage must be screen, refine, or heldout")
+    if stage not in {"screen", "refine", "heldout", "strength"}:
+        raise ValueError("selection stage must be screen, refine, heldout, or strength")
     expected = rules.get("expected_cases")
     numerical = rules.get("numerical", {})
     grouped = {}
@@ -1019,7 +1151,10 @@ def select_candidates(records, rules):
             if target_delta < rules["target_non_degradation"]:
                 status = "fail"
                 reasons.append("target_non_degradation")
-            if stage == "heldout" and history_delta < rules["history_improvement"]:
+            if (
+                stage in {"heldout", "strength"}
+                and history_delta < rules["history_improvement"]
+            ):
                 status = "fail"
                 reasons.append("history_improvement")
         history_delta = (
@@ -1134,7 +1269,7 @@ def summarize_records(records, stage, rules):
             )
             for value in sorted({item.get("history_id") for item in rows})
         }
-        if stage == "heldout":
+        if stage in {"heldout", "strength"}:
             intervals = {}
             for metric, field in (
                 ("target_delta_vs_legacy", "target_score"),

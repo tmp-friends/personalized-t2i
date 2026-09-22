@@ -23,7 +23,9 @@ from exhibit.evaluation import (
     attach_parent_pairs,
     build_experiment,
     build_study_experiment,
+    list_strength_experiments,
     load_evaluation_config,
+    load_strength_config,
     register_experiment,
     runtime_file_provenance,
     score_records,
@@ -685,6 +687,36 @@ def run_phase(config_path, phase, *, resume, cancel, deadline, on_event):
     )
 
 
+def run_strength(strength_path, experiment_id, *, resume, cancel, deadline, on_event):
+    """Resolve one declared strength experiment and execute it under one lease."""
+    config = load_strength_config(strength_path, experiment_id)
+    preparation = validate_evaluator_preparation(
+        config["preparation_manifest"],
+        expected={
+            "repo_id": config["evaluator"]["repo_id"],
+            "resolved_revision": config["evaluator"]["expected_revision"],
+            "weight_format": config["evaluator"]["weight_format"],
+        },
+    )
+    config["evaluator_preparation"] = preparation
+    # Diagnostics load the "encoding" prompts/histories from the evaluation config,
+    # not from the strength config, so the exact policies stay comparable across
+    # experiments.
+    report = ensure_diagnostics(
+        config["evaluation_config_path"], config, preparation, cancel, deadline, on_event
+    )
+    provenance = experiment_provenance(report, preparation)
+    config["numerical"] = numerical_evidence(report, config["policies"])
+    return execute_experiment(
+        config,
+        provenance,
+        resume=resume,
+        cancel=cancel,
+        deadline=deadline,
+        on_event=on_event,
+    )
+
+
 def run_study(config_path, *, resume, cancel, deadline, on_event, runner=None):
     """Generate the fixed study matrix; refuse before the GPU when it is not fixed."""
     config = load_evaluation_config(config_path, "study")
@@ -781,6 +813,22 @@ def parse_args(argv=None):
         command.add_argument("--timeout", type=float, default=1800)
         if name != "encoding":
             command.add_argument("--resume", action="store_true")
+    strength = subparsers.add_parser("strength")
+    strength.add_argument("--config", required=True)
+    strength.add_argument("--timeout", type=float, default=7200)
+    strength.add_argument("--resume", action="store_true")
+    strength.add_argument(
+        "--experiment",
+        action="append",
+        default=[],
+        dest="experiments",
+        help="a declared strength experiment id; may be repeated",
+    )
+    strength.add_argument(
+        "--list",
+        action="store_true",
+        help="print declared experiments as JSON lines and exit; no GPU work",
+    )
     return parser.parse_args(argv)
 
 
@@ -850,6 +898,51 @@ def main(argv=None):
             ),
             flush=True,
         )
+        return
+    if args.command == "strength":
+        if args.list:
+            for experiment_id, description in list_strength_experiments(
+                args.config
+            ).items():
+                print(
+                    json.dumps(
+                        {"experiment_id": experiment_id, "description": description},
+                        ensure_ascii=False,
+                    ),
+                    flush=True,
+                )
+            return
+        if not args.experiments:
+            raise SystemExit(
+                "strength requires at least one --experiment (or --list); "
+                "no GPU work was started."
+            )
+        for experiment_id in args.experiments:
+            experiment_kind = load_strength_config(args.config, experiment_id)[
+                "experiment_kind"
+            ]
+            summary = run_strength(
+                args.config,
+                experiment_id,
+                resume=args.resume,
+                cancel=cancel,
+                deadline=deadline,
+                on_event=show,
+            )
+            print(
+                json.dumps(
+                    {
+                        "type": "experiment_complete",
+                        "experiment_id": experiment_id,
+                        "experiment_kind": experiment_kind,
+                        "experiment_hash": summary["experiment_hash"],
+                        "directory": summary["directory"],
+                        "decision": summary["decision"],
+                    },
+                    ensure_ascii=False,
+                ),
+                flush=True,
+            )
         return
     summary = run_phase(
         args.config,

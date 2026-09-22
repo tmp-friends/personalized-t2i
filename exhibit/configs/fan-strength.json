@@ -1,0 +1,390 @@
+{
+  "schema_version": 1,
+  "evaluation_config": "fan-evaluation.json",
+  "output_root": "../outputs/fan-evaluation/strength",
+  "fixtures": {
+    "histories": "evaluation-cases/histories-strength.json"
+  },
+  "experiments": {
+    "e1-settings": {
+      "description": "設定のみのスイープ。skip_pa 層数 (B1)、alpha (B2/B3)、profiling 件数 (A4)、attention mask (B4)。P0 の対照として legacy を alpha 0.4 でも測る。",
+      "plan_items": [
+        "P0",
+        "P1",
+        "B1",
+        "B2",
+        "B3",
+        "B4",
+        "A4"
+      ],
+      "topics": [
+        "cat",
+        "tokyo",
+        "rain"
+      ],
+      "histories": [
+        "warm",
+        "cool",
+        "mixed",
+        "sparse"
+      ],
+      "seeds": [
+        230923,
+        230924
+      ],
+      "policies": {
+        "legacy-alpha0.4": {
+          "alpha": 0.4,
+          "skip": -2,
+          "skip_pa": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "use_attn_mask": false,
+          "pooled_mode": "plain",
+          "profiling": {
+            "mode": "all"
+          },
+          "reference_unit": "aspect_phrase"
+        },
+        "strong_v1": "strong_v1",
+        "b1-skip4-alpha0.5": {
+          "alpha": 0.5,
+          "skip": -2,
+          "skip_pa": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "use_attn_mask": false,
+          "pooled_mode": "plain",
+          "profiling": {
+            "mode": "ratio",
+            "value": 0.1
+          },
+          "reference_unit": "aspect_phrase"
+        },
+        "b2-skip1-alpha0.7": {
+          "alpha": 0.7,
+          "skip": -2,
+          "skip_pa": [
+            0
+          ],
+          "use_attn_mask": false,
+          "pooled_mode": "plain",
+          "profiling": {
+            "mode": "ratio",
+            "value": 0.1
+          },
+          "reference_unit": "aspect_phrase"
+        },
+        "b2-skip1-alpha0.85": {
+          "alpha": 0.85,
+          "skip": -2,
+          "skip_pa": [
+            0
+          ],
+          "use_attn_mask": false,
+          "pooled_mode": "plain",
+          "profiling": {
+            "mode": "ratio",
+            "value": 0.1
+          },
+          "reference_unit": "aspect_phrase"
+        },
+        "b2-skip1-alpha1.0": {
+          "alpha": 1.0,
+          "skip": -2,
+          "skip_pa": [
+            0
+          ],
+          "use_attn_mask": false,
+          "pooled_mode": "plain",
+          "profiling": {
+            "mode": "ratio",
+            "value": 0.1
+          },
+          "reference_unit": "aspect_phrase"
+        },
+        "b3-skip1-all-alpha0.7": {
+          "alpha": 0.7,
+          "skip": -2,
+          "skip_pa": [
+            0
+          ],
+          "use_attn_mask": false,
+          "pooled_mode": "plain",
+          "profiling": {
+            "mode": "all"
+          },
+          "reference_unit": "aspect_phrase"
+        },
+        "a4-skip1-count2-alpha0.5": {
+          "alpha": 0.5,
+          "skip": -2,
+          "skip_pa": [
+            0
+          ],
+          "use_attn_mask": false,
+          "pooled_mode": "plain",
+          "profiling": {
+            "mode": "count",
+            "value": 2
+          },
+          "reference_unit": "aspect_phrase"
+        },
+        "a4-skip1-count4-alpha0.5": {
+          "alpha": 0.5,
+          "skip": -2,
+          "skip_pa": [
+            0
+          ],
+          "use_attn_mask": false,
+          "pooled_mode": "plain",
+          "profiling": {
+            "mode": "count",
+            "value": 4
+          },
+          "reference_unit": "aspect_phrase"
+        },
+        "b4-skip1-mask-alpha0.5": {
+          "alpha": 0.5,
+          "skip": -2,
+          "skip_pa": [
+            0
+          ],
+          "use_attn_mask": true,
+          "pooled_mode": "plain",
+          "profiling": {
+            "mode": "ratio",
+            "value": 0.1
+          },
+          "reference_unit": "aspect_phrase"
+        },
+        "b4-skip1-mask-alpha0.7": {
+          "alpha": 0.7,
+          "skip": -2,
+          "skip_pa": [
+            0
+          ],
+          "use_attn_mask": true,
+          "pooled_mode": "plain",
+          "profiling": {
+            "mode": "ratio",
+            "value": 0.1
+          },
+          "reference_unit": "aspect_phrase"
+        }
+      }
+    },
+    "e2-adapter": {
+      "description": "アダプタ側の小改修。埋め込み空間のゲイン embed_gain (C1) と EOS 位置で個人化した pooled (C2)。",
+      "plan_items": [
+        "C1",
+        "C2"
+      ],
+      "topics": [
+        "cat",
+        "tokyo",
+        "rain"
+      ],
+      "histories": [
+        "warm",
+        "cool",
+        "mixed",
+        "sparse"
+      ],
+      "seeds": [
+        230923,
+        230924
+      ],
+      "policies": {
+        "c1-gain1.5-alpha0.5": {
+          "alpha": 0.5,
+          "skip": -2,
+          "skip_pa": [
+            0
+          ],
+          "use_attn_mask": false,
+          "pooled_mode": "plain",
+          "profiling": {
+            "mode": "ratio",
+            "value": 0.1
+          },
+          "reference_unit": "aspect_phrase",
+          "embed_gain": 1.5
+        },
+        "c1-gain2.0-alpha0.5": {
+          "alpha": 0.5,
+          "skip": -2,
+          "skip_pa": [
+            0
+          ],
+          "use_attn_mask": false,
+          "pooled_mode": "plain",
+          "profiling": {
+            "mode": "ratio",
+            "value": 0.1
+          },
+          "reference_unit": "aspect_phrase",
+          "embed_gain": 2.0
+        },
+        "c1-gain2.5-alpha0.5": {
+          "alpha": 0.5,
+          "skip": -2,
+          "skip_pa": [
+            0
+          ],
+          "use_attn_mask": false,
+          "pooled_mode": "plain",
+          "profiling": {
+            "mode": "ratio",
+            "value": 0.1
+          },
+          "reference_unit": "aspect_phrase",
+          "embed_gain": 2.5
+        },
+        "c2-faneos-alpha0.5": {
+          "alpha": 0.5,
+          "skip": -2,
+          "skip_pa": [
+            0
+          ],
+          "use_attn_mask": false,
+          "pooled_mode": "fan_eos",
+          "profiling": {
+            "mode": "ratio",
+            "value": 0.1
+          },
+          "reference_unit": "aspect_phrase"
+        },
+        "c2-faneos-alpha0.7": {
+          "alpha": 0.7,
+          "skip": -2,
+          "skip_pa": [
+            0
+          ],
+          "use_attn_mask": false,
+          "pooled_mode": "fan_eos",
+          "profiling": {
+            "mode": "ratio",
+            "value": 0.1
+          },
+          "reference_unit": "aspect_phrase"
+        },
+        "c1c2-faneos-gain1.5-alpha0.5": {
+          "alpha": 0.5,
+          "skip": -2,
+          "skip_pa": [
+            0
+          ],
+          "use_attn_mask": false,
+          "pooled_mode": "fan_eos",
+          "profiling": {
+            "mode": "ratio",
+            "value": 0.1
+          },
+          "reference_unit": "aspect_phrase",
+          "embed_gain": 1.5
+        }
+      }
+    },
+    "e3-references": {
+      "description": "参照の設計。タグ句と自然文 (A3)、最頻レベルへの重み集中 (A5) を同じ policy で比較する。",
+      "plan_items": [
+        "A3",
+        "A5"
+      ],
+      "topics": [
+        "cat",
+        "tokyo",
+        "rain"
+      ],
+      "histories": [
+        "warm",
+        "cool",
+        "mixed",
+        "sparse",
+        "warm-sentence",
+        "cool-sentence",
+        "mixed-sentence",
+        "sparse-sentence",
+        "mixed-focus"
+      ],
+      "seeds": [
+        230923,
+        230924
+      ],
+      "policies": {
+        "strong_v1": "strong_v1",
+        "b2-skip1-alpha0.7": {
+          "alpha": 0.7,
+          "skip": -2,
+          "skip_pa": [
+            0
+          ],
+          "use_attn_mask": false,
+          "pooled_mode": "plain",
+          "profiling": {
+            "mode": "ratio",
+            "value": 0.1
+          },
+          "reference_unit": "aspect_phrase"
+        }
+      }
+    },
+    "e5-official-sampler": {
+      "description": "A6: 公式の生成設定に寄せた対照 (negative なし、非 SDE の DPM++、50 steps)。生成設定が違うため rules は拘束しない。",
+      "plan_items": [
+        "A6"
+      ],
+      "generation": {
+        "negative_prompt": "",
+        "steps": 50,
+        "scheduler_kwargs": {
+          "algorithm_type": "dpmsolver++",
+          "use_karras_sigmas": true
+        }
+      },
+      "topics": [
+        "cat",
+        "tokyo",
+        "rain"
+      ],
+      "histories": [
+        "warm",
+        "cool",
+        "mixed",
+        "sparse"
+      ],
+      "seeds": [
+        230923,
+        230924
+      ],
+      "policies": {
+        "strong_v1": "strong_v1",
+        "b2-skip1-alpha0.7": {
+          "alpha": 0.7,
+          "skip": -2,
+          "skip_pa": [
+            0
+          ],
+          "use_attn_mask": false,
+          "pooled_mode": "plain",
+          "profiling": {
+            "mode": "ratio",
+            "value": 0.1
+          },
+          "reference_unit": "aspect_phrase"
+        }
+      }
+    }
+  }
+}
