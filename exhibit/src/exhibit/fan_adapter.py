@@ -18,7 +18,14 @@ POLICY_KEYS = frozenset(
         "reference_unit",
     }
 )
-POOLED_MODES = frozenset({"plain", "fan"})
+# Optional strength settings. They are dropped from the effective policy at
+# their neutral value so every policy registered before them keeps its hash.
+OPTIONAL_POLICY_KEYS = frozenset({"embed_gain"})
+EMBED_GAIN_NEUTRAL = 1.0
+# ``fan_eos`` personalizes the SDXL pooled channel like ``fan`` but pools at the
+# prompt's EOS position instead of FAN's ClassTokenDecoder, which mislocates the
+# class token on long tag prompts.
+POOLED_MODES = frozenset({"plain", "fan", "fan_eos"})
 REFERENCE_UNITS = frozenset({"aspect_phrase", "card_description"})
 
 
@@ -72,8 +79,16 @@ def profiling_argument(policy):
 
 
 def _validate_policy(policy):
-    if not isinstance(policy, Mapping) or set(policy) != POLICY_KEYS:
+    if (
+        not isinstance(policy, Mapping)
+        or not POLICY_KEYS <= set(policy)
+        or set(policy) - POLICY_KEYS - OPTIONAL_POLICY_KEYS
+    ):
         raise ValueError("Policy must contain exactly the supported settings")
+    if "embed_gain" in policy and (
+        not _finite_number(policy["embed_gain"]) or not 0 <= policy["embed_gain"] <= 4
+    ):
+        raise ValueError("embed_gain must be finite and in [0, 4]")
     if not _finite_number(policy["alpha"]) or not 0 <= policy["alpha"] <= 1:
         raise ValueError("alpha must be finite and in [0, 1]")
     if type(policy["skip"]) is not int:
@@ -99,7 +114,16 @@ def freeze_policy(policy):
     if value["profiling"]["mode"] == "ratio":
         value["profiling"]["value"] = float(value["profiling"]["value"])
     value["skip_pa"] = sorted(set(value["skip_pa"]))
+    if "embed_gain" in value:
+        value["embed_gain"] = float(value["embed_gain"])
+        if value["embed_gain"] == EMBED_GAIN_NEUTRAL:
+            del value["embed_gain"]
     return _freeze(value)
+
+
+def embed_gain(policy):
+    """The hidden-state gain of a policy; absent means the neutral 1.0."""
+    return float(policy.get("embed_gain", EMBED_GAIN_NEUTRAL))
 
 
 def resolve_policy(policy_id, policies):
@@ -242,14 +266,61 @@ def _encode_once(encoder, prompt, refs, effective, collect_trace):
     return hidden.to(torch.float16), pooled.to(torch.float16), calls
 
 
+def _encode_eos_pooled(encoder, prompt, refs, effective):
+    """bigG personalized like the ``fan`` pooled path, pooled at the EOS token.
+
+    Mirrors ``fan.wrapper.stable_diffusion_xl``: one more bigG pass with
+    ``skip=-1`` and no normalization, then final layer norm and projection.
+    Only the pooling position differs from upstream, so the reference selection
+    and the personalized attention stay upstream-owned.
+    """
+    import torch
+
+    components = getattr(encoder, "_fan_components", None)
+    if not isinstance(components, Mapping) or "clip_g" not in components:
+        raise RuntimeError("fan_eos pooled mode needs the pipeline's bigG FAN encoder")
+    big_g = components["clip_g"]
+    texts = [ref["text"] for ref in refs]
+    weights = [float(ref["weight"]) for ref in refs]
+    with torch.no_grad():
+        hidden = big_g(
+            prompt,
+            texts,
+            weight=weights,
+            alpha=effective["alpha"],
+            pooling=False,
+            sample_size=profiling_argument(effective),
+            skip=-1,
+            skip_pa=list(effective["skip_pa"]),
+            use_attn_mask=effective["use_attn_mask"],
+            normalize=False,
+        )
+        pooled = big_g.pool_text_hidden_state(
+            big_g.normalize_text_hidden_state(hidden), prompt
+        )
+        pooled = big_g.projection_text_hidden_state(pooled)
+    return pooled.to(torch.float16)
+
+
+def _apply_embed_gain(hidden, plain_hidden, gain):
+    """``plain + gain * (personalized - plain)`` in the encoder's own dtype."""
+    import torch
+
+    personalized = hidden.float()
+    base = plain_hidden.float()
+    return (base + gain * (personalized - base)).to(torch.float16)
+
+
 def encode_conditioning(encoder, prompt, refs, policy, *, collect_trace=False):
     """Encode one SDXL prompt using a validated FAN policy.
 
     Reference selection stays inside the pinned FAN implementation. The adapter
     only records the official selections and chooses whether the generator sees
-    FAN's pooled embedding or a reference-free pooled embedding.
+    FAN's pooled embedding, an EOS-pooled personalized embedding, or a
+    reference-free pooled embedding. An optional ``embed_gain`` scales the
+    personalized hidden-state difference from the reference-free encoding.
     """
-    if not isinstance(prompt, str) or not prompt:
+    if not isinstance(prompt, str) or (refs and not prompt):
         raise ValueError("prompt is required")
     if refs is not None and not isinstance(refs, (list, tuple)):
         raise TypeError("refs must be a list or None")
@@ -262,17 +333,31 @@ def encode_conditioning(encoder, prompt, refs, policy, *, collect_trace=False):
     )
     pooled = fan_pooled
     pooled_source = "fan" if ref_values else "plain"
-    if ref_values and effective["pooled_mode"] == "plain":
-        _, pooled, _ = _encode_once(encoder, prompt, None, effective, False)
-        pooled_source = "plain"
+    gain = embed_gain(effective)
+    plain_hidden = None
+    if ref_values and (effective["pooled_mode"] == "plain" or gain != 1.0):
+        plain_hidden, plain_pooled, _ = _encode_once(
+            encoder, prompt, None, effective, False
+        )
+        if effective["pooled_mode"] == "plain":
+            pooled = plain_pooled
+            pooled_source = "plain"
+    if ref_values and effective["pooled_mode"] == "fan_eos":
+        pooled = _encode_eos_pooled(encoder, prompt, ref_values, effective)
+        pooled_source = "fan_eos"
+    if ref_values and gain != 1.0:
+        hidden = _apply_embed_gain(hidden, plain_hidden, gain)
 
+    trace = {
+        "calls": calls,
+        "pooled_source": pooled_source,
+        "profiling": copy.deepcopy(effective_value["profiling"]),
+    }
+    if ref_values and gain != 1.0:
+        trace["embed_gain"] = gain
     return {
         "hidden": hidden,
         "pooled": pooled,
-        "trace": {
-            "calls": calls,
-            "pooled_source": pooled_source,
-            "profiling": copy.deepcopy(effective_value["profiling"]),
-        },
+        "trace": trace,
         "effective_policy": effective_value,
     }

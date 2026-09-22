@@ -121,14 +121,18 @@ def fan_block(fan=None, policy=None):
     fan = fan or CONFIG["fan"]
     if policy is None:
         return {"commit": fan["commit"]}
-    return {
+    block = {
         "commit": fan["commit"],
+        "alpha": float(policy["alpha"]),
         "pooled": policy["pooled_mode"],
         "skip": policy["skip"],
         "sample_size": profiling_argument(policy),
         "skip_pa": list(policy["skip_pa"]),
         "use_attn_mask": policy["use_attn_mask"],
     }
+    if "embed_gain" in policy:
+        block["embed_gain"] = float(policy["embed_gain"])
+    return block
 
 
 def effective_policy(personalization=None):

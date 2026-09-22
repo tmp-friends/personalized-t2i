@@ -424,3 +424,23 @@ def test_personalization_rejects_snapshot_missing_catalog_id_without_key_error()
             policy=resolve_policy("legacy_exhibit", FAN_POLICIES),
             provenance=provenance(),
         )
+
+
+def test_a_neutral_embed_gain_keeps_every_policy_hash_registered_before_it():
+    """The optional strength knob must not re-key policies measured without it."""
+    from exhibit.fan_adapter import freeze_policy, thaw_policy
+
+    legacy = FAN_POLICIES["policies"]["legacy_exhibit"]
+    baseline = digest(thaw_policy(freeze_policy(legacy)))
+    neutral = digest(thaw_policy(freeze_policy({**legacy, "embed_gain": 1.0})))
+    integral = digest(thaw_policy(freeze_policy({**legacy, "embed_gain": 1})))
+    raised = digest(thaw_policy(freeze_policy({**legacy, "embed_gain": 1.5})))
+
+    assert baseline == digest(
+        thaw_policy(resolve_policy("legacy_exhibit", FAN_POLICIES))
+    )
+    assert neutral == integral == baseline
+    assert raised != baseline
+    assert (
+        thaw_policy(freeze_policy({**legacy, "embed_gain": 1.5}))["embed_gain"] == 1.5
+    )
