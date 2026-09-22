@@ -16,7 +16,7 @@ def test_missing_assets_block_live_start_without_crashing(tmp_path):
     result = check_assets(tmp_path, review=tmp_path / "absent.json")
     assert not result["ready"]
     assert any("manifest.json" in e for e in result["errors"])
-    assert any("Unreviewed card" in e for e in result["errors"])
+    assert "No reviewed cards" in result["errors"]
 
 
 def test_a_complete_bundle_is_ready(asset_tree):
@@ -29,14 +29,26 @@ def test_a_complete_bundle_is_ready(asset_tree):
     assert result["mode"] == "fan-live"
 
 
-def test_unreviewed_cards_fail_preflight(asset_tree):
+def test_unreviewed_cards_are_reported_but_do_not_block(asset_tree):
     review = json.loads(asset_tree["review"].read_text())
-    stale = next(iter(review))
+    samples = (asset_tree["root"] / "samples.json").read_text()
+    stale = next(card for card in review if card not in samples)
     review[stale]["reviewed"] = False
     asset_tree["review"].write_text(json.dumps(review))
     result = result_for(asset_tree)
+    assert result["ready"], result["errors"]
+    assert result["warnings"] == [f"Unreviewed card: {stale}"]
+    assert result["reviewed_cards"] == result["cards"] - 1
+
+
+def test_no_reviewed_cards_fail_preflight(asset_tree):
+    review = json.loads(asset_tree["review"].read_text())
+    for entry in review.values():
+        entry["reviewed"] = False
+    asset_tree["review"].write_text(json.dumps(review))
+    result = result_for(asset_tree)
     assert not result["ready"]
-    assert f"Unreviewed card: {stale}" in result["errors"]
+    assert "No reviewed cards" in result["errors"]
 
 
 def test_corrupt_and_stale_images_are_detected(asset_tree):

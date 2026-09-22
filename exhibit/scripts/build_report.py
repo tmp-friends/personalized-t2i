@@ -152,6 +152,7 @@ def preflight_block():
         "samples": data.get("samples"),
         "models_checked": bool(models),
         "models_ready": models.get("ready") if isinstance(models, dict) else None,
+        "warnings": list(data.get("warnings") or []),
     }
     errors = list(data.get("errors") or [])
     if isinstance(models, dict):
@@ -337,8 +338,12 @@ def rehearsal_block():
 
 
 def catalog_v2_block():
-    """Generated, reviewed and why; the review file is the only proof of review."""
-    findings = read_json(OUTPUTS / "preparation/catalog-v2/review-findings.json", None)
+    """Generated and reviewed; the owner's review file is the only proof of review.
+
+    Best effort: the owner may leave weak cards unreviewed on purpose. The block
+    passes once every card has a review entry and at least one card is usable;
+    the cards left out are listed, not counted as a failure.
+    """
     manifest = read_json(ASSETS / "catalog-v2.json", None)
     generated = len((manifest or {}).get("images") or {}) if manifest else 0
     review = read_json(V2_REVIEW, {}) or {}
@@ -347,56 +352,59 @@ def catalog_v2_block():
         for value in review.values()
         if isinstance(value, dict) and value.get("reviewed")
     )
-    total, eligible = None, None
+    all_ids, eligible_ids, catalog_error = [], set(), None
     try:
-        catalog = load_catalog(reviewed_only=True)
-        total = len(catalog["all_cards"])
-        eligible = len(catalog["cards"])
+        catalog = load_catalog(reviewed_only=True, review_path=V2_REVIEW)
+        all_ids = [card["id"] for card in catalog["all_cards"]]
+        eligible_ids = {card["id"] for card in catalog["cards"]}
     except (OSError, TypeError, ValueError) as error:
-        total, eligible = None, None
         catalog_error = f"catalog_unreadable:{error}"
-    else:
-        catalog_error = None
+    unentered = [card_id for card_id in all_ids if card_id not in review]
+    excluded = [
+        card_id
+        for card_id in all_ids
+        if card_id in review and card_id not in eligible_ids
+    ]
     detail = {
         "generated": generated,
-        "expected": total,
+        "expected": len(all_ids) or None,
         "reviewed_entries": reviewed_entries,
-        "usable_cards": eligible,
-        "findings_present": isinstance(findings, dict),
-        "decision": (findings or {}).get("decision"),
-        "visual_findings": (findings or {}).get("visual_findings"),
-        "clip_probe": (findings or {}).get("clip_probe"),
-        "checked_by": (findings or {}).get("checked_by"),
-        "checked_at": (findings or {}).get("checked_at"),
+        "usable_cards": len(eligible_ids),
+        "unentered_cards": len(unentered),
+        "excluded_cards": excluded,
     }
-    reasons = []
-    if catalog_error:
-        reasons.append(catalog_error)
+    missing = (len(all_ids) - len(eligible_ids)) / len(all_ids) if all_ids else None
     if not generated:
         return block(
             NOT_RUN,
-            reasons=reasons + ["catalog_v2_not_generated"],
+            reasons=["catalog_v2_not_generated"],
             detail=detail,
             source=ASSETS / "catalog-v2.json",
         )
-    if total and eligible == total:
-        return block(PASSED, reasons=reasons, detail=detail, source=V2_REVIEW)
-    if isinstance(findings, dict) and findings.get("decision"):
-        # A recorded, failed visual check is a result, not a missing measurement.
-        reasons.append(str(findings["decision"]))
-        state = FAILED
-    else:
-        reasons.append("未確認: review-findings.json がありません")
-        state = NOT_RUN
-    missing = None
-    if total:
-        missing = (total - (eligible or 0)) / total
+    if catalog_error:
+        return block(FAILED, reasons=[catalog_error], detail=detail, source=V2_REVIEW)
+    if unentered:
+        return block(
+            NOT_RUN,
+            reasons=[f"未確認: {len(unentered)} 枚に確認記録がありません"],
+            detail=detail,
+            missing_rate=missing,
+            source=V2_REVIEW,
+        )
+    if not eligible_ids:
+        return block(
+            FAILED,
+            reasons=["no_usable_cards"],
+            detail=detail,
+            missing_rate=missing,
+            source=V2_REVIEW,
+        )
     return block(
-        state,
-        reasons=reasons,
+        PASSED,
+        reasons=[f"excluded:{card_id}" for card_id in excluded],
         detail=detail,
         missing_rate=missing,
-        source=OUTPUTS / "preparation/catalog-v2/review-findings.json",
+        source=V2_REVIEW,
     )
 
 

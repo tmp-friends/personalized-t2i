@@ -178,14 +178,38 @@ def test_catalog_v2_separates_未確認_from_不合格(tree):
     assert item["state"] == NOT_RUN
     assert any("未確認" in reason for reason in item["reasons"])
     assert item["detail"]["generated"] == 64
+    card_ids = [card["id"] for card in report.load_catalog()["all_cards"]]
+    # Every card looked at, none accepted: a measured failure, not a gap.
     write(
-        tree / "outputs/preparation/catalog-v2/review-findings.json",
-        {"generated": 64, "reviewed": 0, "decision": "not_reviewed: phrases weak"},
+        tree / "cards-v2-review.json",
+        {card_id: {"reviewed": False} for card_id in card_ids},
     )
     item = report.catalog_v2_block()
     assert item["state"] == FAILED
-    assert "not_reviewed: phrases weak" in item["reasons"]
+    assert item["reasons"] == ["no_usable_cards"]
     assert item["detail"]["reviewed_entries"] == 0
+
+
+def test_catalog_v2_passes_with_cards_left_out_on_purpose(tree, monkeypatch):
+    write(
+        tree / "assets/catalog-v2.json",
+        {"images": {f"girl-{index}": {"path": "x.png"} for index in range(64)}},
+    )
+    card_ids = [f"card-{index}" for index in range(4)]
+    cards = [{"id": card_id} for card_id in card_ids]
+    monkeypatch.setattr(
+        report,
+        "load_catalog",
+        lambda **_: {"all_cards": cards, "cards": cards[1:]},
+    )
+    write(
+        tree / "cards-v2-review.json",
+        {card_id: {"reviewed": card_id != "card-0"} for card_id in card_ids},
+    )
+    item = report.catalog_v2_block()
+    assert item["state"] == PASSED
+    assert item["reasons"] == ["excluded:card-0"]
+    assert item["detail"]["usable_cards"] == 3
 
 
 def test_the_encoding_diagnostic_separates_a_detected_failure_from_a_broken_run(tree):

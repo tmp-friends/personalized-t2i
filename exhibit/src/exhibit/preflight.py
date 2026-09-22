@@ -17,6 +17,7 @@ def check_assets(root=ASSETS, *, require_samples=True, review=None):
 
     root = Path(root)
     errors = []
+    warnings = []
     try:
         # The cards carry the catalog's own protective negative prompt.
         card_generation = card_settings()
@@ -107,7 +108,11 @@ def check_assets(root=ASSETS, *, require_samples=True, review=None):
         ):
             errors.append(f"Card contract mismatch: {card_id}")
         if card_id not in reviewed:
-            errors.append(f"Unreviewed card: {card_id}")
+            # Best effort: the owner may leave weak cards out; the exhibit runs
+            # on the reviewed subset, so an unreviewed card is not a blocker.
+            warnings.append(f"Unreviewed card: {card_id}")
+    if not reviewed:
+        errors.append("No reviewed cards")
 
     prompts = read_object("generic-prompts.json")
     for topic in CONFIG["topics"]:
@@ -169,6 +174,7 @@ def check_assets(root=ASSETS, *, require_samples=True, review=None):
         "mode": "fan-live",
         "catalog_id": CATALOG_ID,
         "errors": errors,
+        "warnings": warnings,
         "fixed_images": len(card_images) if isinstance(card_images, dict) else 0,
         "generic_images": generic_count,
         "reviewed_cards": len(reviewed),
