@@ -329,7 +329,8 @@ def render(f=None):
             "画像に効いているのは hidden states 側の混合です。</p>"
             '<div class="callout"><p><strong>来場者ごとの追加学習はしません。</strong>'
             "生成モデルもテキストエンコーダーも更新しません。"
-            "ただし「追加の重みが一切ない」わけではなく、FAN 公式の ClassTokenDecoder の重みは使っています。</p></div>"
+            "FAN 公式の ClassTokenDecoder の重みは読み込みますが、"
+            "展示の既定設定ではその出力を画像に使っていません（上記）。</p></div>"
             "</section>"
         )
     ]
