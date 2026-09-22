@@ -578,6 +578,7 @@ const TYPES = {
   ".mjs": "text/javascript; charset=utf-8",
   ".css": "text/css; charset=utf-8",
   ".woff2": "font/woff2",
+  ".svg": "image/svg+xml; charset=utf-8",
 };
 function send(res, status, body, type = "application/json", cache = "no-store") {
   const payload = type.startsWith("application/json") ? JSON.stringify(body) : body;

@@ -26,7 +26,7 @@ PYTHONPATH=exhibit/src exhibit/.venv/bin/python exhibit/scripts/preflight.py --m
 uv run --project exhibit uvicorn exhibit.app:app --host 127.0.0.1 --port 7860
 ```
 
-ブラウザーで **http://localhost:7860** を開きます。仕組みの説明は http://localhost:7860/tech 、事前生成サンプルは http://localhost:7860/fallback 。検証記録はサーバー経由では http://localhost:7860/report/ 、ファイルでは [docs/reports/fan-personalization/](../docs/reports/fan-personalization/)。旧構成の記録は [docs/reports/fan-demo/](../docs/reports/fan-demo/)、さらに旧い ZIPP 構成は [docs/reports/zipp-demo/](../docs/reports/zipp-demo/index.html) に履歴として残しています（どちらも旧設定の実測なので、現行設定の結果として引用しません）。
+ブラウザーで **http://localhost:7860** を開きます。技術解説は http://localhost:7860/tech 、事前生成サンプルは http://localhost:7860/fallback 。検証記録はファイルで [docs/reports/fan-personalization/](../docs/reports/fan-personalization/) にあります（展示サーバーからは配信しません）。旧構成の記録は [docs/reports/fan-demo/](../docs/reports/fan-demo/)、さらに旧い ZIPP 構成は [docs/reports/zipp-demo/](../docs/reports/zipp-demo/index.html) に履歴として残しています（どちらも旧設定の実測なので、現行設定の結果として引用しません）。
 
 GPU推論は FAN 環境 `fan-repro/.venv/bin/python` を別プロセスで使います（FAN の attention monkey-patch は transformers 5 系と非互換）。初回は FAN 環境を用意します。
 
