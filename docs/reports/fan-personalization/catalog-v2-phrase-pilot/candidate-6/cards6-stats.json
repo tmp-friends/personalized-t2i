@@ -1,0 +1,1086 @@
+{
+ "per_card": [
+  {
+   "id": "girl-c0-l2-t0-m0",
+   "subject": "girl",
+   "levels": {
+    "color": 0,
+    "lighting": 2,
+    "texture": 0,
+    "mood": 0
+   },
+   "r_minus_b": 52.25,
+   "brightness": 150.97,
+   "saturation": 81.42,
+   "contrast_sd": 60.64,
+   "p95_minus_p5": 172.84
+  },
+  {
+   "id": "girl-c0-l2-t0-m1",
+   "subject": "girl",
+   "levels": {
+    "color": 0,
+    "lighting": 2,
+    "texture": 0,
+    "mood": 1
+   },
+   "r_minus_b": 58.32,
+   "brightness": 169.92,
+   "saturation": 80.21,
+   "contrast_sd": 55.48,
+   "p95_minus_p5": 165.42
+  },
+  {
+   "id": "girl-c0-l3-t1-m2",
+   "subject": "girl",
+   "levels": {
+    "color": 0,
+    "lighting": 3,
+    "texture": 1,
+    "mood": 2
+   },
+   "r_minus_b": 55.47,
+   "brightness": 88.58,
+   "saturation": 142.58,
+   "contrast_sd": 76.71,
+   "p95_minus_p5": 207.76
+  },
+  {
+   "id": "girl-c0-l3-t3-m3",
+   "subject": "girl",
+   "levels": {
+    "color": 0,
+    "lighting": 3,
+    "texture": 3,
+    "mood": 3
+   },
+   "r_minus_b": 68.49,
+   "brightness": 130.28,
+   "saturation": 116.23,
+   "contrast_sd": 66.0,
+   "p95_minus_p5": 193.41
+  },
+  {
+   "id": "girl-c1-l0-t1-m1",
+   "subject": "girl",
+   "levels": {
+    "color": 1,
+    "lighting": 0,
+    "texture": 1,
+    "mood": 1
+   },
+   "r_minus_b": -60.59,
+   "brightness": 116.01,
+   "saturation": 102.6,
+   "contrast_sd": 39.9,
+   "p95_minus_p5": 131.48
+  },
+  {
+   "id": "girl-c1-l1-t2-m3",
+   "subject": "girl",
+   "levels": {
+    "color": 1,
+    "lighting": 1,
+    "texture": 2,
+    "mood": 3
+   },
+   "r_minus_b": -69.86,
+   "brightness": 67.91,
+   "saturation": 165.78,
+   "contrast_sd": 28.5,
+   "p95_minus_p5": 18.9
+  },
+  {
+   "id": "girl-c1-l1-t3-m0",
+   "subject": "girl",
+   "levels": {
+    "color": 1,
+    "lighting": 1,
+    "texture": 3,
+    "mood": 0
+   },
+   "r_minus_b": -34.74,
+   "brightness": 75.61,
+   "saturation": 119.48,
+   "contrast_sd": 45.0,
+   "p95_minus_p5": 169.86
+  },
+  {
+   "id": "girl-c1-l2-t0-m2",
+   "subject": "girl",
+   "levels": {
+    "color": 1,
+    "lighting": 2,
+    "texture": 0,
+    "mood": 2
+   },
+   "r_minus_b": -73.75,
+   "brightness": 127.06,
+   "saturation": 118.93,
+   "contrast_sd": 48.51,
+   "p95_minus_p5": 144.83
+  },
+  {
+   "id": "girl-c2-l0-t0-m3",
+   "subject": "girl",
+   "levels": {
+    "color": 2,
+    "lighting": 0,
+    "texture": 0,
+    "mood": 3
+   },
+   "r_minus_b": 14.86,
+   "brightness": 178.99,
+   "saturation": 29.96,
+   "contrast_sd": 52.97,
+   "p95_minus_p5": 155.28
+  },
+  {
+   "id": "girl-c2-l0-t3-m2",
+   "subject": "girl",
+   "levels": {
+    "color": 2,
+    "lighting": 0,
+    "texture": 3,
+    "mood": 2
+   },
+   "r_minus_b": 2.51,
+   "brightness": 100.38,
+   "saturation": 32.41,
+   "contrast_sd": 63.22,
+   "p95_minus_p5": 174.66
+  },
+  {
+   "id": "girl-c2-l1-t2-m1",
+   "subject": "girl",
+   "levels": {
+    "color": 2,
+    "lighting": 1,
+    "texture": 2,
+    "mood": 1
+   },
+   "r_minus_b": -2.31,
+   "brightness": 70.09,
+   "saturation": 37.27,
+   "contrast_sd": 27.58,
+   "p95_minus_p5": 42.71
+  },
+  {
+   "id": "girl-c2-l3-t1-m0",
+   "subject": "girl",
+   "levels": {
+    "color": 2,
+    "lighting": 3,
+    "texture": 1,
+    "mood": 0
+   },
+   "r_minus_b": 12.67,
+   "brightness": 150.6,
+   "saturation": 27.72,
+   "contrast_sd": 55.96,
+   "p95_minus_p5": 185.24
+  },
+  {
+   "id": "girl-c3-l0-t2-m0",
+   "subject": "girl",
+   "levels": {
+    "color": 3,
+    "lighting": 0,
+    "texture": 2,
+    "mood": 0
+   },
+   "r_minus_b": 16.41,
+   "brightness": 207.54,
+   "saturation": 30.01,
+   "contrast_sd": 40.26,
+   "p95_minus_p5": 130.03
+  },
+  {
+   "id": "girl-c3-l1-t2-m2",
+   "subject": "girl",
+   "levels": {
+    "color": 3,
+    "lighting": 1,
+    "texture": 2,
+    "mood": 2
+   },
+   "r_minus_b": -6.87,
+   "brightness": 146.53,
+   "saturation": 68.98,
+   "contrast_sd": 46.23,
+   "p95_minus_p5": 128.86
+  },
+  {
+   "id": "girl-c3-l2-t1-m3",
+   "subject": "girl",
+   "levels": {
+    "color": 3,
+    "lighting": 2,
+    "texture": 1,
+    "mood": 3
+   },
+   "r_minus_b": 3.54,
+   "brightness": 194.13,
+   "saturation": 50.4,
+   "contrast_sd": 41.94,
+   "p95_minus_p5": 121.14
+  },
+  {
+   "id": "girl-c3-l3-t3-m1",
+   "subject": "girl",
+   "levels": {
+    "color": 3,
+    "lighting": 3,
+    "texture": 3,
+    "mood": 1
+   },
+   "r_minus_b": 20.05,
+   "brightness": 195.16,
+   "saturation": 45.77,
+   "contrast_sd": 42.35,
+   "p95_minus_p5": 132.22
+  },
+  {
+   "id": "student-c0-l2-t0-m0",
+   "subject": "student",
+   "levels": {
+    "color": 0,
+    "lighting": 2,
+    "texture": 0,
+    "mood": 0
+   },
+   "r_minus_b": 43.62,
+   "brightness": 144.48,
+   "saturation": 75.52,
+   "contrast_sd": 73.92,
+   "p95_minus_p5": 216.32
+  },
+  {
+   "id": "student-c0-l2-t0-m1",
+   "subject": "student",
+   "levels": {
+    "color": 0,
+    "lighting": 2,
+    "texture": 0,
+    "mood": 1
+   },
+   "r_minus_b": 38.78,
+   "brightness": 134.45,
+   "saturation": 73.92,
+   "contrast_sd": 77.48,
+   "p95_minus_p5": 209.08
+  },
+  {
+   "id": "student-c0-l3-t1-m2",
+   "subject": "student",
+   "levels": {
+    "color": 0,
+    "lighting": 3,
+    "texture": 1,
+    "mood": 2
+   },
+   "r_minus_b": 49.63,
+   "brightness": 96.89,
+   "saturation": 103.95,
+   "contrast_sd": 66.07,
+   "p95_minus_p5": 209.27
+  },
+  {
+   "id": "student-c0-l3-t3-m3",
+   "subject": "student",
+   "levels": {
+    "color": 0,
+    "lighting": 3,
+    "texture": 3,
+    "mood": 3
+   },
+   "r_minus_b": 69.25,
+   "brightness": 106.11,
+   "saturation": 126.33,
+   "contrast_sd": 71.67,
+   "p95_minus_p5": 221.57
+  },
+  {
+   "id": "student-c1-l0-t1-m1",
+   "subject": "student",
+   "levels": {
+    "color": 1,
+    "lighting": 0,
+    "texture": 1,
+    "mood": 1
+   },
+   "r_minus_b": -36.94,
+   "brightness": 124.59,
+   "saturation": 93.07,
+   "contrast_sd": 69.05,
+   "p95_minus_p5": 208.42
+  },
+  {
+   "id": "student-c1-l1-t2-m3",
+   "subject": "student",
+   "levels": {
+    "color": 1,
+    "lighting": 1,
+    "texture": 2,
+    "mood": 3
+   },
+   "r_minus_b": -52.49,
+   "brightness": 89.62,
+   "saturation": 131.52,
+   "contrast_sd": 57.51,
+   "p95_minus_p5": 176.89
+  },
+  {
+   "id": "student-c1-l1-t3-m0",
+   "subject": "student",
+   "levels": {
+    "color": 1,
+    "lighting": 1,
+    "texture": 3,
+    "mood": 0
+   },
+   "r_minus_b": -61.93,
+   "brightness": 87.37,
+   "saturation": 168.74,
+   "contrast_sd": 71.3,
+   "p95_minus_p5": 226.56
+  },
+  {
+   "id": "student-c1-l2-t0-m2",
+   "subject": "student",
+   "levels": {
+    "color": 1,
+    "lighting": 2,
+    "texture": 0,
+    "mood": 2
+   },
+   "r_minus_b": -59.76,
+   "brightness": 123.14,
+   "saturation": 110.28,
+   "contrast_sd": 60.34,
+   "p95_minus_p5": 182.58
+  },
+  {
+   "id": "student-c2-l0-t0-m3",
+   "subject": "student",
+   "levels": {
+    "color": 2,
+    "lighting": 0,
+    "texture": 0,
+    "mood": 3
+   },
+   "r_minus_b": -8.86,
+   "brightness": 131.04,
+   "saturation": 54.79,
+   "contrast_sd": 79.44,
+   "p95_minus_p5": 233.14
+  },
+  {
+   "id": "student-c2-l0-t3-m2",
+   "subject": "student",
+   "levels": {
+    "color": 2,
+    "lighting": 0,
+    "texture": 3,
+    "mood": 2
+   },
+   "r_minus_b": 2.83,
+   "brightness": 97.46,
+   "saturation": 37.21,
+   "contrast_sd": 66.16,
+   "p95_minus_p5": 193.0
+  },
+  {
+   "id": "student-c2-l1-t2-m1",
+   "subject": "student",
+   "levels": {
+    "color": 2,
+    "lighting": 1,
+    "texture": 2,
+    "mood": 1
+   },
+   "r_minus_b": -0.52,
+   "brightness": 85.52,
+   "saturation": 57.35,
+   "contrast_sd": 67.42,
+   "p95_minus_p5": 193.57
+  },
+  {
+   "id": "student-c2-l3-t1-m0",
+   "subject": "student",
+   "levels": {
+    "color": 2,
+    "lighting": 3,
+    "texture": 1,
+    "mood": 0
+   },
+   "r_minus_b": 19.4,
+   "brightness": 128.59,
+   "saturation": 51.09,
+   "contrast_sd": 80.55,
+   "p95_minus_p5": 202.57
+  },
+  {
+   "id": "student-c3-l0-t2-m0",
+   "subject": "student",
+   "levels": {
+    "color": 3,
+    "lighting": 0,
+    "texture": 2,
+    "mood": 0
+   },
+   "r_minus_b": -11.92,
+   "brightness": 189.28,
+   "saturation": 42.43,
+   "contrast_sd": 53.84,
+   "p95_minus_p5": 184.23
+  },
+  {
+   "id": "student-c3-l1-t2-m2",
+   "subject": "student",
+   "levels": {
+    "color": 3,
+    "lighting": 1,
+    "texture": 2,
+    "mood": 2
+   },
+   "r_minus_b": -11.25,
+   "brightness": 118.32,
+   "saturation": 62.99,
+   "contrast_sd": 65.2,
+   "p95_minus_p5": 168.53
+  },
+  {
+   "id": "student-c3-l2-t1-m3",
+   "subject": "student",
+   "levels": {
+    "color": 3,
+    "lighting": 2,
+    "texture": 1,
+    "mood": 3
+   },
+   "r_minus_b": -1.6,
+   "brightness": 163.76,
+   "saturation": 54.47,
+   "contrast_sd": 73.17,
+   "p95_minus_p5": 196.61
+  },
+  {
+   "id": "student-c3-l3-t3-m1",
+   "subject": "student",
+   "levels": {
+    "color": 3,
+    "lighting": 3,
+    "texture": 3,
+    "mood": 1
+   },
+   "r_minus_b": -4.98,
+   "brightness": 175.65,
+   "saturation": 47.48,
+   "contrast_sd": 62.37,
+   "p95_minus_p5": 178.36
+  },
+  {
+   "id": "traveler-c0-l2-t0-m0",
+   "subject": "traveler",
+   "levels": {
+    "color": 0,
+    "lighting": 2,
+    "texture": 0,
+    "mood": 0
+   },
+   "r_minus_b": 55.88,
+   "brightness": 159.45,
+   "saturation": 71.91,
+   "contrast_sd": 57.94,
+   "p95_minus_p5": 162.1
+  },
+  {
+   "id": "traveler-c0-l2-t0-m1",
+   "subject": "traveler",
+   "levels": {
+    "color": 0,
+    "lighting": 2,
+    "texture": 0,
+    "mood": 1
+   },
+   "r_minus_b": 59.35,
+   "brightness": 171.61,
+   "saturation": 77.39,
+   "contrast_sd": 56.4,
+   "p95_minus_p5": 186.07
+  },
+  {
+   "id": "traveler-c0-l3-t1-m2",
+   "subject": "traveler",
+   "levels": {
+    "color": 0,
+    "lighting": 3,
+    "texture": 1,
+    "mood": 2
+   },
+   "r_minus_b": 69.9,
+   "brightness": 111.32,
+   "saturation": 147.38,
+   "contrast_sd": 72.01,
+   "p95_minus_p5": 228.36
+  },
+  {
+   "id": "traveler-c0-l3-t3-m3",
+   "subject": "traveler",
+   "levels": {
+    "color": 0,
+    "lighting": 3,
+    "texture": 3,
+    "mood": 3
+   },
+   "r_minus_b": 67.12,
+   "brightness": 103.36,
+   "saturation": 109.57,
+   "contrast_sd": 68.82,
+   "p95_minus_p5": 198.97
+  },
+  {
+   "id": "traveler-c1-l0-t1-m1",
+   "subject": "traveler",
+   "levels": {
+    "color": 1,
+    "lighting": 0,
+    "texture": 1,
+    "mood": 1
+   },
+   "r_minus_b": -35.1,
+   "brightness": 162.39,
+   "saturation": 68.7,
+   "contrast_sd": 65.59,
+   "p95_minus_p5": 169.96
+  },
+  {
+   "id": "traveler-c1-l1-t2-m3",
+   "subject": "traveler",
+   "levels": {
+    "color": 1,
+    "lighting": 1,
+    "texture": 2,
+    "mood": 3
+   },
+   "r_minus_b": -54.03,
+   "brightness": 104.8,
+   "saturation": 130.95,
+   "contrast_sd": 66.87,
+   "p95_minus_p5": 176.84
+  },
+  {
+   "id": "traveler-c1-l1-t3-m0",
+   "subject": "traveler",
+   "levels": {
+    "color": 1,
+    "lighting": 1,
+    "texture": 3,
+    "mood": 0
+   },
+   "r_minus_b": -25.83,
+   "brightness": 100.05,
+   "saturation": 122.89,
+   "contrast_sd": 71.83,
+   "p95_minus_p5": 210.3
+  },
+  {
+   "id": "traveler-c1-l2-t0-m2",
+   "subject": "traveler",
+   "levels": {
+    "color": 1,
+    "lighting": 2,
+    "texture": 0,
+    "mood": 2
+   },
+   "r_minus_b": -66.46,
+   "brightness": 119.07,
+   "saturation": 117.71,
+   "contrast_sd": 60.34,
+   "p95_minus_p5": 215.01
+  },
+  {
+   "id": "traveler-c2-l0-t0-m3",
+   "subject": "traveler",
+   "levels": {
+    "color": 2,
+    "lighting": 0,
+    "texture": 0,
+    "mood": 3
+   },
+   "r_minus_b": 0.06,
+   "brightness": 152.11,
+   "saturation": 17.16,
+   "contrast_sd": 63.62,
+   "p95_minus_p5": 190.83
+  },
+  {
+   "id": "traveler-c2-l0-t3-m2",
+   "subject": "traveler",
+   "levels": {
+    "color": 2,
+    "lighting": 0,
+    "texture": 3,
+    "mood": 2
+   },
+   "r_minus_b": 7.64,
+   "brightness": 109.19,
+   "saturation": 50.88,
+   "contrast_sd": 67.82,
+   "p95_minus_p5": 203.34
+  },
+  {
+   "id": "traveler-c2-l1-t2-m1",
+   "subject": "traveler",
+   "levels": {
+    "color": 2,
+    "lighting": 1,
+    "texture": 2,
+    "mood": 1
+   },
+   "r_minus_b": -6.45,
+   "brightness": 112.73,
+   "saturation": 70.45,
+   "contrast_sd": 78.61,
+   "p95_minus_p5": 208.14
+  },
+  {
+   "id": "traveler-c2-l3-t1-m0",
+   "subject": "traveler",
+   "levels": {
+    "color": 2,
+    "lighting": 3,
+    "texture": 1,
+    "mood": 0
+   },
+   "r_minus_b": 15.42,
+   "brightness": 146.53,
+   "saturation": 56.86,
+   "contrast_sd": 73.7,
+   "p95_minus_p5": 213.53
+  },
+  {
+   "id": "traveler-c3-l0-t2-m0",
+   "subject": "traveler",
+   "levels": {
+    "color": 3,
+    "lighting": 0,
+    "texture": 2,
+    "mood": 0
+   },
+   "r_minus_b": -1.36,
+   "brightness": 220.38,
+   "saturation": 14.66,
+   "contrast_sd": 36.16,
+   "p95_minus_p5": 96.26
+  },
+  {
+   "id": "traveler-c3-l1-t2-m2",
+   "subject": "traveler",
+   "levels": {
+    "color": 3,
+    "lighting": 1,
+    "texture": 2,
+    "mood": 2
+   },
+   "r_minus_b": -16.47,
+   "brightness": 132.63,
+   "saturation": 74.47,
+   "contrast_sd": 76.3,
+   "p95_minus_p5": 193.92
+  },
+  {
+   "id": "traveler-c3-l2-t1-m3",
+   "subject": "traveler",
+   "levels": {
+    "color": 3,
+    "lighting": 2,
+    "texture": 1,
+    "mood": 3
+   },
+   "r_minus_b": -1.35,
+   "brightness": 208.52,
+   "saturation": 40.47,
+   "contrast_sd": 37.62,
+   "p95_minus_p5": 118.21
+  },
+  {
+   "id": "traveler-c3-l3-t3-m1",
+   "subject": "traveler",
+   "levels": {
+    "color": 3,
+    "lighting": 3,
+    "texture": 3,
+    "mood": 1
+   },
+   "r_minus_b": 21.86,
+   "brightness": 189.96,
+   "saturation": 47.39,
+   "contrast_sd": 48.14,
+   "p95_minus_p5": 150.26
+  },
+  {
+   "id": "barista-c0-l2-t0-m0",
+   "subject": "barista",
+   "levels": {
+    "color": 0,
+    "lighting": 2,
+    "texture": 0,
+    "mood": 0
+   },
+   "r_minus_b": 55.07,
+   "brightness": 170.5,
+   "saturation": 79.79,
+   "contrast_sd": 66.35,
+   "p95_minus_p5": 198.06
+  },
+  {
+   "id": "barista-c0-l2-t0-m1",
+   "subject": "barista",
+   "levels": {
+    "color": 0,
+    "lighting": 2,
+    "texture": 0,
+    "mood": 1
+   },
+   "r_minus_b": 57.78,
+   "brightness": 159.91,
+   "saturation": 91.48,
+   "contrast_sd": 62.51,
+   "p95_minus_p5": 199.5
+  },
+  {
+   "id": "barista-c0-l3-t1-m2",
+   "subject": "barista",
+   "levels": {
+    "color": 0,
+    "lighting": 3,
+    "texture": 1,
+    "mood": 2
+   },
+   "r_minus_b": 77.7,
+   "brightness": 126.33,
+   "saturation": 132.87,
+   "contrast_sd": 66.5,
+   "p95_minus_p5": 191.64
+  },
+  {
+   "id": "barista-c0-l3-t3-m3",
+   "subject": "barista",
+   "levels": {
+    "color": 0,
+    "lighting": 3,
+    "texture": 3,
+    "mood": 3
+   },
+   "r_minus_b": 79.33,
+   "brightness": 129.68,
+   "saturation": 124.51,
+   "contrast_sd": 62.28,
+   "p95_minus_p5": 192.39
+  },
+  {
+   "id": "barista-c1-l0-t1-m1",
+   "subject": "barista",
+   "levels": {
+    "color": 1,
+    "lighting": 0,
+    "texture": 1,
+    "mood": 1
+   },
+   "r_minus_b": -16.96,
+   "brightness": 121.0,
+   "saturation": 90.83,
+   "contrast_sd": 64.42,
+   "p95_minus_p5": 184.98
+  },
+  {
+   "id": "barista-c1-l1-t2-m3",
+   "subject": "barista",
+   "levels": {
+    "color": 1,
+    "lighting": 1,
+    "texture": 2,
+    "mood": 3
+   },
+   "r_minus_b": -61.69,
+   "brightness": 91.86,
+   "saturation": 135.1,
+   "contrast_sd": 62.72,
+   "p95_minus_p5": 175.41
+  },
+  {
+   "id": "barista-c1-l1-t3-m0",
+   "subject": "barista",
+   "levels": {
+    "color": 1,
+    "lighting": 1,
+    "texture": 3,
+    "mood": 0
+   },
+   "r_minus_b": -52.7,
+   "brightness": 91.16,
+   "saturation": 147.17,
+   "contrast_sd": 70.43,
+   "p95_minus_p5": 220.71
+  },
+  {
+   "id": "barista-c1-l2-t0-m2",
+   "subject": "barista",
+   "levels": {
+    "color": 1,
+    "lighting": 2,
+    "texture": 0,
+    "mood": 2
+   },
+   "r_minus_b": -63.13,
+   "brightness": 122.67,
+   "saturation": 106.18,
+   "contrast_sd": 47.22,
+   "p95_minus_p5": 135.97
+  },
+  {
+   "id": "barista-c2-l0-t0-m3",
+   "subject": "barista",
+   "levels": {
+    "color": 2,
+    "lighting": 0,
+    "texture": 0,
+    "mood": 3
+   },
+   "r_minus_b": 7.44,
+   "brightness": 145.8,
+   "saturation": 31.15,
+   "contrast_sd": 59.03,
+   "p95_minus_p5": 168.62
+  },
+  {
+   "id": "barista-c2-l0-t3-m2",
+   "subject": "barista",
+   "levels": {
+    "color": 2,
+    "lighting": 0,
+    "texture": 3,
+    "mood": 2
+   },
+   "r_minus_b": 4.81,
+   "brightness": 109.34,
+   "saturation": 38.62,
+   "contrast_sd": 62.85,
+   "p95_minus_p5": 166.48
+  },
+  {
+   "id": "barista-c2-l1-t2-m1",
+   "subject": "barista",
+   "levels": {
+    "color": 2,
+    "lighting": 1,
+    "texture": 2,
+    "mood": 1
+   },
+   "r_minus_b": 9.17,
+   "brightness": 120.84,
+   "saturation": 45.68,
+   "contrast_sd": 63.29,
+   "p95_minus_p5": 166.36
+  },
+  {
+   "id": "barista-c2-l3-t1-m0",
+   "subject": "barista",
+   "levels": {
+    "color": 2,
+    "lighting": 3,
+    "texture": 1,
+    "mood": 0
+   },
+   "r_minus_b": 25.95,
+   "brightness": 137.03,
+   "saturation": 50.8,
+   "contrast_sd": 57.59,
+   "p95_minus_p5": 201.54
+  },
+  {
+   "id": "barista-c3-l0-t2-m0",
+   "subject": "barista",
+   "levels": {
+    "color": 3,
+    "lighting": 0,
+    "texture": 2,
+    "mood": 0
+   },
+   "r_minus_b": 9.23,
+   "brightness": 206.2,
+   "saturation": 41.04,
+   "contrast_sd": 33.03,
+   "p95_minus_p5": 100.26
+  },
+  {
+   "id": "barista-c3-l1-t2-m2",
+   "subject": "barista",
+   "levels": {
+    "color": 3,
+    "lighting": 1,
+    "texture": 2,
+    "mood": 2
+   },
+   "r_minus_b": 8.03,
+   "brightness": 169.16,
+   "saturation": 65.22,
+   "contrast_sd": 58.19,
+   "p95_minus_p5": 173.77
+  },
+  {
+   "id": "barista-c3-l2-t1-m3",
+   "subject": "barista",
+   "levels": {
+    "color": 3,
+    "lighting": 2,
+    "texture": 1,
+    "mood": 3
+   },
+   "r_minus_b": 8.92,
+   "brightness": 192.02,
+   "saturation": 59.79,
+   "contrast_sd": 48.54,
+   "p95_minus_p5": 148.83
+  },
+  {
+   "id": "barista-c3-l3-t3-m1",
+   "subject": "barista",
+   "levels": {
+    "color": 3,
+    "lighting": 3,
+    "texture": 3,
+    "mood": 1
+   },
+   "r_minus_b": 30.18,
+   "brightness": 190.31,
+   "saturation": 54.97,
+   "contrast_sd": 51.82,
+   "p95_minus_p5": 159.06
+  }
+ ],
+ "per_level": {
+  "color": {
+   "0": {
+    "r_minus_b": 59.87,
+    "brightness": 134.61,
+    "saturation": 102.19,
+    "contrast_sd": 66.3,
+    "p95_minus_p5": 197.05
+   },
+   "1": {
+    "r_minus_b": -51.62,
+    "brightness": 107.77,
+    "saturation": 120.62,
+    "contrast_sd": 58.1,
+    "p95_minus_p5": 171.79
+   },
+   "2": {
+    "r_minus_b": 6.54,
+    "brightness": 123.52,
+    "saturation": 43.09,
+    "contrast_sd": 63.74,
+    "p95_minus_p5": 181.19
+   },
+   "3": {
+    "r_minus_b": 3.9,
+    "brightness": 181.22,
+    "saturation": 50.03,
+    "contrast_sd": 50.95,
+    "p95_minus_p5": 148.78
+   }
+  },
+  "lighting": {
+   "0": {
+    "r_minus_b": -6.62,
+    "brightness": 148.23,
+    "saturation": 48.47,
+    "contrast_sd": 57.33,
+    "p95_minus_p5": 168.19
+   },
+   "1": {
+    "r_minus_b": -27.5,
+    "brightness": 104.01,
+    "saturation": 100.25,
+    "contrast_sd": 59.81,
+    "p95_minus_p5": 165.71
+   },
+   "2": {
+    "r_minus_b": 10.47,
+    "brightness": 156.98,
+    "saturation": 80.62,
+    "contrast_sd": 58.02,
+    "p95_minus_p5": 173.29
+   },
+   "3": {
+    "r_minus_b": 42.34,
+    "brightness": 137.9,
+    "saturation": 86.59,
+    "contrast_sd": 63.91,
+    "p95_minus_p5": 191.63
+   }
+  },
+  "texture": {
+   "0": {
+    "r_minus_b": 10.72,
+    "brightness": 147.57,
+    "saturation": 76.11,
+    "contrast_sd": 61.39,
+    "p95_minus_p5": 183.48
+   },
+   "1": {
+    "r_minus_b": 11.63,
+    "brightness": 141.77,
+    "saturation": 79.6,
+    "contrast_sd": 61.83,
+    "p95_minus_p5": 182.47
+   },
+   "2": {
+    "r_minus_b": -15.77,
+    "brightness": 133.34,
+    "saturation": 73.37,
+    "contrast_sd": 53.86,
+    "p95_minus_p5": 145.92
+   },
+   "3": {
+    "r_minus_b": 12.12,
+    "brightness": 124.44,
+    "saturation": 86.85,
+    "contrast_sd": 62.0,
+    "p95_minus_p5": 186.95
+   }
+  },
+  "mood": {
+   "0": {
+    "r_minus_b": 7.34,
+    "brightness": 147.86,
+    "saturation": 73.85,
+    "contrast_sd": 59.28,
+    "p95_minus_p5": 180.65
+   },
+   "1": {
+    "r_minus_b": 8.23,
+    "brightness": 143.76,
+    "saturation": 67.78,
+    "contrast_sd": 58.28,
+    "p95_minus_p5": 167.85
+   },
+   "2": {
+    "r_minus_b": -1.2,
+    "brightness": 118.63,
+    "saturation": 88.17,
+    "contrast_sd": 62.73,
+    "p95_minus_p5": 182.37
+   },
+   "3": {
+    "r_minus_b": 4.32,
+    "brightness": 136.87,
+    "saturation": 86.14,
+    "contrast_sd": 58.79,
+    "p95_minus_p5": 167.94
+   }
+  }
+ }
+}

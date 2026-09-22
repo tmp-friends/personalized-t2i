@@ -1,5 +1,6 @@
 {
   "version": "exhibit-fan-illustrious-v6",
+  "schema_version": 2,
   "generation": {
     "model": "OnomaAIResearch/Illustrious-XL-v2.0",
     "revision": "69459c1fe6f46db41ab31e6114f05acc0e06bcaa",
@@ -33,10 +34,11 @@
   ],
   "timeout_seconds": 120,
   "idle_seconds": 90,
-  "alpha": 0.5,
   "selection": {
     "min": 3,
-    "max": 5
+    "max": 10,
+    "round_size": 12,
+    "max_rounds": 3
   },
   "fan": {
     "python": "fan-repro/.venv/bin/python",
@@ -45,20 +47,7 @@
     "decoders": {
       "L.pth": "e35c04b57c42425ef0fcdc671254fb76dc6a5d580c742cecc1fcf2d5ac679807",
       "bigG.pth": "35cc21f7e6bfab0c97ee0198e998bee4f7b41346cab24c26d380a96950ce4391"
-    },
-    "skip": -2,
-    "sample_size": 0,
-    "skip_pa": [
-      0,
-      1,
-      2,
-      3,
-      4,
-      5,
-      6,
-      7
-    ],
-    "use_attn_mask": false
+    }
   },
   "aspect_labels": {
     "color": "色",
@@ -98,96 +87,12 @@
       "basic_prompt_en": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1girl, solo, auburn hair, white shirt, apron, cafe, upper body, detailed eyes, detailed illustration"
     }
   ],
-  "card_subjects": [
-    {
-      "id": "girl",
-      "label": "街角の少女",
-      "basic_prompt_en": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1girl, solo, brown hair, beret, coat, town square, upper body, detailed eyes, detailed illustration",
-      "seed": 601
-    },
-    {
-      "id": "student",
-      "label": "図書館の青年",
-      "basic_prompt_en": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1boy, solo, male focus, black hair, vest, white shirt, library, upper body, detailed eyes, detailed illustration",
-      "seed": 602
-    },
-    {
-      "id": "traveler",
-      "label": "草原の旅人",
-      "basic_prompt_en": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1girl, solo, silver hair, cloak, grassland, detailed eyes, detailed illustration",
-      "seed": 603
-    },
-    {
-      "id": "barista",
-      "label": "カフェの店員",
-      "basic_prompt_en": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1boy, solo, male focus, brown hair, apron, white shirt, cafe, upper body, detailed eyes, detailed illustration",
-      "seed": 604
-    }
-  ],
-  "card_profiles": [
-    {
-      "id": "warm_soft",
-      "label": "あたたかく、やわらかく",
-      "aspects": {
-        "color": "warm color palette, amber and orange tones",
-        "lighting": "warm golden hour light, gentle shadows",
-        "texture": "watercolor painting, soft brushwork, painterly texture",
-        "mood": "calm atmosphere"
-      },
-      "aspects_ja": {
-        "color": "暖かなオレンジ系の色",
-        "lighting": "夕暮れのような暖かな光",
-        "texture": "水彩のような筆づかい",
-        "mood": "静かな雰囲気"
-      }
-    },
-    {
-      "id": "cool_clean",
-      "label": "涼しく、くっきり",
-      "aspects": {
-        "color": "cool color palette, blue and teal tones",
-        "lighting": "soft diffused light",
-        "texture": "cel shading, clean lineart, anime coloring",
-        "mood": "calm atmosphere"
-      },
-      "aspects_ja": {
-        "color": "涼しげな青系の色",
-        "lighting": "やわらかく広がる光",
-        "texture": "くっきりしたアニメ塗り",
-        "mood": "静かな雰囲気"
-      }
-    },
-    {
-      "id": "dramatic",
-      "label": "劇的な光と影",
-      "aspects": {
-        "color": "muted colors, dark background",
-        "lighting": "dramatic lighting, strong shadows, rim light",
-        "texture": "detailed shading, painterly texture",
-        "mood": "serious atmosphere"
-      },
-      "aspects_ja": {
-        "color": "落ち着いた色と暗い背景",
-        "lighting": "強い光と影",
-        "texture": "緻密な陰影",
-        "mood": "真剣な雰囲気"
-      }
-    },
-    {
-      "id": "vivid_lively",
-      "label": "鮮やかで、にぎやか",
-      "aspects": {
-        "color": "vivid colors, colorful, high saturation",
-        "lighting": "bright lighting, sparkle",
-        "texture": "cel shading, flat color",
-        "mood": "cheerful expression, lively atmosphere"
-      },
-      "aspects_ja": {
-        "color": "鮮やかで彩度の高い色",
-        "lighting": "明るくきらめく光",
-        "texture": "くっきりした平塗り",
-        "mood": "楽しくにぎやかな雰囲気"
-      }
-    }
+  "sample_ids": [
+    "s1-cat",
+    "s1-tokyo",
+    "s2-cat",
+    "s2-tokyo",
+    "s3-cat",
+    "s3-tokyo"
   ]
 }

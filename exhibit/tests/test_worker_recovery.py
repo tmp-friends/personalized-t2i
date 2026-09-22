@@ -5,12 +5,12 @@ import sys
 import time
 
 import pytest
-from exhibit.domain import CARDS
+from conftest import PROVENANCE
 from exhibit.service import Service
 
 from exhibit import gpu
 
-IDS = list(CARDS)
+GAINS = {"color": 1, "lighting": 1, "texture": 1, "mood": 1}
 
 WORKER = """
 import hashlib
@@ -27,10 +27,14 @@ marker = Path(os.environ["RECOVERY_TEST_MARKER"])
 for item in request["items"]:
     Path(item["path"]).parent.mkdir(parents=True, exist_ok=True)
     Path(item["path"]).write_bytes(item["id"].encode())
+    personalization = item["personalization"]
     print(json.dumps({"type": "image", "id": item["id"], "path": item["path"],
                       "seed": item["seed"], "prompt": item["prompt"],
                       "sha256": hashlib.sha256(Path(item["path"]).read_bytes()).hexdigest(),
-                      "personalization_hash": item["personalization"]["hash"]}), flush=True)
+                      "policy_id": personalization["policy_id"],
+                      "policy_hash": personalization["policy_hash"],
+                      "effective_policy": personalization["effective_policy"],
+                      "personalization_hash": personalization["hash"]}), flush=True)
     if not marker.exists():
         marker.write_text(str(os.getpid()))
         if os.environ["RECOVERY_TEST_FAILURE"] == "kill":
@@ -69,15 +73,22 @@ def test_worker_death_preserves_image_and_next_session_can_generate(
 
     monkeypatch.setattr(gpu, "run_process", model_process)
     monkeypatch.setattr(gpu, "OUTPUTS", tmp_path)
-    service = Service(tmp_path)
+    service = Service(tmp_path, provenance=PROVENANCE)
 
     def generate(request_id):
         session = service.create_session()
         sid = session["id"]
         service.set_selection(
-            sid, [{"card_id": IDS[i], "aspects_off": []} for i in range(3)]
+            sid,
+            expected_revision=0,
+            cards=[
+                {"card_id": card_id, "strength": 1, "aspects": ["color"]}
+                for card_id in session["shown_ids"][:3]
+            ],
+            aspect_gains=GAINS,
+            commit=True,
         )
-        service.start_run(sid, "cat", request_id)
+        service.start_run(sid, "cat", request_id, 1)
         deadline = time.monotonic() + 15
         while service.busy and time.monotonic() < deadline:
             time.sleep(0.01)

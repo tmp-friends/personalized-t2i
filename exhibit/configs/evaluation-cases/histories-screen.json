@@ -1,0 +1,9 @@
+{
+  "schema_version": 1,
+  "histories": [
+    {"id": "warm", "refs": [{"ref_id": "warm-color", "text": "warm color palette, amber and orange tones", "weight": 3.0}, {"ref_id": "warm-light", "text": "warm golden hour light, gentle shadows", "weight": 3.0}, {"ref_id": "warm-texture", "text": "watercolor painting, soft brushwork, painterly texture", "weight": 3.0}, {"ref_id": "warm-mood", "text": "calm atmosphere", "weight": 3.0}]},
+    {"id": "cool", "refs": [{"ref_id": "cool-color", "text": "cool color palette, blue and teal tones", "weight": 3.0}, {"ref_id": "cool-light", "text": "soft diffused light", "weight": 3.0}, {"ref_id": "cool-texture", "text": "cel shading, clean lineart, anime coloring", "weight": 3.0}, {"ref_id": "cool-mood", "text": "calm atmosphere", "weight": 3.0}]},
+    {"id": "mixed", "refs": [{"ref_id": "mixed-warm-color", "text": "warm color palette, amber and orange tones", "weight": 2.0}, {"ref_id": "mixed-warm-light", "text": "warm golden hour light, gentle shadows", "weight": 2.0}, {"ref_id": "mixed-warm-texture", "text": "watercolor painting, soft brushwork, painterly texture", "weight": 2.0}, {"ref_id": "mixed-cool-color", "text": "cool color palette, blue and teal tones", "weight": 1.0}, {"ref_id": "mixed-cool-light", "text": "soft diffused light", "weight": 1.0}, {"ref_id": "mixed-cool-texture", "text": "cel shading, clean lineart, anime coloring", "weight": 1.0}, {"ref_id": "mixed-mood", "text": "calm atmosphere", "weight": 3.0}]},
+    {"id": "sparse", "refs": [{"ref_id": "sparse-warm", "text": "warm color palette, amber and orange tones", "weight": 2.0}, {"ref_id": "sparse-cool", "text": "cool color palette, blue and teal tones", "weight": 1.0}]}
+  ]
+}

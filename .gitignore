@@ -45,3 +45,6 @@
 
 # Isolated feature worktrees
 .worktrees/
+
+# Per-image worker traces written next to generated assets
+exhibit/assets/**/*.trace.json

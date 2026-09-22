@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "default_policy_id": "legacy_exhibit",
+  "policies": {
+    "legacy_exhibit": {
+      "alpha": 0.5,
+      "skip": -2,
+      "skip_pa": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "use_attn_mask": false,
+      "pooled_mode": "plain",
+      "profiling": {
+        "mode": "all"
+      },
+      "reference_unit": "aspect_phrase"
+    },
+    "official_encoder": {
+      "alpha": 0.4,
+      "skip": -2,
+      "skip_pa": [
+        0
+      ],
+      "use_attn_mask": false,
+      "pooled_mode": "fan",
+      "profiling": {
+        "mode": "ratio",
+        "value": 0.1
+      },
+      "reference_unit": "aspect_phrase"
+    }
+  }
+}

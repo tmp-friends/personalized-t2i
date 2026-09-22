@@ -1,0 +1,1532 @@
+{
+ "base (shipped)": {
+  "pool": 176,
+  "feasible": true,
+  "example": [
+   {
+    "color": 0,
+    "lighting": 0,
+    "texture": 3,
+    "mood": 2
+   },
+   {
+    "color": 0,
+    "lighting": 2,
+    "texture": 0,
+    "mood": 0
+   },
+   {
+    "color": 0,
+    "lighting": 2,
+    "texture": 2,
+    "mood": 3
+   },
+   {
+    "color": 0,
+    "lighting": 3,
+    "texture": 3,
+    "mood": 2
+   },
+   {
+    "color": 1,
+    "lighting": 0,
+    "texture": 1,
+    "mood": 0
+   },
+   {
+    "color": 1,
+    "lighting": 0,
+    "texture": 2,
+    "mood": 2
+   },
+   {
+    "color": 1,
+    "lighting": 2,
+    "texture": 2,
+    "mood": 0
+   },
+   {
+    "color": 1,
+    "lighting": 3,
+    "texture": 1,
+    "mood": 3
+   },
+   {
+    "color": 2,
+    "lighting": 0,
+    "texture": 0,
+    "mood": 1
+   },
+   {
+    "color": 2,
+    "lighting": 1,
+    "texture": 0,
+    "mood": 1
+   },
+   {
+    "color": 2,
+    "lighting": 1,
+    "texture": 1,
+    "mood": 0
+   },
+   {
+    "color": 2,
+    "lighting": 3,
+    "texture": 3,
+    "mood": 3
+   },
+   {
+    "color": 3,
+    "lighting": 1,
+    "texture": 0,
+    "mood": 3
+   },
+   {
+    "color": 3,
+    "lighting": 1,
+    "texture": 1,
+    "mood": 1
+   },
+   {
+    "color": 3,
+    "lighting": 2,
+    "texture": 2,
+    "mood": 2
+   },
+   {
+    "color": 3,
+    "lighting": 3,
+    "texture": 3,
+    "mood": 1
+   }
+  ]
+ },
+ "base + A c3xl1": {
+  "pool": 160,
+  "feasible": true,
+  "example": [
+   {
+    "color": 0,
+    "lighting": 0,
+    "texture": 3,
+    "mood": 3
+   },
+   {
+    "color": 0,
+    "lighting": 2,
+    "texture": 2,
+    "mood": 1
+   },
+   {
+    "color": 0,
+    "lighting": 2,
+    "texture": 2,
+    "mood": 2
+   },
+   {
+    "color": 0,
+    "lighting": 3,
+    "texture": 1,
+    "mood": 0
+   },
+   {
+    "color": 1,
+    "lighting": 0,
+    "texture": 1,
+    "mood": 2
+   },
+   {
+    "color": 1,
+    "lighting": 1,
+    "texture": 1,
+    "mood": 0
+   },
+   {
+    "color": 1,
+    "lighting": 1,
+    "texture": 3,
+    "mood": 0
+   },
+   {
+    "color": 1,
+    "lighting": 2,
+    "texture": 0,
+    "mood": 3
+   },
+   {
+    "color": 2,
+    "lighting": 0,
+    "texture": 0,
+    "mood": 1
+   },
+   {
+    "color": 2,
+    "lighting": 0,
+    "texture": 0,
+    "mood": 2
+   },
+   {
+    "color": 2,
+    "lighting": 1,
+    "texture": 2,
+    "mood": 1
+   },
+   {
+    "color": 2,
+    "lighting": 1,
+    "texture": 2,
+    "mood": 3
+   },
+   {
+    "color": 3,
+    "lighting": 2,
+    "texture": 0,
+    "mood": 1
+   },
+   {
+    "color": 3,
+    "lighting": 3,
+    "texture": 1,
+    "mood": 2
+   },
+   {
+    "color": 3,
+    "lighting": 3,
+    "texture": 3,
+    "mood": 0
+   },
+   {
+    "color": 3,
+    "lighting": 3,
+    "texture": 3,
+    "mood": 3
+   }
+  ]
+ },
+ "base + B c3xt3": {
+  "pool": 168,
+  "feasible": true,
+  "example": [
+   {
+    "color": 0,
+    "lighting": 0,
+    "texture": 3,
+    "mood": 3
+   },
+   {
+    "color": 0,
+    "lighting": 2,
+    "texture": 0,
+    "mood": 3
+   },
+   {
+    "color": 0,
+    "lighting": 2,
+    "texture": 2,
+    "mood": 2
+   },
+   {
+    "color": 0,
+    "lighting": 3,
+    "texture": 3,
+    "mood": 1
+   },
+   {
+    "color": 1,
+    "lighting": 0,
+    "texture": 0,
+    "mood": 0
+   },
+   {
+    "color": 1,
+    "lighting": 1,
+    "texture": 1,
+    "mood": 2
+   },
+   {
+    "color": 1,
+    "lighting": 1,
+    "texture": 2,
+    "mood": 2
+   },
+   {
+    "color": 1,
+    "lighting": 3,
+    "texture": 3,
+    "mood": 1
+   },
+   {
+    "color": 2,
+    "lighting": 0,
+    "texture": 0,
+    "mood": 0
+   },
+   {
+    "color": 2,
+    "lighting": 0,
+    "texture": 2,
+    "mood": 1
+   },
+   {
+    "color": 2,
+    "lighting": 2,
+    "texture": 1,
+    "mood": 3
+   },
+   {
+    "color": 2,
+    "lighting": 3,
+    "texture": 3,
+    "mood": 0
+   },
+   {
+    "color": 3,
+    "lighting": 1,
+    "texture": 1,
+    "mood": 3
+   },
+   {
+    "color": 3,
+    "lighting": 1,
+    "texture": 2,
+    "mood": 2
+   },
+   {
+    "color": 3,
+    "lighting": 2,
+    "texture": 0,
+    "mood": 0
+   },
+   {
+    "color": 3,
+    "lighting": 3,
+    "texture": 1,
+    "mood": 1
+   }
+  ]
+ },
+ "base + C l2xt2": {
+  "pool": 160,
+  "feasible": true,
+  "example": [
+   {
+    "color": 0,
+    "lighting": 2,
+    "texture": 1,
+    "mood": 3
+   },
+   {
+    "color": 0,
+    "lighting": 3,
+    "texture": 1,
+    "mood": 1
+   },
+   {
+    "color": 0,
+    "lighting": 3,
+    "texture": 1,
+    "mood": 2
+   },
+   {
+    "color": 0,
+    "lighting": 3,
+    "texture": 3,
+    "mood": 0
+   },
+   {
+    "color": 1,
+    "lighting": 0,
+    "texture": 2,
+    "mood": 2
+   },
+   {
+    "color": 1,
+    "lighting": 1,
+    "texture": 2,
+    "mood": 0
+   },
+   {
+    "color": 1,
+    "lighting": 2,
+    "texture": 0,
+    "mood": 0
+   },
+   {
+    "color": 1,
+    "lighting": 2,
+    "texture": 1,
+    "mood": 3
+   },
+   {
+    "color": 2,
+    "lighting": 0,
+    "texture": 0,
+    "mood": 3
+   },
+   {
+    "color": 2,
+    "lighting": 0,
+    "texture": 2,
+    "mood": 1
+   },
+   {
+    "color": 2,
+    "lighting": 0,
+    "texture": 2,
+    "mood": 3
+   },
+   {
+    "color": 2,
+    "lighting": 2,
+    "texture": 0,
+    "mood": 1
+   },
+   {
+    "color": 3,
+    "lighting": 1,
+    "texture": 0,
+    "mood": 2
+   },
+   {
+    "color": 3,
+    "lighting": 1,
+    "texture": 3,
+    "mood": 1
+   },
+   {
+    "color": 3,
+    "lighting": 1,
+    "texture": 3,
+    "mood": 2
+   },
+   {
+    "color": 3,
+    "lighting": 3,
+    "texture": 3,
+    "mood": 0
+   }
+  ]
+ },
+ "base + D c0xl0": {
+  "pool": 160,
+  "feasible": true,
+  "example": [
+   {
+    "color": 0,
+    "lighting": 2,
+    "texture": 0,
+    "mood": 1
+   },
+   {
+    "color": 0,
+    "lighting": 2,
+    "texture": 1,
+    "mood": 0
+   },
+   {
+    "color": 0,
+    "lighting": 3,
+    "texture": 1,
+    "mood": 0
+   },
+   {
+    "color": 0,
+    "lighting": 3,
+    "texture": 1,
+    "mood": 3
+   },
+   {
+    "color": 1,
+    "lighting": 0,
+    "texture": 0,
+    "mood": 1
+   },
+   {
+    "color": 1,
+    "lighting": 0,
+    "texture": 0,
+    "mood": 2
+   },
+   {
+    "color": 1,
+    "lighting": 1,
+    "texture": 2,
+    "mood": 2
+   },
+   {
+    "color": 1,
+    "lighting": 1,
+    "texture": 2,
+    "mood": 3
+   },
+   {
+    "color": 2,
+    "lighting": 0,
+    "texture": 0,
+    "mood": 0
+   },
+   {
+    "color": 2,
+    "lighting": 0,
+    "texture": 1,
+    "mood": 2
+   },
+   {
+    "color": 2,
+    "lighting": 1,
+    "texture": 3,
+    "mood": 1
+   },
+   {
+    "color": 2,
+    "lighting": 1,
+    "texture": 3,
+    "mood": 2
+   },
+   {
+    "color": 3,
+    "lighting": 2,
+    "texture": 2,
+    "mood": 0
+   },
+   {
+    "color": 3,
+    "lighting": 2,
+    "texture": 2,
+    "mood": 3
+   },
+   {
+    "color": 3,
+    "lighting": 3,
+    "texture": 3,
+    "mood": 1
+   },
+   {
+    "color": 3,
+    "lighting": 3,
+    "texture": 3,
+    "mood": 3
+   }
+  ]
+ },
+ "base + E c3xt0": {
+  "pool": 168,
+  "feasible": true,
+  "example": [
+   {
+    "color": 0,
+    "lighting": 0,
+    "texture": 0,
+    "mood": 2
+   },
+   {
+    "color": 0,
+    "lighting": 3,
+    "texture": 1,
+    "mood": 0
+   },
+   {
+    "color": 0,
+    "lighting": 3,
+    "texture": 3,
+    "mood": 0
+   },
+   {
+    "color": 0,
+    "lighting": 3,
+    "texture": 3,
+    "mood": 1
+   },
+   {
+    "color": 1,
+    "lighting": 0,
+    "texture": 3,
+    "mood": 0
+   },
+   {
+    "color": 1,
+    "lighting": 1,
+    "texture": 2,
+    "mood": 0
+   },
+   {
+    "color": 1,
+    "lighting": 1,
+    "texture": 2,
+    "mood": 3
+   },
+   {
+    "color": 1,
+    "lighting": 2,
+    "texture": 0,
+    "mood": 3
+   },
+   {
+    "color": 2,
+    "lighting": 0,
+    "texture": 0,
+    "mood": 1
+   },
+   {
+    "color": 2,
+    "lighting": 0,
+    "texture": 3,
+    "mood": 3
+   },
+   {
+    "color": 2,
+    "lighting": 1,
+    "texture": 0,
+    "mood": 3
+   },
+   {
+    "color": 2,
+    "lighting": 2,
+    "texture": 2,
+    "mood": 2
+   },
+   {
+    "color": 3,
+    "lighting": 1,
+    "texture": 2,
+    "mood": 2
+   },
+   {
+    "color": 3,
+    "lighting": 2,
+    "texture": 1,
+    "mood": 1
+   },
+   {
+    "color": 3,
+    "lighting": 2,
+    "texture": 1,
+    "mood": 2
+   },
+   {
+    "color": 3,
+    "lighting": 3,
+    "texture": 1,
+    "mood": 1
+   }
+  ]
+ },
+ "base + F c1xl3": {
+  "pool": 168,
+  "feasible": true,
+  "example": [
+   {
+    "color": 0,
+    "lighting": 2,
+    "texture": 1,
+    "mood": 0
+   },
+   {
+    "color": 0,
+    "lighting": 2,
+    "texture": 2,
+    "mood": 3
+   },
+   {
+    "color": 0,
+    "lighting": 3,
+    "texture": 3,
+    "mood": 0
+   },
+   {
+    "color": 0,
+    "lighting": 3,
+    "texture": 3,
+    "mood": 1
+   },
+   {
+    "color": 1,
+    "lighting": 0,
+    "texture": 1,
+    "mood": 1
+   },
+   {
+    "color": 1,
+    "lighting": 0,
+    "texture": 3,
+    "mood": 3
+   },
+   {
+    "color": 1,
+    "lighting": 1,
+    "texture": 0,
+    "mood": 0
+   },
+   {
+    "color": 1,
+    "lighting": 1,
+    "texture": 0,
+    "mood": 3
+   },
+   {
+    "color": 2,
+    "lighting": 0,
+    "texture": 0,
+    "mood": 1
+   },
+   {
+    "color": 2,
+    "lighting": 0,
+    "texture": 1,
+    "mood": 2
+   },
+   {
+    "color": 2,
+    "lighting": 2,
+    "texture": 0,
+    "mood": 1
+   },
+   {
+    "color": 2,
+    "lighting": 3,
+    "texture": 1,
+    "mood": 2
+   },
+   {
+    "color": 3,
+    "lighting": 1,
+    "texture": 2,
+    "mood": 0
+   },
+   {
+    "color": 3,
+    "lighting": 1,
+    "texture": 2,
+    "mood": 2
+   },
+   {
+    "color": 3,
+    "lighting": 2,
+    "texture": 2,
+    "mood": 2
+   },
+   {
+    "color": 3,
+    "lighting": 3,
+    "texture": 3,
+    "mood": 3
+   }
+  ]
+ },
+ "base + G l3xt1": {
+  "pool": 160,
+  "feasible": true,
+  "example": [
+   {
+    "color": 0,
+    "lighting": 0,
+    "texture": 2,
+    "mood": 1
+   },
+   {
+    "color": 0,
+    "lighting": 2,
+    "texture": 1,
+    "mood": 2
+   },
+   {
+    "color": 0,
+    "lighting": 2,
+    "texture": 2,
+    "mood": 1
+   },
+   {
+    "color": 0,
+    "lighting": 3,
+    "texture": 3,
+    "mood": 1
+   },
+   {
+    "color": 1,
+    "lighting": 0,
+    "texture": 0,
+    "mood": 3
+   },
+   {
+    "color": 1,
+    "lighting": 0,
+    "texture": 2,
+    "mood": 0
+   },
+   {
+    "color": 1,
+    "lighting": 0,
+    "texture": 2,
+    "mood": 2
+   },
+   {
+    "color": 1,
+    "lighting": 3,
+    "texture": 3,
+    "mood": 3
+   },
+   {
+    "color": 2,
+    "lighting": 1,
+    "texture": 0,
+    "mood": 0
+   },
+   {
+    "color": 2,
+    "lighting": 1,
+    "texture": 0,
+    "mood": 1
+   },
+   {
+    "color": 2,
+    "lighting": 1,
+    "texture": 1,
+    "mood": 3
+   },
+   {
+    "color": 2,
+    "lighting": 2,
+    "texture": 1,
+    "mood": 0
+   },
+   {
+    "color": 3,
+    "lighting": 1,
+    "texture": 0,
+    "mood": 2
+   },
+   {
+    "color": 3,
+    "lighting": 2,
+    "texture": 1,
+    "mood": 0
+   },
+   {
+    "color": 3,
+    "lighting": 3,
+    "texture": 3,
+    "mood": 2
+   },
+   {
+    "color": 3,
+    "lighting": 3,
+    "texture": 3,
+    "mood": 3
+   }
+  ]
+ },
+ "base + B,C": {
+  "pool": 152,
+  "feasible": true,
+  "example": [
+   {
+    "color": 0,
+    "lighting": 0,
+    "texture": 2,
+    "mood": 0
+   },
+   {
+    "color": 0,
+    "lighting": 0,
+    "texture": 3,
+    "mood": 2
+   },
+   {
+    "color": 0,
+    "lighting": 3,
+    "texture": 1,
+    "mood": 0
+   },
+   {
+    "color": 0,
+    "lighting": 3,
+    "texture": 3,
+    "mood": 3
+   },
+   {
+    "color": 1,
+    "lighting": 0,
+    "texture": 2,
+    "mood": 0
+   },
+   {
+    "color": 1,
+    "lighting": 1,
+    "texture": 2,
+    "mood": 1
+   },
+   {
+    "color": 1,
+    "lighting": 1,
+    "texture": 3,
+    "mood": 0
+   },
+   {
+    "color": 1,
+    "lighting": 3,
+    "texture": 1,
+    "mood": 2
+   },
+   {
+    "color": 2,
+    "lighting": 0,
+    "texture": 1,
+    "mood": 1
+   },
+   {
+    "color": 2,
+    "lighting": 1,
+    "texture": 2,
+    "mood": 3
+   },
+   {
+    "color": 2,
+    "lighting": 2,
+    "texture": 0,
+    "mood": 2
+   },
+   {
+    "color": 2,
+    "lighting": 3,
+    "texture": 3,
+    "mood": 2
+   },
+   {
+    "color": 3,
+    "lighting": 1,
+    "texture": 0,
+    "mood": 3
+   },
+   {
+    "color": 3,
+    "lighting": 2,
+    "texture": 0,
+    "mood": 1
+   },
+   {
+    "color": 3,
+    "lighting": 2,
+    "texture": 0,
+    "mood": 3
+   },
+   {
+    "color": 3,
+    "lighting": 2,
+    "texture": 1,
+    "mood": 1
+   }
+  ]
+ },
+ "base + A,B,C": {
+  "pool": 140,
+  "feasible": true,
+  "example": [
+   {
+    "color": 0,
+    "lighting": 0,
+    "texture": 2,
+    "mood": 1
+   },
+   {
+    "color": 0,
+    "lighting": 0,
+    "texture": 2,
+    "mood": 2
+   },
+   {
+    "color": 0,
+    "lighting": 2,
+    "texture": 0,
+    "mood": 2
+   },
+   {
+    "color": 0,
+    "lighting": 3,
+    "texture": 3,
+    "mood": 0
+   },
+   {
+    "color": 1,
+    "lighting": 0,
+    "texture": 3,
+    "mood": 0
+   },
+   {
+    "color": 1,
+    "lighting": 1,
+    "texture": 0,
+    "mood": 2
+   },
+   {
+    "color": 1,
+    "lighting": 1,
+    "texture": 2,
+    "mood": 3
+   },
+   {
+    "color": 1,
+    "lighting": 2,
+    "texture": 0,
+    "mood": 1
+   },
+   {
+    "color": 2,
+    "lighting": 0,
+    "texture": 0,
+    "mood": 0
+   },
+   {
+    "color": 2,
+    "lighting": 1,
+    "texture": 2,
+    "mood": 2
+   },
+   {
+    "color": 2,
+    "lighting": 1,
+    "texture": 3,
+    "mood": 3
+   },
+   {
+    "color": 2,
+    "lighting": 3,
+    "texture": 3,
+    "mood": 1
+   },
+   {
+    "color": 3,
+    "lighting": 2,
+    "texture": 1,
+    "mood": 1
+   },
+   {
+    "color": 3,
+    "lighting": 2,
+    "texture": 1,
+    "mood": 3
+   },
+   {
+    "color": 3,
+    "lighting": 3,
+    "texture": 1,
+    "mood": 0
+   },
+   {
+    "color": 3,
+    "lighting": 3,
+    "texture": 1,
+    "mood": 3
+   }
+  ]
+ },
+ "base + B,C,F": {
+  "pool": 144,
+  "feasible": true,
+  "example": [
+   {
+    "color": 0,
+    "lighting": 0,
+    "texture": 0,
+    "mood": 0
+   },
+   {
+    "color": 0,
+    "lighting": 0,
+    "texture": 2,
+    "mood": 1
+   },
+   {
+    "color": 0,
+    "lighting": 2,
+    "texture": 0,
+    "mood": 1
+   },
+   {
+    "color": 0,
+    "lighting": 3,
+    "texture": 1,
+    "mood": 0
+   },
+   {
+    "color": 1,
+    "lighting": 0,
+    "texture": 2,
+    "mood": 0
+   },
+   {
+    "color": 1,
+    "lighting": 1,
+    "texture": 2,
+    "mood": 2
+   },
+   {
+    "color": 1,
+    "lighting": 1,
+    "texture": 3,
+    "mood": 2
+   },
+   {
+    "color": 1,
+    "lighting": 2,
+    "texture": 0,
+    "mood": 0
+   },
+   {
+    "color": 2,
+    "lighting": 0,
+    "texture": 2,
+    "mood": 1
+   },
+   {
+    "color": 2,
+    "lighting": 1,
+    "texture": 3,
+    "mood": 3
+   },
+   {
+    "color": 2,
+    "lighting": 3,
+    "texture": 3,
+    "mood": 2
+   },
+   {
+    "color": 2,
+    "lighting": 3,
+    "texture": 3,
+    "mood": 3
+   },
+   {
+    "color": 3,
+    "lighting": 1,
+    "texture": 0,
+    "mood": 3
+   },
+   {
+    "color": 3,
+    "lighting": 2,
+    "texture": 1,
+    "mood": 1
+   },
+   {
+    "color": 3,
+    "lighting": 2,
+    "texture": 1,
+    "mood": 3
+   },
+   {
+    "color": 3,
+    "lighting": 3,
+    "texture": 1,
+    "mood": 2
+   }
+  ]
+ },
+ "base + A,B,C,F": {
+  "pool": 132,
+  "feasible": true,
+  "example": [
+   {
+    "color": 0,
+    "lighting": 0,
+    "texture": 0,
+    "mood": 3
+   },
+   {
+    "color": 0,
+    "lighting": 0,
+    "texture": 3,
+    "mood": 2
+   },
+   {
+    "color": 0,
+    "lighting": 2,
+    "texture": 0,
+    "mood": 3
+   },
+   {
+    "color": 0,
+    "lighting": 3,
+    "texture": 3,
+    "mood": 3
+   },
+   {
+    "color": 1,
+    "lighting": 0,
+    "texture": 2,
+    "mood": 0
+   },
+   {
+    "color": 1,
+    "lighting": 1,
+    "texture": 1,
+    "mood": 0
+   },
+   {
+    "color": 1,
+    "lighting": 1,
+    "texture": 2,
+    "mood": 1
+   },
+   {
+    "color": 1,
+    "lighting": 2,
+    "texture": 0,
+    "mood": 2
+   },
+   {
+    "color": 2,
+    "lighting": 0,
+    "texture": 3,
+    "mood": 0
+   },
+   {
+    "color": 2,
+    "lighting": 1,
+    "texture": 2,
+    "mood": 1
+   },
+   {
+    "color": 2,
+    "lighting": 1,
+    "texture": 2,
+    "mood": 2
+   },
+   {
+    "color": 2,
+    "lighting": 3,
+    "texture": 3,
+    "mood": 1
+   },
+   {
+    "color": 3,
+    "lighting": 2,
+    "texture": 0,
+    "mood": 2
+   },
+   {
+    "color": 3,
+    "lighting": 2,
+    "texture": 1,
+    "mood": 3
+   },
+   {
+    "color": 3,
+    "lighting": 3,
+    "texture": 1,
+    "mood": 0
+   },
+   {
+    "color": 3,
+    "lighting": 3,
+    "texture": 1,
+    "mood": 1
+   }
+  ]
+ },
+ "base + A,B,C,E,F": {
+  "pool": 128,
+  "feasible": true,
+  "example": [
+   {
+    "color": 0,
+    "lighting": 0,
+    "texture": 2,
+    "mood": 0
+   },
+   {
+    "color": 0,
+    "lighting": 2,
+    "texture": 0,
+    "mood": 3
+   },
+   {
+    "color": 0,
+    "lighting": 3,
+    "texture": 3,
+    "mood": 0
+   },
+   {
+    "color": 0,
+    "lighting": 3,
+    "texture": 3,
+    "mood": 2
+   },
+   {
+    "color": 1,
+    "lighting": 0,
+    "texture": 0,
+    "mood": 3
+   },
+   {
+    "color": 1,
+    "lighting": 0,
+    "texture": 2,
+    "mood": 1
+   },
+   {
+    "color": 1,
+    "lighting": 1,
+    "texture": 2,
+    "mood": 2
+   },
+   {
+    "color": 1,
+    "lighting": 1,
+    "texture": 3,
+    "mood": 1
+   },
+   {
+    "color": 2,
+    "lighting": 0,
+    "texture": 0,
+    "mood": 1
+   },
+   {
+    "color": 2,
+    "lighting": 1,
+    "texture": 0,
+    "mood": 3
+   },
+   {
+    "color": 2,
+    "lighting": 1,
+    "texture": 2,
+    "mood": 2
+   },
+   {
+    "color": 2,
+    "lighting": 3,
+    "texture": 3,
+    "mood": 0
+   },
+   {
+    "color": 3,
+    "lighting": 2,
+    "texture": 1,
+    "mood": 0
+   },
+   {
+    "color": 3,
+    "lighting": 2,
+    "texture": 1,
+    "mood": 1
+   },
+   {
+    "color": 3,
+    "lighting": 2,
+    "texture": 1,
+    "mood": 2
+   },
+   {
+    "color": 3,
+    "lighting": 3,
+    "texture": 1,
+    "mood": 3
+   }
+  ]
+ },
+ "base + A,B,C,D,F": {
+  "pool": 116,
+  "feasible": true,
+  "example": [
+   {
+    "color": 0,
+    "lighting": 2,
+    "texture": 0,
+    "mood": 0
+   },
+   {
+    "color": 0,
+    "lighting": 2,
+    "texture": 0,
+    "mood": 3
+   },
+   {
+    "color": 0,
+    "lighting": 3,
+    "texture": 3,
+    "mood": 0
+   },
+   {
+    "color": 0,
+    "lighting": 3,
+    "texture": 3,
+    "mood": 3
+   },
+   {
+    "color": 1,
+    "lighting": 0,
+    "texture": 1,
+    "mood": 2
+   },
+   {
+    "color": 1,
+    "lighting": 0,
+    "texture": 3,
+    "mood": 1
+   },
+   {
+    "color": 1,
+    "lighting": 1,
+    "texture": 2,
+    "mood": 2
+   },
+   {
+    "color": 1,
+    "lighting": 1,
+    "texture": 3,
+    "mood": 1
+   },
+   {
+    "color": 2,
+    "lighting": 0,
+    "texture": 2,
+    "mood": 1
+   },
+   {
+    "color": 2,
+    "lighting": 0,
+    "texture": 2,
+    "mood": 2
+   },
+   {
+    "color": 2,
+    "lighting": 1,
+    "texture": 0,
+    "mood": 3
+   },
+   {
+    "color": 2,
+    "lighting": 1,
+    "texture": 2,
+    "mood": 1
+   },
+   {
+    "color": 3,
+    "lighting": 2,
+    "texture": 0,
+    "mood": 2
+   },
+   {
+    "color": 3,
+    "lighting": 2,
+    "texture": 1,
+    "mood": 0
+   },
+   {
+    "color": 3,
+    "lighting": 3,
+    "texture": 1,
+    "mood": 0
+   },
+   {
+    "color": 3,
+    "lighting": 3,
+    "texture": 1,
+    "mood": 3
+   }
+  ]
+ },
+ "base + A,B,C,D,E,F": {
+  "pool": 112,
+  "feasible": true,
+  "example": [
+   {
+    "color": 0,
+    "lighting": 2,
+    "texture": 0,
+    "mood": 1
+   },
+   {
+    "color": 0,
+    "lighting": 2,
+    "texture": 0,
+    "mood": 3
+   },
+   {
+    "color": 0,
+    "lighting": 3,
+    "texture": 3,
+    "mood": 2
+   },
+   {
+    "color": 0,
+    "lighting": 3,
+    "texture": 3,
+    "mood": 3
+   },
+   {
+    "color": 1,
+    "lighting": 0,
+    "texture": 3,
+    "mood": 0
+   },
+   {
+    "color": 1,
+    "lighting": 1,
+    "texture": 0,
+    "mood": 2
+   },
+   {
+    "color": 1,
+    "lighting": 1,
+    "texture": 0,
+    "mood": 3
+   },
+   {
+    "color": 1,
+    "lighting": 1,
+    "texture": 2,
+    "mood": 2
+   },
+   {
+    "color": 2,
+    "lighting": 0,
+    "texture": 2,
+    "mood": 0
+   },
+   {
+    "color": 2,
+    "lighting": 0,
+    "texture": 2,
+    "mood": 1
+   },
+   {
+    "color": 2,
+    "lighting": 0,
+    "texture": 3,
+    "mood": 0
+   },
+   {
+    "color": 2,
+    "lighting": 1,
+    "texture": 2,
+    "mood": 1
+   },
+   {
+    "color": 3,
+    "lighting": 2,
+    "texture": 1,
+    "mood": 0
+   },
+   {
+    "color": 3,
+    "lighting": 2,
+    "texture": 1,
+    "mood": 2
+   },
+   {
+    "color": 3,
+    "lighting": 3,
+    "texture": 1,
+    "mood": 1
+   },
+   {
+    "color": 3,
+    "lighting": 3,
+    "texture": 1,
+    "mood": 3
+   }
+  ]
+ }
+}

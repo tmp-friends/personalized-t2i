@@ -7,6 +7,8 @@ from exhibit import domain
 QUALITY_PREFIX = (
     "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, "
 )
+# catalog-v2 dropped `amazing quality` to buy tokens for the four aspect phrases.
+V2_QUALITY_PREFIX = "masterpiece, best quality, very aesthetic, newest, safe, "
 
 
 def test_compose_prompt_places_quality_first_and_resolution_last():
@@ -27,17 +29,6 @@ def test_all_exhibit_topics_use_the_illustrious_v2_quality_prefix():
         target = domain.target_prompt(topic)
         assert target.startswith(QUALITY_PREFIX)
         assert target.endswith(CONFIG["generation"]["positive_prompt_tail"] + ".")
-
-
-def test_all_card_prompts_use_the_same_quality_envelope():
-    for card in domain.CARDS.values():
-        assert card["prompt"].startswith(QUALITY_PREFIX), card["id"]
-        assert card["prompt"].endswith(
-            CONFIG["generation"]["positive_prompt_tail"] + "."
-        )
-        # The subject never enters a reference; only the expression phrases do.
-        assert QUALITY_PREFIX not in card["ref_en"]
-        assert card["ref_en"] == ", ".join(card["aspects"].values())
 
 
 def test_generation_profile_matches_the_reviewed_illustrious_v2_contract():
@@ -64,3 +55,20 @@ def test_generation_profile_matches_the_reviewed_illustrious_v2_contract():
     assert "clip_skip" not in g
     assert g["positive_prompt_tail"] == "absurdres, highres"
     assert "nsfw" in g["negative_prompt"] and "multiple people" in g["negative_prompt"]
+
+
+def test_v2_catalog_prompts_keep_all_four_reference_phrases_in_the_quality_envelope():
+    from exhibit.catalog import build_catalog
+    from exhibit.config import ROOT, read_json
+
+    cards = build_catalog(read_json(ROOT / "configs/catalog-v2.json"))
+    assert len(cards) == 64
+    assert "amazing quality" not in V2_QUALITY_PREFIX
+    for card in cards:
+        assert card["prompt"].startswith(V2_QUALITY_PREFIX), card["id"]
+        assert "amazing quality" not in card["prompt"], card["id"]
+        assert card["prompt"].endswith(
+            CONFIG["generation"]["positive_prompt_tail"] + "."
+        )
+        assert card["ref_en"] == ", ".join(card["aspects"].values())
+        assert all(phrase in card["prompt"] for phrase in card["aspects"].values())

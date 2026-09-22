@@ -1,0 +1,225 @@
+/* Self-contained study styling: system fonts only, so the page makes no request. */
+:root {
+  color-scheme: dark;
+  --bg: #100d0c;
+  --panel: #191514;
+  --raise: #221c1a;
+  --line: #30282a;
+  --ink: #f8f1eb;
+  --sub: #ab9f97;
+  --a1: #ff9a6b;
+  --a2: #ff6f93;
+  --on-accent: #1a0e0a;
+  --accent: linear-gradient(135deg, var(--a1), var(--a2));
+  --sans: "Noto Sans CJK JP", "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Yu Gothic",
+    system-ui, sans-serif;
+  --r-m: 14px;
+  --pill: 999px;
+}
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 15px;
+  line-height: 1.7;
+  overflow-x: hidden;
+}
+main,
+header {
+  max-width: 1040px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+header {
+  padding-top: 28px;
+  padding-bottom: 8px;
+}
+h1 {
+  font-size: 20px;
+  margin: 0 0 4px;
+}
+h2 {
+  font-size: 16px;
+  margin: 18px 0 6px;
+}
+p {
+  margin: 6px 0;
+}
+.sub,
+.note,
+.round-tag {
+  color: var(--sub);
+  font-size: 13px;
+}
+.note {
+  color: var(--a1);
+}
+.panel {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--r-m);
+  padding: 16px;
+  margin: 12px 0;
+}
+input,
+textarea {
+  width: 100%;
+  background: var(--raise);
+  color: var(--ink);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 10px 12px;
+  font: inherit;
+  margin: 8px 0;
+}
+textarea {
+  font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
+  font-size: 12px;
+  white-space: pre;
+}
+button {
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  border-radius: var(--pill);
+  border: 1px solid var(--line);
+  background: var(--raise);
+  padding: 8px 16px;
+  touch-action: manipulation;
+}
+button[disabled] {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+.primary {
+  background: var(--accent);
+  color: var(--on-accent);
+  border: none;
+  font-weight: 700;
+}
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  margin: 12px 0 32px;
+}
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+  gap: 10px;
+  margin: 12px 0;
+}
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 6px;
+  border-radius: var(--r-m);
+  background: var(--panel);
+  text-align: left;
+}
+.card img {
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  border-radius: 10px;
+  display: block;
+}
+.card-label {
+  font-size: 12px;
+  color: var(--sub);
+}
+.card.selected {
+  border-color: var(--a1);
+  box-shadow: 0 0 0 1px var(--a1) inset;
+}
+.pick {
+  display: grid;
+  grid-template-columns: 64px 1fr;
+  gap: 8px 12px;
+  align-items: start;
+  padding: 10px 0;
+  border-top: 1px solid var(--line);
+}
+.pick img {
+  width: 64px;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  border-radius: 8px;
+  grid-row: span 4;
+}
+.pick-label {
+  font-size: 13px;
+}
+.pick.needs .pick-label::after {
+  content: " · 好きなところが未回答";
+  color: var(--a1);
+}
+.chips,
+.steps {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.chip,
+.step {
+  font-size: 13px;
+  padding: 5px 12px;
+}
+.chip[aria-pressed="true"],
+.step[aria-pressed="true"] {
+  background: var(--accent);
+  color: var(--on-accent);
+  border-color: transparent;
+  font-weight: 700;
+}
+.drop {
+  font-size: 12px;
+  padding: 4px 10px;
+  color: var(--sub);
+  justify-self: start;
+}
+.stored li {
+  color: var(--sub);
+  font-size: 13px;
+}
+.shots {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin: 10px 0;
+}
+.shot {
+  margin: 0;
+}
+.shot img {
+  width: 100%;
+  /* Both images stay on one screen, so the pair is compared without scrolling. */
+  max-height: 64vh;
+  object-fit: contain;
+  border-radius: 10px;
+  display: block;
+  background: var(--raise);
+}
+.shot figcaption {
+  text-align: center;
+  color: var(--sub);
+  font-size: 13px;
+  padding-top: 4px;
+}
+@media (max-width: 520px) {
+  .card-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .pick {
+    grid-template-columns: 52px 1fr;
+  }
+  .pick img {
+    width: 52px;
+  }
+}

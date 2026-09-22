@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "topics": [
+    {
+      "id": "cat",
+      "generation_prompt": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1girl, solo, brown hair, green eyes, sweater, holding cat, window, upper body, detailed eyes, detailed illustration, absurdres, highres.",
+      "target_text": "A brown-haired girl with green eyes wearing a sweater, holding a cat by a window."
+    },
+    {
+      "id": "tokyo",
+      "generation_prompt": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1boy, solo, male focus, short black hair, jacket, Tokyo skyline, night, portrait, detailed eyes, detailed illustration, absurdres, highres.",
+      "target_text": "A young man with short black hair wearing a jacket, with the Tokyo skyline at night."
+    },
+    {
+      "id": "forest",
+      "generation_prompt": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1girl, solo, silver hair, witch hat, cloak, forest, upper body, detailed eyes, detailed illustration, absurdres, highres.",
+      "target_text": "A silver-haired witch wearing a witch hat and a cloak in a forest."
+    },
+    {
+      "id": "lighthouse",
+      "generation_prompt": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1boy, solo, male focus, short blond hair, sailor hat, striped shirt, lighthouse, ocean, upper body, detailed eyes, detailed illustration, absurdres, highres.",
+      "target_text": "A young blond male sailor wearing a sailor hat and a striped shirt, near a lighthouse and the ocean."
+    },
+    {
+      "id": "rain",
+      "generation_prompt": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1girl, solo, blue hair, raincoat, rain, city street, upper body, detailed eyes, detailed illustration, absurdres, highres.",
+      "target_text": "A blue-haired girl wearing a raincoat on a rainy city street."
+    },
+    {
+      "id": "cafe",
+      "generation_prompt": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1girl, solo, auburn hair, white shirt, apron, cafe, upper body, detailed eyes, detailed illustration, absurdres, highres.",
+      "target_text": "An auburn-haired female cafe worker wearing a white shirt and an apron in a cafe."
+    }
+  ],
+  "diagnostic_prompts": [
+    {"id": "diagnostic-short", "text": "A cat by a window."},
+    {
+      "id": "diagnostic-long",
+      "text": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, a brown-haired girl with green eyes wearing a sweater and holding a cat beside a rain-streaked window, detailed illustration, absurdres, highres."
+    }
+  ]
+}

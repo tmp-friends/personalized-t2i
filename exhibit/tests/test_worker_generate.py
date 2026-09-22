@@ -1,12 +1,14 @@
 """The FAN generate stage, with torch/diffusers/fan replaced by recorders."""
 
+import json
 import sys
 from contextlib import contextmanager
 from pathlib import Path
 from types import ModuleType, SimpleNamespace
 
 import pytest
-from exhibit.config import CONFIG
+from exhibit.config import CONFIG, FAN_POLICIES
+from exhibit.fan_adapter import profiling_argument, resolve_policy, thaw_policy
 
 from exhibit import workers
 
@@ -150,14 +152,23 @@ def stubs(monkeypatch, tmp_path):
         calls["fan"].append((model, processor, decoder))
         return SimpleNamespace(model=model, decoder=decoder)
 
+    model_module = ModuleType("fan.model")
+    model_module.sample_reference = lambda *args, **kwargs: None
+
     def stable_diffusion_xl(large, bigG):
         calls["wrapper"].append((large, bigG))
 
         def encoder(prompt, ref_prompt=None, **kwargs):
             calls["encode"].append({"prompt": prompt, "refs": ref_prompt, **kwargs})
+            if ref_prompt and kwargs.get("sample_size"):
+                for _ in range(3):
+                    model_module.sample_reference(
+                        "target", "context", kwargs.get("weight")
+                    )
             suffix = "-personalized" if ref_prompt else ""
             return Tensor("cond" + suffix), Tensor("pooled" + suffix)
 
+        encoder._fan_model_module = model_module
         return encoder
 
     fan_module = ModuleType("fan")
@@ -167,6 +178,7 @@ def stubs(monkeypatch, tmp_path):
     fan_module.wrapper = wrapper_module
     monkeypatch.setitem(sys.modules, "fan", fan_module)
     monkeypatch.setitem(sys.modules, "fan.wrapper", wrapper_module)
+    monkeypatch.setitem(sys.modules, "fan.model", model_module)
 
     events = []
     monkeypatch.setattr(
@@ -178,7 +190,7 @@ def stubs(monkeypatch, tmp_path):
     return calls
 
 
-def personalization(alpha=0.4):
+def personalization(alpha=0.5):
     return {
         "refs": [
             {"card_id": "girl-warm_soft", "text": "warm color palette", "weight": 2.0},
@@ -227,7 +239,7 @@ def test_the_encoder_is_built_once_and_only_references_differ(stubs, tmp_path):
     ]
     assert len(stubs["wrapper"]) == 1
 
-    negative, plain, personal = stubs["encode"]
+    negative, plain, personal, personal_plain = stubs["encode"]
     assert negative["prompt"] == SETTINGS["negative_prompt"]
     assert negative["refs"] is None and negative["weight"] is None
     assert plain["prompt"] == "masterpiece, 1girl, absurdres, highres."
@@ -235,11 +247,15 @@ def test_the_encoder_is_built_once_and_only_references_differ(stubs, tmp_path):
     assert personal["prompt"] == plain["prompt"]
     assert personal["refs"] == ["warm color palette", "cool color palette"]
     assert personal["weight"] == [2.0, 1.0]
-    assert personal["alpha"] == 0.4
-    assert len(stubs["encode"]) == 3, "the plain encoding is reused, not recomputed"
+    assert personal["alpha"] == 0.5
+    assert personal_plain["prompt"] == personal["prompt"]
+    assert personal_plain["refs"] is None and personal_plain["alpha"] is None
+    # The encoder settings come from the legacy policy, never from demo.json.
+    legacy = thaw_policy(resolve_policy("legacy_exhibit", FAN_POLICIES))
+    assert not {"skip", "sample_size", "skip_pa", "use_attn_mask"} & set(CONFIG["fan"])
     for call in stubs["encode"]:
-        assert call["skip"] == CONFIG["fan"]["skip"] == -2
-        assert call["sample_size"] == CONFIG["fan"]["sample_size"] == 0
+        assert call["skip"] == legacy["skip"] == -2
+        assert call["sample_size"] == profiling_argument(legacy) == 0
         # Measured settings: personalized attention is skipped in layers 0-7 and
         # the attention mask stays off, for the target and every reference alike.
         assert call["skip_pa"] == [0, 1, 2, 3, 4, 5, 6, 7]
@@ -281,21 +297,24 @@ def test_image_events_carry_the_personalization_of_their_item(stubs, tmp_path):
     kinds = [kind for kind, _ in stubs["events"]]
     assert kinds == ["loaded", "image", "image"]
     loaded = stubs["events"][0][1]
-    assert loaded["fan"] == {
-        "commit": CONFIG["fan"]["commit"],
-        "pooled": "plain",
-        "skip": -2,
-        "sample_size": 0,
-        "skip_pa": [0, 1, 2, 3, 4, 5, 6, 7],
-        "use_attn_mask": False,
-    }
+    assert loaded["fan"] == {"commit": CONFIG["fan"]["commit"]}
     assert loaded["load_seconds"] >= 0
     plain, personal = (data for kind, data in stubs["events"] if kind == "image")
     assert plain["personalization_hash"] is None
     assert personal["personalization_hash"] == "personalization-hash"
     assert plain["negative_prompt"] == SETTINGS["negative_prompt"]
     assert plain["pooled"] == personal["pooled"] == "plain"
-    assert plain["fan"] == personal["fan"] == loaded["fan"]
+    assert plain["fan"]["pooled"] == personal["fan"]["pooled"] == "plain"
+    assert (
+        plain["fan"]["commit"] == personal["fan"]["commit"] == loaded["fan"]["commit"]
+    )
+    assert plain["policy_id"] == personal["policy_id"] == "legacy_exhibit"
+    assert plain["policy_hash"] == personal["policy_hash"]
+    assert plain["policy_hash"] == workers.digest(plain["effective_policy"])
+    for event in (plain, personal):
+        trace_path = Path(event["profiling_trace_path"])
+        assert trace_path.is_file()
+        assert json.loads(trace_path.read_text()) == event["profiling_trace"]
     assert Path(plain["path"]).read_bytes() == b"fake png"
     assert plain["sha256"] == personal["sha256"]
     assert not list(tmp_path.glob("*.tmp.png"))
@@ -309,29 +328,24 @@ def test_the_pinned_checkpoint_loads_without_a_complete_hub_snapshot(stubs, tmp_
     ]
 
 
-def test_config_tuning_knobs_reach_the_encoder(stubs):
-    """Follow-up probes may add `use_attn_mask`/`skip_pa` without a code change."""
-    fan = {**CONFIG["fan"], "use_attn_mask": True, "skip_pa": [0, 1]}
-
-    def encoder(prompt, ref_prompt=None, **kwargs):
-        stubs["encode"].append({"prompt": prompt, "refs": ref_prompt, **kwargs})
-        return Tensor("cond"), Tensor("pooled")
-
-    workers.encode(encoder, "a prompt", None, fan)
-    assert stubs["encode"][-1]["use_attn_mask"] is True
-    assert stubs["encode"][-1]["skip_pa"] == [0, 1]
-    assert stubs["encode"][-1]["alpha"] is None
-
-
 def test_the_worker_module_stays_python_3_10_compatible():
     """The FAN environment resolves to Python 3.10, not the exhibit 3.12 venv."""
     import ast
 
     from exhibit.config import ROOT
 
-    for name in ("workers.py", "config.py", "domain.py"):
+    for name in (
+        "workers.py",
+        "evaluation_worker.py",
+        "fan_adapter.py",
+        "gpu.py",
+        "config.py",
+        "domain.py",
+    ):
         source = (ROOT / "src/exhibit" / name).read_text()
         ast.parse(source, filename=name, feature_version=(3, 10))
+    script = ROOT / "scripts/evaluate_fan.py"
+    ast.parse(script.read_text(), filename=script.name, feature_version=(3, 10))
 
 
 def test_the_pinned_fp16_fix_vae_replaces_the_checkpoint_decoder(stubs, tmp_path):
@@ -344,6 +358,7 @@ def test_the_pinned_fp16_fix_vae_replaces_the_checkpoint_decoder(stubs, tmp_path
             {
                 "revision": "vae-revision",
                 "torch_dtype": "fp16",
+                "use_safetensors": True,
                 "local_files_only": True,
             },
         )
@@ -378,6 +393,36 @@ def test_the_scheduler_comes_from_the_configuration(stubs, tmp_path):
     assert loaded["config"]["name"] == "DPMSolverMultistepScheduler"
 
 
+def test_the_loaded_event_survives_a_strict_json_sink(stubs, tmp_path, monkeypatch):
+    """The real Karras SDE scheduler reports `lambda_min_clipped = -inf`."""
+    import json
+
+    original = sys.modules["diffusers"].DPMSolverMultistepScheduler.from_config
+
+    def with_infinity(config, **kwargs):
+        scheduler = original(config, **kwargs)
+        scheduler.config["lambda_min_clipped"] = float("-inf")
+        scheduler.config["nested"] = {"values": [float("nan"), 1.5]}
+        return scheduler
+
+    monkeypatch.setattr(
+        sys.modules["diffusers"].DPMSolverMultistepScheduler,
+        "from_config",
+        with_infinity,
+    )
+    events = []
+    workers.generate(
+        {**request_for(tmp_path, stubs["upstream"]), "items": []},
+        event_sink=lambda kind, **data: events.append(
+            json.dumps({"type": kind, **data}, allow_nan=False)
+        ),
+    )
+
+    config = json.loads(events[0])["scheduler"]["config"]
+    assert config["lambda_min_clipped"] == "-inf"
+    assert config["nested"] == {"values": ["nan", 1.5]}
+
+
 def test_settings_without_scheduler_kwargs_still_load(stubs, tmp_path):
     settings = {
         k: v for k, v in SETTINGS.items() if k not in ("scheduler", "scheduler_kwargs")
@@ -394,4 +439,134 @@ def test_an_unknown_scheduler_fails_at_load_time(stubs, tmp_path):
     request = {**request_for(tmp_path, stubs["upstream"]), "settings": settings}
     with pytest.raises(ValueError, match="Unknown scheduler: NoSuchScheduler"):
         workers.generate(request)
+    assert stubs["events"] == []
+
+
+def test_official_policy_keeps_fan_pooled_and_emits_trace(stubs, tmp_path):
+    effective = thaw_policy(resolve_policy("official_encoder", FAN_POLICIES))
+    personal = {
+        **personalization(alpha=effective["alpha"]),
+        "effective_policy": effective,
+        "policy_hash": workers.digest(effective),
+        "personalization_hash": "official-personalization-hash",
+    }
+    request = request_for(tmp_path, stubs["upstream"])
+    request["items"] = [{**request["items"][1], "personalization": personal}]
+
+    workers.generate(request)
+
+    pipeline_call = stubs["pipeline"][0]
+    assert pipeline_call["prompt_embeds"].name == "cond-personalized"
+    assert pipeline_call["pooled_prompt_embeds"].name == "pooled-personalized"
+    negative, positive = stubs["encode"]
+    assert negative["refs"] is None
+    assert positive["refs"] == ["warm color palette", "cool color palette"]
+    assert positive["sample_size"] == 0.1
+    assert positive["skip_pa"] == [0]
+
+    image_event = next(data for kind, data in stubs["events"] if kind == "image")
+    assert image_event["pooled"] == "fan"
+    assert image_event["effective_policy"] == effective
+    assert image_event["policy_id"] == "official_encoder"
+    assert image_event["policy_hash"] == workers.digest(effective)
+    assert image_event["personalization_hash"] == "official-personalization-hash"
+    assert image_event["fan"] == {
+        "commit": CONFIG["fan"]["commit"],
+        "pooled": "fan",
+        "skip": -2,
+        "sample_size": 0.1,
+        "skip_pa": [0],
+        "use_attn_mask": False,
+    }
+    trace_path = Path(image_event["profiling_trace_path"])
+    assert trace_path == Path(request["items"][0]["path"]).with_suffix(".trace.json")
+    assert json.loads(trace_path.read_text()) == image_event["profiling_trace"]
+    assert [call["phase"] for call in image_event["profiling_trace"]["calls"]] == [
+        "clip_l_hidden",
+        "clip_g_hidden",
+        "clip_g_pool",
+    ]
+
+
+def test_plain_policy_gets_pooled_from_a_reference_free_positive_call(stubs, tmp_path):
+    effective = thaw_policy(resolve_policy("legacy_exhibit", FAN_POLICIES))
+    personal = {
+        **personalization(alpha=effective["alpha"]),
+        "effective_policy": effective,
+        "policy_id": "legacy_exhibit",
+        "policy_hash": workers.digest(effective),
+        "personalization_hash": "legacy-personalization-hash",
+    }
+    request = request_for(tmp_path, stubs["upstream"])
+    request["items"] = [{**request["items"][1], "personalization": personal}]
+
+    workers.generate(request)
+
+    negative, personalized, positive_plain = stubs["encode"]
+    assert negative["refs"] is None
+    assert personalized["refs"] == ["warm color palette", "cool color palette"]
+    assert positive_plain["prompt"] == personalized["prompt"]
+    assert positive_plain["refs"] is None
+    assert stubs["pipeline"][0]["prompt_embeds"].name == "cond-personalized"
+    assert stubs["pipeline"][0]["pooled_prompt_embeds"].name == "pooled"
+
+
+def test_generate_rejects_a_policy_hash_that_conflicts_with_effective_policy(
+    stubs, tmp_path
+):
+    effective = thaw_policy(resolve_policy("official_encoder", FAN_POLICIES))
+    personal = {
+        **personalization(alpha=effective["alpha"]),
+        "policy_id": "official_encoder",
+        "effective_policy": effective,
+        "policy_hash": "conflicting-hash",
+        "personalization_hash": "official-personalization-hash",
+    }
+    request = request_for(tmp_path, stubs["upstream"])
+    request["items"] = [{**request["items"][1], "personalization": personal}]
+
+    with pytest.raises(ValueError, match="policy_hash"):
+        workers.generate(request)
+
+    assert stubs["pipeline"] == []
+
+
+def test_evaluation_can_observe_conditioning_without_duplicating_generation(
+    stubs, tmp_path
+):
+    effective = thaw_policy(resolve_policy("official_encoder", FAN_POLICIES))
+    personal = {
+        **personalization(alpha=effective["alpha"]),
+        "effective_policy": effective,
+        "policy_hash": workers.digest(effective),
+        "personalization_hash": "observed-personalization",
+    }
+    request = request_for(tmp_path, stubs["upstream"])
+    request["items"] = [{**request["items"][1], "personalization": personal}]
+    observed = []
+    forwarded = []
+
+    workers.generate(
+        request,
+        event_sink=lambda kind, **data: forwarded.append((kind, data)),
+        conditioning_sink=lambda item_id, candidate, plain: (
+            observed.append((item_id, candidate, plain))
+            or {
+                "hidden": {"valid": True, "cosine": 0.75},
+                "pooled": {"valid": True, "cosine": 0.5},
+            }
+        ),
+    )
+
+    assert len(stubs["pipeline"]) == 1
+    assert len(observed) == 1
+    item_id, candidate, plain = observed[0]
+    assert item_id == "v0-0"
+    assert candidate["hidden"].name == "cond-personalized"
+    assert plain["hidden"].name == "cond"
+    image = next(data for kind, data in forwarded if kind == "image")
+    assert image["conditioning_target_align"] == {
+        "hidden": {"valid": True, "cosine": 0.75},
+        "pooled": {"valid": True, "cosine": 0.5},
+    }
     assert stubs["events"] == []

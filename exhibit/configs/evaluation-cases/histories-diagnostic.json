@@ -1,0 +1,10 @@
+{
+  "schema_version": 1,
+  "histories": [
+    {"id": "single", "refs": [{"ref_id": "single-warm", "text": "warm color palette", "weight": 1.0}]},
+    {"id": "duplicate", "refs": [{"ref_id": "duplicate-a", "text": "warm color palette", "weight": 0.5}, {"ref_id": "duplicate-b", "text": "warm color palette", "weight": 0.5}]},
+    {"id": "scaled", "refs": [{"ref_id": "scaled-warm", "text": "warm color palette", "weight": 3.0}, {"ref_id": "scaled-soft", "text": "soft diffused light", "weight": 3.0}]},
+    {"id": "conflicting", "refs": [{"ref_id": "conflict-warm", "text": "warm color palette", "weight": 1.0}, {"ref_id": "conflict-cool", "text": "cool color palette", "weight": 1.0}]},
+    {"id": "four-aspects", "refs": [{"ref_id": "aspect-color", "text": "warm color palette", "weight": 1.0}, {"ref_id": "aspect-light", "text": "soft diffused light", "weight": 1.0}, {"ref_id": "aspect-texture", "text": "watercolor painting", "weight": 1.0}, {"ref_id": "aspect-mood", "text": "calm atmosphere", "weight": 1.0}]}
+  ]
+}

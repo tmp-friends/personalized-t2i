@@ -1,0 +1,841 @@
+{
+  "girl-c0-l0-t0-m2": {
+    "reviewed": true,
+    "image_sha256": "f9337b314b93804dceb880067446d69be87ba9989722fa9b2b152eba91306da0",
+    "description_hash": "b9a3e52e8ceebd6e69d300e65ab53f9e889e2e0b4fd3279407b64a3376185cb9",
+    "aspects": {
+      "color": true,
+      "lighting": true,
+      "texture": true,
+      "mood": true
+    },
+    "subject_ok": true,
+    "note": ""
+  },
+  "girl-c0-l2-t2-m0": {
+    "reviewed": true,
+    "image_sha256": "d9bd5497fc4b4593d1609975e923b2e708b0e3fe17e7a217a654f26ee9b67221",
+    "description_hash": "12e18de054cebba9ddcc577c4ad1e10a5706ecd2863b9bdc861b3cee1b95f8de",
+    "aspects": {
+      "color": true,
+      "lighting": true,
+      "texture": true,
+      "mood": true
+    },
+    "subject_ok": true,
+    "note": ""
+  },
+  "girl-c0-l3-t1-m1": {
+    "reviewed": true,
+    "image_sha256": "68ca6c733f6989f49d1000215a73685792c46cf2e708e686894397743ef912bb",
+    "description_hash": "48e2d7606cc984f4216979a91a1771a9c32ff2ff184eb0d7d9e7d17ca2e67f0c",
+    "aspects": {
+      "color": true,
+      "lighting": true,
+      "texture": true,
+      "mood": true
+    },
+    "subject_ok": true,
+    "note": ""
+  },
+  "girl-c0-l3-t3-m3": {
+    "reviewed": true,
+    "image_sha256": "367666e4dbaf052a132c244029dc32798de339956e378824845402f60f77e8d9",
+    "description_hash": "f57fad60353681244c3efb339e3509c31946bdf0227b90bff74c0b20c2c9b00a",
+    "aspects": {
+      "color": true,
+      "lighting": true,
+      "texture": true,
+      "mood": true
+    },
+    "subject_ok": true,
+    "note": ""
+  },
+  "girl-c1-l0-t2-m3": {
+    "reviewed": true,
+    "image_sha256": "25288ef5258b7c50bd7ee62996e4353a45fc439fd9200f4678c0f25a517e5267",
+    "description_hash": "f102b00c35edf4ed221504e0011079c74cd60079ea0a5aefa8d7aee42d23a3e9",
+    "aspects": {
+      "color": true,
+      "lighting": true,
+      "texture": true,
+      "mood": true
+    },
+    "subject_ok": true,
+    "note": ""
+  },
+  "girl-c1-l1-t3-m1": {
+    "reviewed": true,
+    "image_sha256": "c595fc35be5eb9a72afcc022cc3a8b60e9b614383255be615e996ee2f4d64e45",
+    "description_hash": "42429d6cecc1f6295c79e81db9fe0fc7f5961c6dacd57a809e4d766a2884018d",
+    "aspects": {
+      "color": true,
+      "lighting": true,
+      "texture": true,
+      "mood": true
+    },
+    "subject_ok": true,
+    "note": ""
+  },
+  "girl-c1-l2-t1-m2": {
+    "reviewed": true,
+    "image_sha256": "4f843f58769fcd25b00a8e51c767d98021dabecb485e2c117801d41de675a13d",
+    "description_hash": "a62d4da3724367faa606385ec72e2395fa0a32576f501d55fca6962c2829723f",
+    "aspects": {
+      "color": true,
+      "lighting": true,
+      "texture": true,
+      "mood": true
+    },
+    "subject_ok": true,
+    "note": ""
+  },
+  "girl-c1-l3-t1-m0": {
+    "reviewed": true,
+    "image_sha256": "1250352b671311d9a27177a87e05e57461a42e8c651eb2b4018ae32e96ea3bb6",
+    "description_hash": "0547dbdb0af56c86b4434057cbf014567baf889cdb1f72125c1bcf438b12e9a9",
+    "aspects": {
+      "color": true,
+      "lighting": true,
+      "texture": true,
+      "mood": true
+    },
+    "subject_ok": true,
+    "note": ""
+  },
+  "girl-c2-l0-t3-m0": {
+    "reviewed": true,
+    "image_sha256": "a8a46ff1a4647ac5c7d27aa3adc27fe5a0911ec6448f3e25ee162aa444beadf5",
+    "description_hash": "43a1c7eec0c379c7bcb64927492fe17b87a11f715574fbdcd1b541eb6151da14",
+    "aspects": {
+      "color": true,
+      "lighting": true,
+      "texture": true,
+      "mood": true
+    },
+    "subject_ok": true,
+    "note": ""
+  },
+  "girl-c2-l1-t0-m3": {
+    "reviewed": true,
+    "image_sha256": "3d08894dd5ee2094ba770f1d6ba50c7fa8aef582fde8e3aa7652d0cd5a0176fe",
+    "description_hash": "aefb1bb48db2e4bcde1ba63e4d43ea906e27c220f2eb13e1a6e1d81e51b5ecd7",
+    "aspects": {
+      "color": true,
+      "lighting": true,
+      "texture": true,
+      "mood": true
+    },
+    "subject_ok": true,
+    "note": ""
+  },
+  "girl-c2-l2-t2-m1": {
+    "reviewed": false,
+    "image_sha256": "a6b96e7917dedf2447d57579528a7d8f039dfb70792799b8acba0752d9be3194",
+    "description_hash": "d128e4e7656a745bc84c69905e309db04615ac886a51bbd7d0b196cae9396415",
+    "aspects": {
+      "color": true,
+      "lighting": true,
+      "texture": true,
+      "mood": false
+    },
+    "subject_ok": true,
+    "note": ""
+  },
+  "girl-c2-l3-t3-m2": {
+    "reviewed": true,
+    "image_sha256": "cb6ee4bfd0d73da80238e0bb792cd8d231ab6033359a1c6d8aa0e3d65234c8ea",
+    "description_hash": "6b0b2ab194c78735ffa6b92cf0024c0da31f98651ea512dad95eb8eb0ad61922",
+    "aspects": {
+      "color": true,
+      "lighting": true,
+      "texture": true,
+      "mood": true
+    },
+    "subject_ok": true,
+    "note": ""
+  },
+  "girl-c3-l0-t0-m1": {
+    "reviewed": true,
+    "image_sha256": "e38353d910fc7519de82259a076b42925fbee410fc07f91ffe5dbcc682d95c43",
+    "description_hash": "9b7292b3a68ed612bdbb8def83476671ce67b5ba3a8317f5c2a9419c23765cc2",
+    "aspects": {
+      "color": true,
+      "lighting": true,
+      "texture": true,
+      "mood": true
+    },
+    "subject_ok": true,
+    "note": ""
+  },
+  "girl-c3-l1-t0-m0": {
+    "reviewed": true,
+    "image_sha256": "ebd84b35edb6d7ee484439a5a049e3517f8326c715c95c888943771514069190",
+    "description_hash": "a32e4b46d209672f65bb9a19b70f5b89294b39f7b4bf281d43c92015685b79c0",
+    "aspects": {
+      "color": true,
+      "lighting": true,
+      "texture": true,
+      "mood": true
+    },
+    "subject_ok": true,
+    "note": ""
+  },
+  "girl-c3-l1-t2-m2": {
+    "reviewed": true,
+    "image_sha256": "56ffb5188e66dffc58d9d5e283e17183ce90e096f5e5534e73888bd3257462b9",
+    "description_hash": "2288bdd89a45acc7da08618302da0e2fe42e841b5ac706db793bb0c287e5cc74",
+    "aspects": {
+      "color": true,
+      "lighting": true,
+      "texture": true,
+      "mood": true
+    },
+    "subject_ok": true,
+    "note": ""
+  },
+  "girl-c3-l2-t1-m3": {
+    "reviewed": true,
+    "image_sha256": "d652c8d3f5dfbaa818d9186a2d7fc58d3f6158f3578003fb483782d2f0f4e760",
+    "description_hash": "8d967d2d31f5ffc5f3e8495d6794fc880c5857a4c3c7397ad78cee4ed01e57b4",
+    "aspects": {
+      "color": true,
+      "lighting": true,
+      "texture": true,
+      "mood": true
+    },
+    "subject_ok": true,
+    "note": ""
+  },
+  "student-c0-l0-t0-m2": {
+    "reviewed": true,
+    "image_sha256": "738804d2e422a23e8bd389e092505fb16849a390d866a3f92133a3ca09a85c15",
+    "description_hash": "f735c3ddae9a46295718b64305d40adc357fffa478fc803051f539c2e768f248",
+    "aspects": {
+      "color": true,
+      "lighting": true,
+      "texture": true,
+      "mood": true
+    },
+    "subject_ok": true,
+    "note": ""
+  },
+  "student-c0-l2-t2-m0": {
+    "reviewed": true,
+    "image_sha256": "185cc56d7c576de8c18d419d8b16b5d7a5963addc50e8a7540d48098418c64c4",
+    "description_hash": "1e846a96935f23f179b9326cddf5f3617588be47ee787321ed953fda2383b1e0",
+    "aspects": {
+      "color": true,
+      "lighting": true,
+      "texture": true,
+      "mood": true
+    },
+    "subject_ok": true,
+    "note": ""
+  },
+  "student-c0-l3-t1-m1": {
+    "reviewed": true,
+    "image_sha256": "91e7abdc5eaad7f470248ab6208d3c2f1b8eff929edb920e2c1c88e79c41bff3",
+    "description_hash": "4e8b9a3381ca96b529b77d35b4260a195821a94cd2a7261183cb099b3e6546ef",
+    "aspects": {
+      "color": true,
+      "lighting": true,
+      "texture": true,
+      "mood": true
+    },
+    "subject_ok": true,
+    "note": ""
+  },
+  "student-c0-l3-t3-m3": {
+    "reviewed": true,
+    "image_sha256": "36fe716050e5c93a01dee8296d3a695a99200b71ba66fea4f0398282a18b67ce",
+    "description_hash": "aaf33457ad78c1a306eb9b2c899c45b64176196e057bcde2268fa32fcb8e38e6",
+    "aspects": {
+      "color": true,
+      "lighting": true,
+      "texture": true,
+      "mood": true
+    },
+    "subject_ok": true,
+    "note": ""
+  },
+  "student-c1-l0-t2-m3": {
+    "reviewed": false,
+    "image_sha256": "0dfaefcedd255c40176efc47a05ca05c16a764c0353dd108aca996ea3c1954dc",
+    "description_hash": "9ed7a85f0429315d3dd0107e26991be8f42a122fe0d7c1e42fd4ccc82221fecd",
+    "aspects": {
+      "color": false,
+      "lighting": false,
+      "texture": false,
+      "mood": false
+    },
+    "subject_ok": false,
+    "note": ""
+  },
+  "student-c1-l1-t3-m1": {
+    "reviewed": true,
+    "image_sha256": "9c8c69dbb3289c7ae0ef294ce178f69524f67c96efd6d4550463a9ee3fe79ac9",
+    "description_hash": "bb6bd05f36100c826ad3b8bf0bb443fe1ed7df00facce56e16f4e6964b23a3ad",
+    "aspects": {
+      "color": true,
+      "lighting": true,
+      "texture": true,
+      "mood": true
+    },
+    "subject_ok": true,
+    "note": ""
+  },
+  "student-c1-l2-t1-m2": {
+    "reviewed": true,
+    "image_sha256": "9ca6d6a61c75c24b81bb4eed9480a466a2dd11fed141ee05f392bac70932ced3",
+    "description_hash": "fe46033554607fb54ef6b067f44b5aacb5a967fda6fb573a3482d98cea0e2d89",
+    "aspects": {
+      "color": true,
+      "lighting": true,
+      "texture": true,
+      "mood": true
+    },
+    "subject_ok": true,
+    "note": ""
+  },
+  "student-c1-l3-t1-m0": {
+    "reviewed": true,
+    "image_sha256": "338d80363c0ab6fc60112738f4181766248d87bf8c4a43763568452f717dcb1d",
+    "description_hash": "65a64a1340738811f2389dddcabd842ed4b5f75548aa5977b5b5371d3b4f5257",
+    "aspects": {
+      "color": true,
+      "lighting": true,
+      "texture": true,
+      "mood": true
+    },
+    "subject_ok": true,
+    "note": ""
+  },
+  "student-c2-l0-t3-m0": {
+    "reviewed": true,
+    "image_sha256": "47c06da70ff0d840e29a0877d7ea3a2a2f78d949621e22c82e78bc859b02abed",
+    "description_hash": "3a87cad2d557fd79e1214941cf4f29cef827667bf5266d3c408b7cebe7ecdabc",
+    "aspects": {
+      "color": true,
+      "lighting": true,
+      "texture": true,
+      "mood": true
+    },
+    "subject_ok": true,
+    "note": ""
+  },
+  "student-c2-l1-t0-m3": {
+    "reviewed": true,
+    "image_sha256": "47a33eb6b984aa6c04ed4200532f9ec4182b425d1d369b6c3983b13fe6bd389a",
+    "description_hash": "42a8dab55ba55d9856d171b5463f83d0486f9e679d03acdd13ca1e415d285db4",
+    "aspects": {
+      "color": true,
+      "lighting": true,
+      "texture": true,
+      "mood": true
+    },
+    "subject_ok": true,
+    "note": ""
+  },
+  "student-c2-l2-t2-m1": {
+    "reviewed": true,
+    "image_sha256": "757ce0a1a00f34c08c4d01037e07980e8d7d49bb424cac4fbe3de12fe6057fd5",
+    "description_hash": "e7813d18d3b6e3bccf09254050c2ac776b790df6923005464396466828f94ef3",
+    "aspects": {
+      "color": true,
+      "lighting": true,
+      "texture": true,
+      "mood": true
+    },
+    "subject_ok": true,
+    "note": ""
+  },
+  "student-c2-l3-t3-m2": {
+    "reviewed": true,
+    "image_sha256": "10f7151f65d0452ccb6b1fd1e2275f8a169f154e5dfd084276f05b9b30f8aaed",
+    "description_hash": "60c0c14cf9946c1b94272271fff09bcbc3aa5dcc589451ecacc2baeff6b1ab93",
+    "aspects": {
+      "color": true,
+      "lighting": true,
+      "texture": true,
+      "mood": true
+    },
+    "subject_ok": true,
+    "note": ""
+  },
+  "student-c3-l0-t0-m1": {
+    "reviewed": true,
+    "image_sha256": "4df98b4218927ec3e9bfc22e2211a23dffdfd69ef768f5b933b6343ae7b89137",
+    "description_hash": "68002160446ba6d63fb4a7b5f2f4d059b76e4c40a0fa6e08f532e460d53593c3",
+    "aspects": {
+      "color": true,
+      "lighting": true,
+      "texture": true,
+      "mood": true
+    },
+    "subject_ok": true,
+    "note": ""
+  },
+  "student-c3-l1-t0-m0": {
+    "reviewed": true,
+    "image_sha256": "cf2648c366cc8431d1b5ba8c391928ee696162aff11d37b464bcb919cf725153",
+    "description_hash": "d64c97ab100387f507edf10c0e3b68d9ca45e016fc8f1c1c4bc7ce74768791d3",
+    "aspects": {
+      "color": true,
+      "lighting": true,
+      "texture": true,
+      "mood": true
+    },
+    "subject_ok": true,
+    "note": ""
+  },
+  "student-c3-l1-t2-m2": {
+    "reviewed": true,
+    "image_sha256": "57ee75b1832498dec8b17ba6efe13c7820a10bfc6458c878fb924fb4552b6837",
+    "description_hash": "f14743a9a6efdaed51f2ce3a868e3730d1a222a5face45dc1eb9f0949f9f2b91",
+    "aspects": {
+      "color": true,
+      "lighting": true,
+      "texture": true,
+      "mood": true
+    },
+    "subject_ok": true,
+    "note": ""
+  },
+  "student-c3-l2-t1-m3": {
+    "reviewed": true,
+    "image_sha256": "4f495f2613ac98548926ddc89fa37c6b94dcd2e3d3b80e5ccfe251698675fd1e",
+    "description_hash": "177f74b6240334a30d497d6221faaeed7cfae5f8475854c9281a4bd401ea9607",
+    "aspects": {
+      "color": true,
+      "lighting": true,
+      "texture": true,
+      "mood": true
+    },
+    "subject_ok": true,
+    "note": ""
+  },
+  "traveler-c0-l0-t0-m2": {
+    "reviewed": true,
+    "image_sha256": "6b252179c5602590cec0ae5f59f6e74d5f903d22ab07e4fa93aa6da7fe9bbb4e",
+    "description_hash": "0dac752c752ef5ec57212291fefbce2bcf542ffe71143e0b688bf6a9d46eec65",
+    "aspects": {
+      "color": true,
+      "lighting": true,
+      "texture": true,
+      "mood": true
+    },
+    "subject_ok": true,
+    "note": ""
+  },
+  "traveler-c0-l2-t2-m0": {
+    "reviewed": true,
+    "image_sha256": "12d445b7d27e2ac8b427e2f1a873e393837babd33c76fc1ea2eb03b7f1e22894",
+    "description_hash": "2e93fd2e80dcb166a47b9cdd3959d6cd0d381903c643e2e866d8f028bc47ff4e",
+    "aspects": {
+      "color": true,
+      "lighting": true,
+      "texture": true,
+      "mood": true
+    },
+    "subject_ok": true,
+    "note": ""
+  },
+  "traveler-c0-l3-t1-m1": {
+    "reviewed": true,
+    "image_sha256": "bca82ae303c4f54b192b754a3668fd2f2d0349bc88b006001702e2eba20f0b44",
+    "description_hash": "7cf882bc797ffeb2b819266a75bcef0cbb9b11b94f4ccffe7804f125c189d507",
+    "aspects": {
+      "color": true,
+      "lighting": true,
+      "texture": true,
+      "mood": true
+    },
+    "subject_ok": true,
+    "note": ""
+  },
+  "traveler-c0-l3-t3-m3": {
+    "reviewed": true,
+    "image_sha256": "7d6d0336e25afa6f3fc0dc9f55a3cdf8ec5ac3d8ea95c058fed9e02e363655de",
+    "description_hash": "e3afa5d238b7ea8f89770940c5d31afdb945884aad0d55e097756abfc9ee4ad9",
+    "aspects": {
+      "color": true,
+      "lighting": true,
+      "texture": true,
+      "mood": true
+    },
+    "subject_ok": true,
+    "note": ""
+  },
+  "traveler-c1-l0-t2-m3": {
+    "reviewed": true,
+    "image_sha256": "1a152bb7f0eea21a8f6beb19ec5ed4d7b830e64d62531ddb0b2b40c00a19a75b",
+    "description_hash": "b7087e387076f2345113149cd4d63b407b071c17e0b1cbbae2ff0a0870dad47a",
+    "aspects": {
+      "color": true,
+      "lighting": true,
+      "texture": true,
+      "mood": true
+    },
+    "subject_ok": true,
+    "note": ""
+  },
+  "traveler-c1-l1-t3-m1": {
+    "reviewed": true,
+    "image_sha256": "2056b138bb842fdb16d9d597ab898779088747dc456d3ae102d20fcbf0773b47",
+    "description_hash": "e539cb3767e52a0858cdf00a6b78a0d030cdbab0a7b5cc77ba951a477c53c27b",
+    "aspects": {
+      "color": true,
+      "lighting": true,
+      "texture": true,
+      "mood": true
+    },
+    "subject_ok": true,
+    "note": ""
+  },
+  "traveler-c1-l2-t1-m2": {
+    "reviewed": true,
+    "image_sha256": "311de358b794de4e03b48732b6dc8b3a031f1891a7fb09c6d480db0c9add76ed",
+    "description_hash": "526561e7774248b4dc523e98ee356b50491cc9d4706327b72cf4d76bca26e09f",
+    "aspects": {
+      "color": true,
+      "lighting": true,
+      "texture": true,
+      "mood": true
+    },
+    "subject_ok": true,
+    "note": ""
+  },
+  "traveler-c1-l3-t1-m0": {
+    "reviewed": true,
+    "image_sha256": "2e114c1a99a0a58890c961e87ec4a514c93a657453898b8a84e4516bbefd8faf",
+    "description_hash": "a7da17c3350e37ef842fb9a7145a900e0e99b10668ae7c5d96d9e86070293d1e",
+    "aspects": {
+      "color": true,
+      "lighting": true,
+      "texture": true,
+      "mood": true
+    },
+    "subject_ok": true,
+    "note": ""
+  },
+  "traveler-c2-l0-t3-m0": {
+    "reviewed": true,
+    "image_sha256": "5dfff538303ef3a62694f5592986d58b9c1cee6b1f61a9a8818a644e3f64431b",
+    "description_hash": "725bcf3f6b662844298cf10f277ff34a62b364bf0703021af7e60d3d7ea337f9",
+    "aspects": {
+      "color": true,
+      "lighting": true,
+      "texture": true,
+      "mood": true
+    },
+    "subject_ok": true,
+    "note": ""
+  },
+  "traveler-c2-l1-t0-m3": {
+    "reviewed": true,
+    "image_sha256": "12ea5ff10dbf0bbac02966975dd9a148c57f126da6e1dfdf6e604bad55fd483f",
+    "description_hash": "32eb61723ee86fd1062c7517c3f3077be5f2808e8da34f81b1fc9ab7c68a30e9",
+    "aspects": {
+      "color": true,
+      "lighting": true,
+      "texture": true,
+      "mood": true
+    },
+    "subject_ok": true,
+    "note": ""
+  },
+  "traveler-c2-l2-t2-m1": {
+    "reviewed": true,
+    "image_sha256": "d7da37e6a7aa4e23095b66c220020a54b351910298d46c16aa0017108e3c88d8",
+    "description_hash": "bf0cc3184fa647ecde66825e23d36b1eba28b3222613e74882df13e477736afb",
+    "aspects": {
+      "color": true,
+      "lighting": true,
+      "texture": true,
+      "mood": true
+    },
+    "subject_ok": true,
+    "note": ""
+  },
+  "traveler-c2-l3-t3-m2": {
+    "reviewed": true,
+    "image_sha256": "bc36c4064d9838acd060c09d26b2434c551c7a2af5a85e337ad785ffd62a12d3",
+    "description_hash": "b7efd4ac6fc227106b9145816a133381ec18d4c009ec6af5d8fd2d4fd67654ee",
+    "aspects": {
+      "color": true,
+      "lighting": true,
+      "texture": true,
+      "mood": true
+    },
+    "subject_ok": true,
+    "note": ""
+  },
+  "traveler-c3-l0-t0-m1": {
+    "reviewed": true,
+    "image_sha256": "2536994ec70dd08c9f1a6e262db62ed3b3801d0bf0253a19eb20c6258e972e86",
+    "description_hash": "f700808718727c58decbc9f52e877c59c9fb7d2c616c8077f8d4f534041ca008",
+    "aspects": {
+      "color": true,
+      "lighting": true,
+      "texture": true,
+      "mood": true
+    },
+    "subject_ok": true,
+    "note": ""
+  },
+  "traveler-c3-l1-t0-m0": {
+    "reviewed": true,
+    "image_sha256": "87d06e4bc1eea84abd12d7897322bbf610a7b6265be8c9967b6a288a04b01714",
+    "description_hash": "2fbff0f674ea1556b2e0b87ba7a8e3426c5d9e76e6596c98ad733b09f9c58518",
+    "aspects": {
+      "color": true,
+      "lighting": true,
+      "texture": true,
+      "mood": true
+    },
+    "subject_ok": true,
+    "note": ""
+  },
+  "traveler-c3-l1-t2-m2": {
+    "reviewed": true,
+    "image_sha256": "e368c92ef5fb92ce0a0fcf8a5a673bfe13e5e0cbf7b8dd19ed8aa7a52eb46576",
+    "description_hash": "b7cb9bfa00c4f61b62f27b2718d9d59f2fd5b8a12650baf5a48bcad24b9c42c6",
+    "aspects": {
+      "color": true,
+      "lighting": true,
+      "texture": true,
+      "mood": true
+    },
+    "subject_ok": true,
+    "note": ""
+  },
+  "traveler-c3-l2-t1-m3": {
+    "reviewed": true,
+    "image_sha256": "554559bf58814b805e6d801f14aa4505944ff83260a1c40f10b9ea29dc20f9c0",
+    "description_hash": "7cc740aa6ac570d074d34591c59cbce606c4026c9471121ee7bf5d1c2af97d4a",
+    "aspects": {
+      "color": true,
+      "lighting": true,
+      "texture": true,
+      "mood": true
+    },
+    "subject_ok": true,
+    "note": ""
+  },
+  "barista-c0-l0-t0-m2": {
+    "reviewed": true,
+    "image_sha256": "9460ce68cfc274e614440e081692ccfc36a18a8a5cf28ce57433eb4d6c68de54",
+    "description_hash": "d17e9680c0d3dacc9944c70d0c010bd4fb02b9f13e69d1f51404fd55e4d3f994",
+    "aspects": {
+      "color": true,
+      "lighting": true,
+      "texture": true,
+      "mood": true
+    },
+    "subject_ok": true,
+    "note": ""
+  },
+  "barista-c0-l2-t2-m0": {
+    "reviewed": true,
+    "image_sha256": "f2d5f275e5a41fc28518c73828fbc027741615081a5415e145b255bb5242b4c5",
+    "description_hash": "d41bd0d097b4d64e1cdf623420591b7ed4de78b281d9b74b2eacda7544a67eef",
+    "aspects": {
+      "color": true,
+      "lighting": true,
+      "texture": true,
+      "mood": true
+    },
+    "subject_ok": true,
+    "note": ""
+  },
+  "barista-c0-l3-t1-m1": {
+    "reviewed": true,
+    "image_sha256": "abd25b4d47b84dbc4d2866fc082e24dc05bb01be29a4b2c5ac43a250130fc928",
+    "description_hash": "599b56b61a96d1ae5f7a25f219aa1955d1244009b15771b65c3a1a7c0c2b8fa2",
+    "aspects": {
+      "color": true,
+      "lighting": true,
+      "texture": true,
+      "mood": true
+    },
+    "subject_ok": true,
+    "note": ""
+  },
+  "barista-c0-l3-t3-m3": {
+    "reviewed": true,
+    "image_sha256": "729240e6c8fe466fa7d2d086de180b632201daf96eeec11a0e22fdcf946844f9",
+    "description_hash": "c93947897df9b5136d2b82544b420bb34e14ece797647a69e142f6b66bddb5de",
+    "aspects": {
+      "color": true,
+      "lighting": true,
+      "texture": true,
+      "mood": true
+    },
+    "subject_ok": true,
+    "note": ""
+  },
+  "barista-c1-l0-t2-m3": {
+    "reviewed": true,
+    "image_sha256": "4c1ae49cb92d1c66460d8358b499ff55860058b93146bc71c33b843eaf0b5df1",
+    "description_hash": "3b665b5d32969179419e25346ec5bff92b4d6fe23427662de009982341ddb675",
+    "aspects": {
+      "color": true,
+      "lighting": true,
+      "texture": true,
+      "mood": true
+    },
+    "subject_ok": true,
+    "note": ""
+  },
+  "barista-c1-l1-t3-m1": {
+    "reviewed": true,
+    "image_sha256": "c4aa742828e41a4a885f15ba8fb667411fbe66d9c86763b1d3631cf516bd4f06",
+    "description_hash": "51333db6ce8e3ee6b9268803c74eca684f24717f5a9f2c003d8f6d5bffc83db8",
+    "aspects": {
+      "color": true,
+      "lighting": true,
+      "texture": true,
+      "mood": true
+    },
+    "subject_ok": true,
+    "note": ""
+  },
+  "barista-c1-l2-t1-m2": {
+    "reviewed": true,
+    "image_sha256": "e94e05e32efa1ff7472c60588300d203fb085ce3a3ab6fd49550bd269c970615",
+    "description_hash": "2b5222cc1447defe5fb2019a97f71554fa86c3d02c38a966fc904a1d387f909a",
+    "aspects": {
+      "color": true,
+      "lighting": true,
+      "texture": true,
+      "mood": true
+    },
+    "subject_ok": true,
+    "note": ""
+  },
+  "barista-c1-l3-t1-m0": {
+    "reviewed": true,
+    "image_sha256": "a852eecc58c1406437e8d88416884605ac346288dbddd5fc7932a5e03c0eeeea",
+    "description_hash": "5a2d37dd6c9eeb3acdf3e050b192e8c9b2328123899778b65960a50225ef1f76",
+    "aspects": {
+      "color": true,
+      "lighting": true,
+      "texture": true,
+      "mood": true
+    },
+    "subject_ok": true,
+    "note": ""
+  },
+  "barista-c2-l0-t3-m0": {
+    "reviewed": true,
+    "image_sha256": "ced389dbadb59447084ef42d3d916f9dee908a1b6e992f504160fb5bb27527eb",
+    "description_hash": "952930f34e8a56792e70fee563202b2d4151cdb8607eda19ac36cf29182ee27e",
+    "aspects": {
+      "color": true,
+      "lighting": true,
+      "texture": true,
+      "mood": true
+    },
+    "subject_ok": true,
+    "note": ""
+  },
+  "barista-c2-l1-t0-m3": {
+    "reviewed": true,
+    "image_sha256": "18c3e18d4144788a8e42e5b25d53df0dcb01088660592e3bcb7e228724540173",
+    "description_hash": "0ba71016ff51dc9e4051e871c3dc54e9d38f0c30c887c3eab75c8566021f8f8d",
+    "aspects": {
+      "color": true,
+      "lighting": true,
+      "texture": true,
+      "mood": true
+    },
+    "subject_ok": true,
+    "note": ""
+  },
+  "barista-c2-l2-t2-m1": {
+    "reviewed": true,
+    "image_sha256": "7f13725475b58b7d82acb3b8df693a8aaad65a7ba308b04986be60e884e0b44b",
+    "description_hash": "cfc2d2d7ea6704cb52c836e5418eceecb75b2fe50c93eae0e1893723b61b146a",
+    "aspects": {
+      "color": true,
+      "lighting": true,
+      "texture": true,
+      "mood": true
+    },
+    "subject_ok": true,
+    "note": ""
+  },
+  "barista-c2-l3-t3-m2": {
+    "reviewed": true,
+    "image_sha256": "494ad26f252e6bd6fbcf2b1dc693d1456f42c6f179445fc01a2043fa6ecf0ced",
+    "description_hash": "c5d6bbfd1e4922ec286f864704ac5d03c6c93058e404c225d3709aeb70ac1278",
+    "aspects": {
+      "color": true,
+      "lighting": true,
+      "texture": true,
+      "mood": true
+    },
+    "subject_ok": true,
+    "note": ""
+  },
+  "barista-c3-l0-t0-m1": {
+    "reviewed": true,
+    "image_sha256": "634a2400d8b3677acd4f9a97dc48e4857ccc997562628bd3795de640bf66b26d",
+    "description_hash": "dc92b6dbcd937f2212da4376906b6d8ae03c504a8556353f73aa0a15d3a14814",
+    "aspects": {
+      "color": true,
+      "lighting": true,
+      "texture": true,
+      "mood": true
+    },
+    "subject_ok": true,
+    "note": ""
+  },
+  "barista-c3-l1-t0-m0": {
+    "reviewed": true,
+    "image_sha256": "516b376a78978eedae954e75485d5862c3cb2a4de56444117bcd461d4c8a0ba7",
+    "description_hash": "79f13027442b76031df5825a9261b8c471c9d964bab782facb094bcdc56537cf",
+    "aspects": {
+      "color": true,
+      "lighting": true,
+      "texture": true,
+      "mood": true
+    },
+    "subject_ok": true,
+    "note": ""
+  },
+  "barista-c3-l1-t2-m2": {
+    "reviewed": true,
+    "image_sha256": "dcf6e5b7b86ea0126a1b7178482e7281af5a7af7d340a8f9627ba6a0aa9b9c1a",
+    "description_hash": "23e56b944df5c7de9dd9782b40e7fd1009d8989eae5e50ad799cdf82cde5e52f",
+    "aspects": {
+      "color": true,
+      "lighting": true,
+      "texture": true,
+      "mood": true
+    },
+    "subject_ok": true,
+    "note": ""
+  },
+  "barista-c3-l2-t1-m3": {
+    "reviewed": true,
+    "image_sha256": "55f855dfac75191d27a9d66b4976798a7671eb7b644e2fb83992b494c1fac873",
+    "description_hash": "9d083876c08d4bfbfcbc273d66809185da6498922e8020ec3c238336a05268c5",
+    "aspects": {
+      "color": true,
+      "lighting": true,
+      "texture": true,
+      "mood": true
+    },
+    "subject_ok": true,
+    "note": ""
+  },
+  "_metadata": {
+    "reviewer": "Komekami",
+    "date": "20260922",
+    "generated_by": "build_review_sheet.py (export)",
+    "exported_at": "2026-09-21T17:38:25.144Z",
+    "source_generated_at": "2026-09-21T17:23:35+00:00"
+  }
+}

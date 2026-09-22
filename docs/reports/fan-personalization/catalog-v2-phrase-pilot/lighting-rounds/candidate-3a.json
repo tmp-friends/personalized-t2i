@@ -1,0 +1,106 @@
+{
+ "catalog_id": "catalog-v2",
+ "subjects": [
+  {
+   "id": "girl",
+   "label": "街角の少女",
+   "basic_prompt_en": "masterpiece, best quality, very aesthetic, newest, safe, 1girl, solo, brown hair, beret, coat, town square, upper body",
+   "seed": 601
+  },
+  {
+   "id": "student",
+   "label": "図書館の青年",
+   "basic_prompt_en": "masterpiece, best quality, very aesthetic, newest, safe, 1boy, solo, male focus, black hair, vest, white shirt, library, upper body",
+   "seed": 602
+  },
+  {
+   "id": "traveler",
+   "label": "草原の旅人",
+   "basic_prompt_en": "masterpiece, best quality, very aesthetic, newest, safe, 1girl, solo, silver hair, cloak, grassland",
+   "seed": 603
+  },
+  {
+   "id": "barista",
+   "label": "カフェの店員",
+   "basic_prompt_en": "masterpiece, best quality, very aesthetic, newest, safe, 1boy, solo, male focus, brown hair, apron, white shirt, cafe, upper body",
+   "seed": 604
+  }
+ ],
+ "axes": {
+  "color": [
+   "warm color palette, amber tones",
+   "cool color palette, blue tones",
+   "muted colors, desaturated",
+   "vivid saturated colors, high saturation"
+  ],
+  "lighting": [
+   "overcast, cloudy sky, soft diffused light",
+   "night, night sky, dark",
+   "sunset, evening, orange sky",
+   "day, blue sky, sunlight, hard shadows"
+  ],
+  "texture": [
+   "watercolor (medium), soft wash",
+   "anime screencap, cel shading, crisp lineart",
+   "flat color, minimal shading",
+   "oil painting (medium), thick brushstrokes"
+  ],
+  "mood": [
+   "calm, closed eyes, gentle smile",
+   "cheerful, open mouth smile, happy",
+   "serious, stern expression",
+   "dreamy, light particles, soft glow"
+  ]
+ },
+ "generation": {
+  "model": "OnomaAIResearch/Illustrious-XL-v2.0",
+  "revision": "69459c1fe6f46db41ab31e6114f05acc0e06bcaa",
+  "scheduler": "DPMSolverMultistepScheduler",
+  "scheduler_kwargs": {
+   "algorithm_type": "sde-dpmsolver++",
+   "use_karras_sigmas": true
+  },
+  "width": 1024,
+  "height": 1280,
+  "steps": 30,
+  "guidance_scale": 5.0,
+  "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
+  "precision": "fp16",
+  "pipeline_config": {
+   "model": "OnomaAIResearch/Illustrious-xl-early-release-v0",
+   "revision": "dca0dac303e6dc4b0c31d8001bc685b89b5d0204"
+  },
+  "vae": {
+   "model": "madebyollin/sdxl-vae-fp16-fix",
+   "revision": "207b116dae70ace3637169f1ddd2434b91b3a8cd"
+  },
+  "checkpoint": "Illustrious-XL-v2.0.safetensors",
+  "positive_prompt_tail": "absurdres, highres"
+ },
+ "axes_ja": {
+  "color": [
+   "暖かな琥珀色",
+   "涼しい青緑",
+   "低彩度の落ち着いた色",
+   "鮮やかな高彩度色"
+  ],
+  "lighting": [
+   "曇天の柔らかな光",
+   "夜の暗い光",
+   "夕景の低い光",
+   "日中の強い光"
+  ],
+  "texture": [
+   "水彩の柔らかな筆致",
+   "セル塗りと線画",
+   "平塗りの最小陰影",
+   "絵画的な細密陰影"
+  ],
+  "mood": [
+   "静かな雰囲気",
+   "明るく活発な表情",
+   "真剣な雰囲気",
+   "夢のような雰囲気"
+  ]
+ }
+}

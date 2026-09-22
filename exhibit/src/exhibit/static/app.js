@@ -1,24 +1,48 @@
 import {
+  canRequestRound,
+  commitBlocker,
   createPoller,
+  createSelectionWriter,
+  createTicket,
+  currentRound,
+  draftFromSnapshot,
+  draftMatchesSnapshot,
+  emptyDraft,
+  feedbackVisible,
+  gainIndex,
+  GAIN_LABELS,
+  GAIN_STEPS,
   initialScreen,
+  likeAll,
   pollIdentity,
-  selectionComplete,
+  removeCard,
+  roundNotice,
+  roundNumber,
+  schemaSupported,
+  setGain,
+  setStrength,
+  toggleAspect,
+  toggleCard,
+  withLimits,
 } from "./session.mjs";
 ("use strict");
 const app = document.querySelector("#app");
 const resetButton = document.querySelector("#reset");
 const SESSION_KEY = "fan-session";
-const DRAFT_KEY = "fan-selection";
 let cfg,
-  session = null,
+  limits,
+  session = null, // the server snapshot: the only source of truth
+  draft = emptyDraft(), // the working copy the screen edits
   screen = "welcome",
-  selection = [], // [{card_id, aspects_off: []}] — the visitor's working copy
   topic = null,
-  ownSelection = false, // the visitor picked these cards (a sample's refs are not theirs)
   pending = false,
+  notice = "", // one line explaining what the server just did
   lastActive = Date.now(),
   lastTouch = 0,
+  saveTimer = null,
   renderedRun = "";
+const roundTicket = createTicket(() => crypto.randomUUID());
+const runTicket = createTicket(() => crypto.randomUUID());
 
 const esc = (value) =>
   String(value ?? "").replace(
@@ -29,12 +53,12 @@ const esc = (value) =>
       ],
   );
 const two = (n) => String(n).padStart(2, "0");
+const sleep = (ms) => new Promise((done) => setTimeout(done, ms));
 const cardOf = (id) => cfg.cards.find((c) => c.id === id) || null;
 const topicOf = (id) => cfg.topics.find((t) => t.id === id) || null;
 const topicLabel = (id) => topicOf(id)?.label || id;
 const aspectKeys = () => Object.keys(cfg.aspects || {});
-const profileLabel = (cardId) =>
-  cardOf(cardId)?.profile_label || cardOf(cardId)?.label || cardId;
+const picked = (id) => draft.selection.findIndex((s) => s.card_id === id);
 /** Two cards can share a profile, so name a reference by profile and subject. */
 const refName = (cardId) => {
   const card = cardOf(cardId);
@@ -42,21 +66,22 @@ const refName = (cardId) => {
   const profile = card.profile_label || card.label;
   return card.subject_label ? `${profile}（${card.subject_label}）` : profile;
 };
-/** The English reference text a card contributes, minus the aspects turned off. */
+/** The English reference text a card contributes through its chosen aspects. */
 const refText = (entry) => {
   const card = cardOf(entry.card_id);
   if (!card) return "";
-  const off = entry.aspects_off || [];
   return aspectKeys()
-    .filter((k) => !off.includes(k) && card.aspects?.[k])
+    .filter((k) => entry.aspects.includes(k) && card.aspects?.[k])
     .map((k) => card.aspects[k])
     .join(", ");
 };
 const num = (value) =>
-  Number.isFinite(Number(value)) ? String(Number(Number(value).toFixed(2))) : String(value ?? "");
+  Number.isFinite(Number(value))
+    ? String(Number(Number(value).toFixed(2)))
+    : String(value ?? "");
 const MODES = {
   live: "この場で生成",
-  "exact-cache": "同一条件のキャッシュ",
+  "exact-cache": "同じ内容の描き直し",
   sample: "事前生成サンプル",
 };
 
@@ -66,6 +91,9 @@ function error(text) {
   box.hidden = false;
   clearTimeout(error.timer);
   error.timer = setTimeout(() => (box.hidden = true), 6000);
+}
+function say(text) {
+  notice = text || "";
 }
 async function api(path, method = "GET", body) {
   const r = await fetch("/api" + path, {
@@ -89,7 +117,7 @@ async function api(path, method = "GET", body) {
   }
   return r.json();
 }
-/** Single-flight guard: one visitor action at a time, errors surface as a toast. */
+/** Single-flight guard for network actions; local edits never wait on it. */
 async function act(fn) {
   if (pending) return;
   pending = true;
@@ -104,19 +132,87 @@ async function act(fn) {
 function bind(id, fn) {
   document.getElementById(id)?.addEventListener("click", () => act(fn));
 }
+/** Local edits: instant, never blocked by an in-flight save. */
 function on(attr, fn) {
-  app
-    .querySelectorAll(`[data-${attr}]`)
-    .forEach((el) =>
-      el.addEventListener("click", () => act(() => fn(el.dataset))),
-    );
+  app.querySelectorAll(`[data-${attr}]`).forEach((el) =>
+    el.addEventListener("click", () => {
+      try {
+        fn(el.dataset);
+      } catch (e) {
+        error(e.message);
+      }
+    }),
+  );
 }
+
+/* -------------------------------------------------- server-owned snapshot */
+function adoptSession(snapshot) {
+  session = snapshot;
+}
+/** Adopt the server's answer, draft included: the screen mirrors the snapshot. */
+function adoptAll(snapshot) {
+  session = snapshot;
+  draft = draftFromSnapshot(snapshot, aspectKeys());
+}
+/**
+ * Serialised full-replace writes. A 409 (stale revision, or a worker that still
+ * owns the GPU right after cancel/done) adopts the server snapshot and retries.
+ */
+const writer = createSelectionWriter({
+  revision: () => session.revision,
+  put: (payload) => api(`/sessions/${session.id}/selection`, "PUT", payload),
+  refetch: () => api(`/sessions/${session.id}`),
+  adopt: adoptSession,
+  wait: sleep,
+});
+
+/** Persist the working copy. `commit` marks it ready to generate from. */
+async function save(commit) {
+  clearTimeout(saveTimer);
+  saveTimer = null;
+  if (!session) return null;
+  const value = { ...draft, committed: Boolean(commit) };
+  if (draftMatchesSnapshot(value, session, aspectKeys())) {
+    draft = value;
+    return session;
+  }
+  try {
+    const snapshot = await writer.push({ draft: structuredClone(value), commit });
+    if (writer.busy) adoptSession(snapshot);
+    else adoptAll(snapshot);
+    // A content change detaches the finished comparison: nothing left to poll.
+    if (!session.run) poller.stop();
+    return session;
+  } catch (e) {
+    adoptAll(await api(`/sessions/${session.id}`));
+    say("画面を最新の状態に合わせました。もう一度お試しください。");
+    render();
+    throw e;
+  }
+}
+/**
+ * Local edit: draw at once, save shortly after. On the result screen the edits
+ * stay local until 「同じお題で描き直す」, so the comparison on screen survives.
+ */
+function edited() {
+  if (screen === "compare") return redrawAdjust();
+  render();
+  clearTimeout(saveTimer);
+  saveTimer = null;
+  if (!session) return;
+  // Deliberately outside `act`: an autosave must never swallow the next click.
+  saveTimer = setTimeout(() => save(false).catch((e) => error(e.message)), 350);
+}
+
 const STEPS = ["好きな画像を選ぶ", "お題を選ぶ", "見比べる"];
 function steps(n) {
   return `<ol class="stepbar">${STEPS.map(
     (label, i) =>
       `<li class="${i + 1 === n ? "active" : ""}"${i + 1 === n ? ' aria-current="step"' : ""}><b>${two(i + 1)}</b>${esc(label)}</li>`,
   ).join("")}</ol>`;
+}
+function noticeLine() {
+  return notice ? `<p class="notice" role="status">${esc(notice)}</p>` : "";
 }
 function render() {
   resetButton.hidden = !session;
@@ -128,6 +224,11 @@ function render() {
       compare: compareScreen,
     }[screen] || welcome
   )();
+}
+function goto(next) {
+  screen = next;
+  render();
+  window.scrollTo(0, 0);
 }
 
 /* ---------------------------------------------------------------- welcome */
@@ -146,12 +247,15 @@ function sampleControl() {
 function bindSample() {
   bind("sample", async () => {
     if (!session) await start(false);
-    session = await api(`/sessions/${session.id}/sample`, "POST", {
-      sample_id: document.querySelector("#sample-id").value,
-    });
-    screen = "compare";
-    render();
-    window.scrollTo(0, 0);
+    // A sample is somebody else's preference; the visitor's draft is untouched.
+    adoptSession(
+      await api(`/sessions/${session.id}/sample`, "POST", {
+        sample_id: document.querySelector("#sample-id").value,
+      }),
+    );
+    renderedRun = JSON.stringify(session.run);
+    say("");
+    goto("compare");
   });
 }
 /** Same prompt, same seed: the plain picture beside a sample's personalized one. */
@@ -170,114 +274,161 @@ function welcome() {
     cfg.ready
       ? ""
       : '<p class="note ready-note">画像を準備中です。準備が終わると体験できます。</p>'
-  }${sampleControl()}</div>${heroArt()}</section><ol class="journey"><li><b>01</b><h3>好きな画像を選ぶ</h3><p>16枚から${cfg.selection.min}〜${cfg.selection.max}枚</p></li><li><b>02</b><h3>お題を選ぶ</h3><p>一文は誰でも同じ</p></li><li><b>03</b><h3>見比べる</h3><p>パーソナライズなし・あり</p></li></ol>`;
+  }${sampleControl()}</div>${heroArt()}</section><ol class="journey"><li><b>01</b><h3>好きな画像を選ぶ</h3><p>${limits.round_size}枚ずつ、最大${limits.max_rounds}回。合計${limits.min}〜${limits.max}枚</p></li><li><b>02</b><h3>お題を選ぶ</h3><p>一文は誰でも同じ</p></li><li><b>03</b><h3>見比べる</h3><p>パーソナライズなし・あり</p></li></ol>`;
   bind("start", () => start(true));
   bindSample();
 }
 async function start(show) {
   poller.stop();
-  session = await api("/sessions", "POST");
+  roundTicket.done();
+  runTicket.done();
+  adoptAll(await api("/sessions", "POST"));
   sessionStorage.setItem(SESSION_KEY, session.id);
-  selection = [];
   topic = null;
-  ownSelection = false;
-  saveDraft();
+  say("");
   lastActive = Date.now();
-  if (show) {
-    screen = "cards";
-    render();
-    window.scrollTo(0, 0);
-  }
-}
-function saveDraft() {
-  try {
-    sessionStorage.setItem(
-      DRAFT_KEY,
-      JSON.stringify({ sid: session?.id || null, selection }),
-    );
-  } catch {}
+  if (show) goto("cards");
 }
 
 /* ------------------------------------------------ 01 好きな画像を選ぶ */
-const picked = (id) => selection.findIndex((s) => s.card_id === id);
+/** Strength, aspects and 「全部好き」 for one chosen card. */
+function pickRow(entry, index) {
+  const card = cardOf(entry.card_id);
+  if (!card) return "";
+  const unanswered = !entry.aspects.length;
+  const strengths = [1, 2].map((value) => {
+    const label = value === 1 ? "好き" : "とても好き";
+    return `<button class="step ${entry.strength === value ? "on" : ""}" data-strength="${value}" data-target="${esc(entry.card_id)}" aria-pressed="${entry.strength === value}">${label}</button>`;
+  });
+  const chips = aspectKeys().map((k) => {
+    const on = entry.aspects.includes(k);
+    return `<button class="chip ${on ? "on" : ""}" data-aspect="${k}" data-target="${esc(entry.card_id)}" aria-pressed="${on}"><b>${esc(cfg.aspects[k])}</b><small>${esc(card.aspects_ja?.[k] || card.aspects?.[k] || "")}</small></button>`;
+  });
+  return `<div class="ref-edit ${unanswered ? "needs" : ""}" id="pick-${esc(entry.card_id)}"><img src="${esc(card.url)}" alt="${esc(card.label)}"><div class="ref-body"><div class="ref-head"><b>${two(index + 1)}</b><span class="ref-profile">${esc(card.profile_label || card.label)}</span><span class="ref-subject">${esc(card.subject_label || "")}</span></div><div class="seg small" role="group" aria-label="${esc(refName(entry.card_id))}の好きの強さ">${strengths.join("")}</div><div class="chips" role="group" aria-label="${esc(refName(entry.card_id))}のどこが好きか">${chips.join("")}<button class="chip all" data-likeall="${esc(entry.card_id)}">全部好き</button></div>${
+    unanswered
+      ? '<p class="hint">この画像のどこが好きかを、1つ以上えらんでください。</p>'
+      : `<code class="ref-en">${esc(refText(entry))}</code>`
+  }</div><button class="quiet" data-drop="${esc(entry.card_id)}">外す ✕</button></div>`;
+}
+function trayBlock(title, lead) {
+  if (!draft.selection.length)
+    return `<p class="note">まだ選ばれていません。気になる描き方の画像を${limits.min}枚以上えらんでください。</p>`;
+  return `<div class="picked-head"><h3>${esc(title)}</h3><span>${esc(lead)}</span></div><div class="picked-list">${draft.selection
+    .map((entry, i) => pickRow(entry, i))
+    .join("")}</div>`;
+}
+const BLOCK_TEXT = (blocker) => {
+  if (!blocker) return null;
+  if (blocker.code === "too_few")
+    return `あと${blocker.missing}枚えらぶと次へ進めます（最大${limits.max}枚）。`;
+  if (blocker.code === "too_many")
+    return `選べるのは${limits.max}枚までです。`;
+  return `「${refName(blocker.card_id)}」のどこが好きかを、1つ以上えらんでください。`;
+};
+function bindPickRows() {
+  on("strength", ({ strength, target }) => {
+    draft = setStrength(draft, target, Number(strength));
+    edited();
+  });
+  on("aspect", ({ aspect, target }) => {
+    draft = toggleAspect(draft, target, aspect, aspectKeys());
+    edited();
+  });
+  on("likeall", ({ likeall }) => {
+    draft = likeAll(draft, likeall, aspectKeys());
+    edited();
+  });
+  on("drop", ({ drop }) => {
+    draft = removeCard(draft, drop);
+    edited();
+  });
+}
 function cardsScreen() {
-  const { min, max } = cfg.selection;
-  const ok = selectionComplete(selection, cfg.selection);
-  const order = session.card_order?.length
-    ? session.card_order
-    : cfg.cards.map((c) => c.id);
-  app.innerHTML = `${steps(1)}<div class="topline"><div><h2>好きな画像を選んでください。</h2><p>同じ人物が4つの描き方で並んでいます。人物ではなく、描き方の好みで選んでください。</p></div><div class="counter" aria-label="選んだ枚数"><b>${selection.length}</b><small>/ ${min}〜${max}枚</small></div></div><div class="card-grid">${order
+  const round = currentRound(session);
+  const ids = round?.card_ids || [];
+  const blocker = commitBlocker(draft, limits);
+  const more = canRequestRound(session, limits);
+  const roundText = roundNotice(session, limits);
+  app.innerHTML = `${steps(1)}<div class="topline"><div><h2>好きな画像を選んでください。</h2><p>人物ではなく、色・光・描き方・雰囲気の好みで選びます。好きなものがなければ、選ばずに次の候補へ進めます。</p></div><div class="counter" aria-label="選んだ枚数"><b>${draft.selection.length}</b><small>/ ${limits.min}〜${limits.max}枚</small></div></div>${noticeLine()}<div class="roundline"><span class="round-tag">${roundNumber(session)} / ${limits.max_rounds}回目</span><span>この回の候補 ${ids.length}枚</span>${
+    roundText ? `<span class="round-note">${esc(roundText)}</span>` : ""
+  }</div><div class="card-grid">${ids
     .map((id) => {
       const card = cardOf(id);
       if (!card) return "";
       const n = picked(id);
       return `<button class="card ${n >= 0 ? "selected" : ""}" data-card="${esc(id)}" aria-pressed="${n >= 0}" aria-label="${esc(card.label)}を${n >= 0 ? "選択解除" : "選ぶ"}"><img src="${esc(card.url)}" alt="${esc(card.label)}" loading="lazy">${n >= 0 ? `<span class="order">${n + 1}</span>` : ""}<span class="card-foot">${esc(card.subject_label || card.label)}</span></button>`;
     })
-    .join("")}</div>${
-    selection.length
-      ? `<div class="picked-head"><h3>選んだ${selection.length}枚を、参照に使います。</h3><span>この画像のどこが好き？ 外した側面は参照から消えます。</span></div><div class="picked-list">${selection
-          .map((entry, i) => {
-            const card = cardOf(entry.card_id);
-            if (!card) return "";
-            const off = entry.aspects_off || [];
-            return `<div class="ref-edit"><img src="${esc(card.url)}" alt="${esc(card.label)}"><div class="ref-body"><div class="ref-head"><b>${two(i + 1)}</b><span class="ref-profile">${esc(card.profile_label || card.label)}</span><span class="ref-subject">${esc(card.subject_label || "")}</span></div><div class="chips" role="group" aria-label="${esc(card.label)}のどこが好きか">${aspectKeys()
-              .map(
-                (k) =>
-                  `<button class="chip ${off.includes(k) ? "" : "on"}" data-aspect="${k}" data-target="${esc(entry.card_id)}" aria-pressed="${!off.includes(k)}"><b>${esc(cfg.aspects[k])}</b><small>${esc(card.aspects_ja?.[k] || card.aspects?.[k] || "")}</small></button>`,
-              )
-              .join(
-                "",
-              )}</div><code class="ref-en">${esc(refText(entry) || "（側面がすべて外れています）")}</code></div><button class="quiet" data-drop="${esc(entry.card_id)}">外す ✕</button></div>`;
-          })
-          .join("")}</div>`
-      : `<p class="note">まだ選ばれていません。気になる描き方の画像を${min}枚以上えらんでください。</p>`
-  }<div class="action-row"><span class="note">${ok ? `${selection.length}枚を参照にします。` : `あと${Math.max(0, min - selection.length)}枚えらぶと次へ進めます（最大${max}枚）。`}</span><button id="to-topics" class="primary" ${ok ? "" : "disabled"}>次へ <span>→</span></button></div><p class="note">選ばなかった画像を「嫌い」とは扱いません。並び順は端末ごとにシャッフルしています。</p>`;
+    .join("")}</div><div class="round-actions">${
+    more
+      ? '<button id="more" class="secondary">ほかの候補も見る <span>→</span></button>'
+      : '<span class="note">候補はこれですべてです。</span>'
+  }<span class="note">選ばなかった画像を「嫌い」とは扱いません。</span></div>${trayBlock(
+    "選んだ画像",
+    "それぞれ、どこが好きかを教えてください。前の回で選んだ画像もここで直せます。",
+  )}<div class="action-row"><span class="note">${esc(
+    BLOCK_TEXT(blocker) || `${draft.selection.length}枚を参照に使います。`,
+  )}</span><button id="commit" class="primary" ${blocker ? "disabled" : ""}>これで決定 <span>→</span></button></div>`;
   on("card", ({ card }) => {
-    const n = picked(card);
-    if (n >= 0) selection.splice(n, 1);
-    else if (selection.length >= cfg.selection.max)
-      return error(`選べるのは${cfg.selection.max}枚までです。`);
-    else selection.push({ card_id: card, aspects_off: [] });
-    saveDraft();
-    cardsScreen();
+    const result = toggleCard(draft, card, limits);
+    draft = result.draft;
+    if (result.error) return error(result.error);
+    edited();
   });
-  on("aspect", ({ aspect, target }) => {
-    const entry = selection.find((s) => s.card_id === target);
-    if (!entry) return;
-    const off = new Set(entry.aspects_off || []);
-    if (off.has(aspect)) off.delete(aspect);
-    else if (off.size + 1 >= aspectKeys().length)
-      return error("この画像のどこが好きかを、少なくとも1つ残してください。");
-    else off.add(aspect);
-    entry.aspects_off = aspectKeys().filter((k) => off.has(k));
-    saveDraft();
-    cardsScreen();
+  bindPickRows();
+  bind("more", nextRound);
+  bind("commit", async () => {
+    await save(true);
+    const blocked = commitBlocker(draft, limits);
+    if (blocked) return error(BLOCK_TEXT(blocked));
+    say("");
+    goto("topics");
   });
-  on("drop", ({ drop }) => {
-    const n = picked(drop);
-    if (n >= 0) selection.splice(n, 1);
-    saveDraft();
-    cardsScreen();
-  });
-  bind("to-topics", async () => {
-    session = await api(`/sessions/${session.id}/selection`, "PUT", {
-      cards: selection.map((s) => ({
-        card_id: s.card_id,
-        aspects_off: s.aspects_off || [],
-      })),
-    });
-    if (session.selection?.length) selection = structuredClone(session.selection);
-    ownSelection = true;
-    saveDraft();
-    screen = "topics";
+}
+/** One request per intended round: a second click while in flight does nothing. */
+async function nextRound() {
+  if (!canRequestRound(session, limits)) return;
+  await save(false);
+  const button = document.querySelector("#more");
+  const request_id = roundTicket.take();
+  if (!request_id) return;
+  if (button) button.disabled = true;
+  try {
+    for (let attempt = 0; ; attempt++) {
+      try {
+        // A round never changes the selection, so local edits are kept.
+        adoptSession(
+          await api(`/sessions/${session.id}/rounds`, "POST", {
+            request_id,
+            expected_revision: session.revision,
+          }),
+        );
+        roundTicket.done();
+        say("");
+        break;
+      } catch (e) {
+        if (e.status !== 409) throw e;
+        adoptAll(await api(`/sessions/${session.id}`));
+        if (!canRequestRound(session, limits)) {
+          roundTicket.done();
+          say("お見せできる画像はこれですべてです。");
+          break;
+        }
+        if (attempt >= 1) throw e;
+        await sleep(250);
+      }
+    }
+  } catch (e) {
+    roundTicket.fail(); // a retry stays the same request: never two rounds
+    throw e;
+  } finally {
     render();
     window.scrollTo(0, 0);
-  });
+  }
 }
 
 /* ------------------------------------------------------ 02 お題を選ぶ */
 function refStrip() {
-  return `<div class="refbar">${selection
+  return `<div class="refbar">${draft.selection
     .map((entry, i) => {
       const card = cardOf(entry.card_id);
       if (!card) return "";
@@ -287,7 +438,7 @@ function refStrip() {
 }
 function topicsScreen() {
   if (!topic) topic = session.run?.topic_id || cfg.topics[0]?.id;
-  app.innerHTML = `${steps(2)}<h2>お題を選んでください。</h2><p>お題の一文は誰でも同じです。渡すのは、下の英語の説明文だけです。</p>${refStrip()}<div class="topics">${cfg.topics
+  app.innerHTML = `${steps(2)}<h2>お題を選んでください。</h2><p>お題の一文は誰でも同じです。渡すのは、選んだ画像の説明文だけです。</p>${noticeLine()}${refStrip()}<div class="topics">${cfg.topics
     .map(
       (t) =>
         `<button class="topic ${t.id === topic ? "selected" : ""}" data-topic="${esc(t.id)}" aria-pressed="${t.id === topic}"><img src="${esc(t.preview_url)}" alt="${esc(t.label)}の参照なし生成サンプル" loading="lazy"><span>${esc(t.label)}</span></button>`,
@@ -300,48 +451,54 @@ function topicsScreen() {
     topicsScreen();
   });
   bind("back", () => {
-    screen = session.run ? "compare" : "cards";
-    render();
-    window.scrollTo(0, 0);
+    say("");
+    goto(session.run ? "compare" : "cards");
   });
-  bind("generate", async () => {
-    const button = document.querySelector("#generate");
-    if (button) button.disabled = true;
-    try {
-      // The finished comparison for this topic is already on hand.
-      const shown = session.run;
-      const kept =
-        shown?.topic_id === topic &&
-        shown.mode !== "sample" &&
-        shown.status === "done" &&
-        !shown.error;
-      if (!kept)
-        session = await api(`/sessions/${session.id}/runs`, "POST", {
-          topic_id: topic,
-          request_id: crypto.randomUUID(),
-        });
-      screen = "compare";
-      renderedRun = JSON.stringify(session.run);
+  bind("generate", () => generate(topic));
+}
+/** Commit the draft, then start one run for it. Seeds are fixed server-side. */
+async function generate(topicId) {
+  await save(true);
+  const blocked = commitBlocker(draft, limits);
+  if (blocked) {
+    say(BLOCK_TEXT(blocked));
+    return goto("cards");
+  }
+  const request_id = runTicket.take();
+  if (!request_id) return;
+  const button = document.querySelector("#generate") || document.querySelector("#redraw");
+  if (button) button.disabled = true;
+  try {
+    adoptAll(
+      await api(`/sessions/${session.id}/runs`, "POST", {
+        topic_id: topicId,
+        request_id,
+        expected_revision: session.revision,
+      }),
+    );
+    runTicket.done();
+    topic = topicId;
+    say("");
+    renderedRun = JSON.stringify(session.run);
+    goto("compare");
+    if (session.run?.status !== "done") poller.start();
+  } catch (e) {
+    runTicket.fail();
+    if (e.status === 409) {
+      adoptAll(await api(`/sessions/${session.id}`));
+      say("直前の処理が終わっていません。少し待ってからもう一度お試しください。");
       render();
-      window.scrollTo(0, 0);
-      if (session.run?.status !== "done") watch();
-    } finally {
-      const b = document.querySelector("#generate");
-      if (b) b.disabled = false;
     }
-  });
+    throw e;
+  } finally {
+    if (button) button.disabled = false;
+  }
 }
 
 /* ------------------------------------------------------ 03 見比べる */
 function statusbox(run) {
   const working = run.status !== "done";
-  return `<div class="statusbox" role="status">${working ? '<span class="spinner"></span>' : "<span>✓</span>"}<p>${esc(run.message || (working ? "描いています…" : "できました。"))}${run.elapsed_seconds ? ` · ${esc(run.elapsed_seconds)}秒` : ""}</p></div>`;
-}
-/** Past the card grid the server owns the selection (a sample run sets its own). */
-function adoptSelection() {
-  const theirs = session?.selection;
-  if (theirs?.length && JSON.stringify(theirs) !== JSON.stringify(selection))
-    selection = structuredClone(theirs);
+  return `<div class="statusbox ${working ? "" : "quiet-box"}" role="status">${working ? '<span class="spinner"></span>' : "<span>✓</span>"}<p>${esc(run.message || (working ? "描いています…" : "できました。"))}${run.elapsed_seconds ? ` · ${esc(run.elapsed_seconds)}秒` : ""}</p></div>`;
 }
 function shots(images, working, count = 4) {
   return `<div class="image-grid">${Array.from({ length: count }, (_, i) => {
@@ -352,13 +509,16 @@ function shots(images, working, count = 4) {
   }).join("")}</div>`;
 }
 /**
- * One row per distinct aspect phrase, grouped by aspect. A phrase that several
- * selected cards share carries a larger weight, and its thumbnails show why.
+ * One row per distinct aspect phrase. A phrase that several selected cards share
+ * carries a larger weight, and its thumbnails show why.
  */
 function refRows(refs) {
   const keys = aspectKeys();
-  const groups = keys.map((key) => [key, refs.filter((r) => r.aspect === key)]);
-  const rest = refs.filter((r) => !keys.includes(r.aspect));
+  const groups = keys.map((key) => [
+    key,
+    refs.filter((r) => (r.aspects || []).includes(key)),
+  ]);
+  const rest = refs.filter((r) => !(r.aspects || []).some((a) => keys.includes(a)));
   if (rest.length) groups.push([null, rest]);
   return (
     groups
@@ -385,59 +545,137 @@ function refRows(refs) {
       .join("") || "<p>—</p>"
   );
 }
+/** Everything technical lives here, folded away from the main copy. */
 function inputsPanel(run) {
-  const p = run.personalization;
+  const p = run.personalization || {};
+  const policy = p.effective_policy || {};
   return `<details class="prompt-details"><summary>パーソナライズに渡したもの</summary><p class="kv"><b>お題の一文（全員に共通・変えていません）</b></p><code class="block">${esc(run.prompt || "—")}</code><p class="kv"><b>参照した好み（選んだ画像に付けた確認済みの説明文）</b>　同じ説明文を複数の画像が持つと、その分だけ重みが大きくなります。</p><div class="ref-used">${refRows(
-    p?.refs || [],
-  )}</div><p class="kv"><b>反映の強さ alpha</b>　${esc(p?.alpha ?? cfg.alpha ?? "—")}</p><p>生成モデル・seed・負のプロンプト・生成設定は、パーソナライズなしの4枚とまったく同じです。</p></details>`;
+    p.refs || [],
+  )}</div><p class="kv"><b>設定</b>　alpha ${esc(p.alpha ?? cfg.policy?.alpha ?? "—")} / policy ${esc(run.policy_id || "—")} / pooled ${esc(policy.pooled_mode || "—")} / 参照単位 ${esc(policy.reference_unit || "—")}</p><p class="kv"><b>内容ハッシュ</b>　<code>${esc(run.personalization_hash || "—")}</code></p><p>生成モデル・seed・負のプロンプト・生成設定は、パーソナライズなしの4枚とまったく同じです。</p></details>`;
+}
+function feedbackBlock(run) {
+  if (!feedbackVisible(run)) return "";
+  const chosen = run.feedback?.preference || null;
+  const options = [
+    ["plain", "通常"],
+    ["personal", "あなた向け"],
+    ["tie", "同じくらい"],
+  ];
+  return `<section class="feedback"><div class="picked-head"><h3>どちらが好みですか？</h3><span>任意です。答えても答えなくても、画像は変わりません。</span></div><div class="seg" role="group" aria-label="どちらが好みか">${options
+    .map(
+      ([value, label]) =>
+        `<button class="step ${chosen === value ? "on" : ""}" data-pref="${value}" aria-pressed="${chosen === value}">${label}</button>`,
+    )
+    .join("")}</div>${
+    chosen
+      ? '<p class="note">回答を受け取りました。いつでも選び直せます。</p>'
+      : ""
+  }</section>`;
+}
+function gainBlock() {
+  return `<div class="gains" role="group" aria-label="側面ごとの強さ">${aspectKeys()
+    .map((key) => {
+      const index = gainIndex(draft.aspect_gains[key]);
+      return `<div class="gain"><span class="gain-name">${esc(cfg.aspects[key])}</span><div class="seg small" role="group" aria-label="${esc(cfg.aspects[key])}の強さ">${GAIN_STEPS.map(
+        (value, i) =>
+          `<button class="step ${i === index ? "on" : ""}" data-gain="${key}" data-level="${value}" aria-pressed="${i === index}">${GAIN_LABELS[i]}</button>`,
+      ).join("")}</div></div>`;
+    })
+    .join("")}</div>`;
+}
+function adjustBlock(run) {
+  if (run.mode === "sample") return "";
+  const blocker = commitBlocker(draft, limits);
+  const changed = !draftMatchesSnapshot(
+    { ...draft, committed: true },
+    session,
+    aspectKeys(),
+  );
+  return `<section class="adjust"><div class="picked-head"><h3>好みを調整する</h3><span>変更は「同じお題で描き直す」を押したときに反映されます。お題と seed は同じままです。</span></div>${gainBlock()}${trayBlock(
+    "選んだ画像",
+    "好きな側面と強さを直せます。",
+  )}<div class="action-row"><span class="note">${esc(
+    BLOCK_TEXT(blocker) ||
+      (changed
+        ? "変更があります。描き直すと反映されます。"
+        : "変更していません。描き直すと同じ結果になります。"),
+  )}</span><button id="redraw" class="primary" ${blocker || run.status !== "done" ? "disabled" : ""}>同じお題で描き直す <span>→</span></button></div></section>`;
+}
+/** Redraw only the adjust panel, so the eight images on screen are not reloaded. */
+function redrawAdjust() {
+  const host = app.querySelector(".adjust");
+  if (!host || !session?.run) return render();
+  host.outerHTML = adjustBlock(session.run);
+  bindAdjust(session.run);
+}
+function bindAdjust(run) {
+  bindPickRows();
+  on("gain", ({ gain, level }) => {
+    draft = setGain(draft, gain, Number(level));
+    edited();
+  });
+  bind("redraw", () => generate(run.topic_id));
 }
 function compareScreen() {
   const run = session.run;
   if (!run) {
-    screen = selectionComplete(selection, cfg.selection) ? "topics" : "cards";
-    return render();
+    return goto(commitBlocker(draft, limits) ? "cards" : "topics");
   }
-  adoptSelection();
   const sample = run.mode === "sample";
   const working = run.status !== "done";
-  const canRetopic = ownSelection && selectionComplete(selection, cfg.selection);
-  app.innerHTML = `${steps(3)}<h2>パーソナライズなし・ありを見比べてください。</h2><div class="callout"><b>${esc(topicLabel(run.topic_id))}</b><span>入力文も生成モデルも seed も同じです。違うのは、あなたの好みを参照したかどうかだけです。</span></div>${
-    working ? statusbox(run) : ""
-  }<section class="row"><div class="comparison-label"><h3>パーソナライズなし</h3><span>好みを使わずに描いた4枚</span></div>${shots(
+  app.innerHTML = `${steps(3)}<h2>パーソナライズなし・ありを見比べてください。</h2><div class="callout"><b>${esc(topicLabel(run.topic_id))}</b><span>入力文も生成モデルも seed も同じです。違うのは、あなたの好みを参照したかどうかだけです。</span></div>${noticeLine()}${statusbox(
+    run,
+  )}<section class="row"><div class="comparison-label"><h3>パーソナライズなし</h3><span>好みを使わずに描いた4枚</span></div>${shots(
     run.plain,
     working,
   )}</section><section class="row mine"><div class="comparison-label"><h3>パーソナライズあり</h3><span>選んだ画像の好みを参照して描いた4枚</span><span class="badge ${sample ? "sample" : ""}">${esc(MODES[run.mode] || run.mode)}</span>${
     run.error ? `<span class="badge sample">${esc(run.error)}</span>` : ""
   }</div>${shots(run.personal, working)}${inputsPanel(run)}</section>${
     sample
-      ? `<p class="error-message">事前生成のサンプルです。あなたの選択を反映した結果ではありません。${canRetopic ? "" : "ご自分の好みで試すには、最初から始めてください。"}</p>`
+      ? '<p class="error-message">事前生成のサンプルです。あなたの選択を反映した結果ではありません。あなたの好みで試すには、下の「好きな画像を選ぶ」へ進んでください。</p>'
       : ""
-  }<div class="action-row">${
-    canRetopic
-      ? `<button id="another" class="secondary" ${working ? "disabled" : ""}>別のお題で描く</button>`
-      : '<button id="restart" class="secondary">最初から始める</button>'
-  }${working ? '<button id="cancel" class="secondary">描くのを中止する</button>' : ""}<button id="finish" class="primary">体験を終了</button></div><p class="note">終了すると、この体験の選択・参照・生成画像は削除されます。${cfg.idle_seconds}秒の無操作でも終了します。${working ? "処理中は無操作リセットを止めています。" : ""}</p>`;
+  }${feedbackBlock(run)}${adjustBlock(run)}<div class="action-row"><button id="reselect" class="secondary">好きな画像を選ぶ</button><button id="another" class="secondary" ${working ? "disabled" : ""}>別のお題で描く</button>${
+    working ? '<button id="cancel" class="secondary">描くのを中止する</button>' : ""
+  }<button id="finish" class="primary">体験を終了</button></div><p class="note">終了すると、この体験の選択・参照・生成画像は削除されます。${cfg.idle_seconds}秒の無操作でも終了します。${working ? "処理中は無操作リセットを止めています。" : ""}</p>`;
+  bindAdjust(run);
+  on("pref", ({ pref }) => act(() => answer(pref)));
+  bind("reselect", () => {
+    say("");
+    goto("cards");
+  });
   bind("another", () => {
     topic = null;
-    screen = "topics";
-    render();
-    window.scrollTo(0, 0);
-  });
-  bind("restart", async () => {
-    await finish();
-    await start(true);
+    say("");
+    goto("topics");
   });
   bind("cancel", async () => {
     poller.stop();
-    session = await api(`/sessions/${session.id}/cancel`, "POST");
-    // Cancelling drops the unfinished run; the selection survives.
-    adoptSelection();
-    if (!session.run) screen = "topics";
+    adoptSession(await api(`/sessions/${session.id}/cancel`, "POST"));
+    say("生成を中止しました。");
     renderedRun = JSON.stringify(session.run);
-    render();
-    window.scrollTo(0, 0);
+    goto(session.run ? "compare" : "topics");
   });
   bind("finish", finish);
+}
+/** The optional, labelled answer about this finished comparison. */
+async function answer(preference) {
+  const run = session.run;
+  if (!feedbackVisible(run)) return;
+  try {
+    adoptSession(
+      await api(`/sessions/${session.id}/runs/${run.id}/feedback`, "PUT", {
+        expected_revision: session.revision,
+        preference,
+      }),
+    );
+    say("");
+  } catch (e) {
+    if (e.status !== 409) throw e;
+    adoptAll(await api(`/sessions/${session.id}`));
+    say("この結果には回答できませんでした。画面を最新にしました。");
+  }
+  renderedRun = JSON.stringify(session.run);
+  render();
 }
 function keepScroll(fn) {
   const y = window.scrollY;
@@ -461,19 +699,20 @@ async function finish() {
 }
 function forget() {
   session = null;
-  selection = [];
+  draft = emptyDraft(cfg ? aspectKeys() : undefined);
   topic = null;
-  ownSelection = false;
   renderedRun = "";
+  say("");
+  roundTicket.done();
+  runTicket.done();
   sessionStorage.removeItem(SESSION_KEY);
-  sessionStorage.removeItem(DRAFT_KEY);
   screen = "welcome";
 }
 const poller = createPoller({
   identity: () => pollIdentity(session),
   fetchSnapshot: (sid) => api(`/sessions/${sid}`),
   onSnapshot: (current) => {
-    session = current;
+    adoptSession(current);
     const signature = JSON.stringify(session.run);
     if (signature !== renderedRun && screen === "compare") {
       renderedRun = signature;
@@ -486,9 +725,6 @@ const poller = createPoller({
   },
   onError: (e) => error(e.message),
 });
-function watch() {
-  poller.start();
-}
 resetButton.addEventListener("click", () => act(finish));
 for (const name of ["pointerdown", "keydown", "change", "scroll"])
   document.addEventListener(
@@ -516,26 +752,25 @@ setInterval(() => {
 (async () => {
   try {
     cfg = await api("/config");
+    if (!schemaSupported(cfg)) {
+      app.innerHTML =
+        "<h2>画面が新しくなりました。</h2><p>お手数ですが、ページを再読み込みしてください。</p>";
+      return;
+    }
+    limits = withLimits(cfg.selection);
     const saved = sessionStorage.getItem(SESSION_KEY);
     if (saved) {
       try {
-        session = await api(`/sessions/${saved}`);
-        if (session.selection?.length)
-          selection = structuredClone(session.selection);
-        else {
-          const draft = JSON.parse(sessionStorage.getItem(DRAFT_KEY) || "null");
-          if (draft?.sid === session.id && Array.isArray(draft.selection))
-            selection = draft.selection;
-        }
+        // Screen, round, draft and commit state all come from the snapshot.
+        adoptAll(await api(`/sessions/${saved}`));
         topic = session.run?.topic_id || null;
-        ownSelection =
-          Boolean(session.selection?.length) && session.run?.mode !== "sample";
-        screen = initialScreen(session, cfg.selection);
-        if (session.run && session.run.status !== "done") watch();
+        screen = initialScreen(session, limits);
+        renderedRun = JSON.stringify(session.run);
+        if (session.run && session.run.status !== "done") poller.start();
       } catch {
         sessionStorage.removeItem(SESSION_KEY);
-        sessionStorage.removeItem(DRAFT_KEY);
         session = null;
+        draft = emptyDraft(aspectKeys());
       }
     }
     render();

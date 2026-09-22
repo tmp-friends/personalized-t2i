@@ -1,0 +1,517 @@
+{
+ "note": "strict eye estimate of exhibit/assets/cards-v2 AFTER the 20 per-card seed swaps, 2026-09-22. ok/weak/uncertain per aspect. An estimate, not the owner's review.",
+ "cards": {
+  "girl-c0-l0-t0-m2": {
+   "color": "ok",
+   "lighting": "weak",
+   "texture": "ok",
+   "mood": "ok",
+   "subject": "ok",
+   "note": "sketch carries no lighting cue at all; L0 indistinguishable from L2/L3"
+  },
+  "girl-c0-l2-t2-m0": {
+   "color": "ok",
+   "lighting": "ok",
+   "texture": "ok",
+   "mood": "ok",
+   "subject": "ok",
+   "note": "sunset backlight + rim, lineless, closed eyes"
+  },
+  "girl-c0-l3-t1-m1": {
+   "color": "ok",
+   "lighting": "ok",
+   "texture": "ok",
+   "mood": "ok",
+   "subject": "ok",
+   "note": "seed 7601: 日の当たる壁に輪郭のはっきりした落ち影。[差し替え][heldout]"
+  },
+  "girl-c0-l3-t3-m3": {
+   "color": "ok",
+   "lighting": "weak",
+   "texture": "ok",
+   "mood": "uncertain",
+   "subject": "ok",
+   "note": "no cast shadow; eyes read open rather than half-closed"
+  },
+  "girl-c1-l0-t2-m3": {
+   "color": "ok",
+   "lighting": "weak",
+   "texture": "weak",
+   "mood": "weak",
+   "subject": "uncertain",
+   "note": "lineart present; face in profile, eye hidden; skin lavender"
+  },
+  "girl-c1-l1-t3-m1": {
+   "color": "ok",
+   "lighting": "ok",
+   "texture": "uncertain",
+   "mood": "ok",
+   "subject": "ok",
+   "note": "heldout; painterly but brushstrokes not clearly thick"
+  },
+  "girl-c1-l2-t1-m2": {
+   "color": "ok",
+   "lighting": "ok",
+   "texture": "ok",
+   "mood": "ok",
+   "subject": "ok",
+   "note": "seed 5601: 右上に太陽とグレア、肌の青染まりが消えた。[差し替え]"
+  },
+  "girl-c1-l3-t1-m0": {
+   "color": "ok",
+   "lighting": "weak",
+   "texture": "ok",
+   "mood": "ok",
+   "subject": "weak",
+   "note": "skin fully blue-tinted; no cast shadow"
+  },
+  "girl-c2-l0-t3-m0": {
+   "color": "ok",
+   "lighting": "ok",
+   "texture": "ok",
+   "mood": "ok",
+   "subject": "ok",
+   "note": "seed 3601: 屋根と空に厚い筆致、閉じ目＋口を閉じた微笑。[差し替え]"
+  },
+  "girl-c2-l1-t0-m3": {
+   "color": "ok",
+   "lighting": "ok",
+   "texture": "ok",
+   "mood": "ok",
+   "subject": "ok",
+   "note": "sketch lines visible in bg and coat"
+  },
+  "girl-c2-l2-t2-m1": {
+   "color": "ok",
+   "lighting": "ok",
+   "texture": "ok",
+   "mood": "ok",
+   "subject": "ok",
+   "note": "seed 6601: 背後に太陽のグレア、人物はほぼ線なしの平塗り。[差し替え][heldout]"
+  },
+  "girl-c2-l3-t3-m2": {
+   "color": "ok",
+   "lighting": "weak",
+   "texture": "ok",
+   "mood": "ok",
+   "subject": "ok",
+   "note": "pale sky, no hard cast shadow"
+  },
+  "girl-c3-l0-t0-m1": {
+   "color": "ok",
+   "lighting": "uncertain",
+   "texture": "uncertain",
+   "mood": "ok",
+   "subject": "ok",
+   "note": "sketch lines only on the coat; overcast not readable"
+  },
+  "girl-c3-l1-t0-m0": {
+   "color": "ok",
+   "lighting": "ok",
+   "texture": "ok",
+   "mood": "ok",
+   "subject": "ok",
+   "note": "seed 2601: 閉じ目＋穏やかな微笑、鉛筆線あり。[差し替え]"
+  },
+  "girl-c3-l1-t2-m2": {
+   "color": "ok",
+   "lighting": "ok",
+   "texture": "ok",
+   "mood": "ok",
+   "subject": "ok",
+   "note": "seed 2601: 人物は線なしの平塗り（背景に線が残るのは境界的）。[差し替え]"
+  },
+  "girl-c3-l2-t1-m3": {
+   "color": "ok",
+   "lighting": "weak",
+   "texture": "weak",
+   "mood": "ok",
+   "subject": "ok",
+   "note": "pink haze, no rim/glare; soft rendering, not cel"
+  },
+  "student-c0-l0-t0-m2": {
+   "color": "weak",
+   "lighting": "ok",
+   "texture": "ok",
+   "mood": "ok",
+   "subject": "weak",
+   "note": "grey rainy exterior: not warm, library swapped away"
+  },
+  "student-c0-l2-t2-m0": {
+   "color": "ok",
+   "lighting": "ok",
+   "texture": "weak",
+   "mood": "uncertain",
+   "subject": "ok",
+   "note": "visible lineart; grin rather than gentle smile"
+  },
+  "student-c0-l3-t1-m1": {
+   "color": "ok",
+   "lighting": "ok",
+   "texture": "ok",
+   "mood": "ok",
+   "subject": "ok",
+   "note": "seed 2602: 書架と顔を横切る硬い斜光と落ち影。[差し替え][heldout]"
+  },
+  "student-c0-l3-t3-m3": {
+   "color": "ok",
+   "lighting": "ok",
+   "texture": "ok",
+   "mood": "ok",
+   "subject": "ok",
+   "note": "clear diagonal sun shaft and cast shadow on the shelves"
+  },
+  "student-c1-l0-t2-m3": {
+   "color": "ok",
+   "lighting": "weak",
+   "texture": "uncertain",
+   "mood": "weak",
+   "subject": "ok",
+   "note": "flat blue field, no lighting cue; eyes open"
+  },
+  "student-c1-l1-t3-m1": {
+   "color": "ok",
+   "lighting": "ok",
+   "texture": "ok",
+   "mood": "ok",
+   "subject": "ok",
+   "note": "heldout; visible brushstrokes in the shelves"
+  },
+  "student-c1-l2-t1-m2": {
+   "color": "ok",
+   "lighting": "ok",
+   "texture": "ok",
+   "mood": "ok",
+   "subject": "ok",
+   "note": "strong window backlight with rim"
+  },
+  "student-c1-l3-t1-m0": {
+   "color": "ok",
+   "lighting": "ok",
+   "texture": "ok",
+   "mood": "ok",
+   "subject": "ok",
+   "note": "hard cast shadow on the wall"
+  },
+  "student-c2-l0-t3-m0": {
+   "color": "ok",
+   "lighting": "ok",
+   "texture": "ok",
+   "mood": "ok",
+   "subject": "ok",
+   "note": "seed 2602: 書架と服に厚い筆致。[差し替え]"
+  },
+  "student-c2-l1-t0-m3": {
+   "color": "ok",
+   "lighting": "ok",
+   "texture": "ok",
+   "mood": "ok",
+   "subject": "ok",
+   "note": "rough pencil lines on the clothes"
+  },
+  "student-c2-l2-t2-m1": {
+   "color": "ok",
+   "lighting": "ok",
+   "texture": "ok",
+   "mood": "ok",
+   "subject": "ok",
+   "note": "seed 6602: 左上から光条、人物は線なしの平塗り。[差し替え][heldout]"
+  },
+  "student-c2-l3-t3-m2": {
+   "color": "ok",
+   "lighting": "weak",
+   "texture": "uncertain",
+   "mood": "ok",
+   "subject": "ok",
+   "note": "no cast shadow; brushwork only in the bg"
+  },
+  "student-c3-l0-t0-m1": {
+   "color": "uncertain",
+   "lighting": "ok",
+   "texture": "weak",
+   "mood": "ok",
+   "subject": "ok",
+   "note": "clean anime, no pencil lines"
+  },
+  "student-c3-l1-t0-m0": {
+   "color": "ok",
+   "lighting": "ok",
+   "texture": "uncertain",
+   "mood": "ok",
+   "subject": "ok",
+   "note": "rough lines only in the bg"
+  },
+  "student-c3-l1-t2-m2": {
+   "color": "weak",
+   "lighting": "ok",
+   "texture": "weak",
+   "mood": "ok",
+   "subject": "ok",
+   "note": "dark purple, not pastel; lineart present"
+  },
+  "student-c3-l2-t1-m3": {
+   "color": "ok",
+   "lighting": "ok",
+   "texture": "ok",
+   "mood": "ok",
+   "subject": "ok",
+   "note": "seed 1602: 太陽のフレアとリムライト、パステルが明瞭。[差し替え]"
+  },
+  "traveler-c0-l0-t0-m2": {
+   "color": "uncertain",
+   "lighting": "weak",
+   "texture": "ok",
+   "mood": "ok",
+   "subject": "ok",
+   "note": "olive/grey rather than amber; sketch has no lighting"
+  },
+  "traveler-c0-l2-t2-m0": {
+   "color": "ok",
+   "lighting": "ok",
+   "texture": "ok",
+   "mood": "ok",
+   "subject": "ok",
+   "note": "sun glare above, rim on grass and hair"
+  },
+  "traveler-c0-l3-t1-m1": {
+   "color": "ok",
+   "lighting": "ok",
+   "texture": "ok",
+   "mood": "ok",
+   "subject": "ok",
+   "note": "seed 1603: 草原を横切る硬い落ち影、琥珀色。閉じ目で笑うため M0 との差は境界的。[差し替え][heldout]"
+  },
+  "traveler-c0-l3-t3-m3": {
+   "color": "ok",
+   "lighting": "uncertain",
+   "texture": "ok",
+   "mood": "ok",
+   "subject": "ok",
+   "note": "high contrast but the light direction is not readable"
+  },
+  "traveler-c1-l0-t2-m3": {
+   "color": "ok",
+   "lighting": "weak",
+   "texture": "ok",
+   "mood": "weak",
+   "subject": "uncertain",
+   "note": "eyes open; the grassland reads as snow"
+  },
+  "traveler-c1-l1-t3-m1": {
+   "color": "ok",
+   "lighting": "ok",
+   "texture": "ok",
+   "mood": "ok",
+   "subject": "ok",
+   "note": "seed 4603: 空と草に明確な厚塗りの筆致。[差し替え][heldout]"
+  },
+  "traveler-c1-l2-t1-m2": {
+   "color": "ok",
+   "lighting": "ok",
+   "texture": "ok",
+   "mood": "ok",
+   "subject": "ok",
+   "note": "seed 2603: 太陽のグレアとリム、肌の灰染まりが消えた。[差し替え]"
+  },
+  "traveler-c1-l3-t1-m0": {
+   "color": "ok",
+   "lighting": "weak",
+   "texture": "ok",
+   "mood": "ok",
+   "subject": "ok",
+   "note": "bright, no cast shadow (grassland has no surface)"
+  },
+  "traveler-c2-l0-t3-m0": {
+   "color": "ok",
+   "lighting": "ok",
+   "texture": "ok",
+   "mood": "ok",
+   "subject": "ok",
+   "note": "seed 4603: 曇天と草に厚い筆致。[差し替え]"
+  },
+  "traveler-c2-l1-t0-m3": {
+   "color": "ok",
+   "lighting": "ok",
+   "texture": "ok",
+   "mood": "ok",
+   "subject": "ok",
+   "note": "rough lines, dark night field"
+  },
+  "traveler-c2-l2-t2-m1": {
+   "color": "ok",
+   "lighting": "ok",
+   "texture": "ok",
+   "mood": "ok",
+   "subject": "ok",
+   "note": "seed 2603: 頭上に太陽とグレア、リムライト。[差し替え][heldout]"
+  },
+  "traveler-c2-l3-t3-m2": {
+   "color": "ok",
+   "lighting": "weak",
+   "texture": "weak",
+   "mood": "ok",
+   "subject": "ok",
+   "note": "flat green field, no sun; no brushstrokes"
+  },
+  "traveler-c3-l0-t0-m1": {
+   "color": "ok",
+   "lighting": "uncertain",
+   "texture": "ok",
+   "mood": "ok",
+   "subject": "uncertain",
+   "note": "grassland almost absent behind the close-up"
+  },
+  "traveler-c3-l1-t0-m0": {
+   "color": "ok",
+   "lighting": "ok",
+   "texture": "ok",
+   "mood": "ok",
+   "subject": "ok",
+   "note": "night field, pencil lines, closed eyes"
+  },
+  "traveler-c3-l1-t2-m2": {
+   "color": "ok",
+   "lighting": "ok",
+   "texture": "ok",
+   "mood": "ok",
+   "subject": "ok",
+   "note": "seed 4603: 完全な線なし平塗り、夜のランタン。[差し替え]"
+  },
+  "traveler-c3-l2-t1-m3": {
+   "color": "ok",
+   "lighting": "uncertain",
+   "texture": "weak",
+   "mood": "ok",
+   "subject": "ok",
+   "note": "soft rendering, not cel; glow only"
+  },
+  "barista-c0-l0-t0-m2": {
+   "color": "weak",
+   "lighting": "ok",
+   "texture": "ok",
+   "mood": "ok",
+   "subject": "ok",
+   "note": "grey-brown, not amber"
+  },
+  "barista-c0-l2-t2-m0": {
+   "color": "ok",
+   "lighting": "ok",
+   "texture": "ok",
+   "mood": "ok",
+   "subject": "ok",
+   "note": "sun starburst through the window, flat lineless"
+  },
+  "barista-c0-l3-t1-m1": {
+   "color": "ok",
+   "lighting": "ok",
+   "texture": "ok",
+   "mood": "ok",
+   "subject": "ok",
+   "note": "seed 1604: 床と什器に窓枠の硬い落ち影。[差し替え]"
+  },
+  "barista-c0-l3-t3-m3": {
+   "color": "ok",
+   "lighting": "weak",
+   "texture": "ok",
+   "mood": "uncertain",
+   "subject": "ok",
+   "note": "no cast shadow; eyes read open"
+  },
+  "barista-c1-l0-t2-m3": {
+   "color": "ok",
+   "lighting": "weak",
+   "texture": "ok",
+   "mood": "ok",
+   "subject": "weak",
+   "note": "skin fully blue-grey; no lighting cue"
+  },
+  "barista-c1-l1-t3-m1": {
+   "color": "ok",
+   "lighting": "ok",
+   "texture": "ok",
+   "mood": "ok",
+   "subject": "ok",
+   "note": "thick visible brushstrokes, lamps, cheerful"
+  },
+  "barista-c1-l2-t1-m2": {
+   "color": "ok",
+   "lighting": "ok",
+   "texture": "ok",
+   "mood": "ok",
+   "subject": "ok",
+   "note": "seed 4604: 右の窓が強く白飛びし肩と髪にリム。[差し替え]"
+  },
+  "barista-c1-l3-t1-m0": {
+   "color": "ok",
+   "lighting": "ok",
+   "texture": "ok",
+   "mood": "ok",
+   "subject": "weak",
+   "note": "figure tiny at the right edge, face in far profile"
+  },
+  "barista-c2-l0-t3-m0": {
+   "color": "ok",
+   "lighting": "ok",
+   "texture": "ok",
+   "mood": "ok",
+   "subject": "ok",
+   "note": "seed 3604: 閉じ目＋穏やかな微笑、厚い筆致。黄土色のエプロンで低彩度は境界的。[差し替え]"
+  },
+  "barista-c2-l1-t0-m3": {
+   "color": "ok",
+   "lighting": "ok",
+   "texture": "ok",
+   "mood": "ok",
+   "subject": "ok",
+   "note": "clear rough pencil lines, dim cafe"
+  },
+  "barista-c2-l2-t2-m1": {
+   "color": "ok",
+   "lighting": "ok",
+   "texture": "ok",
+   "mood": "ok",
+   "subject": "ok",
+   "note": "seed 3604: 輪郭線がほぼ消えた平塗り、窓からの強い光。[差し替え]"
+  },
+  "barista-c2-l3-t3-m2": {
+   "color": "ok",
+   "lighting": "weak",
+   "texture": "ok",
+   "mood": "ok",
+   "subject": "ok",
+   "note": "bright corridor but no hard cast shadow"
+  },
+  "barista-c3-l0-t0-m1": {
+   "color": "ok",
+   "lighting": "ok",
+   "texture": "weak",
+   "mood": "ok",
+   "subject": "uncertain",
+   "note": "clean anime, no pencil lines; reads as a girl, not the same shopkeeper"
+  },
+  "barista-c3-l1-t0-m0": {
+   "color": "ok",
+   "lighting": "weak",
+   "texture": "uncertain",
+   "mood": "weak",
+   "subject": "uncertain",
+   "note": "bright pink bg, not night; laugh reads cheerful; reads as a girl"
+  },
+  "barista-c3-l1-t2-m2": {
+   "color": "ok",
+   "lighting": "ok",
+   "texture": "weak",
+   "mood": "ok",
+   "subject": "uncertain",
+   "note": "lineart present; reads as a girl"
+  },
+  "barista-c3-l2-t1-m3": {
+   "color": "ok",
+   "lighting": "weak",
+   "texture": "ok",
+   "mood": "weak",
+   "subject": "uncertain",
+   "note": "no rim/glare; eyes open; reads as a girl"
+  }
+ }
+}

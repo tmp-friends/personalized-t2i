@@ -1,0 +1,189 @@
+{
+  "catalog_id": "catalog-v2",
+  "subjects": [
+    {
+      "id": "girl",
+      "label": "街角の少女",
+      "basic_prompt_en": "masterpiece, best quality, very aesthetic, newest, safe, 1girl, solo, brown hair, beret, coat, town square, upper body",
+      "seed": 601
+    },
+    {
+      "id": "student",
+      "label": "図書館の青年",
+      "basic_prompt_en": "masterpiece, best quality, very aesthetic, newest, safe, 1boy, solo, male focus, black hair, vest, white shirt, library, upper body",
+      "seed": 602
+    },
+    {
+      "id": "traveler",
+      "label": "草原の旅人",
+      "basic_prompt_en": "masterpiece, best quality, very aesthetic, newest, safe, 1girl, solo, silver hair, cloak, grassland, upper body",
+      "seed": 603
+    },
+    {
+      "id": "barista",
+      "label": "カフェの店員",
+      "basic_prompt_en": "masterpiece, best quality, very aesthetic, newest, safe, 1boy, solo, male focus, brown hair, apron, white shirt, cafe, upper body",
+      "seed": 604
+    }
+  ],
+  "axes": {
+    "color": [
+      "warm color palette, amber tones",
+      "cool color palette, blue background",
+      "muted colors, desaturated",
+      "pastel colors, soft pink and mint"
+    ],
+    "lighting": [
+      "overcast, diffused light, soft shadows",
+      "night, dim lighting, lamplight, dark background",
+      "backlighting, rim light, sun glare",
+      "harsh sunlight, hard cast shadow, high contrast"
+    ],
+    "texture": [
+      "sketch, visible pencil lines, rough drawing",
+      "anime screencap, cel shading",
+      "flat color, lineless, no lineart",
+      "oil painting, thick brushstrokes"
+    ],
+    "mood": [
+      "calm, closed eyes, gentle smile",
+      "cheerful, open mouth smile, happy",
+      "serious, stern expression",
+      "dreamy, half-closed eyes, looking away"
+    ]
+  },
+  "forbidden_level_pairs": [
+    {
+      "axes": ["color", "lighting"],
+      "levels": [0, 1],
+      "reason": "夜の暗さが暖色のパレットを打ち消す"
+    },
+    {
+      "axes": ["color", "lighting"],
+      "levels": [3, 3],
+      "reason": "淡いパステルには硬い落ち影が乗らず、光も色も言い切れない"
+    },
+    {
+      "axes": ["color", "texture"],
+      "levels": [1, 0],
+      "reason": "寒色の地色がラフスケッチの紙面を染め、肌が青緑になる"
+    },
+    {
+      "axes": ["color", "texture"],
+      "levels": [3, 3],
+      "reason": "淡いパステルでは油彩の厚い筆致が絵に出ない"
+    },
+    {
+      "axes": ["lighting", "texture"],
+      "levels": [2, 0],
+      "reason": "ラフスケッチは平坦で、逆光のグレアが出る面がない"
+    },
+    {
+      "axes": ["lighting", "texture"],
+      "levels": [2, 3],
+      "reason": "逆光のグレアが油彩の厚い筆致に埋もれて見えなくなる"
+    },
+    {
+      "axes": ["lighting", "texture"],
+      "levels": [3, 0],
+      "reason": "ラフスケッチは陰影を持たないので硬い落ち影が乗らない"
+    },
+    {
+      "axes": ["lighting", "texture"],
+      "levels": [3, 2],
+      "reason": "硬い直射光と落ち影は線のない平塗りと同じ絵で両立しない"
+    }
+  ],
+  "profiles": [
+    {"color": 0, "lighting": 0, "texture": 0, "mood": 2},
+    {"color": 0, "lighting": 2, "texture": 2, "mood": 0},
+    {"color": 0, "lighting": 3, "texture": 1, "mood": 1},
+    {"color": 0, "lighting": 3, "texture": 3, "mood": 3},
+    {"color": 1, "lighting": 0, "texture": 2, "mood": 3},
+    {"color": 1, "lighting": 1, "texture": 3, "mood": 1},
+    {"color": 1, "lighting": 2, "texture": 1, "mood": 2},
+    {"color": 1, "lighting": 3, "texture": 1, "mood": 0},
+    {"color": 2, "lighting": 0, "texture": 3, "mood": 0},
+    {"color": 2, "lighting": 1, "texture": 0, "mood": 3},
+    {"color": 2, "lighting": 2, "texture": 2, "mood": 1},
+    {"color": 2, "lighting": 3, "texture": 3, "mood": 2},
+    {"color": 3, "lighting": 0, "texture": 0, "mood": 1},
+    {"color": 3, "lighting": 1, "texture": 0, "mood": 0},
+    {"color": 3, "lighting": 1, "texture": 2, "mood": 2},
+    {"color": 3, "lighting": 2, "texture": 1, "mood": 3}
+  ],
+  "seed_overrides": {
+    "girl-c0-l3-t1-m1": 7601,
+    "girl-c1-l2-t1-m2": 5601,
+    "girl-c2-l0-t3-m0": 3601,
+    "girl-c2-l2-t2-m1": 6601,
+    "girl-c3-l1-t0-m0": 2601,
+    "girl-c3-l1-t2-m2": 2601,
+    "student-c0-l3-t1-m1": 2602,
+    "student-c2-l0-t3-m0": 2602,
+    "student-c2-l2-t2-m1": 6602,
+    "student-c3-l2-t1-m3": 1602,
+    "traveler-c0-l3-t1-m1": 1603,
+    "traveler-c1-l1-t3-m1": 4603,
+    "traveler-c1-l2-t1-m2": 2603,
+    "traveler-c2-l0-t3-m0": 4603,
+    "traveler-c2-l2-t2-m1": 2603,
+    "traveler-c3-l1-t2-m2": 4603,
+    "barista-c0-l3-t1-m1": 1604,
+    "barista-c1-l2-t1-m2": 4604,
+    "barista-c2-l0-t3-m0": 3604,
+    "barista-c2-l2-t2-m1": 3604
+  },
+  "card_negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, bad proportions, bad perspective, text, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude, from behind, facing away, back turned, faceless, scenery focus",
+  "generation": {
+    "model": "OnomaAIResearch/Illustrious-XL-v2.0",
+    "revision": "69459c1fe6f46db41ab31e6114f05acc0e06bcaa",
+    "scheduler": "DPMSolverMultistepScheduler",
+    "scheduler_kwargs": {
+      "algorithm_type": "sde-dpmsolver++",
+      "use_karras_sigmas": true
+    },
+    "width": 1024,
+    "height": 1280,
+    "steps": 30,
+    "guidance_scale": 5.0,
+    "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
+    "precision": "fp16",
+    "pipeline_config": {
+      "model": "OnomaAIResearch/Illustrious-xl-early-release-v0",
+      "revision": "dca0dac303e6dc4b0c31d8001bc685b89b5d0204"
+    },
+    "vae": {
+      "model": "madebyollin/sdxl-vae-fp16-fix",
+      "revision": "207b116dae70ace3637169f1ddd2434b91b3a8cd"
+    },
+    "checkpoint": "Illustrious-XL-v2.0.safetensors",
+    "positive_prompt_tail": "absurdres, highres"
+  },
+  "axes_ja": {
+    "color": [
+      "暖かな琥珀色",
+      "青い背景の涼しい色",
+      "低彩度の落ち着いた色",
+      "淡いパステルの色"
+    ],
+    "lighting": [
+      "曇りの日のやわらかな光",
+      "夜のランプの灯り",
+      "逆光とまぶしい輪郭の光",
+      "強い日差しとくっきりした影"
+    ],
+    "texture": [
+      "鉛筆のラフスケッチ",
+      "セル塗りと線画",
+      "線のない平塗り",
+      "油彩の厚い筆致"
+    ],
+    "mood": [
+      "静かな雰囲気",
+      "明るく活発な表情",
+      "真剣な雰囲気",
+      "夢見るような半眼"
+    ]
+  }
+}
