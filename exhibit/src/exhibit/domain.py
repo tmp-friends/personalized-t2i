@@ -15,6 +15,9 @@ from .fan_adapter import (
 )
 
 ASPECTS = ("color", "lighting", "texture", "mood")
+# The only strengths and per-aspect gains a visitor can pick.
+STRENGTHS = (1, 2)
+GAINS = (0.5, 1, 2)
 
 
 def digest(value):
@@ -80,12 +83,12 @@ def _finite_json(value, label):
 
 def valid_strength(value):
     """The two explicit strengths; `True` is not the integer 1 here."""
-    return type(value) is int and value in (1, 2)
+    return type(value) is int and value in STRENGTHS
 
 
 def valid_gain(value):
     """The three explicit gain steps; bool and non-finite values are not gains."""
-    return type(value) in (int, float) and value in (0.5, 1, 2)
+    return type(value) in (int, float) and value in GAINS
 
 
 def canonical_aspects(aspects, *, allow_empty=False):

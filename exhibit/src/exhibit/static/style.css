@@ -200,6 +200,11 @@ footer a {
 footer a:hover {
   color: var(--ink);
 }
+.footer-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 20px;
+}
 /* ------------------------------------------------------------ controls */
 .primary,
 .secondary {
@@ -1184,6 +1189,15 @@ summary {
   header {
     min-height: 60px;
     padding: 0 16px;
+  }
+  .brand {
+    gap: 8px;
+    font-size: 14px;
+    letter-spacing: 0.01em;
+  }
+  .brand-mark {
+    width: 26px;
+    height: 26px;
   }
   main {
     padding: 24px 16px 40px;

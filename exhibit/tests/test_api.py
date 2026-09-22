@@ -325,3 +325,56 @@ def test_a_partly_reviewed_v2_catalog_still_opens_and_serves_rounds(
     session = client.post("/api/sessions").json()
     assert set(session["shown_ids"]) <= reviewed
     assert len(session["rounds"][0]["cards"]) == CONFIG["selection"]["round_size"]
+
+
+def build_tech_script():
+    import importlib.util
+
+    from exhibit.config import ROOT
+
+    path = ROOT / "scripts/build_tech.py"
+    spec = importlib.util.spec_from_file_location("test_build_tech_script", path)
+    script = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(script)
+    return script
+
+
+def test_tech_page_is_served_from_the_shipped_asset():
+    from exhibit.config import ASSETS
+
+    assert (ASSETS / "tech.html").is_file()
+    response = TestClient(module.app).get("/tech")
+    assert response.status_code == 200
+    assert response.headers["content-type"].startswith("text/html")
+    assert "言わないこと" in response.text
+
+
+def test_tech_page_is_rebuilt_from_the_current_configs():
+    """The shipped page is exactly what build_tech.py renders from the configs."""
+    import re
+
+    from exhibit.config import ASSETS, FAN_POLICIES
+
+    page = build_tech_script().render()
+    assert (ASSETS / "tech.html").read_text() == page, (
+        "assets/tech.html is stale: run exhibit/scripts/build_tech.py"
+    )
+    generation = CONFIG["generation"]
+    policy = FAN_POLICIES["policies"][FAN_POLICIES["default_policy_id"]]
+    for value in (
+        f"{generation['width']}×{generation['height']}",
+        f"<dt>steps</dt><dd>{generation['steps']}</dd>",
+        f"<dt>CFG</dt><dd>{generation['guidance_scale']}</dd>",
+        f"<code>alpha</code> = {policy['alpha']}",
+        f"<code>pooled_mode</code> = {policy['pooled_mode']}",
+        f"{CONFIG['idle_seconds']}秒",
+        f"{CONFIG['timeout_seconds']}秒",
+        generation["revision"][:12],
+        generation["vae"]["model"],
+    ):
+        assert value in page, value
+    # Self-contained: fonts are inlined and nothing is loaded from the network.
+    assert "<link" not in page.replace('<link rel="icon" href="data:', "")
+    assert "@import" not in page
+    assert not re.search(r'src="https?://', page)
+    assert not re.search(r"url\((?!data:)", page)

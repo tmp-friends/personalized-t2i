@@ -634,6 +634,8 @@ const server = http.createServer(async (req, res) => {
     }
     if (p === "/fallback")
       return send(res, 200, "<h1>fallback</h1>", "text/html; charset=utf-8");
+    if (p === "/tech")
+      return send(res, 200, "<h1>tech</h1>", "text/html; charset=utf-8");
     if (p.startsWith("/assets/cards-v2/")) {
       const card = cardOf(path.basename(p, ".png"));
       if (!card) return fail(res, 404, "no card");

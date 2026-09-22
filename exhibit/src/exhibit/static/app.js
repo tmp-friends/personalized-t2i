@@ -265,16 +265,16 @@ function heroArt() {
   if (!plain?.preview_url) return "";
   return `<div class="hero-art ${sample ? "pair" : ""}"><figure class="plain"><img src="${esc(plain.preview_url)}" alt="${esc(plain.label)}のパーソナライズなしの生成画像"><figcaption>パーソナライズなし</figcaption></figure>${
     sample
-      ? `<figure class="mine"><img src="${esc(sample.preview_url)}" alt="${esc(plain.label)}の、好みを反映した生成サンプル"><figcaption>好みを反映</figcaption></figure>`
+      ? `<figure class="mine"><img src="${esc(sample.preview_url)}" alt="${esc(plain.label)}の、パーソナライズありの生成サンプル"><figcaption>パーソナライズあり</figcaption></figure>`
       : ""
   }</div>`;
 }
 function welcome() {
-  app.innerHTML = `<section class="hero"><div class="hero-copy"><span class="pill">好みを反映する画像生成 · 体験展示</span><h1>同じ一文から、<br><em>あなたの一枚</em>を。</h1><p class="intro">好きな絵を数枚えらぶだけ。入力文も生成モデルも変えずに、絵がどこまで「あなた好み」に寄るのかを、その場で見比べられます。</p><button class="primary" id="start" ${cfg.ready ? "" : "disabled"}>体験をはじめる <span>→</span></button><ul class="facts"><li>約3分</li><li>登録不要</li><li>この端末の中だけで動作</li></ul>${
+  app.innerHTML = `<section class="hero"><div class="hero-copy"><span class="pill">パーソナライズ画像生成 · 体験展示</span><h1>好きな絵を選ぶだけ。<br>あなた好みに描く、<em>パーソナライズ画像生成</em>。</h1><p class="intro">好きな絵を数枚選ぶだけで、あなたの好みを反映した画像をその場で生成します。入力文や生成モデルは変えず、絵がどこまで「あなた好み」に寄るのかを見比べられます。</p><button class="primary" id="start" ${cfg.ready ? "" : "disabled"}>体験をはじめる <span>→</span></button><ul class="facts"><li>約3分</li><li>登録不要</li><li>この端末の中だけで動作</li></ul>${
     cfg.ready
       ? ""
       : '<p class="note ready-note">画像を準備中です。準備が終わると体験できます。</p>'
-  }${sampleControl()}</div>${heroArt()}</section><ol class="journey"><li><b>01</b><h3>好きな画像を選ぶ</h3><p>${limits.round_size}枚ずつ、最大${limits.max_rounds}回。合計${limits.min}〜${limits.max}枚</p></li><li><b>02</b><h3>お題を選ぶ</h3><p>一文は誰でも同じ</p></li><li><b>03</b><h3>見比べる</h3><p>パーソナライズなし・あり</p></li></ol>`;
+  }${sampleControl()}</div>${heroArt()}</section><ol class="journey"><li><b>01</b><h3>好きな画像を選ぶ</h3><p>${limits.round_size}枚ずつ、最大${limits.max_rounds}回。合計${limits.min}〜${limits.max}枚</p></li><li><b>02</b><h3>お題を選ぶ</h3><p>描いてほしい場面を選ぶ</p></li><li><b>03</b><h3>見比べる</h3><p>あなた向けの結果を見る</p></li></ol>`;
   bind("start", () => start(true));
   bindSample();
 }
@@ -366,7 +366,7 @@ function cardsScreen() {
     "選んだ画像",
     "それぞれ、どこが好きかを教えてください。前の回で選んだ画像もここで直せます。",
   )}<div class="action-row"><span class="note">${esc(
-    BLOCK_TEXT(blocker) || `${draft.selection.length}枚を参照に使います。`,
+    BLOCK_TEXT(blocker) || `${draft.selection.length}枚をあなたの好みとして使います。`,
   )}</span><button id="commit" class="primary" ${blocker ? "disabled" : ""}>これで決定 <span>→</span></button></div>`;
   on("card", ({ card }) => {
     const result = toggleCard(draft, card, limits);
@@ -438,14 +438,14 @@ function refStrip() {
 }
 function topicsScreen() {
   if (!topic) topic = session.run?.topic_id || cfg.topics[0]?.id;
-  app.innerHTML = `${steps(2)}<h2>お題を選んでください。</h2><p>お題の一文は誰でも同じです。渡すのは、選んだ画像の説明文だけです。</p>${noticeLine()}${refStrip()}<div class="topics">${cfg.topics
+  app.innerHTML = `${steps(2)}<h2>お題を選んでください。</h2><p>お題を選ぶと、あなたの好みを反映して描きます。反映に使うのは、選んだ画像の説明文です。</p>${noticeLine()}${refStrip()}<div class="topics">${cfg.topics
     .map(
       (t) =>
-        `<button class="topic ${t.id === topic ? "selected" : ""}" data-topic="${esc(t.id)}" aria-pressed="${t.id === topic}"><img src="${esc(t.preview_url)}" alt="${esc(t.label)}の参照なし生成サンプル" loading="lazy"><span>${esc(t.label)}</span></button>`,
+        `<button class="topic ${t.id === topic ? "selected" : ""}" data-topic="${esc(t.id)}" aria-pressed="${t.id === topic}"><img src="${esc(t.preview_url)}" alt="${esc(t.label)}のパーソナライズなし生成サンプル" loading="lazy"><span>${esc(t.label)}</span></button>`,
     )
     .join(
       "",
-    )}</div><div class="action-row"><button id="back" class="quiet">← ${session.run ? "比較に戻る" : "好きな画像を選び直す"}</button><button id="generate" class="primary">この好みで描く <span>→</span></button></div><p class="note">パーソナライズなしの4枚と、同じ入力文・同じseedで描いたあなた向けの4枚を並べます。</p>`;
+    )}</div><div class="action-row"><button id="back" class="quiet">← ${session.run ? "比較に戻る" : "好きな画像を選び直す"}</button><button id="generate" class="primary">この好みで描く <span>→</span></button></div><p class="note">あなたの好みを反映した4枚を、比較用に同じ入力文・同じseedで描いた通常の4枚と並べます。</p>`;
   on("topic", ({ topic: id }) => {
     topic = id;
     topicsScreen();
@@ -623,12 +623,12 @@ function compareScreen() {
   }
   const sample = run.mode === "sample";
   const working = run.status !== "done";
-  app.innerHTML = `${steps(3)}<h2>パーソナライズなし・ありを見比べてください。</h2><div class="callout"><b>${esc(topicLabel(run.topic_id))}</b><span>入力文も生成モデルも seed も同じです。違うのは、あなたの好みを参照したかどうかだけです。</span></div>${noticeLine()}${statusbox(
+  app.innerHTML = `${steps(3)}<h2>あなたの好みで描いた結果です。</h2><div class="callout"><b>${esc(topicLabel(run.topic_id))}</b><span>違いは、あなたの好みを参照したかどうかだけです。</span></div>${noticeLine()}${statusbox(
     run,
-  )}<section class="row"><div class="comparison-label"><h3>パーソナライズなし</h3><span>好みを使わずに描いた4枚</span></div>${shots(
+  )}<section class="row"><div class="comparison-label"><h3>通常の生成</h3><span>好みを使わずに描いた4枚</span></div>${shots(
     run.plain,
     working,
-  )}</section><section class="row mine"><div class="comparison-label"><h3>パーソナライズあり</h3><span>選んだ画像の好みを参照して描いた4枚</span><span class="badge ${sample ? "sample" : ""}">${esc(MODES[run.mode] || run.mode)}</span>${
+  )}</section><section class="row mine"><div class="comparison-label"><h3>あなた向けにパーソナライズ</h3><span>選んだ画像の好みを参照して描いた4枚</span><span class="badge ${sample ? "sample" : ""}">${esc(MODES[run.mode] || run.mode)}</span>${
     run.error ? `<span class="badge sample">${esc(run.error)}</span>` : ""
   }</div>${shots(run.personal, working)}${inputsPanel(run)}</section>${
     sample

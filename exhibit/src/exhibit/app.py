@@ -11,7 +11,7 @@ from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictInt
 
 from .config import ASSETS, CONFIG, REPO, read_json
-from .domain import digest
+from .domain import GAINS, STRENGTHS, digest
 from .elicitation import PreferenceError, RoundError
 from .preflight import sample_errors
 from .service import Conflict, Service, active_catalog, default_policy
@@ -36,7 +36,7 @@ async def lifespan(app):
 
 
 app = FastAPI(
-    title="FAN / 同じ一文から、あなたの一枚を",
+    title="パーソナライズ画像生成 — FAN 体験展示",
     lifespan=lifespan,
     docs_url=None,
     redoc_url=None,
@@ -167,8 +167,8 @@ def config():
             "reference_unit": policy["reference_unit"],
             "profiling": policy["profiling"],
         },
-        "strengths": [1, 2],
-        "aspect_gains": [0.5, 1, 2],
+        "strengths": list(STRENGTHS),
+        "aspect_gains": list(GAINS),
         "selection": CONFIG["selection"],
         "idle_seconds": CONFIG["idle_seconds"],
         "timeout_seconds": CONFIG["timeout_seconds"],
@@ -275,6 +275,11 @@ def index():
 @app.get("/fallback")
 def fallback():
     return FileResponse(ASSETS / "fallback.html")
+
+
+@app.get("/tech")
+def tech():
+    return FileResponse(ASSETS / "tech.html")
 
 
 @app.get("/reference/{name}")
