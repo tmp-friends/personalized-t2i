@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-09-22 03:16 JST",
+  "generated_at": "2026-09-22 12:11 JST",
   "configuration": {
     "default_policy_id": "legacy_exhibit",
     "policies": [
@@ -46,13 +46,13 @@
   },
   "sections": {
     "実装完了": {
-      "state": "不合格",
+      "state": "合格",
       "blocks": {
         "自動テスト": {
           "state": "合格",
           "reasons": [],
           "detail": {
-            "python_passed": 339,
+            "python_passed": 369,
             "python_failed": 0,
             "node_passed": 21,
             "node_failed": 0
@@ -61,11 +61,8 @@
           "source": "/home/tomoya/stable-diffusion/personalized-t2i/.worktrees/fan-personalization/exhibit/outputs"
         },
         "Preflight（資産・モデル）": {
-          "state": "不合格",
-          "reasons": [
-            "Unreviewed card: girl-c2-l2-t2-m1",
-            "Unreviewed card: student-c1-l0-t2-m3"
-          ],
+          "state": "合格",
+          "reasons": [],
           "detail": {
             "catalog_id": "catalog-v2",
             "reviewed_cards": 62,
@@ -73,8 +70,12 @@
             "fixed_images": 64,
             "generic_images": 24,
             "samples": 6,
-            "models_checked": false,
-            "models_ready": null
+            "models_checked": true,
+            "models_ready": true,
+            "warnings": [
+              "Unreviewed card: girl-c2-l2-t2-m1",
+              "Unreviewed card: student-c1-l0-t2-m3"
+            ]
           },
           "missing_rate": null,
           "source": "/home/tomoya/stable-diffusion/personalized-t2i/.worktrees/fan-personalization/exhibit/outputs/preflight.json"
@@ -120,7 +121,7 @@
       }
     },
     "実機検証": {
-      "state": "不合格",
+      "state": "合格",
       "blocks": {
         "encoding 数値検査": {
           "state": "合格",
@@ -132,29 +133,19 @@
                 "passed": true,
                 "failed_checks": []
               },
-              "418f3372b6935d7ee94062f0631f099995a0d501012633cc10fb5976ecab807f": {
-                "policy_id": "screen-skip1-plain-all-alpha-0.3",
-                "passed": true,
-                "failed_checks": []
-              },
-              "0cc84fda31f8cfe849ec5873be25f6c86f84283b5f8163fcf1a8d58a0a6f4f88": {
-                "policy_id": "screen-skip1-plain-all-alpha-0.5",
-                "passed": true,
-                "failed_checks": []
-              },
-              "a628d421dcef81ce43654892fabc909bf853d0fdd9a784addea33defd09eee40": {
-                "policy_id": "screen-skip1-plain-ratio01-alpha-0.3",
-                "passed": true,
-                "failed_checks": []
-              },
               "5f2a92f3cbbcf32de330f0fa9ca2a07c51de1c59da53fd393d399a3ac651c9c0": {
                 "policy_id": "screen-skip1-plain-ratio01-alpha-0.5",
                 "passed": true,
                 "failed_checks": []
+              },
+              "ec01ec598f1cc595e794d72bd060f60f6ae93a40003882e22703b8cc951168c4": {
+                "policy_id": "screen-skip1-plain-all",
+                "passed": true,
+                "failed_checks": []
               }
             },
-            "policy_count": 5,
-            "passed_count": 5,
+            "policy_count": 3,
+            "passed_count": 3,
             "fan_restored_after_exception": true,
             "versions": {
               "python": "3.10.16",
@@ -162,10 +153,10 @@
               "cuda": "13.0",
               "device": "NVIDIA GeForce RTX 4090"
             },
-            "seconds": 92.337
+            "seconds": 56.636
           },
           "missing_rate": 0.0,
-          "source": "/home/tomoya/stable-diffusion/personalized-t2i/.worktrees/fan-personalization/exhibit/outputs/fan-evaluation/diagnostics/0be9313589c66e5295d9ef838084baac525d484cbbc4fe30301acc75e681e03c/report.json"
+          "source": "/home/tomoya/stable-diffusion/personalized-t2i/.worktrees/fan-personalization/exhibit/outputs/fan-evaluation/diagnostics/4d20df17d2af999b3dab699747f89a14908b2e74be30e896aecf3cc338b2293d/report.json"
         },
         "実ブラウザーの一連操作": {
           "state": "合格",
@@ -203,65 +194,24 @@
           "source": "/home/tomoya/stable-diffusion/personalized-t2i/.worktrees/fan-personalization/exhibit/outputs/rehearsal.json"
         },
         "catalog v2 の確認": {
-          "state": "不合格",
+          "state": "合格",
           "reasons": [
-            "not_reviewed: initial axis phrases do not render all four aspects distinguishably; revise phrases and regenerate before any review entry is written"
+            "excluded:girl-c2-l2-t2-m1",
+            "excluded:student-c1-l0-t2-m3"
           ],
           "detail": {
             "generated": 64,
             "expected": 64,
             "reviewed_entries": 62,
             "usable_cards": 62,
-            "findings_present": true,
-            "decision": "not_reviewed: initial axis phrases do not render all four aspects distinguishably; revise phrases and regenerate before any review entry is written",
-            "visual_findings": {
-              "color": "warm/cool strongly rendered, muted mostly rendered, vivid often not more saturated than default; cool palette tints skin cyan on some cards (visible breakage)",
-              "lighting": "hard directional light and backlighting are rarely visible; the four levels are mostly indistinguishable",
-              "texture": "distinguishable on some subjects (girl, traveler), near-identical on others (student warm row)",
-              "mood": "cheerful (smile) and sometimes serious are visible; calm and dreamlike are not distinguishable"
-            },
-            "clip_probe": {
-              "note": "diagnostic aid only, not a review: frozen openai/clip-vit-large-patch14, does the claimed level rank first among the axis's four phrases",
-              "top1": {
-                "color": 39,
-                "lighting": 20,
-                "texture": 27,
-                "mood": 31
-              },
-              "top1_per_level": {
-                "color": [
-                  8,
-                  9,
-                  14,
-                  8
-                ],
-                "lighting": [
-                  0,
-                  0,
-                  4,
-                  16
-                ],
-                "texture": [
-                  4,
-                  6,
-                  7,
-                  10
-                ],
-                "mood": [
-                  14,
-                  10,
-                  7,
-                  0
-                ]
-              },
-              "all_four_axes": 5,
-              "of": 64
-            },
-            "checked_by": "coding agent (visual contact sheets of all 4 subjects sampled: 8 of 16 sheets, plus frozen-CLIP probe of all 64)",
-            "checked_at": "2026-09-21"
+            "unentered_cards": 0,
+            "excluded_cards": [
+              "girl-c2-l2-t2-m1",
+              "student-c1-l0-t2-m3"
+            ]
           },
           "missing_rate": 0.03125,
-          "source": "/home/tomoya/stable-diffusion/personalized-t2i/.worktrees/fan-personalization/exhibit/outputs/preparation/catalog-v2/review-findings.json"
+          "source": "/home/tomoya/stable-diffusion/personalized-t2i/.worktrees/fan-personalization/exhibit/configs/cards-v2-review.json"
         }
       }
     },
@@ -277,10 +227,10 @@
             "f96314c33699:numerical_failure"
           ],
           "detail": {
-            "experiment_hash": "a8335ee98bba71f4b0b722900c07bcee97ae88dd493745b0b858a521a4119d26",
-            "directory": "exhibit/outputs/fan-evaluation/a8335ee98bba71f4b0b722900c07bcee97ae88dd493745b0b858a521a4119d26",
+            "experiment_hash": "715231656f5359e76769ad652b3f66ad714b95ccd69d69647a203963e7837006",
+            "directory": "exhibit/outputs/fan-evaluation/715231656f5359e76769ad652b3f66ad714b95ccd69d69647a203963e7837006",
             "decision_status": "selected",
-            "decision_hash": "aab7b3e36ebd4d0b2838cdd0b8a60c5b9fe76cc2981a371596bd1f81133f23fa",
+            "decision_hash": "3ac6493a37e9e3fb6ee8f9f87da0b0a46b6cc12a270e860c13b6472273471be6",
             "status_counts": {
               "measured": 222
             },
@@ -367,7 +317,7 @@
             ]
           },
           "missing_rate": 0.0,
-          "source": "/home/tomoya/stable-diffusion/personalized-t2i/.worktrees/fan-personalization/exhibit/outputs/fan-evaluation/a8335ee98bba71f4b0b722900c07bcee97ae88dd493745b0b858a521a4119d26/summary.json"
+          "source": "/home/tomoya/stable-diffusion/personalized-t2i/.worktrees/fan-personalization/exhibit/outputs/fan-evaluation/715231656f5359e76769ad652b3f66ad714b95ccd69d69647a203963e7837006/summary.json"
         },
         "refine（alpha 追加比較）": {
           "state": "合格",
@@ -375,10 +325,10 @@
             "0cc84fda31f8:target_non_degradation"
           ],
           "detail": {
-            "experiment_hash": "807e52b56200d18a39cb1f45dfcac8ab5041ea19147c3e817e3aa5ff69856e18",
-            "directory": "exhibit/outputs/fan-evaluation/807e52b56200d18a39cb1f45dfcac8ab5041ea19147c3e817e3aa5ff69856e18",
+            "experiment_hash": "1ef0054ecc78191a32d79b6f04c6218b1536b73a20a82826b5fe9f2e90eb787b",
+            "directory": "exhibit/outputs/fan-evaluation/1ef0054ecc78191a32d79b6f04c6218b1536b73a20a82826b5fe9f2e90eb787b",
             "decision_status": "selected",
-            "decision_hash": "19cf1b6f53cbe5b23643647cbda657838a5a7bbf1cf8d7030f56481d6ef573f4",
+            "decision_hash": "5c2bebef83c29df969c7a4729a570dc8c3ea75c29075fd898d610ce0b346a132",
             "status_counts": {
               "measured": 144
             },
@@ -445,16 +395,51 @@
             ]
           },
           "missing_rate": 0.0,
-          "source": "/home/tomoya/stable-diffusion/personalized-t2i/.worktrees/fan-personalization/exhibit/outputs/fan-evaluation/807e52b56200d18a39cb1f45dfcac8ab5041ea19147c3e817e3aa5ff69856e18/summary.json"
+          "source": "/home/tomoya/stable-diffusion/personalized-t2i/.worktrees/fan-personalization/exhibit/outputs/fan-evaluation/1ef0054ecc78191a32d79b6f04c6218b1536b73a20a82826b5fe9f2e90eb787b/summary.json"
         },
         "heldout（事前基準の判定）": {
-          "state": "未実施",
+          "state": "合格",
           "reasons": [
-            "heldout_not_run"
+            "ec01ec598f1c:history_improvement"
           ],
-          "detail": {},
-          "missing_rate": null,
-          "source": "/home/tomoya/stable-diffusion/personalized-t2i/.worktrees/fan-personalization/exhibit/outputs/fan-evaluation"
+          "detail": {
+            "experiment_hash": "4aff16f839958e89bed6c326a67f0880de82683f4ec55f66436e5e468291a994",
+            "directory": "exhibit/outputs/fan-evaluation/4aff16f839958e89bed6c326a67f0880de82683f4ec55f66436e5e468291a994",
+            "decision_status": "selected",
+            "decision_hash": "692884250e777fbd72fbb04b883ec1b3dd8485957d50c6c1585a76e6a6666b36",
+            "status_counts": {
+              "measured": 156
+            },
+            "record_count": 156,
+            "selected": [
+              {
+                "policy_id": "screen-skip1-plain-ratio01-alpha-0.5",
+                "policy_hash": "5f2a92f3cbbcf32de330f0fa9ca2a07c51de1c59da53fd393d399a3ac651c9c0",
+                "mean_history_delta_vs_legacy": 0.013062809681250063,
+                "mean_target_delta_vs_legacy": -0.007628839554772875
+              }
+            ],
+            "candidates": [
+              {
+                "policy_hash": "5f2a92f3cbbcf32de330f0fa9ca2a07c51de1c59da53fd393d399a3ac651c9c0",
+                "status": "pass",
+                "reasons": [],
+                "mean_history_delta_vs_legacy": 0.013062809681250063,
+                "mean_target_delta_vs_legacy": -0.007628839554772875
+              },
+              {
+                "policy_hash": "ec01ec598f1cc595e794d72bd060f60f6ae93a40003882e22703b8cc951168c4",
+                "status": "fail",
+                "reasons": [
+                  "history_improvement"
+                ],
+                "mean_history_delta_vs_legacy": 0.0032480905074224013,
+                "mean_target_delta_vs_legacy": -0.001656553679663491
+              }
+            ]
+          },
+          "missing_rate": 0.0,
+          "source": "/home/tomoya/stable-diffusion/personalized-t2i/.worktrees/fan-personalization/exhibit/outputs/fan-evaluation/4aff16f839958e89bed6c326a67f0880de82683f4ec55f66436e5e468291a994/summary.json"
         },
         "本人によるブラインド評価": {
           "state": "未実施",
@@ -474,5 +459,5 @@
     "論文の定量結果をこの展示の性能として記載しない。",
     "人の回答は収集していない。代答もしない。"
   ],
-  "inputs_hash": "1b5067e6a6b02df47842225a32e5cf70f8e61f4bad4e302582676dd3940f5e49"
+  "inputs_hash": "dc1b5739f6c8eb534e65c07404311f5912a8c23329acb92b3caee19b546e3cd5"
 }

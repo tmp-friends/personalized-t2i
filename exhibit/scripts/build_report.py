@@ -777,22 +777,15 @@ def section_html(title, section, lead):
 
 
 def catalog_v2_html(item):
-    findings = item["detail"].get("visual_findings") or {}
-    probe = item["detail"].get("clip_probe") or {}
-    if not findings and not probe:
+    detail = item["detail"]
+    excluded = detail.get("excluded_cards") or []
+    if not excluded:
         return ""
-    rows = "".join(
-        f"<tr><td>{E(axis)}</td><td>{E(str(text))}</td>"
-        f"<td>{E(str((probe.get('top1') or {}).get(axis, '—')))}"
-        f" / {E(str(probe.get('of', '—')))}</td></tr>"
-        for axis, text in findings.items()
-    )
-    note = f"<p>{E(str(probe['note']))}</p>" if probe.get("note") else ""
-    return f"""<h3>catalog v2 の所見</h3>
-<div class="scroll"><table><thead><tr><th>軸</th><th>目視の所見</th>
-<th>凍結CLIPで水準が1位</th></tr></thead><tbody>{rows}</tbody></table></div>
-<p>4軸すべてが1位だったカードは {E(str(probe.get("all_four_axes", "—")))} / {E(str(probe.get("of", "—")))}。
-これは診断補助であり、確認（review）そのものではありません。</p>{note}"""
+    names = "".join(f"<li><code>{E(card_id)}</code></li>" for card_id in excluded)
+    return f"""<h3>catalog v2 で展示から外したカード</h3>
+<div class="panel"><p>本人が確認済みにしなかったカードです（{E(str(len(excluded)))} 枚）。
+展示と heldout は残りの {E(str(detail.get("usable_cards", "—")))} 枚で動きます。</p>
+<ul>{names}</ul></div>"""
 
 
 def render(evidence, parts):
