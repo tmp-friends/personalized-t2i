@@ -36,7 +36,7 @@ async def lifespan(app):
 
 
 app = FastAPI(
-    title="FAN / 同じ一文から、あなたの一枚を",
+    title="パーソナライズ画像生成 — FAN 体験展示",
     lifespan=lifespan,
     docs_url=None,
     redoc_url=None,

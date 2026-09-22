@@ -1,4 +1,4 @@
-# FAN — 同じ一文から、あなたの一枚を
+# パーソナライズ画像生成デモ（FAN）
 
 好きな画像を選び、その画像の**どこが好きか**（色・光・描画・雰囲気）を指定すると、指定した側面に付いた**確認済みの説明文**を参照にして、同じお題・同じseed・同じ生成設定のまま Illustrious XL v2.0 が描き直すローカル展示デモ。
 個人化は [FAN](https://github.com/Burf/FAN)（Foundation Encoders Are All You Need for Preference-Aware Personalization, CVPR 2026）公式実装。設計は [FAN個人化改善設計書](../docs/superpowers/specs/2026-09-21-fan-personalization-improvement-design.md)（旧 [FAN展示デモ設計](../docs/superpowers/specs/2026-09-21-fan-exhibition-demo-design.md) と矛盾する箇所は新しい方を優先）。

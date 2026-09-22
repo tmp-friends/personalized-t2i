@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <meta name="theme-color" content="#100d0c" />
-    <title>FAN — 同じ一文から、あなたの一枚を。</title>
+    <title>パーソナライズ画像生成 — FAN 体験展示</title>
     <!-- Inline so the browser never asks for /favicon.ico: no external request. -->
     <link
       rel="icon"
@@ -15,19 +15,19 @@
   </head>
   <body>
     <header>
-      <a class="brand" href="/" aria-label="FAN ホーム"
+      <a class="brand" href="/" aria-label="パーソナライズ画像生成 ホーム"
         ><span class="brand-mark" aria-hidden="true"
           ><svg viewBox="0 0 24 24" fill="none" stroke-linecap="round">
             <path d="M6 19V6M6 19l9.2-9.2M6 19h13" stroke-width="2.4" />
             <path d="M6 6a13 13 0 0 1 13 13" stroke-width="1.6" /></svg></span
-        >FAN</a
-      ><span class="exhibit-label">同じ一文から、あなたの一枚を</span
+        >パーソナライズ画像生成</a
+      ><span class="exhibit-label">powered by FAN</span
       ><button id="reset" class="ghost" hidden>体験を終了</button>
     </header>
     <main id="app" aria-live="polite"></main>
     <div id="error" role="alert" hidden></div>
     <footer>
-      <span>入力文も生成モデルも変えていません。</span
+      <span>選んだ好みだけで結果が変わります。入力文・モデル・seed は共通です。</span
       ><a href="/fallback">サンプルと手法の説明</a>
     </footer>
   </body>
