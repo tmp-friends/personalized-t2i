@@ -140,6 +140,8 @@ def fan_block(fan=None, policy=None):
     }
     if "embed_gain" in policy:
         block["embed_gain"] = float(policy["embed_gain"])
+    if "hidden_norm" in policy:
+        block["hidden_norm"] = policy["hidden_norm"]
     return block
 
 

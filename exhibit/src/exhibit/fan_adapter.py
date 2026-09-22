@@ -24,8 +24,21 @@ POLICY_KEYS = frozenset(
 # padding mask. See ``exhibit.fan_mask`` for why the target must stay untouched.
 # Optional strength settings. They are dropped from the effective policy at
 # their neutral value so every policy registered before them keeps its hash.
-OPTIONAL_POLICY_KEYS = frozenset({"embed_gain"})
+OPTIONAL_POLICY_KEYS = frozenset({"embed_gain", "hidden_norm"})
 EMBED_GAIN_NEUTRAL = 1.0
+# ``plain_token`` rescales every personalized token to the L2 norm the plain
+# encoding has at that position, separately for the two SDXL encoders, leaving
+# only the direction of the personalization. Attention mixing averages value
+# vectors, so the personalized tokens come out shorter than the plain ones and
+# the UNet's guidance delta shrinks with them.
+# ``plain_pad`` instead hands the target's pad positions straight back to the
+# plain encoding and leaves the real tokens personalized and unscaled; the mask
+# suppresses the pads to ~0.6x of plain and the UNet reads all 77 positions.
+# ``plain_pad_token`` does both: plain pads, plain lengths on the real tokens.
+HIDDEN_NORMS = frozenset({"none", "plain_token", "plain_pad", "plain_pad_token"})
+HIDDEN_NORM_NEUTRAL = "none"
+# The SDXL hidden state is CLIP-L's 768 channels followed by bigG's 1280.
+SDXL_CLIP_L_DIM = 768
 # ``fan_eos`` personalizes the SDXL pooled channel like ``fan`` but pools at the
 # prompt's EOS position instead of FAN's ClassTokenDecoder, which mislocates the
 # class token on long tag prompts.
@@ -93,6 +106,11 @@ def _validate_policy(policy):
         not _finite_number(policy["embed_gain"]) or not 0 <= policy["embed_gain"] <= 4
     ):
         raise ValueError("embed_gain must be finite and in [0, 4]")
+    if "hidden_norm" in policy and (
+        not isinstance(policy["hidden_norm"], str)
+        or policy["hidden_norm"] not in HIDDEN_NORMS
+    ):
+        raise ValueError("Unknown hidden_norm")
     if not _finite_number(policy["alpha"]) or not 0 <= policy["alpha"] <= 1:
         raise ValueError("alpha must be finite and in [0, 1]")
     if type(policy["skip"]) is not int:
@@ -122,12 +140,19 @@ def freeze_policy(policy):
         value["embed_gain"] = float(value["embed_gain"])
         if value["embed_gain"] == EMBED_GAIN_NEUTRAL:
             del value["embed_gain"]
+    if value.get("hidden_norm") == HIDDEN_NORM_NEUTRAL:
+        del value["hidden_norm"]
     return _freeze(value)
 
 
 def embed_gain(policy):
     """The hidden-state gain of a policy; absent means the neutral 1.0."""
     return float(policy.get("embed_gain", EMBED_GAIN_NEUTRAL))
+
+
+def hidden_norm(policy):
+    """The hidden-state renormalization of a policy; absent means none."""
+    return policy.get("hidden_norm", HIDDEN_NORM_NEUTRAL)
 
 
 def resolve_policy(policy_id, policies):
@@ -308,6 +333,56 @@ def _encode_eos_pooled(encoder, prompt, refs, effective):
     return pooled.to(torch.float16)
 
 
+def _match_plain_token_norms(hidden, plain_hidden):
+    """Give every personalized token the plain token's length, direction kept.
+
+    The two SDXL encoders are rescaled separately: their channels live on
+    different scales and one common factor would trade one against the other.
+    """
+    import torch
+
+    personalized = hidden.float()
+    base = plain_hidden.float()
+    if personalized.shape[-1] <= SDXL_CLIP_L_DIM:
+        raise ValueError("hidden_norm needs the concatenated SDXL hidden state")
+    parts = []
+    for section in (slice(None, SDXL_CLIP_L_DIM), slice(SDXL_CLIP_L_DIM, None)):
+        left, right = personalized[..., section], base[..., section]
+        scale = right.norm(dim=-1, keepdim=True) / left.norm(
+            dim=-1, keepdim=True
+        ).clamp_min(1e-6)
+        parts.append(left * scale)
+    return torch.cat(parts, dim=-1).to(torch.float16)
+
+
+def _target_pad_masks(encoder, prompt):
+    """The target's pad positions, as each encoder's own tokenizer sees them."""
+    components = getattr(encoder, "_fan_components", None)
+    if not isinstance(components, Mapping) or not {"clip_l", "clip_g"} <= set(
+        components
+    ):
+        raise RuntimeError("hidden_norm pad splicing needs the two SDXL FAN encoders")
+    return {
+        name: ~components[name].preprocess([prompt])["attention_mask"][0].bool()
+        for name in ("clip_l", "clip_g")
+    }
+
+
+def _splice_plain_pads(hidden, plain_hidden, encoder, prompt):
+    """Restore the plain vectors wherever the target prompt has a pad token."""
+    if hidden.shape[-1] <= SDXL_CLIP_L_DIM:
+        raise ValueError("hidden_norm needs the concatenated SDXL hidden state")
+    masks = _target_pad_masks(encoder, prompt)
+    result = hidden.clone()
+    for name, section in (
+        ("clip_l", slice(None, SDXL_CLIP_L_DIM)),
+        ("clip_g", slice(SDXL_CLIP_L_DIM, None)),
+    ):
+        pads = masks[name].to(result.device)
+        result[:, pads, section] = plain_hidden[:, pads, section].to(result.dtype)
+    return result
+
+
 def _apply_embed_gain(hidden, plain_hidden, gain):
     """``plain + gain * (personalized - plain)`` in the encoder's own dtype."""
     import torch
@@ -324,7 +399,9 @@ def encode_conditioning(encoder, prompt, refs, policy, *, collect_trace=False):
     only records the official selections and chooses whether the generator sees
     FAN's pooled embedding, an EOS-pooled personalized embedding, or a
     reference-free pooled embedding. An optional ``embed_gain`` scales the
-    personalized hidden-state difference from the reference-free encoding.
+    personalized hidden-state difference from the reference-free encoding, and
+    an optional ``hidden_norm`` restores the plain per-token lengths, the plain
+    pad positions, or both, afterwards.
     """
     if not isinstance(prompt, str) or (refs and not prompt):
         raise ValueError("prompt is required")
@@ -333,15 +410,22 @@ def encode_conditioning(encoder, prompt, refs, policy, *, collect_trace=False):
     effective = freeze_policy(policy)
     effective_value = thaw_policy(effective)
     ref_values = _validated_refs(refs) if refs else None
-
+    # The causal+padding mask fix is installed once, on the encoder itself, in
+    # `workers.build_encoder`; every caller of that builder gets it, including
+    # the ones that reach the encoder without passing through this function.
     hidden, fan_pooled, calls = _encode_once(
         encoder, prompt, ref_values, effective, collect_trace
     )
     pooled = fan_pooled
     pooled_source = "fan" if ref_values else "plain"
     gain = embed_gain(effective)
+    normalization = hidden_norm(effective)
     plain_hidden = None
-    if ref_values and (effective["pooled_mode"] == "plain" or gain != 1.0):
+    if ref_values and (
+        effective["pooled_mode"] == "plain"
+        or gain != 1.0
+        or normalization != HIDDEN_NORM_NEUTRAL
+    ):
         plain_hidden, plain_pooled, _ = _encode_once(
             encoder, prompt, None, effective, False
         )
@@ -353,9 +437,13 @@ def encode_conditioning(encoder, prompt, refs, policy, *, collect_trace=False):
         pooled_source = "fan_eos"
     if ref_values and gain != 1.0:
         hidden = _apply_embed_gain(hidden, plain_hidden, gain)
-    # The causal+padding mask fix is installed once, on the encoder itself, in
-    # `workers.build_encoder`; every caller of that builder gets it, including
-    # the ones that reach the encoder without passing through this function.
+    if ref_values and normalization in ("plain_token", "plain_pad_token"):
+        # Last, so it also undoes the length change an embed_gain introduced.
+        hidden = _match_plain_token_norms(hidden, plain_hidden)
+    if ref_values and normalization in ("plain_pad", "plain_pad_token"):
+        # After the rescaling, which therefore only survives on the real tokens.
+        hidden = _splice_plain_pads(hidden, plain_hidden, encoder, prompt)
+
     trace = {
         "calls": calls,
         "pooled_source": pooled_source,
@@ -363,6 +451,8 @@ def encode_conditioning(encoder, prompt, refs, policy, *, collect_trace=False):
     }
     if ref_values and gain != 1.0:
         trace["embed_gain"] = gain
+    if ref_values and normalization != HIDDEN_NORM_NEUTRAL:
+        trace["hidden_norm"] = normalization
     return {
         "hidden": hidden,
         "pooled": pooled,
