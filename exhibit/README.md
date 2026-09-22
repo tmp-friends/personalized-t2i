@@ -144,6 +144,24 @@ PYTHONPATH=exhibit/src exhibit/.venv/bin/python exhibit/scripts/evaluate_fan.py 
 - `--resume` は同じ manifest hash の完了済み画像だけを再利用します。1 experiment の上限は512枚で、超えるmatrixは実行前に失敗します。
 - 集計は成功例だけを抜き出しません。欠損率と理由を必ず出します。`heldout` は64枚全数の確認までは求めず、設計§9.2の3条件（参照カードが確認済み・各水準2枚以上・合計32枚以上）を満たせば実行できます。
 
+### 強度実験（FAN の効きを強くする設定の比較）
+
+`docs/superpowers/plans/2026-09-22-fan-strength-experiments.md` の実験群を、`configs/fan-strength.json` に宣言した実験単位で回します。各実験は policy を明示的に列挙し（登録名か effective policy）、`legacy_exhibit` と個人化なし（plain）を同じ topic × history × seed で自動的に併走させ、既存の rules（target 床 −0.01、history 改善 +0.005）で判定します。生成設定を上書きした実験は `experiment_kind: generation` になり、rules は参考値（`binding: false`）です。
+
+```bash
+# 宣言済みの実験を一覧
+PYTHONPATH=exhibit/src exhibit/.venv/bin/python exhibit/scripts/evaluate_fan.py strength --config exhibit/configs/fan-strength.json --list
+# 1 実験を実行（encoding 数値検査 → 画像 matrix → CLIP 採点 → 判定）
+PYTHONPATH=exhibit/src exhibit/.venv/bin/python exhibit/scripts/evaluate_fan.py strength --config exhibit/configs/fan-strength.json --experiment e1-settings --resume
+# 論文レジームの対照（base SDXL 1.0、自然文、A2）。fan-repro の環境で実行する
+HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1 PYTHONPATH=fan-repro/.work/upstream:exhibit/src fan-repro/.venv/bin/python exhibit/scripts/fan_paper_regime.py
+# 人間向けレポート・目視シート・ブラインド評価ページ・AI 判定素材
+PYTHONPATH=exhibit/src exhibit/.venv/bin/python exhibit/scripts/build_strength_report.py [--judge-answers 回答.json ...]
+```
+
+- 実測: `outputs/fan-evaluation/strength/<experiment_hash>/`（manifest の `display.experiment_id` で実験を引けます）。レポート: `docs/reports/fan-personalization/strength/`。
+- policy には任意項目 `embed_gain`（`hidden = plain + gain·(personalized − plain)`、1.0 は省略と同値で hash 不変）と、`pooled_mode: fan_eos`（bigG の個人化 pooled を EOS 位置で取る）が使えます。既定 policy は変えません。
+
 ### 人によるブラインド評価
 
 ```bash

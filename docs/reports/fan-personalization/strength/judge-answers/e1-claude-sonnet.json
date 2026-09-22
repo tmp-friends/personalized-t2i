@@ -1,0 +1,2119 @@
+{
+ "judge": "claude-sonnet",
+ "kind": "ai",
+ "model": "claude-sonnet-5",
+ "answers": {
+  "0271285ae71a": {
+   "preference": "B",
+   "target_kept": {
+    "A": "yes",
+    "B": "yes"
+   },
+   "note": "B cooler grayer muted tone, A warm golden rays"
+  },
+  "11a255c8701e": {
+   "preference": "A",
+   "target_kept": {
+    "A": "yes",
+    "B": "yes"
+   },
+   "note": "A warmer reddish hair and golden light vs B grayer"
+  },
+  "15d4af0df3f1": {
+   "preference": "B",
+   "target_kept": {
+    "A": "yes",
+    "B": "yes"
+   },
+   "note": "B sepia painterly brushwork matches watercolor texture"
+  },
+  "18a6b9b203e5": {
+   "preference": "B",
+   "target_kept": {
+    "A": "yes",
+    "B": "yes"
+   },
+   "note": "B keeps warm golden light plus green cool accents"
+  },
+  "26545a27a9ef": {
+   "preference": "B",
+   "target_kept": {
+    "A": "no",
+    "B": "yes"
+   },
+   "note": "A abstract stained-glass, subject and cat unrecognizable"
+  },
+  "2e6b4fda6e42": {
+   "preference": "A",
+   "target_kept": {
+    "A": "yes",
+    "B": "no"
+   },
+   "note": "A stays calm warm-lit, B dramatic catgirl not calm"
+  },
+  "31b858b56151": {
+   "preference": "B",
+   "target_kept": {
+    "A": "partly",
+    "B": "yes"
+   },
+   "note": "B has clear warm golden hour light, A cream and no cat"
+  },
+  "3244323f910b": {
+   "preference": "A",
+   "target_kept": {
+    "A": "yes",
+    "B": "yes"
+   },
+   "note": "A soft brushwork painterly texture fits watercolor request"
+  },
+  "3382a91da614": {
+   "preference": "A",
+   "target_kept": {
+    "A": "yes",
+    "B": "no"
+   },
+   "note": "A calm warm-lit, B intense catgirl fails calm mood"
+  },
+  "36dce008c74c": {
+   "preference": "tie",
+   "target_kept": {
+    "A": "yes",
+    "B": "yes"
+   },
+   "note": "nearly identical warm palette and composition"
+  },
+  "3f1be897a3ba": {
+   "preference": "A",
+   "target_kept": {
+    "A": "partly",
+    "B": "yes"
+   },
+   "note": "A softer diffused neutral light fits cool ask, but no cat"
+  },
+  "42c191115a58": {
+   "preference": "B",
+   "target_kept": {
+    "A": "yes",
+    "B": "yes"
+   },
+   "note": "B balances warm gold with green, better 2:1 warm-cool mix"
+  },
+  "43ca61f777a2": {
+   "preference": "A",
+   "target_kept": {
+    "A": "yes",
+    "B": "no"
+   },
+   "note": "B is pure warm costume art, no cool accent, no cat"
+  },
+  "4e46d6eab9e2": {
+   "preference": "B",
+   "target_kept": {
+    "A": "yes",
+    "B": "yes"
+   },
+   "note": "B soft brushwork painterly texture matches watercolor ask"
+  },
+  "5c0bf18166f5": {
+   "preference": "B",
+   "target_kept": {
+    "A": "yes",
+    "B": "yes"
+   },
+   "note": "B desaturated neutral-cool grading beats A warm golden light"
+  },
+  "5f6f9d3f3683": {
+   "preference": "A",
+   "target_kept": {
+    "A": "yes",
+    "B": "partly"
+   },
+   "note": "A keeps warm golden light and cat, B loses cat and eye color"
+  },
+  "65595d18bb8d": {
+   "preference": "tie",
+   "target_kept": {
+    "A": "yes",
+    "B": "yes"
+   },
+   "note": "both show similar warm-dominant mixed palette"
+  },
+  "662c77a1dea9": {
+   "preference": "B",
+   "target_kept": {
+    "A": "no",
+    "B": "yes"
+   },
+   "note": "A mosaic costume art, no cat, not calm, poor texture match"
+  },
+  "71c763e93b68": {
+   "preference": "A",
+   "target_kept": {
+    "A": "yes",
+    "B": "no"
+   },
+   "note": "B dark cool catgirl fails warm-dominant mixed palette, no cat"
+  },
+  "732fbfcff485": {
+   "preference": "B",
+   "target_kept": {
+    "A": "yes",
+    "B": "yes"
+   },
+   "note": "B cooler muted palette and diffuse light fit cool ask better"
+  },
+  "7aa4cbdf8161": {
+   "preference": "B",
+   "target_kept": {
+    "A": "yes",
+    "B": "yes"
+   },
+   "note": "B warmer pink sweater tone is more consistently warm overall"
+  },
+  "9006a1347a5d": {
+   "preference": "B",
+   "target_kept": {
+    "A": "yes",
+    "B": "partly"
+   },
+   "note": "B clearly blue-toned matching cool ask, but B has no cat"
+  },
+  "968f625c045b": {
+   "preference": "A",
+   "target_kept": {
+    "A": "yes",
+    "B": "yes"
+   },
+   "note": "A keeps green cool accents beside warm gold, better 2:1 mix"
+  },
+  "a17366b23af0": {
+   "preference": "B",
+   "target_kept": {
+    "A": "no",
+    "B": "yes"
+   },
+   "note": "A dark monochrome catgirl fails warm-dominant calm palette"
+  },
+  "a4db7ef41b2b": {
+   "preference": "A",
+   "target_kept": {
+    "A": "yes",
+    "B": "partly"
+   },
+   "note": "A balances warm gold with green, B nearly all warm no cool"
+  },
+  "a6a99533b43f": {
+   "preference": "B",
+   "target_kept": {
+    "A": "no",
+    "B": "yes"
+   },
+   "note": "A mosaic texture and active pose miss watercolor calm ask"
+  },
+  "a722f0514d09": {
+   "preference": "B",
+   "target_kept": {
+    "A": "yes",
+    "B": "yes"
+   },
+   "note": "B desaturated cooler grading and soft diffuse light fit cool ask"
+  },
+  "b0f94ddc5e92": {
+   "preference": "A",
+   "target_kept": {
+    "A": "yes",
+    "B": "no"
+   },
+   "note": "A clean cel lineart matches cool ask, B warm-lit and no cat"
+  },
+  "c0f9460ea04e": {
+   "preference": "A",
+   "target_kept": {
+    "A": "yes",
+    "B": "partly"
+   },
+   "note": "A has stronger golden-hour rays, B pale and no cat"
+  },
+  "c649561fa756": {
+   "preference": "B",
+   "target_kept": {
+    "A": "yes",
+    "B": "yes"
+   },
+   "note": "B cooler desaturated grading beats A warm golden lighting"
+  },
+  "c65a9151c5f8": {
+   "preference": "A",
+   "target_kept": {
+    "A": "yes",
+    "B": "partly"
+   },
+   "note": "A keeps warm-dominant mixed palette and calm, B no cat"
+  },
+  "ceeb11a77c40": {
+   "preference": "A",
+   "target_kept": {
+    "A": "no",
+    "B": "yes"
+   },
+   "note": "A purple-cool tones and clean lineart fit cool ask, but no cat"
+  },
+  "d3dacfc8c05a": {
+   "preference": "A",
+   "target_kept": {
+    "A": "yes",
+    "B": "partly"
+   },
+   "note": "A balances warm gold with cool green, B all warm no cat"
+  },
+  "d567ac202a05": {
+   "preference": "B",
+   "target_kept": {
+    "A": "no",
+    "B": "yes"
+   },
+   "note": "B matches warm-dominant mixed palette and calm, A cool catgirl no cat"
+  },
+  "d9950e203170": {
+   "preference": "A",
+   "target_kept": {
+    "A": "yes",
+    "B": "yes"
+   },
+   "note": "A stronger golden light matches warm-dominant mixed weights"
+  },
+  "e05d94fcfe2c": {
+   "preference": "A",
+   "target_kept": {
+    "A": "yes",
+    "B": "partly"
+   },
+   "note": "A golden warm-lit and cel matches mixed weights better, B no cat"
+  },
+  "e3c0a9c0378f": {
+   "preference": "tie",
+   "target_kept": {
+    "A": "yes",
+    "B": "yes"
+   },
+   "note": "nearly identical warm-green color balance"
+  },
+  "e6154943054a": {
+   "preference": "A",
+   "target_kept": {
+    "A": "yes",
+    "B": "partly"
+   },
+   "note": "A keeps cool green accent for 2:1 mix, B all warm no cat"
+  },
+  "e969ee4420c6": {
+   "preference": "A",
+   "target_kept": {
+    "A": "yes",
+    "B": "yes"
+   },
+   "note": "A stronger golden warm light fits warm-dominant mixed weights"
+  },
+  "e970546f3293": {
+   "preference": "A",
+   "target_kept": {
+    "A": "yes",
+    "B": "partly"
+   },
+   "note": "A golden warm cel look fits mixed weights, B neutral and no cat"
+  },
+  "eccc335b33b5": {
+   "preference": "tie",
+   "target_kept": {
+    "A": "yes",
+    "B": "yes"
+   },
+   "note": "sepia painterly warmth vs golden cel are close matches"
+  },
+  "ee7499e3add0": {
+   "preference": "A",
+   "target_kept": {
+    "A": "partly",
+    "B": "yes"
+   },
+   "note": "A blue sweater and soft diffuse light fit cool ask, no cat"
+  },
+  "f8e2c7818284": {
+   "preference": "tie",
+   "target_kept": {
+    "A": "yes",
+    "B": "yes"
+   },
+   "note": "sepia painterly warmth vs golden cel are close matches"
+  },
+  "fdc3f456b895": {
+   "preference": "B",
+   "target_kept": {
+    "A": "yes",
+    "B": "partly"
+   },
+   "note": "B strong blue-grey desaturated tone matches cool ask, no cat"
+  },
+  "0297d61b1db5": {
+   "preference": "A",
+   "target_kept": {
+    "A": "no",
+    "B": "yes"
+   },
+   "note": "A warm watercolor, holds mug not cat"
+  },
+  "04ac99e523a5": {
+   "preference": "tie",
+   "target_kept": {
+    "A": "yes",
+    "B": "yes"
+   },
+   "note": "near identical cel-shaded cool cat scenes"
+  },
+  "09d3463c6623": {
+   "preference": "B",
+   "target_kept": {
+    "A": "yes",
+    "B": "no"
+   },
+   "note": "B warmer/painterly but no cat, diff outfit"
+  },
+  "0c70d88775f9": {
+   "preference": "A",
+   "target_kept": {
+    "A": "no",
+    "B": "yes"
+   },
+   "note": "A warm amber palette but different subject"
+  },
+  "105e86577133": {
+   "preference": "B",
+   "target_kept": {
+    "A": "yes",
+    "B": "yes"
+   },
+   "note": "B cream warmer tone, higher-weight warm cue"
+  },
+  "12c4a49690ab": {
+   "preference": "A",
+   "target_kept": {
+    "A": "no",
+    "B": "yes"
+   },
+   "note": "A warm amber but different subject, no cat"
+  },
+  "186c93f8e34b": {
+   "preference": "tie",
+   "target_kept": {
+    "A": "yes",
+    "B": "no"
+   },
+   "note": "tie on style; B lacks cat, diff hair colour"
+  },
+  "1ab3e29059c0": {
+   "preference": "A",
+   "target_kept": {
+    "A": "no",
+    "B": "yes"
+   },
+   "note": "A strongly warm golden but different subject"
+  },
+  "1e7fc77c3654": {
+   "preference": "B",
+   "target_kept": {
+    "A": "yes",
+    "B": "partly"
+   },
+   "note": "B warmer maroon/auburn, hair more auburn"
+  },
+  "20175fb1f316": {
+   "preference": "B",
+   "target_kept": {
+    "A": "yes",
+    "B": "no"
+   },
+   "note": "B sepia painterly but no cat, holds teacup"
+  },
+  "3820d1478bbb": {
+   "preference": "B",
+   "target_kept": {
+    "A": "yes",
+    "B": "no"
+   },
+   "note": "B warm sepia tone but no cat, holds cup"
+  },
+  "3bc8be73c239": {
+   "preference": "B",
+   "target_kept": {
+    "A": "yes",
+    "B": "partly"
+   },
+   "note": "B painterly warm-brown; eyes not clearly green"
+  },
+  "3fc487862e91": {
+   "preference": "A",
+   "target_kept": {
+    "A": "no",
+    "B": "yes"
+   },
+   "note": "A strongly warm golden but different subject"
+  },
+  "4d79979ceedb": {
+   "preference": "B",
+   "target_kept": {
+    "A": "yes",
+    "B": "partly"
+   },
+   "note": "B has cat but hair blonde, eyes brown not green"
+  },
+  "55d4b1527104": {
+   "preference": "A",
+   "target_kept": {
+    "A": "yes",
+    "B": "yes"
+   },
+   "note": "A warm maroon tone, keeps cat and features well"
+  },
+  "570e458df312": {
+   "preference": "tie",
+   "target_kept": {
+    "A": "yes",
+    "B": "yes"
+   },
+   "note": "both cel-shaded cool tones, neither matches warm cue"
+  },
+  "58529f16553b": {
+   "preference": "tie",
+   "target_kept": {
+    "A": "yes",
+    "B": "partly"
+   },
+   "note": "tie: A cool cel-shade, B grayscale painterly not amber"
+  },
+  "65fe16aaf454": {
+   "preference": "B",
+   "target_kept": {
+    "A": "yes",
+    "B": "yes"
+   },
+   "note": "B blue-gray sweater slightly closer to cool teal cue"
+  },
+  "66559858c62e": {
+   "preference": "A",
+   "target_kept": {
+    "A": "yes",
+    "B": "partly"
+   },
+   "note": "A cooler purple/blue matches cue; B is warm maroon"
+  },
+  "67497f4e48e1": {
+   "preference": "A",
+   "target_kept": {
+    "A": "yes",
+    "B": "yes"
+   },
+   "note": "A warm maroon sweater, keeps cat and features"
+  },
+  "677444d3880a": {
+   "preference": "B",
+   "target_kept": {
+    "A": "yes",
+    "B": "partly"
+   },
+   "note": "B warm-ish maroon painterly; hair not brown"
+  },
+  "70e6840d8f5a": {
+   "preference": "A",
+   "target_kept": {
+    "A": "yes",
+    "B": "yes"
+   },
+   "note": "A blue-gray sweater closer to cool teal cue"
+  },
+  "8ad9e46c18d3": {
+   "preference": "B",
+   "target_kept": {
+    "A": "yes",
+    "B": "yes"
+   },
+   "note": "B purple slightly warmer, matches higher weight"
+  },
+  "8fff2c46339f": {
+   "preference": "A",
+   "target_kept": {
+    "A": "no",
+    "B": "yes"
+   },
+   "note": "A warm amber but no cat, holds teacup instead"
+  },
+  "935421a5ad62": {
+   "preference": "A",
+   "target_kept": {
+    "A": "yes",
+    "B": "no"
+   },
+   "note": "neither clearly warm; A less cool-toned than B"
+  },
+  "9de8b03c8449": {
+   "preference": "A",
+   "target_kept": {
+    "A": "partly",
+    "B": "yes"
+   },
+   "note": "A warm/painterly; eyes look brown not green"
+  },
+  "a0936d24a4f3": {
+   "preference": "A",
+   "target_kept": {
+    "A": "yes",
+    "B": "no"
+   },
+   "note": "A matches cel-shading/cool cue; B has no cat"
+  },
+  "b02943969f03": {
+   "preference": "A",
+   "target_kept": {
+    "A": "yes",
+    "B": "yes"
+   },
+   "note": "A warm maroon sweater, keeps cat and features"
+  },
+  "bd3f3602cc23": {
+   "preference": "B",
+   "target_kept": {
+    "A": "yes",
+    "B": "yes"
+   },
+   "note": "B painterly texture matches warm cue; both keep cat"
+  },
+  "bdb86fccff25": {
+   "preference": "B",
+   "target_kept": {
+    "A": "no",
+    "B": "yes"
+   },
+   "note": "B matches cel-shading/cool cue; A has no cat"
+  },
+  "c056dc7611f9": {
+   "preference": "B",
+   "target_kept": {
+    "A": "no",
+    "B": "yes"
+   },
+   "note": "B matches cel-shading/cool cue; A has no cat"
+  },
+  "c116583aa2d1": {
+   "preference": "A",
+   "target_kept": {
+    "A": "yes",
+    "B": "yes"
+   },
+   "note": "A painterly texture matches higher-weight warm cue"
+  },
+  "cb4f58bd645f": {
+   "preference": "A",
+   "target_kept": {
+    "A": "yes",
+    "B": "partly"
+   },
+   "note": "A matches cool/cel-shading cue; B warm-toned, eyes off"
+  },
+  "d7a7677afe2a": {
+   "preference": "A",
+   "target_kept": {
+    "A": "no",
+    "B": "yes"
+   },
+   "note": "A closer to warm/painterly cue but no cat, holds book"
+  },
+  "da44247af3e5": {
+   "preference": "B",
+   "target_kept": {
+    "A": "yes",
+    "B": "partly"
+   },
+   "note": "B warmer sweater tone but cat-ears added, hair wrong"
+  },
+  "dd462d94e7e5": {
+   "preference": "B",
+   "target_kept": {
+    "A": "yes",
+    "B": "yes"
+   },
+   "note": "B painterly texture matches higher-weight warm cue"
+  },
+  "df50d68fad1c": {
+   "preference": "A",
+   "target_kept": {
+    "A": "yes",
+    "B": "yes"
+   },
+   "note": "A warm maroon tone, keeps subject reasonably"
+  },
+  "e3d06fbcb127": {
+   "preference": "B",
+   "target_kept": {
+    "A": "yes",
+    "B": "yes"
+   },
+   "note": "B painterly texture matches higher-weight warm cue"
+  },
+  "e46058076789": {
+   "preference": "A",
+   "target_kept": {
+    "A": "partly",
+    "B": "yes"
+   },
+   "note": "A warm/painterly; eye colour looks off from green"
+  },
+  "e89d20b73f19": {
+   "preference": "tie",
+   "target_kept": {
+    "A": "yes",
+    "B": "partly"
+   },
+   "note": "tie: both cel-shaded cool; B hair not brown"
+  },
+  "ebdd61ad6106": {
+   "preference": "A",
+   "target_kept": {
+    "A": "yes",
+    "B": "partly"
+   },
+   "note": "A matches cool/cel-shading cue; B is warm, hair not brown"
+  },
+  "ee94ecbaf947": {
+   "preference": "A",
+   "target_kept": {
+    "A": "yes",
+    "B": "yes"
+   },
+   "note": "A matches cool/cel-shading cue clearly over warm B"
+  },
+  "f044ede7bd56": {
+   "preference": "B",
+   "target_kept": {
+    "A": "yes",
+    "B": "no"
+   },
+   "note": "B warm red tone but no cat, holds bowl"
+  },
+  "eb186e5add28": {
+   "preference": "B",
+   "target_kept": {
+    "A": "yes",
+    "B": "no"
+   },
+   "note": "B painterly texture matches warm cue but no cat"
+  },
+  "04b7edc1a8bc": {
+   "preference": "B",
+   "target_kept": {
+    "A": "partly",
+    "B": "yes"
+   },
+   "note": "B shows liked cool blue palette; A pale, matches neither pref"
+  },
+  "1650c986d736": {
+   "preference": "A",
+   "target_kept": {
+    "A": "partly",
+    "B": "yes"
+   },
+   "note": "A watercolor plus diffused matches warm-cluster; hair/coat ambiguous"
+  },
+  "246d55056762": {
+   "preference": "tie",
+   "target_kept": {
+    "A": "yes",
+    "B": "yes"
+   },
+   "note": "both match cool/cel/calm equally well"
+  },
+  "24c16b188110": {
+   "preference": "A",
+   "target_kept": {
+    "A": "yes",
+    "B": "partly"
+   },
+   "note": "A solid cool/cel match; B pink bg, no city, not cel-shaded"
+  },
+  "27ab5bd4aa0d": {
+   "preference": "A",
+   "target_kept": {
+    "A": "yes",
+    "B": "partly"
+   },
+   "note": "A matches cool cluster; B soft warm portrait, no city bg"
+  },
+  "29f700291d8b": {
+   "preference": "A",
+   "target_kept": {
+    "A": "no",
+    "B": "yes"
+   },
+   "note": "A wrong subject but warm-toned matches pref; B correct scene"
+  },
+  "3401a9cf2d2c": {
+   "preference": "A",
+   "target_kept": {
+    "A": "partly",
+    "B": "yes"
+   },
+   "note": "A watercolor and calm match warm pref; no city bg visible"
+  },
+  "39a66516ab65": {
+   "preference": "A",
+   "target_kept": {
+    "A": "yes",
+    "B": "partly"
+   },
+   "note": "A matches cool palette and cel best; B moody mono, hair unclear"
+  },
+  "500f367bf9d1": {
+   "preference": "A",
+   "target_kept": {
+    "A": "partly",
+    "B": "yes"
+   },
+   "note": "A watercolor matches warm-cluster pref; no city bg"
+  },
+  "5010f98dee76": {
+   "preference": "A",
+   "target_kept": {
+    "A": "yes",
+    "B": "partly"
+   },
+   "note": "A matches cool/cel/calm fully; B distressed, no city"
+  },
+  "6154e9a71887": {
+   "preference": "tie",
+   "target_kept": {
+    "A": "yes",
+    "B": "yes"
+   },
+   "note": "Both cool/cel city variants; neither shows warm cluster attributes"
+  },
+  "6223176f08f0": {
+   "preference": "B",
+   "target_kept": {
+    "A": "partly",
+    "B": "yes"
+   },
+   "note": "B matches cool/cel/city pref strongly; A fragmented, no city"
+  },
+  "66f42905320d": {
+   "preference": "B",
+   "target_kept": {
+    "A": "yes",
+    "B": "no"
+   },
+   "note": "B warmer cream tone matches pref; but hair turned black not blue"
+  },
+  "69824abca001": {
+   "preference": "B",
+   "target_kept": {
+    "A": "yes",
+    "B": "no"
+   },
+   "note": "B vivid warm tones match higher pref weight; wrong subject entirely"
+  },
+  "6a7fba0121d7": {
+   "preference": "A",
+   "target_kept": {
+    "A": "partly",
+    "B": "yes"
+   },
+   "note": "A painterly texture matches high-weight warm attribute; hair/city unclear"
+  },
+  "6b9b4020e83d": {
+   "preference": "A",
+   "target_kept": {
+    "A": "yes",
+    "B": "partly"
+   },
+   "note": "A clean cool/cel match; B desaturated ink-style, hair tone unclear"
+  },
+  "7b94652ed95e": {
+   "preference": "tie",
+   "target_kept": {
+    "A": "yes",
+    "B": "yes"
+   },
+   "note": "Neither shows warm/watercolor pref; both similar cool/cel variants"
+  },
+  "83f0a334fcbe": {
+   "preference": "B",
+   "target_kept": {
+    "A": "partly",
+    "B": "yes"
+   },
+   "note": "B matches cool cluster convincingly; A fragmented, no city"
+  },
+  "8b06800b6940": {
+   "preference": "A",
+   "target_kept": {
+    "A": "yes",
+    "B": "partly"
+   },
+   "note": "A matches cool/cel pref fully; B warm-tinted painterly, no city"
+  },
+  "9022e3f90c18": {
+   "preference": "A",
+   "target_kept": {
+    "A": "partly",
+    "B": "yes"
+   },
+   "note": "A soft pencil/watercolor texture matches warm-cluster pref; no city"
+  },
+  "97014e95892b": {
+   "preference": "A",
+   "target_kept": {
+    "A": "yes",
+    "B": "partly"
+   },
+   "note": "A matches cool/cel fully; B icy fragmented, no city, less cel"
+  },
+  "98df790cdf73": {
+   "preference": "A",
+   "target_kept": {
+    "A": "yes",
+    "B": "yes"
+   },
+   "note": "A watercolor and calm match warm pref; B has no warm cues"
+  },
+  "99f09d235880": {
+   "preference": "A",
+   "target_kept": {
+    "A": "yes",
+    "B": "yes"
+   },
+   "note": "A stronger cel/palette match; B moody painterly but plausible too"
+  },
+  "9a9e766fc13a": {
+   "preference": "tie",
+   "target_kept": {
+    "A": "yes",
+    "B": "yes"
+   },
+   "note": "Both cool/cel; A more saturated, B more diffused light"
+  },
+  "a5a88e9a3623": {
+   "preference": "B",
+   "target_kept": {
+    "A": "yes",
+    "B": "partly"
+   },
+   "note": "B sketchy painterly texture partly matches warm pref; A no match"
+  },
+  "a8e5e7572fca": {
+   "preference": "A",
+   "target_kept": {
+    "A": "yes",
+    "B": "yes"
+   },
+   "note": "A matches cool/cel pref strongly; B painterly grayscale, less cel/color"
+  },
+  "b42df8fcda16": {
+   "preference": "B",
+   "target_kept": {
+    "A": "yes",
+    "B": "partly"
+   },
+   "note": "B warm cream bg and soft light match warm-cluster pref; no city"
+  },
+  "b5335560a29a": {
+   "preference": "A",
+   "target_kept": {
+    "A": "yes",
+    "B": "partly"
+   },
+   "note": "Neither is warm; A shows clearer cool-palette match than pale B"
+  },
+  "b73bf1d3f6c6": {
+   "preference": "B",
+   "target_kept": {
+    "A": "yes",
+    "B": "yes"
+   },
+   "note": "B painterly texture matches warm-weight attribute; A no warm match"
+  },
+  "bb3797933093": {
+   "preference": "A",
+   "target_kept": {
+    "A": "yes",
+    "B": "yes"
+   },
+   "note": "A clearer cool match; B monochrome, neither strongly warm"
+  },
+  "c146725f406a": {
+   "preference": "B",
+   "target_kept": {
+    "A": "yes",
+    "B": "partly"
+   },
+   "note": "B has warmer brown garment and eye tones; coat less raincoat-like"
+  },
+  "c31fb1b8f41f": {
+   "preference": "A",
+   "target_kept": {
+    "A": "yes",
+    "B": "yes"
+   },
+   "note": "Similar scene desaturated; A shows clearer cool-palette match"
+  },
+  "c63961ec3d21": {
+   "preference": "A",
+   "target_kept": {
+    "A": "yes",
+    "B": "yes"
+   },
+   "note": "Both cool variants; A more saturated cool match than muted B"
+  },
+  "ce58ca053a16": {
+   "preference": "B",
+   "target_kept": {
+    "A": "yes",
+    "B": "partly"
+   },
+   "note": "B strongly matches warm/golden/watercolor pref; A no match, no city"
+  },
+  "d8f34d83f000": {
+   "preference": "B",
+   "target_kept": {
+    "A": "yes",
+    "B": "yes"
+   },
+   "note": "B softer painterly render weakly matches warm pref; A no match"
+  },
+  "da975c939262": {
+   "preference": "A",
+   "target_kept": {
+    "A": "no",
+    "B": "yes"
+   },
+   "note": "A vividly warm-toned matches pref strongly; wrong subject though"
+  },
+  "e21869d3fa82": {
+   "preference": "tie",
+   "target_kept": {
+    "A": "yes",
+    "B": "yes"
+   },
+   "note": "Both plain cool variants; neither shows warm, roughly equivalent"
+  },
+  "5e2bcbd1b627": {
+   "preference": "B",
+   "target_kept": {
+    "A": "yes",
+    "B": "no"
+   },
+   "note": "B vividly warm and gold matches pref strongly; wrong subject entirely"
+  },
+  "be6f6c5c52f8": {
+   "preference": "B",
+   "target_kept": {
+    "A": "yes",
+    "B": "yes"
+   },
+   "note": "B painterly texture weakly matches warm pref; A shows no match"
+  },
+  "ec6a9faeba90": {
+   "preference": "A",
+   "target_kept": {
+    "A": "yes",
+    "B": "yes"
+   },
+   "note": "A painterly ink style matches warm-cluster attribute; both otherwise close"
+  },
+  "f5ab2ace33c0": {
+   "preference": "A",
+   "target_kept": {
+    "A": "yes",
+    "B": "partly"
+   },
+   "note": "A clear cool-cluster match; B sketchy line-art, weak match, no city"
+  },
+  "f695106af6ac": {
+   "preference": "A",
+   "target_kept": {
+    "A": "yes",
+    "B": "partly"
+   },
+   "note": "A matches cool/cel pref fully; B sketchy pale, no city, less cel"
+  },
+  "fcaf9ba682b7": {
+   "preference": "B",
+   "target_kept": {
+    "A": "yes",
+    "B": "partly"
+   },
+   "note": "B has warm cream-toned bg matching higher-weight pref; no city"
+  },
+  "fcce4d20b241": {
+   "preference": "A",
+   "target_kept": {
+    "A": "yes",
+    "B": "yes"
+   },
+   "note": "A painterly texture partly matches warm pref; B shows no warm match"
+  },
+  "016c65ada2d3": {
+   "preference": "A",
+   "target_kept": {
+    "A": "yes",
+    "B": "partly"
+   },
+   "note": "A clean cel cool calm; B dark dramatic tactical gear"
+  },
+  "05bd89362e40": {
+   "preference": "B",
+   "target_kept": {
+    "A": "yes",
+    "B": "partly"
+   },
+   "note": "B warm brown coat fits warm-lean blend; B hair not blue"
+  },
+  "063ed228a0e5": {
+   "preference": "B",
+   "target_kept": {
+    "A": "partly",
+    "B": "yes"
+   },
+   "note": "B crisp cool cel calm; A painterly indoor unclear raincoat"
+  },
+  "0b50db8f0896": {
+   "preference": "tie",
+   "target_kept": {
+    "A": "yes",
+    "B": "yes"
+   },
+   "note": "both cool cel-ish calm, comparable match"
+  },
+  "0c9a3a366eb2": {
+   "preference": "B",
+   "target_kept": {
+    "A": "yes",
+    "B": "yes"
+   },
+   "note": "B warm streetlight+cool coat+painterly fits mixed blend"
+  },
+  "1116be94d353": {
+   "preference": "B",
+   "target_kept": {
+    "A": "yes",
+    "B": "partly"
+   },
+   "note": "B mixes warm brown hair/bag with cool night; A purely cool"
+  },
+  "1a586747d2b3": {
+   "preference": "B",
+   "target_kept": {
+    "A": "yes",
+    "B": "yes"
+   },
+   "note": "neither warm amber; B softer painterly texture closer to watercolor"
+  },
+  "1f54c04c6259": {
+   "preference": "tie",
+   "target_kept": {
+    "A": "partly",
+    "B": "yes"
+   },
+   "note": "both cool/gray painterly, neither shows warm amber tones"
+  },
+  "213a6dec1b98": {
+   "preference": "tie",
+   "target_kept": {
+    "A": "yes",
+    "B": "yes"
+   },
+   "note": "both purely cool blue, no warm signal shown"
+  },
+  "2abd837a1442": {
+   "preference": "tie",
+   "target_kept": {
+    "A": "yes",
+    "B": "yes"
+   },
+   "note": "both cool blue cel-shaded, no warm/watercolor match"
+  },
+  "2fa00b78c82d": {
+   "preference": "tie",
+   "target_kept": {
+    "A": "yes",
+    "B": "yes"
+   },
+   "note": "both essentially identical cool cel calm match"
+  },
+  "3345282131b3": {
+   "preference": "A",
+   "target_kept": {
+    "A": "yes",
+    "B": "partly"
+   },
+   "note": "A clean cel cool calm; B painterly softer, not cel-shaded"
+  },
+  "35c55b8be38c": {
+   "preference": "A",
+   "target_kept": {
+    "A": "yes",
+    "B": "partly"
+   },
+   "note": "A calmer cel match; B dark moody, warm tones not evident"
+  },
+  "3871ce77dd0c": {
+   "preference": "B",
+   "target_kept": {
+    "A": "yes",
+    "B": "no"
+   },
+   "note": "B vivid warm red fits warm-lean sparse; hair/outfit not blue raincoat"
+  },
+  "3c678bcc4b5b": {
+   "preference": "B",
+   "target_kept": {
+    "A": "yes",
+    "B": "yes"
+   },
+   "note": "B painterly texture+cool+calm scores higher on mixed weights"
+  },
+  "417a33fbd82d": {
+   "preference": "A",
+   "target_kept": {
+    "A": "yes",
+    "B": "yes"
+   },
+   "note": "A has warm bokeh lights amid cool scene, fits warm-leaning sparse"
+  },
+  "442e28f99608": {
+   "preference": "B",
+   "target_kept": {
+    "A": "yes",
+    "B": "no"
+   },
+   "note": "B vivid warm red dominates; subject/scene very different from target"
+  },
+  "4d26d7f506d6": {
+   "preference": "B",
+   "target_kept": {
+    "A": "yes",
+    "B": "partly"
+   },
+   "note": "neither shows warm light; B looser brushwork closer to watercolor cue"
+  },
+  "59671e6e08a5": {
+   "preference": "B",
+   "target_kept": {
+    "A": "yes",
+    "B": "partly"
+   },
+   "note": "B has warm hair/eye tones and painterly texture vs A fully cool cel"
+  },
+  "5fa45b2d61fc": {
+   "preference": "A",
+   "target_kept": {
+    "A": "yes",
+    "B": "partly"
+   },
+   "note": "A clean cel cool calm strongly matches; B painterly, not cel-shaded"
+  },
+  "620dfcb6f1dd": {
+   "preference": "B",
+   "target_kept": {
+    "A": "yes",
+    "B": "yes"
+   },
+   "note": "B painterly texture+cool+calm scores higher than pure-cel A"
+  },
+  "625adf3562f4": {
+   "preference": "tie",
+   "target_kept": {
+    "A": "yes",
+    "B": "yes"
+   },
+   "note": "both clean cel cool calm, comparable strong match"
+  },
+  "6b9dcd902e0c": {
+   "preference": "B",
+   "target_kept": {
+    "A": "yes",
+    "B": "partly"
+   },
+   "note": "B painterly texture edges out A; B hair not blue"
+  },
+  "6d87459089f2": {
+   "preference": "tie",
+   "target_kept": {
+    "A": "yes",
+    "B": "partly"
+   },
+   "note": "neither shows true warm tones; B just neutral gray vs A vivid cool"
+  },
+  "7122e532686a": {
+   "preference": "B",
+   "target_kept": {
+    "A": "yes",
+    "B": "yes"
+   },
+   "note": "B has warm lantern light and amber eyes vs A fully cool"
+  },
+  "7f69ec9994d1": {
+   "preference": "tie",
+   "target_kept": {
+    "A": "yes",
+    "B": "yes"
+   },
+   "note": "both cel cool calm, neither shows warm tones for mixed profile"
+  },
+  "83d50358d2d7": {
+   "preference": "A",
+   "target_kept": {
+    "A": "yes",
+    "B": "yes"
+   },
+   "note": "A shows more warm streetlight accents along road, fits mixed profile"
+  },
+  "8e28a8129818": {
+   "preference": "B",
+   "target_kept": {
+    "A": "yes",
+    "B": "yes"
+   },
+   "note": "B clean cel cool soft-light calm strongly matches; A painterly not cel"
+  },
+  "8e3f0f5f2c86": {
+   "preference": "A",
+   "target_kept": {
+    "A": "yes",
+    "B": "yes"
+   },
+   "note": "A has warm amber eye accent amid cool scene, closer to mixed blend"
+  },
+  "96c064a66a35": {
+   "preference": "B",
+   "target_kept": {
+    "A": "yes",
+    "B": "no"
+   },
+   "note": "B strongly matches warm palette/light/texture; A fully mismatched"
+  },
+  "a02e5b1b2415": {
+   "preference": "B",
+   "target_kept": {
+    "A": "yes",
+    "B": "no"
+   },
+   "note": "B strongly matches warm palette/light/texture despite not calm"
+  },
+  "b987f9b6d819": {
+   "preference": "A",
+   "target_kept": {
+    "A": "yes",
+    "B": "yes"
+   },
+   "note": "A clean cel cool soft-light calm strongly matches; B painterly not cel"
+  },
+  "c019b27e9a64": {
+   "preference": "A",
+   "target_kept": {
+    "A": "partly",
+    "B": "yes"
+   },
+   "note": "A painterly texture+cool+calm scores higher on mixed weights"
+  },
+  "d2a96cd7f23d": {
+   "preference": "A",
+   "target_kept": {
+    "A": "yes",
+    "B": "yes"
+   },
+   "note": "A shows warm city-light glow amid cool night, fits warm-lean sparse"
+  },
+  "d413537f046b": {
+   "preference": "tie",
+   "target_kept": {
+    "A": "yes",
+    "B": "yes"
+   },
+   "note": "both clean cel cool calm, comparable strong match"
+  },
+  "d8540638e003": {
+   "preference": "B",
+   "target_kept": {
+    "A": "yes",
+    "B": "partly"
+   },
+   "note": "neither shows warm palette/light; B softer painterly closer to watercolor"
+  },
+  "de9af8f87eff": {
+   "preference": "A",
+   "target_kept": {
+    "A": "yes",
+    "B": "yes"
+   },
+   "note": "A painterly texture+cool+calm scores higher on mixed weights"
+  },
+  "e22e201464e9": {
+   "preference": "B",
+   "target_kept": {
+    "A": "yes",
+    "B": "yes"
+   },
+   "note": "B shows more warm lit windows along street plus warm-toned bag"
+  },
+  "e8056d7af897": {
+   "preference": "B",
+   "target_kept": {
+    "A": "yes",
+    "B": "yes"
+   },
+   "note": "B satisfies cel-shading plus cool/soft-light/calm; A lacks cel look"
+  },
+  "e970990fb145": {
+   "preference": "A",
+   "target_kept": {
+    "A": "yes",
+    "B": "yes"
+   },
+   "note": "A painterly texture+calm expression scores higher on mixed weights"
+  },
+  "ec71c7a60fe1": {
+   "preference": "B",
+   "target_kept": {
+    "A": "yes",
+    "B": "partly"
+   },
+   "note": "B has warm red accents plus painterly texture; A fully cool cel"
+  },
+  "ec7bdd5d80b8": {
+   "preference": "A",
+   "target_kept": {
+    "A": "yes",
+    "B": "yes"
+   },
+   "note": "A shows warm-tinted city bokeh lights amid cool night"
+  },
+  "f49437608a04": {
+   "preference": "tie",
+   "target_kept": {
+    "A": "yes",
+    "B": "yes"
+   },
+   "note": "both cool clean-lineart, neither shows warm palette or painterly texture"
+  },
+  "f65c296439ed": {
+   "preference": "tie",
+   "target_kept": {
+    "A": "yes",
+    "B": "yes"
+   },
+   "note": "both cool clean cel-shaded, neither shows warm palette/light"
+  },
+  "0f74f8d408f9": {
+   "preference": "A",
+   "target_kept": {
+    "A": "partly",
+    "B": "yes"
+   },
+   "note": "A cooler calmer soft light; B intense neon harsh warm signage"
+  },
+  "11ea952089c2": {
+   "preference": "B",
+   "target_kept": {
+    "A": "yes",
+    "B": "no"
+   },
+   "note": "B warm watercolor amber tones; A stays cool neon no watercolor"
+  },
+  "135e633119de": {
+   "preference": "tie",
+   "target_kept": {
+    "A": "yes",
+    "B": "no"
+   },
+   "note": "Neither shows clear warm amber; both fairly neutral toned"
+  },
+  "154b3e4cd2a6": {
+   "preference": "B",
+   "target_kept": {
+    "A": "yes",
+    "B": "partly"
+   },
+   "note": "B calmer cooler teal skyline; A tense neon no amber warmth"
+  },
+  "169e8898bf2c": {
+   "preference": "A",
+   "target_kept": {
+    "A": "no",
+    "B": "yes"
+   },
+   "note": "A neutral pale leans warm-ish; B strongly cool cyan neon"
+  },
+  "172fc6718b2c": {
+   "preference": "tie",
+   "target_kept": {
+    "A": "yes",
+    "B": "yes"
+   },
+   "note": "Nearly identical style; both cool cyan cel-shaded, neither calm"
+  },
+  "188dab75fecf": {
+   "preference": "B",
+   "target_kept": {
+    "A": "yes",
+    "B": "partly"
+   },
+   "note": "B has warm window glow mixed with cool blue; A pure cyan"
+  },
+  "1fcedbfcc488": {
+   "preference": "A",
+   "target_kept": {
+    "A": "no",
+    "B": "yes"
+   },
+   "note": "A clearly warm brown beige tones; B stays cool cyan neon"
+  },
+  "2a982bb8503e": {
+   "preference": "A",
+   "target_kept": {
+    "A": "no",
+    "B": "yes"
+   },
+   "note": "A warmer beige calm mood fits mixed; B stays cool neon"
+  },
+  "328096f57d04": {
+   "preference": "A",
+   "target_kept": {
+    "A": "no",
+    "B": "yes"
+   },
+   "note": "A strongly warm watercolor calm; B remains cool neon no warmth"
+  },
+  "3a4f693c6e30": {
+   "preference": "B",
+   "target_kept": {
+    "A": "yes",
+    "B": "partly"
+   },
+   "note": "B has warm streetlight glow plus cool night; A pure cyan"
+  },
+  "3ec0e76a5b4b": {
+   "preference": "B",
+   "target_kept": {
+    "A": "yes",
+    "B": "partly"
+   },
+   "note": "B shows some warm window glow and calm mood; A cold neon"
+  },
+  "4452426d27f3": {
+   "preference": "A",
+   "target_kept": {
+    "A": "no",
+    "B": "yes"
+   },
+   "note": "A calmer relaxed pose; neither shows warm color, B tense neon"
+  },
+  "4830f895b6fb": {
+   "preference": "A",
+   "target_kept": {
+    "A": "no",
+    "B": "yes"
+   },
+   "note": "A cooler grayish tone and calm mood; B cool but tense"
+  },
+  "4b90df3707a9": {
+   "preference": "B",
+   "target_kept": {
+    "A": "yes",
+    "B": "no"
+   },
+   "note": "B strongly warm orange gold tones; A stays pure cool cyan"
+  },
+  "4bbc8646b7d0": {
+   "preference": "B",
+   "target_kept": {
+    "A": "yes",
+    "B": "no"
+   },
+   "note": "B strongly warm orange gold tones; A stays pure cool cyan"
+  },
+  "4f267cce20ee": {
+   "preference": "tie",
+   "target_kept": {
+    "A": "yes",
+    "B": "yes"
+   },
+   "note": "Both stay cool neon, no warm shift visible, nearly identical"
+  },
+  "5a2b8276b835": {
+   "preference": "tie",
+   "target_kept": {
+    "A": "yes",
+    "B": "yes"
+   },
+   "note": "Both cool cyan neon variants, no warm difference visible"
+  },
+  "5b87ca40d5cf": {
+   "preference": "B",
+   "target_kept": {
+    "A": "yes",
+    "B": "no"
+   },
+   "note": "B calmer neutral cool tone fits better; A intense stern neon"
+  },
+  "60e51c58aa84": {
+   "preference": "B",
+   "target_kept": {
+    "A": "yes",
+    "B": "no"
+   },
+   "note": "B strongly warm golden tones though excited not calm; A cool"
+  },
+  "697726c24e35": {
+   "preference": "A",
+   "target_kept": {
+    "A": "partly",
+    "B": "yes"
+   },
+   "note": "A calmer with warm streetlight accents; B stern cool, no warmth"
+  },
+  "6c2add5a5795": {
+   "preference": "B",
+   "target_kept": {
+    "A": "yes",
+    "B": "no"
+   },
+   "note": "B strongly warm beige calm tone; A stays cool neon"
+  },
+  "7552f73321f9": {
+   "preference": "B",
+   "target_kept": {
+    "A": "yes",
+    "B": "partly"
+   },
+   "note": "B cool teal palette and calm expression; A stern cold neon"
+  },
+  "77a595c4ac58": {
+   "preference": "A",
+   "target_kept": {
+    "A": "no",
+    "B": "yes"
+   },
+   "note": "A grayish-blue soft sketch fits cool light; B harsh neon"
+  },
+  "7cf1ea4a8da6": {
+   "preference": "A",
+   "target_kept": {
+    "A": "no",
+    "B": "yes"
+   },
+   "note": "A warm beige tone and calm gentle mood; B cool stern neon"
+  },
+  "8032b2aeb54a": {
+   "preference": "B",
+   "target_kept": {
+    "A": "yes",
+    "B": "partly"
+   },
+   "note": "B blends warm streetlight glow with cool blue; A pure cyan"
+  },
+  "8e2ade690caf": {
+   "preference": "B",
+   "target_kept": {
+    "A": "yes",
+    "B": "no"
+   },
+   "note": "B warm brown sketch tone, calm; A cool stern neon"
+  },
+  "916e188b098d": {
+   "preference": "B",
+   "target_kept": {
+    "A": "yes",
+    "B": "partly"
+   },
+   "note": "B calmer cool teal skyline; A stern cold neon, no calm"
+  },
+  "9176e3a79d64": {
+   "preference": "B",
+   "target_kept": {
+    "A": "yes",
+    "B": "no"
+   },
+   "note": "B calmer neutral-warm tone; A stern cold cyan, no calm"
+  },
+  "9ac5985cd6d2": {
+   "preference": "A",
+   "target_kept": {
+    "A": "no",
+    "B": "yes"
+   },
+   "note": "A cool blue tone and calm gentle pose; B stern cold neon"
+  },
+  "9adec6e847c9": {
+   "preference": "tie",
+   "target_kept": {
+    "A": "no",
+    "B": "yes"
+   },
+   "note": "A calm but warm-toned not cool; B cool cyan but tense"
+  },
+  "9f6a0fab947f": {
+   "preference": "A",
+   "target_kept": {
+    "A": "partly",
+    "B": "yes"
+   },
+   "note": "A cool teal palette, calm, soft city glow; B stern harsh neon"
+  },
+  "af5afc4be72c": {
+   "preference": "tie",
+   "target_kept": {
+    "A": "no",
+    "B": "yes"
+   },
+   "note": "A grayscale neutral, not warm; B strongly cool cyan, no warmth"
+  },
+  "c7ba00ea724c": {
+   "preference": "A",
+   "target_kept": {
+    "A": "no",
+    "B": "yes"
+   },
+   "note": "A warm beige calm tone fits mixed well; B stern cool neon"
+  },
+  "ca573f0c8705": {
+   "preference": "tie",
+   "target_kept": {
+    "A": "yes",
+    "B": "yes"
+   },
+   "note": "Both stay cool cyan stern, no warm or calm shift visible"
+  },
+  "cc27b82e6907": {
+   "preference": "A",
+   "target_kept": {
+    "A": "no",
+    "B": "yes"
+   },
+   "note": "A cooler toned and calmer gentle pose; B stern harsh neon"
+  },
+  "ccaf4cbf0d54": {
+   "preference": "B",
+   "target_kept": {
+    "A": "no",
+    "B": "yes"
+   },
+   "note": "B calmer with warm streetlight glow and skyline; A cold stern"
+  },
+  "cd6e26fe9f51": {
+   "preference": "tie",
+   "target_kept": {
+    "A": "yes",
+    "B": "no"
+   },
+   "note": "B grayscale not warm, serious not calm; A cool stern, neither warm"
+  },
+  "d2d86f13904e": {
+   "preference": "B",
+   "target_kept": {
+    "A": "yes",
+    "B": "partly"
+   },
+   "note": "B calmer with warm streetlight glow and skyline; A cold stern"
+  },
+  "d6c1e4c8fc87": {
+   "preference": "B",
+   "target_kept": {
+    "A": "yes",
+    "B": "partly"
+   },
+   "note": "B calmer with warm streetlight glow and skyline; A cold stern"
+  },
+  "e6f12eaad3af": {
+   "preference": "tie",
+   "target_kept": {
+    "A": "no",
+    "B": "yes"
+   },
+   "note": "A grayscale, not warm, somber not calm; B cool stern, no warmth"
+  },
+  "f1f8097c226a": {
+   "preference": "B",
+   "target_kept": {
+    "A": "yes",
+    "B": "partly"
+   },
+   "note": "B cool teal palette, calm, soft city light; A stern harsh neon"
+  },
+  "f54389f8c8d8": {
+   "preference": "A",
+   "target_kept": {
+    "A": "no",
+    "B": "yes"
+   },
+   "note": "A clearly warm brown beige calm tone; B stays cool cyan neon"
+  },
+  "f7cc5dc2df49": {
+   "preference": "B",
+   "target_kept": {
+    "A": "yes",
+    "B": "partly"
+   },
+   "note": "B calmer with warm streetlight glow and skyline; A cold stern"
+  },
+  "03efb9617df6": {
+   "preference": "A",
+   "target_kept": {
+    "A": "partly",
+    "B": "yes"
+   },
+   "note": "A warm painterly no black hair/skyline; B has skyline"
+  },
+  "0663b3b5bed5": {
+   "preference": "A",
+   "target_kept": {
+    "A": "partly",
+    "B": "yes"
+   },
+   "note": "A painterly grey hair no skyline; B matches target"
+  },
+  "0a5fff8827e3": {
+   "preference": "B",
+   "target_kept": {
+    "A": "yes",
+    "B": "partly"
+   },
+   "note": "A cool cel skyline; B warm soft glow no skyline"
+  },
+  "0cafc448778b": {
+   "preference": "A",
+   "target_kept": {
+    "A": "yes",
+    "B": "partly"
+   },
+   "note": "A cool cel matches; B warm purple hair no skyline"
+  },
+  "1615bb91c54e": {
+   "preference": "A",
+   "target_kept": {
+    "A": "partly",
+    "B": "yes"
+   },
+   "note": "A painterly cool indoor no skyline; B matches"
+  },
+  "24c576833384": {
+   "preference": "A",
+   "target_kept": {
+    "A": "no",
+    "B": "yes"
+   },
+   "note": "A warm but wrong subject female no jacket; B matches target"
+  },
+  "2c2bac5e1d80": {
+   "preference": "A",
+   "target_kept": {
+    "A": "no",
+    "B": "yes"
+   },
+   "note": "A warm colors but wrong subject female no jacket; B matches"
+  },
+  "2c43ff78bdf3": {
+   "preference": "A",
+   "target_kept": {
+    "A": "no",
+    "B": "yes"
+   },
+   "note": "same pair as prior, wrong subject female no jacket"
+  },
+  "2df5bd0a411c": {
+   "preference": "B",
+   "target_kept": {
+    "A": "yes",
+    "B": "partly"
+   },
+   "note": "A cool cel skyline; B warm soft glow no skyline"
+  },
+  "3deaad70d599": {
+   "preference": "A",
+   "target_kept": {
+    "A": "partly",
+    "B": "yes"
+   },
+   "note": "A warm painterly strong match, no skyline; B matches target"
+  },
+  "3f77001e618f": {
+   "preference": "tie",
+   "target_kept": {
+    "A": "yes",
+    "B": "partly"
+   },
+   "note": "both cool toned, minor warm accents in B hair"
+  },
+  "48d24d90629b": {
+   "preference": "tie",
+   "target_kept": {
+    "A": "yes",
+    "B": "partly"
+   },
+   "note": "both cool-toned, neither shows warm palette; B no skyline"
+  },
+  "5d0b011af3f7": {
+   "preference": "B",
+   "target_kept": {
+    "A": "partly",
+    "B": "no"
+   },
+   "note": "B strong warm reds/oranges though energetic not calm; A no skyline"
+  },
+  "65101f1cae06": {
+   "preference": "B",
+   "target_kept": {
+    "A": "yes",
+    "B": "partly"
+   },
+   "note": "B painterly texture matches better; A cel-shaded fails texture"
+  },
+  "67d773ca2954": {
+   "preference": "B",
+   "target_kept": {
+    "A": "partly",
+    "B": "yes"
+   },
+   "note": "B matches cool cel-shaded bucket fully; A lacks cel shading"
+  },
+  "719eb8557055": {
+   "preference": "B",
+   "target_kept": {
+    "A": "partly",
+    "B": "yes"
+   },
+   "note": "B purer match of cool cel-shaded calm bucket"
+  },
+  "74a0be0af399": {
+   "preference": "tie",
+   "target_kept": {
+    "A": "partly",
+    "B": "yes"
+   },
+   "note": "both cool toned, neither warm; A no skyline"
+  },
+  "757a40415f61": {
+   "preference": "B",
+   "target_kept": {
+    "A": "partly",
+    "B": "yes"
+   },
+   "note": "B matches cool cel-shaded calm fully; A lacks cel shading"
+  },
+  "7bae4d0848b6": {
+   "preference": "tie",
+   "target_kept": {
+    "A": "partly",
+    "B": "yes"
+   },
+   "note": "both cool toned, neither shows warm palette"
+  },
+  "857c5b1c3e73": {
+   "preference": "B",
+   "target_kept": {
+    "A": "partly",
+    "B": "yes"
+   },
+   "note": "B matches more mixed-bucket attrs cumulatively; A no skyline"
+  },
+  "8978574aad75": {
+   "preference": "A",
+   "target_kept": {
+    "A": "partly",
+    "B": "yes"
+   },
+   "note": "A warm golden bokeh matches mixed warm attrs; no skyline"
+  },
+  "8cb8bd31522b": {
+   "preference": "tie",
+   "target_kept": {
+    "A": "partly",
+    "B": "yes"
+   },
+   "note": "both cool toned grungy vs baseline; A no skyline"
+  },
+  "906360bc9284": {
+   "preference": "A",
+   "target_kept": {
+    "A": "partly",
+    "B": "yes"
+   },
+   "note": "A has warm golden glow accent; hair green tinted, no skyline"
+  },
+  "93d21350170c": {
+   "preference": "A",
+   "target_kept": {
+    "A": "partly",
+    "B": "yes"
+   },
+   "note": "A matches all warm bucket attrs well; no skyline"
+  },
+  "93d81997861c": {
+   "preference": "tie",
+   "target_kept": {
+    "A": "yes",
+    "B": "yes"
+   },
+   "note": "both cel-shaded cool skyline variants, equally match cool bucket"
+  },
+  "969040d5d2e4": {
+   "preference": "tie",
+   "target_kept": {
+    "A": "yes",
+    "B": "yes"
+   },
+   "note": "both cel-shaded cool baseline variants, neither warm"
+  },
+  "a2274d8d5a66": {
+   "preference": "B",
+   "target_kept": {
+    "A": "partly",
+    "B": "yes"
+   },
+   "note": "B matches cool cel-shaded calm bucket fully"
+  },
+  "a2f506a468cd": {
+   "preference": "tie",
+   "target_kept": {
+    "A": "yes",
+    "B": "yes"
+   },
+   "note": "both cel-shaded cool baseline variants, neither warm"
+  },
+  "ad0ce60e0157": {
+   "preference": "A",
+   "target_kept": {
+    "A": "partly",
+    "B": "yes"
+   },
+   "note": "A warm golden bokeh lights vs cool B; A hair not black, no skyline"
+  },
+  "b431a4cef48f": {
+   "preference": "A",
+   "target_kept": {
+    "A": "partly",
+    "B": "yes"
+   },
+   "note": "A warm golden bokeh matches mixed warm attrs; no skyline"
+  },
+  "be000625c9a6": {
+   "preference": "A",
+   "target_kept": {
+    "A": "no",
+    "B": "yes"
+   },
+   "note": "A warm fire costume but wrong subject female no jacket"
+  },
+  "c0be04d4cdeb": {
+   "preference": "B",
+   "target_kept": {
+    "A": "partly",
+    "B": "yes"
+   },
+   "note": "B matches cool cel-shaded calm bucket fully; A warm bokeh fails"
+  },
+  "c0cdb3552e40": {
+   "preference": "A",
+   "target_kept": {
+    "A": "partly",
+    "B": "yes"
+   },
+   "note": "A matches warm color/light/texture strongly; no skyline"
+  },
+  "c43c346710fa": {
+   "preference": "B",
+   "target_kept": {
+    "A": "partly",
+    "B": "yes"
+   },
+   "note": "B crisper cel-shaded cool match; A grey hair no skyline"
+  },
+  "c59bdcbc0644": {
+   "preference": "B",
+   "target_kept": {
+    "A": "partly",
+    "B": "yes"
+   },
+   "note": "B matches more mixed-bucket attrs cumulatively; A white hair no skyline"
+  },
+  "c75793ecd98e": {
+   "preference": "A",
+   "target_kept": {
+    "A": "partly",
+    "B": "yes"
+   },
+   "note": "A warm bokeh matches sparse warm color weight; no skyline"
+  },
+  "ca832666b58f": {
+   "preference": "A",
+   "target_kept": {
+    "A": "partly",
+    "B": "yes"
+   },
+   "note": "A warm bokeh matches sparse warm color weight; no skyline"
+  },
+  "d02453ff4ad1": {
+   "preference": "A",
+   "target_kept": {
+    "A": "partly",
+    "B": "yes"
+   },
+   "note": "A warm bokeh matches sparse warm color weight; no skyline"
+  },
+  "d587809830f5": {
+   "preference": "A",
+   "target_kept": {
+    "A": "yes",
+    "B": "partly"
+   },
+   "note": "A canonical cool cel match; B painterly no skyline"
+  },
+  "dc00215e1a7b": {
+   "preference": "B",
+   "target_kept": {
+    "A": "partly",
+    "B": "yes"
+   },
+   "note": "B matches cool cel-shaded calm bucket fully; A grey hair no skyline"
+  },
+  "e120b6effc02": {
+   "preference": "B",
+   "target_kept": {
+    "A": "partly",
+    "B": "yes"
+   },
+   "note": "B matches cool cel-shaded calm bucket fully; A painterly no skyline"
+  },
+  "e58d8d98e454": {
+   "preference": "B",
+   "target_kept": {
+    "A": "partly",
+    "B": "yes"
+   },
+   "note": "B matches cel-shading criterion A lacks; A hair not black no skyline"
+  },
+  "e7d6b71e5e64": {
+   "preference": "tie",
+   "target_kept": {
+    "A": "yes",
+    "B": "yes"
+   },
+   "note": "both cool cel-shaded variants with skyline, neither warm"
+  },
+  "f46c6659f4c3": {
+   "preference": "B",
+   "target_kept": {
+    "A": "yes",
+    "B": "partly"
+   },
+   "note": "B matches more mixed-bucket warm+calm attrs; no skyline"
+  }
+ }
+}

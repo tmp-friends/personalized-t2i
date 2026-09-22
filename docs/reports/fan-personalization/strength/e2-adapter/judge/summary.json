@@ -1,0 +1,91 @@
+{
+  "experiment_id": "e2-adapter",
+  "pair_count": 144,
+  "ai": {
+    "judges": [
+      "claude-sonnet"
+    ],
+    "answered_pairs": 144,
+    "pair_count": 144,
+    "policies": [
+      {
+        "policy_id": "c1-gain1.5-alpha0.5",
+        "policy_hash": "d2edb12121773bc247e5091cc437e2c7a4fb28a3c9c5baa0dc96e3f3537d527a",
+        "wins": 10,
+        "losses": 13,
+        "ties": 1,
+        "decided": 23,
+        "win_rate": 0.43478260869565216,
+        "target_yes": 1,
+        "target_answers": 24,
+        "target_kept_rate": 0.041666666666666664
+      },
+      {
+        "policy_id": "c1-gain2.0-alpha0.5",
+        "policy_hash": "e9208f6d55a446936575fda61017a36304a4c9c6195f19e77ca82af3154b97fa",
+        "wins": 10,
+        "losses": 13,
+        "ties": 1,
+        "decided": 23,
+        "win_rate": 0.43478260869565216,
+        "target_yes": 1,
+        "target_answers": 24,
+        "target_kept_rate": 0.041666666666666664
+      },
+      {
+        "policy_id": "c1-gain2.5-alpha0.5",
+        "policy_hash": "042fe69f37effbf639f89d3f5fc4af19e2d70e590a04b9577019bce037998666",
+        "wins": 11,
+        "losses": 12,
+        "ties": 1,
+        "decided": 23,
+        "win_rate": 0.4782608695652174,
+        "target_yes": 3,
+        "target_answers": 24,
+        "target_kept_rate": 0.125
+      },
+      {
+        "policy_id": "c1c2-faneos-gain1.5-alpha0.5",
+        "policy_hash": "e295f087a140b97086efb57d0fbe117105561318fcad8cee5ff172dbab89df3e",
+        "wins": 12,
+        "losses": 11,
+        "ties": 1,
+        "decided": 23,
+        "win_rate": 0.5217391304347826,
+        "target_yes": 0,
+        "target_answers": 24,
+        "target_kept_rate": 0.0
+      },
+      {
+        "policy_id": "c2-faneos-alpha0.5",
+        "policy_hash": "a124481522fa1b121dc84e92d82ccffe82e8fe48f1d4ca44acd06e419b8a38f5",
+        "wins": 13,
+        "losses": 9,
+        "ties": 2,
+        "decided": 22,
+        "win_rate": 0.5909090909090909,
+        "target_yes": 10,
+        "target_answers": 24,
+        "target_kept_rate": 0.4166666666666667
+      },
+      {
+        "policy_id": "c2-faneos-alpha0.7",
+        "policy_hash": "0de32571bba9a59948cf588c48300d865b3b1b673688d434984c98b5951b0e35",
+        "wins": 17,
+        "losses": 6,
+        "ties": 1,
+        "decided": 23,
+        "win_rate": 0.7391304347826086,
+        "target_yes": 3,
+        "target_answers": 24,
+        "target_kept_rate": 0.125
+      }
+    ],
+    "agreement": {
+      "pairs_with_multiple_judges": 0,
+      "pairs_in_agreement": 0,
+      "rate": null
+    }
+  },
+  "human": null
+}

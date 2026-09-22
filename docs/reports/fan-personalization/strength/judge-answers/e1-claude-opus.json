@@ -1,0 +1,359 @@
+{
+ "judge": "claude-opus",
+ "kind": "ai",
+ "model": "claude-opus-5",
+ "answers": {
+  "0271285ae71a": {
+   "preference": "A",
+   "target_kept": {
+    "A": "yes",
+    "B": "yes"
+   },
+   "note": "A cel shading clean lineart, B sepia painterly"
+  },
+  "11a255c8701e": {
+   "preference": "B",
+   "target_kept": {
+    "A": "yes",
+    "B": "yes"
+   },
+   "note": "B warm amber glow, softer painterly"
+  },
+  "15d4af0df3f1": {
+   "preference": "B",
+   "target_kept": {
+    "A": "yes",
+    "B": "yes"
+   },
+   "note": "B warm sepia soft brushwork"
+  },
+  "18a6b9b203e5": {
+   "preference": "A",
+   "target_kept": {
+    "A": "yes",
+    "B": "yes"
+   },
+   "note": "A warm brown cast overall"
+  },
+  "26545a27a9ef": {
+   "preference": "A",
+   "target_kept": {
+    "A": "partly",
+    "B": "yes"
+   },
+   "note": "A strongly orange but purple hair, cat unclear"
+  },
+  "2e6b4fda6e42": {
+   "preference": "B",
+   "target_kept": {
+    "A": "yes",
+    "B": "partly"
+   },
+   "note": "B golden amber, cat ears added, no cat"
+  },
+  "31b858b56151": {
+   "preference": "A",
+   "target_kept": {
+    "A": "partly",
+    "B": "yes"
+   },
+   "note": "A warm cream painterly, cat missing"
+  },
+  "3244323f910b": {
+   "preference": "A",
+   "target_kept": {
+    "A": "yes",
+    "B": "yes"
+   },
+   "note": "A warm sepia soft brushwork"
+  },
+  "3382a91da614": {
+   "preference": "A",
+   "target_kept": {
+    "A": "yes",
+    "B": "yes"
+   },
+   "note": "A stronger golden window light"
+  },
+  "36dce008c74c": {
+   "preference": "B",
+   "target_kept": {
+    "A": "yes",
+    "B": "partly"
+   },
+   "note": "B strong amber, cat ears, no cat"
+  },
+  "3f1be897a3ba": {
+   "preference": "A",
+   "target_kept": {
+    "A": "partly",
+    "B": "yes"
+   },
+   "note": "A muted cool diffused calm, cat missing"
+  },
+  "42c191115a58": {
+   "preference": "A",
+   "target_kept": {
+    "A": "yes",
+    "B": "yes"
+   },
+   "note": "A warm brown cast, softer light"
+  },
+  "43ca61f777a2": {
+   "preference": "B",
+   "target_kept": {
+    "A": "yes",
+    "B": "partly"
+   },
+   "note": "B strong orange amber, no cat, wrong outfit"
+  },
+  "4e46d6eab9e2": {
+   "preference": "B",
+   "target_kept": {
+    "A": "yes",
+    "B": "yes"
+   },
+   "note": "B warm sepia soft brushwork"
+  },
+  "5c0bf18166f5": {
+   "preference": "A",
+   "target_kept": {
+    "A": "yes",
+    "B": "yes"
+   },
+   "note": "A cel shading, cooler navy teal"
+  },
+  "5f6f9d3f3683": {
+   "preference": "B",
+   "target_kept": {
+    "A": "yes",
+    "B": "partly"
+   },
+   "note": "B warm cream golden painterly, cat missing"
+  },
+  "65595d18bb8d": {
+   "preference": "A",
+   "target_kept": {
+    "A": "yes",
+    "B": "yes"
+   },
+   "note": "A hazy warm golden light, softer"
+  },
+  "662c77a1dea9": {
+   "preference": "A",
+   "target_kept": {
+    "A": "partly",
+    "B": "yes"
+   },
+   "note": "A strong amber orange, no cat, wrong outfit"
+  },
+  "71c763e93b68": {
+   "preference": "A",
+   "target_kept": {
+    "A": "yes",
+    "B": "partly"
+   },
+   "note": "A warmer golden, B grey cat ears no cat"
+  },
+  "732fbfcff485": {
+   "preference": "B",
+   "target_kept": {
+    "A": "yes",
+    "B": "yes"
+   },
+   "note": "B cel shading clean lineart, cooler navy"
+  },
+  "7aa4cbdf8161": {
+   "preference": "tie",
+   "target_kept": {
+    "A": "yes",
+    "B": "yes"
+   },
+   "note": "similar warmth, B softer but less amber"
+  },
+  "9006a1347a5d": {
+   "preference": "B",
+   "target_kept": {
+    "A": "yes",
+    "B": "partly"
+   },
+   "note": "B blue cool diffused calm, cat missing"
+  },
+  "968f625c045b": {
+   "preference": "B",
+   "target_kept": {
+    "A": "yes",
+    "B": "yes"
+   },
+   "note": "B warm sepia soft brushwork"
+  },
+  "a17366b23af0": {
+   "preference": "B",
+   "target_kept": {
+    "A": "partly",
+    "B": "yes"
+   },
+   "note": "B warmer golden, A grey cat ears no cat"
+  },
+  "a4db7ef41b2b": {
+   "preference": "A",
+   "target_kept": {
+    "A": "partly",
+    "B": "yes"
+   },
+   "note": "A warm cream golden painterly, cat missing"
+  },
+  "a6a99533b43f": {
+   "preference": "A",
+   "target_kept": {
+    "A": "partly",
+    "B": "yes"
+   },
+   "note": "A strong amber orange, no cat, wrong outfit"
+  },
+  "a722f0514d09": {
+   "preference": "A",
+   "target_kept": {
+    "A": "yes",
+    "B": "partly"
+   },
+   "note": "A cel shading cooler, B warm cream no cat"
+  },
+  "b0f94ddc5e92": {
+   "preference": "A",
+   "target_kept": {
+    "A": "yes",
+    "B": "yes"
+   },
+   "note": "A cel shading, cooler navy teal"
+  },
+  "c0f9460ea04e": {
+   "preference": "B",
+   "target_kept": {
+    "A": "yes",
+    "B": "partly"
+   },
+   "note": "B warm golden painterly, cat ears, no cat"
+  },
+  "c649561fa756": {
+   "preference": "A",
+   "target_kept": {
+    "A": "yes",
+    "B": "yes"
+   },
+   "note": "A cooler lavender, softer light, calmer"
+  },
+  "c65a9151c5f8": {
+   "preference": "B",
+   "target_kept": {
+    "A": "yes",
+    "B": "partly"
+   },
+   "note": "B soft painterly calm warm cream, no cat"
+  },
+  "ceeb11a77c40": {
+   "preference": "B",
+   "target_kept": {
+    "A": "partly",
+    "B": "yes"
+   },
+   "note": "B cel shading cooler, A cat ears no cat"
+  },
+  "d3dacfc8c05a": {
+   "preference": "B",
+   "target_kept": {
+    "A": "yes",
+    "B": "partly"
+   },
+   "note": "B warm golden cream, cat missing"
+  },
+  "d567ac202a05": {
+   "preference": "B",
+   "target_kept": {
+    "A": "partly",
+    "B": "yes"
+   },
+   "note": "B warmer golden, A purple cat ears no cat"
+  },
+  "d9950e203170": {
+   "preference": "A",
+   "target_kept": {
+    "A": "yes",
+    "B": "yes"
+   },
+   "note": "A soft painterly, calm, hazy warm light"
+  },
+  "e05d94fcfe2c": {
+   "preference": "A",
+   "target_kept": {
+    "A": "yes",
+    "B": "partly"
+   },
+   "note": "A warmer golden, B purple cat ears no cat"
+  },
+  "e3c0a9c0378f": {
+   "preference": "B",
+   "target_kept": {
+    "A": "yes",
+    "B": "yes"
+   },
+   "note": "B warmer yellow throughout, softer brushwork"
+  },
+  "e6154943054a": {
+   "preference": "B",
+   "target_kept": {
+    "A": "yes",
+    "B": "partly"
+   },
+   "note": "B warm cream golden, cat missing"
+  },
+  "e969ee4420c6": {
+   "preference": "B",
+   "target_kept": {
+    "A": "yes",
+    "B": "yes"
+   },
+   "note": "B soft painterly, calm, warm muted light"
+  },
+  "e970546f3293": {
+   "preference": "B",
+   "target_kept": {
+    "A": "yes",
+    "B": "partly"
+   },
+   "note": "B soft painterly calm, blouse, no cat"
+  },
+  "eccc335b33b5": {
+   "preference": "A",
+   "target_kept": {
+    "A": "yes",
+    "B": "yes"
+   },
+   "note": "A soft painterly, calm, warm muted light"
+  },
+  "ee7499e3add0": {
+   "preference": "A",
+   "target_kept": {
+    "A": "partly",
+    "B": "yes"
+   },
+   "note": "A cool blue diffused calm, cat missing"
+  },
+  "f8e2c7818284": {
+   "preference": "B",
+   "target_kept": {
+    "A": "yes",
+    "B": "yes"
+   },
+   "note": "B warm sepia soft brushwork, calm"
+  },
+  "fdc3f456b895": {
+   "preference": "B",
+   "target_kept": {
+    "A": "yes",
+    "B": "partly"
+   },
+   "note": "B cool blue diffused calm, cat missing"
+  }
+ }
+}

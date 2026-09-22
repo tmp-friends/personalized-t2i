@@ -8,7 +8,12 @@ from types import ModuleType, SimpleNamespace
 
 import pytest
 from exhibit.config import CONFIG, FAN_POLICIES
-from exhibit.fan_adapter import profiling_argument, resolve_policy, thaw_policy
+from exhibit.fan_adapter import (
+    freeze_policy,
+    profiling_argument,
+    resolve_policy,
+    thaw_policy,
+)
 
 from exhibit import workers
 
@@ -472,12 +477,14 @@ def test_official_policy_keeps_fan_pooled_and_emits_trace(stubs, tmp_path):
     assert image_event["personalization_hash"] == "official-personalization-hash"
     assert image_event["fan"] == {
         "commit": CONFIG["fan"]["commit"],
+        "alpha": effective["alpha"],
         "pooled": "fan",
         "skip": -2,
         "sample_size": 0.1,
         "skip_pa": [0],
         "use_attn_mask": False,
     }
+    assert effective["alpha"] == 0.4
     trace_path = Path(image_event["profiling_trace_path"])
     assert trace_path == Path(request["items"][0]["path"]).with_suffix(".trace.json")
     assert json.loads(trace_path.read_text()) == image_event["profiling_trace"]
@@ -570,3 +577,15 @@ def test_evaluation_can_observe_conditioning_without_duplicating_generation(
         "pooled": {"valid": True, "cosine": 0.5},
     }
     assert stubs["events"] == []
+
+
+def test_fan_block_reports_alpha_and_only_a_non_neutral_embed_gain():
+    """The emitted encoding settings must name every knob that was applied."""
+    plain = thaw_policy(resolve_policy("strong_v1", FAN_POLICIES))
+    gained = thaw_policy(freeze_policy({**plain, "embed_gain": 2.0}))
+    neutral = thaw_policy(freeze_policy({**plain, "embed_gain": 1.0}))
+
+    assert workers.fan_block(policy=gained)["embed_gain"] == 2.0
+    assert "embed_gain" not in workers.fan_block(policy=plain)
+    assert "embed_gain" not in workers.fan_block(policy=neutral)
+    assert workers.fan_block(policy=plain)["alpha"] == plain["alpha"] == 0.5

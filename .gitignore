@@ -48,3 +48,6 @@
 
 # Per-image worker traces written next to generated assets
 exhibit/assets/**/*.trace.json
+
+# AI/human judge pair images are large (65 MB); rebuild them locally with build_strength_report.py
+docs/reports/fan-personalization/strength/*/judge/pairs/

@@ -14,6 +14,7 @@ from .config import CONFIG, FAN_UPSTREAM, write_json
 from .domain import digest, file_hash
 from .evaluation import runtime_file_provenance
 from .fan_adapter import (
+    embed_gain,
     encode_conditioning,
     freeze_policy,
     profiling_argument,
@@ -151,6 +152,53 @@ def _raw_official(encoder, prompt, refs, policy):
             use_attn_mask=policy["use_attn_mask"],
         )
     return {"hidden": hidden.to(torch.float16), "pooled": pooled.to(torch.float16)}
+
+
+def _raw_eos_pooled(big_g, prompt, refs, policy):
+    """The upstream bigG pooled pass of ``stable_diffusion_xl`` pooled at EOS."""
+    import torch
+
+    with torch.no_grad():
+        hidden = big_g(
+            prompt,
+            [ref["text"] for ref in refs],
+            weight=[float(ref["weight"]) for ref in refs],
+            alpha=policy["alpha"],
+            pooling=False,
+            sample_size=profiling_argument(policy),
+            skip=-1,
+            skip_pa=list(policy["skip_pa"]),
+            use_attn_mask=policy["use_attn_mask"],
+            normalize=False,
+        )
+        pooled = big_g.pool_text_hidden_state(
+            big_g.normalize_text_hidden_state(hidden), prompt
+        )
+        pooled = big_g.projection_text_hidden_state(pooled)
+    return pooled.to(torch.float16)
+
+
+def _expected_direct(encoder, direct_encoder, prompt, refs, policy):
+    """What the adapter must reproduce, built only from upstream calls."""
+    import torch
+
+    direct_fan = _raw_official(direct_encoder, prompt, refs, policy)
+    hidden = direct_fan["hidden"]
+    pooled = direct_fan["pooled"]
+    gain = embed_gain(policy)
+    direct_plain = None
+    if policy["pooled_mode"] != "fan" or gain != 1.0:
+        direct_plain = _raw_official(direct_encoder, prompt, None, policy)
+    if policy["pooled_mode"] == "plain":
+        pooled = direct_plain["pooled"]
+    elif policy["pooled_mode"] == "fan_eos":
+        pooled = _raw_eos_pooled(
+            encoder._fan_components["clip_g"], prompt, refs, policy
+        )
+    if gain != 1.0:
+        base = direct_plain["hidden"].float()
+        hidden = (base + gain * (hidden.float() - base)).to(torch.float16)
+    return {"hidden": hidden, "pooled": pooled, "official": direct_fan}
 
 
 def _pipeline_conditioning(pipe, prompt):
@@ -424,15 +472,8 @@ def _diagnose_prompt(pipe, encoder, direct_encoder, prompt, refs, spec):
     pipeline_plain = _pipeline_conditioning(pipe, prompt)
     fan_plain = encode_conditioning(encoder, prompt, None, policy)
     adapter = encode_conditioning(encoder, prompt, refs, policy, collect_trace=True)
-    direct_fan = _raw_official(direct_encoder, prompt, refs, policy)
-    if policy["pooled_mode"] == "fan":
-        direct_expected = direct_fan
-    else:
-        direct_plain = _raw_official(direct_encoder, prompt, None, policy)
-        direct_expected = {
-            "hidden": direct_fan["hidden"],
-            "pooled": direct_plain["pooled"],
-        }
+    direct_expected = _expected_direct(encoder, direct_encoder, prompt, refs, policy)
+    direct_fan = direct_expected["official"]
 
     alpha_zero_policy = _policy_variant(policy, alpha=0.0)
     alpha_zero = encode_conditioning(
@@ -463,8 +504,8 @@ def _diagnose_prompt(pipe, encoder, direct_encoder, prompt, refs, spec):
         "invariants": invariants,
     }
     comparisons["personalized_vs_no_reference"]["diagnostic_only"] = True
-    if policy["pooled_mode"] == "plain":
-        comparisons["official_fan_pooled_vs_selected_plain"] = tensor_metrics(
+    if policy["pooled_mode"] != "fan":
+        comparisons["official_fan_pooled_vs_selected_pooled"] = tensor_metrics(
             direct_fan["pooled"], adapter["pooled"]
         )
 

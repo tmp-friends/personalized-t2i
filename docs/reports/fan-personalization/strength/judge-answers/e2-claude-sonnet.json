@@ -1,0 +1,1159 @@
+{
+ "judge": "claude-sonnet",
+ "kind": "ai",
+ "model": "claude-sonnet-5",
+ "answers": {
+  "04b5c698c5b5": {
+   "preference": "A",
+   "target_kept": {
+    "A": "yes",
+    "B": "no"
+   },
+   "note": "A clear warm golden scene; B destroyed noise, no cat visible"
+  },
+  "0862f6818c0d": {
+   "preference": "B",
+   "target_kept": {
+    "A": "no",
+    "B": "yes"
+   },
+   "note": "A destroyed magenta noise; B clean warm golden scene with cat"
+  },
+  "0cdeb1acadb9": {
+   "preference": "A",
+   "target_kept": {
+    "A": "yes",
+    "B": "no"
+   },
+   "note": "A warm golden calm scene; B grayish noise unrecognizable"
+  },
+  "13beec15a75f": {
+   "preference": "A",
+   "target_kept": {
+    "A": "yes",
+    "B": "no"
+   },
+   "note": "B abstract red/white blob no subject; A clear warm scene"
+  },
+  "331999460bee": {
+   "preference": "B",
+   "target_kept": {
+    "A": "yes",
+    "B": "yes"
+   },
+   "note": "B softer muted painterly brushwork fits watercolor and calm"
+  },
+  "3c26bc99976f": {
+   "preference": "A",
+   "target_kept": {
+    "A": "yes",
+    "B": "no"
+   },
+   "note": "A clear amber warm scene; B red/white blob no subject"
+  },
+  "46655897b002": {
+   "preference": "B",
+   "target_kept": {
+    "A": "yes",
+    "B": "no"
+   },
+   "note": "A warm golden opposes cool ask; B purplish, cooler toned"
+  },
+  "4b6a2eb11d9b": {
+   "preference": "B",
+   "target_kept": {
+    "A": "no",
+    "B": "yes"
+   },
+   "note": "A flat salmon blur; B clear warm golden calm scene"
+  },
+  "548ad2e9d479": {
+   "preference": "B",
+   "target_kept": {
+    "A": "no",
+    "B": "yes"
+   },
+   "note": "A purple noise unrecognizable; B clear warm scene"
+  },
+  "5593ad5e3528": {
+   "preference": "A",
+   "target_kept": {
+    "A": "yes",
+    "B": "no"
+   },
+   "note": "A clear warm golden scene; B flat magenta noise"
+  },
+  "5b88bdc41566": {
+   "preference": "A",
+   "target_kept": {
+    "A": "yes",
+    "B": "partly"
+   },
+   "note": "A vivid amber gold; B muted sepia, cat eyes unclear"
+  },
+  "7d2ce11cc82f": {
+   "preference": "B",
+   "target_kept": {
+    "A": "no",
+    "B": "yes"
+   },
+   "note": "A purple noise faint face; B clear warm golden scene"
+  },
+  "7eb0051dda98": {
+   "preference": "B",
+   "target_kept": {
+    "A": "yes",
+    "B": "no"
+   },
+   "note": "A warm golden opposes cool ask; B red/white less golden"
+  },
+  "92b2e4ed3ad3": {
+   "preference": "A",
+   "target_kept": {
+    "A": "no",
+    "B": "yes"
+   },
+   "note": "A muted dusty pink cooler than B warm gold"
+  },
+  "952b54d27d32": {
+   "preference": "B",
+   "target_kept": {
+    "A": "yes",
+    "B": "no"
+   },
+   "note": "B richer amber autumn tones but no cat, wrong eye color"
+  },
+  "a214447f42aa": {
+   "preference": "A",
+   "target_kept": {
+    "A": "yes",
+    "B": "no"
+   },
+   "note": "A clear amber golden scene; B pink noise texture"
+  },
+  "a2ec384b9c40": {
+   "preference": "B",
+   "target_kept": {
+    "A": "yes",
+    "B": "no"
+   },
+   "note": "B deep amber autumn tones; no cat, brown eyes not green"
+  },
+  "a2ec762a5b77": {
+   "preference": "B",
+   "target_kept": {
+    "A": "yes",
+    "B": "partly"
+   },
+   "note": "B cool blue-gray tones match ask; no cat visible in B"
+  },
+  "b81fe452fec7": {
+   "preference": "A",
+   "target_kept": {
+    "A": "yes",
+    "B": "no"
+   },
+   "note": "A clear amber warm scene; B purple magenta noise"
+  },
+  "bba946c03c12": {
+   "preference": "A",
+   "target_kept": {
+    "A": "partly",
+    "B": "yes"
+   },
+   "note": "A desaturated grayish cooler than B; eye color unclear"
+  },
+  "bc7afb1a9c0f": {
+   "preference": "B",
+   "target_kept": {
+    "A": "yes",
+    "B": "no"
+   },
+   "note": "B soft painterly muted wash fits watercolor and calm; no subject"
+  },
+  "d7258da69c46": {
+   "preference": "B",
+   "target_kept": {
+    "A": "yes",
+    "B": "yes"
+   },
+   "note": "A desaturated sepia monochrome; B vivid warm amber colorful"
+  },
+  "f167f60a8baf": {
+   "preference": "B",
+   "target_kept": {
+    "A": "no",
+    "B": "yes"
+   },
+   "note": "A animated cat-ear pose not calm; no cat, wrong eyes"
+  },
+  "f219a5e60ebd": {
+   "preference": "A",
+   "target_kept": {
+    "A": "no",
+    "B": "yes"
+   },
+   "note": "A purple noise cooler toned but unrecognizable; B clear warm scene"
+  },
+  "08536d1bbbe3": {
+   "preference": "B",
+   "target_kept": {
+    "A": "no",
+    "B": "yes"
+   },
+   "note": "A is unreadable pink noise, B intact cool scene"
+  },
+  "198ff8f39d36": {
+   "preference": "B",
+   "target_kept": {
+    "A": "no",
+    "B": "yes"
+   },
+   "note": "A is red/white noise, B intact cool scene"
+  },
+  "2425295b21ed": {
+   "preference": "B",
+   "target_kept": {
+    "A": "yes",
+    "B": "no"
+   },
+   "note": "B warmer golden tones; B missing cat, eyes not green"
+  },
+  "2aa1ee6a6928": {
+   "preference": "B",
+   "target_kept": {
+    "A": "no",
+    "B": "yes"
+   },
+   "note": "A is pale pink noise, B intact cool scene"
+  },
+  "2b64f709f97a": {
+   "preference": "A",
+   "target_kept": {
+    "A": "yes",
+    "B": "partly"
+   },
+   "note": "B sepia blur, not cel-shaded, subject barely discernible"
+  },
+  "2c328c7112b7": {
+   "preference": "B",
+   "target_kept": {
+    "A": "yes",
+    "B": "no"
+   },
+   "note": "B matches warm watercolor style but no cat, eyes not green"
+  },
+  "31b68e7583c6": {
+   "preference": "A",
+   "target_kept": {
+    "A": "partly",
+    "B": "yes"
+   },
+   "note": "A painterly warm-toned blur closer to style; B clean cool"
+  },
+  "38e542fe4c6e": {
+   "preference": "A",
+   "target_kept": {
+    "A": "no",
+    "B": "yes"
+   },
+   "note": "A grainy warm-pink blur, indeterminate subject; B cool style"
+  },
+  "417b4bad88c2": {
+   "preference": "A",
+   "target_kept": {
+    "A": "yes",
+    "B": "no"
+   },
+   "note": "B is magenta noise, A intact cool scene"
+  },
+  "421ec3f1136a": {
+   "preference": "B",
+   "target_kept": {
+    "A": "partly",
+    "B": "yes"
+   },
+   "note": "A blurry purple ghost not clean/cel-shaded; B matches"
+  },
+  "4cc51c73f87c": {
+   "preference": "A",
+   "target_kept": {
+    "A": "partly",
+    "B": "yes"
+   },
+   "note": "A softer painterly, warmer tones, but eyes not green"
+  },
+  "74034f4002e4": {
+   "preference": "A",
+   "target_kept": {
+    "A": "yes",
+    "B": "no"
+   },
+   "note": "B is red/white noise, fails cool style entirely"
+  },
+  "9a61d9ad1e29": {
+   "preference": "A",
+   "target_kept": {
+    "A": "yes",
+    "B": "partly"
+   },
+   "note": "B blurry purple ghost, not cel-shaded; A matches"
+  },
+  "9c4ac4acbf94": {
+   "preference": "A",
+   "target_kept": {
+    "A": "yes",
+    "B": "partly"
+   },
+   "note": "B murky purple blur, no warm tones; A cool intact"
+  },
+  "a7464547789f": {
+   "preference": "A",
+   "target_kept": {
+    "A": "yes",
+    "B": "no"
+   },
+   "note": "B no cat, painterly not cel-shaded; A matches"
+  },
+  "b5a134cbd7d8": {
+   "preference": "A",
+   "target_kept": {
+    "A": "yes",
+    "B": "no"
+   },
+   "note": "B pink noise, no cel-shading visible; A matches"
+  },
+  "c34a2c625753": {
+   "preference": "A",
+   "target_kept": {
+    "A": "yes",
+    "B": "no"
+   },
+   "note": "B is flat orange noise, no texture or subject"
+  },
+  "d8410410a041": {
+   "preference": "A",
+   "target_kept": {
+    "A": "partly",
+    "B": "yes"
+   },
+   "note": "A matches warm/golden/watercolor strongly; hair copper not brown"
+  },
+  "ecd4580ce8ca": {
+   "preference": "A",
+   "target_kept": {
+    "A": "partly",
+    "B": "yes"
+   },
+   "note": "A grainy painterly blur faintly warm; B clean cool"
+  },
+  "effe253446f9": {
+   "preference": "B",
+   "target_kept": {
+    "A": "partly",
+    "B": "yes"
+   },
+   "note": "A murky blur unclear color; B clearly cool, intact"
+  },
+  "f2fd70c5ed70": {
+   "preference": "tie",
+   "target_kept": {
+    "A": "no",
+    "B": "yes"
+   },
+   "note": "close match either way; A no cat, desaturated"
+  },
+  "f5fc5a944eaf": {
+   "preference": "A",
+   "target_kept": {
+    "A": "partly",
+    "B": "yes"
+   },
+   "note": "A matches warm/golden/watercolor strongly; hair auburn"
+  },
+  "fc37a7327791": {
+   "preference": "B",
+   "target_kept": {
+    "A": "partly",
+    "B": "yes"
+   },
+   "note": "A purple/pink blur not amber-toned; B cool clear"
+  },
+  "fe598273de3d": {
+   "preference": "B",
+   "target_kept": {
+    "A": "yes",
+    "B": "partly"
+   },
+   "note": "B warm golden speckled texture matches; A wrong cool style"
+  },
+  "089ccc3eedcd": {
+   "preference": "A",
+   "target_kept": {
+    "A": "yes",
+    "B": "no"
+   },
+   "note": "A clear cool cel scene, B pink blur no girl visible"
+  },
+  "0adbd88cfa7d": {
+   "preference": "B",
+   "target_kept": {
+    "A": "no",
+    "B": "yes"
+   },
+   "note": "A brown blur no subject, B clear cool anime scene"
+  },
+  "20ffd12005e4": {
+   "preference": "B",
+   "target_kept": {
+    "A": "yes",
+    "B": "no"
+   },
+   "note": "A clear cool blue, B blurry warm-brown no blue hair"
+  },
+  "219178bc8341": {
+   "preference": "A",
+   "target_kept": {
+    "A": "yes",
+    "B": "no"
+   },
+   "note": "A clear cool anime scene, B abstract navy-gold blur"
+  },
+  "2290acddc2a4": {
+   "preference": "B",
+   "target_kept": {
+    "A": "no",
+    "B": "yes"
+   },
+   "note": "A blurry warm portrait dark hair no raincoat, B clear cool scene"
+  },
+  "24521b160920": {
+   "preference": "B",
+   "target_kept": {
+    "A": "yes",
+    "B": "yes"
+   },
+   "note": "B warmer golden eyes, greener softer painterly tones"
+  },
+  "289e6d0f0b88": {
+   "preference": "A",
+   "target_kept": {
+    "A": "yes",
+    "B": "no"
+   },
+   "note": "A crisp cool anime scene, B blurry cream-purple no scene"
+  },
+  "2e6804f115da": {
+   "preference": "B",
+   "target_kept": {
+    "A": "yes",
+    "B": "partly"
+   },
+   "note": "B warm amber gold tones but no visible city street"
+  },
+  "4490c39c4563": {
+   "preference": "B",
+   "target_kept": {
+    "A": "yes",
+    "B": "no"
+   },
+   "note": "A clear cool blue, B blurry cream-pink no blue hair"
+  },
+  "5c0e64ea502c": {
+   "preference": "tie",
+   "target_kept": {
+    "A": "yes",
+    "B": "yes"
+   },
+   "note": "Both cool calm rainy scenes, similar style"
+  },
+  "5dbe8ac5fe2c": {
+   "preference": "A",
+   "target_kept": {
+    "A": "no",
+    "B": "yes"
+   },
+   "note": "A reddish blotch texture warm-ish no subject, B cool clear scene"
+  },
+  "64cfc577757f": {
+   "preference": "B",
+   "target_kept": {
+    "A": "yes",
+    "B": "no"
+   },
+   "note": "A cool clear scene wrong direction, B pale warm tan texture no subject"
+  },
+  "7d2449bf4c93": {
+   "preference": "B",
+   "target_kept": {
+    "A": "yes",
+    "B": "no"
+   },
+   "note": "A clear cool blue, B reddish-brown blotch texture no subject"
+  },
+  "82756f33d488": {
+   "preference": "A",
+   "target_kept": {
+    "A": "yes",
+    "B": "yes"
+   },
+   "note": "A soft calm cool tones, B bold high-contrast ink less calm"
+  },
+  "8b0c401dfc14": {
+   "preference": "A",
+   "target_kept": {
+    "A": "no",
+    "B": "yes"
+   },
+   "note": "A warm pink-cream painterly blur no clear street, B clear cool scene"
+  },
+  "8bae4c877667": {
+   "preference": "A",
+   "target_kept": {
+    "A": "yes",
+    "B": "yes"
+   },
+   "note": "A has warm golden-eye accent vs B pure cool, sparse favors warm"
+  },
+  "babe86138dfa": {
+   "preference": "A",
+   "target_kept": {
+    "A": "yes",
+    "B": "no"
+   },
+   "note": "A clear cool cel scene, B pale tan blur no subject"
+  },
+  "cafad6cedcde": {
+   "preference": "A",
+   "target_kept": {
+    "A": "no",
+    "B": "yes"
+   },
+   "note": "A pale warm tan blur no subject, B clear cool scene"
+  },
+  "d86d7ae43135": {
+   "preference": "A",
+   "target_kept": {
+    "A": "no",
+    "B": "yes"
+   },
+   "note": "A pink-purple painterly blur no clear street, B clear cool scene"
+  },
+  "dffec9950cc9": {
+   "preference": "B",
+   "target_kept": {
+    "A": "yes",
+    "B": "partly"
+   },
+   "note": "B warm gold tones painterly matches higher weight attrs, no street"
+  },
+  "e5ebfa751bdd": {
+   "preference": "A",
+   "target_kept": {
+    "A": "partly",
+    "B": "yes"
+   },
+   "note": "A warm cream-gold painterly matches warm attrs, no city street"
+  },
+  "e883dfa3ee0c": {
+   "preference": "A",
+   "target_kept": {
+    "A": "yes",
+    "B": "yes"
+   },
+   "note": "A painterly soft golden-eye accents, visible street, warm+diffused"
+  },
+  "f030e1b13199": {
+   "preference": "B",
+   "target_kept": {
+    "A": "no",
+    "B": "yes"
+   },
+   "note": "A blurry purple-gold portrait not blue-haired, B clear cool scene"
+  },
+  "fbc8f73170c9": {
+   "preference": "B",
+   "target_kept": {
+    "A": "no",
+    "B": "yes"
+   },
+   "note": "A reddish blotch wrong warm direction no subject, B clear cool scene"
+  },
+  "12f93b747810": {
+   "preference": "A",
+   "target_kept": {
+    "A": "no",
+    "B": "yes"
+   },
+   "note": "A warm brown blur fits weighted warm; B cool clean, hair wrong"
+  },
+  "138c4926b2a7": {
+   "preference": "B",
+   "target_kept": {
+    "A": "no",
+    "B": "yes"
+   },
+   "note": "A beige blur mismatches cool; B cel-shaded blue matches fully"
+  },
+  "150ca82da519": {
+   "preference": "B",
+   "target_kept": {
+    "A": "yes",
+    "B": "partly"
+   },
+   "note": "B painterly soft matches watercolor weight; A crisp cel lineart"
+  },
+  "182ee197d0cb": {
+   "preference": "A",
+   "target_kept": {
+    "A": "yes",
+    "B": "no"
+   },
+   "note": "A clean cool cel-shaded match; B dark glitchy, not calm"
+  },
+  "310b027337d4": {
+   "preference": "B",
+   "target_kept": {
+    "A": "no",
+    "B": "yes"
+   },
+   "note": "A formless pink blur; B calm cool cel-shaded coherent match"
+  },
+  "32b4cef5f4e9": {
+   "preference": "A",
+   "target_kept": {
+    "A": "no",
+    "B": "yes"
+   },
+   "note": "A warm pink blur fits weighted warm; B cool clean"
+  },
+  "38763d6a126b": {
+   "preference": "B",
+   "target_kept": {
+    "A": "no",
+    "B": "yes"
+   },
+   "note": "A blurry brown girl unclear; B calm cool cel-shaded match"
+  },
+  "3f5f1ba52f38": {
+   "preference": "B",
+   "target_kept": {
+    "A": "yes",
+    "B": "no"
+   },
+   "note": "B warm pink blur fits weighted warm; A cool clean"
+  },
+  "442576afa44e": {
+   "preference": "B",
+   "target_kept": {
+    "A": "yes",
+    "B": "no"
+   },
+   "note": "B pink blur painterly soft fits warm; A cool mismatch"
+  },
+  "5f1697ccc734": {
+   "preference": "A",
+   "target_kept": {
+    "A": "partly",
+    "B": "yes"
+   },
+   "note": "A painterly soft texture matches watercolor weight; B crisp lineart"
+  },
+  "8799209222bc": {
+   "preference": "B",
+   "target_kept": {
+    "A": "yes",
+    "B": "yes"
+   },
+   "note": "Both cool cel-shaded blue; B calmer, softer diffused daylight mood"
+  },
+  "a2b916adc79f": {
+   "preference": "B",
+   "target_kept": {
+    "A": "no",
+    "B": "yes"
+   },
+   "note": "A formless pale blur, no warm cues; B clean cool match"
+  },
+  "a45d5fb435e4": {
+   "preference": "B",
+   "target_kept": {
+    "A": "yes",
+    "B": "partly"
+   },
+   "note": "B warmer red-brown tones fit weighted warm; A cool, hair wrong"
+  },
+  "b1ac0c72d2ea": {
+   "preference": "A",
+   "target_kept": {
+    "A": "no",
+    "B": "yes"
+   },
+   "note": "A brown blur, painterly, fits warm; B cool cel mismatch"
+  },
+  "c5cdaa012195": {
+   "preference": "B",
+   "target_kept": {
+    "A": "yes",
+    "B": "no"
+   },
+   "note": "B red-brown blur fits weighted warm; A cool clean"
+  },
+  "c8335771ff22": {
+   "preference": "A",
+   "target_kept": {
+    "A": "yes",
+    "B": "yes"
+   },
+   "note": "A soft diffused calm cel match; B dramatic harsh rain, less calm"
+  },
+  "c937b46c3985": {
+   "preference": "B",
+   "target_kept": {
+    "A": "yes",
+    "B": "no"
+   },
+   "note": "B red-brown blur fits weighted warm; A cool clean"
+  },
+  "d57ec6e4428f": {
+   "preference": "B",
+   "target_kept": {
+    "A": "no",
+    "B": "yes"
+   },
+   "note": "A painterly not cel-shaded, mismatches cool; B full cool match"
+  },
+  "ddba3bbbe6cf": {
+   "preference": "B",
+   "target_kept": {
+    "A": "yes",
+    "B": "no"
+   },
+   "note": "B red-brown blur, painterly, fits warm; A cool mismatch"
+  },
+  "e0bf4def3341": {
+   "preference": "tie",
+   "target_kept": {
+    "A": "yes",
+    "B": "yes"
+   },
+   "note": "Both cool cel-shaded style; A crisper, B softer diffused calm"
+  },
+  "e1dd0be0f058": {
+   "preference": "B",
+   "target_kept": {
+    "A": "yes",
+    "B": "partly"
+   },
+   "note": "B painterly texture partial match; A cool fully mismatches warm"
+  },
+  "ec26a3762a7f": {
+   "preference": "A",
+   "target_kept": {
+    "A": "no",
+    "B": "yes"
+   },
+   "note": "A pale painterly soft fits warm texture/calm; B cool mismatch"
+  },
+  "f550d03634c7": {
+   "preference": "A",
+   "target_kept": {
+    "A": "yes",
+    "B": "no"
+   },
+   "note": "B red-brown blur, no cel shading; A full cool match wins"
+  },
+  "f5f28b6f54a7": {
+   "preference": "A",
+   "target_kept": {
+    "A": "no",
+    "B": "yes"
+   },
+   "note": "A red-brown blur fits warm color/texture; B cool mismatch"
+  },
+  "03b94d0c1cea": {
+   "preference": "B",
+   "target_kept": {
+    "A": "yes",
+    "B": "no"
+   },
+   "note": "B pink watercolor texture calm; A cool sharp neon"
+  },
+  "3864d995fef4": {
+   "preference": "tie",
+   "target_kept": {
+    "A": "yes",
+    "B": "no"
+   },
+   "note": "Both partial: A cel-shade cyan, B soft diffuse gray"
+  },
+  "4009ca8cdd9c": {
+   "preference": "B",
+   "target_kept": {
+    "A": "yes",
+    "B": "no"
+   },
+   "note": "B warmer pinkish blur; A purely cool cyan neon"
+  },
+  "48ab54a054fa": {
+   "preference": "A",
+   "target_kept": {
+    "A": "partly",
+    "B": "yes"
+   },
+   "note": "A watercolor calm, purple not amber; B cool neon"
+  },
+  "4b24595be8db": {
+   "preference": "A",
+   "target_kept": {
+    "A": "yes",
+    "B": "partly"
+   },
+   "note": "A cyan cel-shaded matches cool; B dark purple blur"
+  },
+  "56303ba40c68": {
+   "preference": "A",
+   "target_kept": {
+    "A": "partly",
+    "B": "yes"
+   },
+   "note": "A warm soft brown calm portrait; B cool neon intense"
+  },
+  "62e4904a75f8": {
+   "preference": "B",
+   "target_kept": {
+    "A": "yes",
+    "B": "partly"
+   },
+   "note": "B mixed warm windows softer; A almost pure cool cyan"
+  },
+  "6812aa8dcc7e": {
+   "preference": "A",
+   "target_kept": {
+    "A": "partly",
+    "B": "yes"
+   },
+   "note": "A soft calm blue-toned; B cel-shaded but harsh intense"
+  },
+  "6bb4e389e036": {
+   "preference": "B",
+   "target_kept": {
+    "A": "yes",
+    "B": "partly"
+   },
+   "note": "B warm lit windows, calm painterly; A cool sharp neon"
+  },
+  "78b5ada7147f": {
+   "preference": "B",
+   "target_kept": {
+    "A": "yes",
+    "B": "partly"
+   },
+   "note": "B soft cool diffused calm; A cel-shaded but harsh intense"
+  },
+  "7b113698d5e9": {
+   "preference": "B",
+   "target_kept": {
+    "A": "yes",
+    "B": "no"
+   },
+   "note": "B red warm splotches; A pure cool cyan no subject"
+  },
+  "8fd5e48cd28f": {
+   "preference": "A",
+   "target_kept": {
+    "A": "yes",
+    "B": "no"
+   },
+   "note": "A matches cool cyan cel-shade; B red splotches wrong hue"
+  },
+  "8fdd67e0387e": {
+   "preference": "A",
+   "target_kept": {
+    "A": "no",
+    "B": "yes"
+   },
+   "note": "A pale soft calm blur fits warm mix; B intense cool"
+  },
+  "931cb8e9f865": {
+   "preference": "B",
+   "target_kept": {
+    "A": "yes",
+    "B": "partly"
+   },
+   "note": "B warm brown sketch fits; A cool cyan wrong hue"
+  },
+  "aa6fbaf99d4a": {
+   "preference": "tie",
+   "target_kept": {
+    "A": "yes",
+    "B": "partly"
+   },
+   "note": "Neither warm: A vivid cool cyan, B murky cool purple"
+  },
+  "c127bcb06996": {
+   "preference": "A",
+   "target_kept": {
+    "A": "partly",
+    "B": "yes"
+   },
+   "note": "A warm soft brown calm sketch; B cool sharp intense"
+  },
+  "cba340c82b73": {
+   "preference": "tie",
+   "target_kept": {
+    "A": "yes",
+    "B": "partly"
+   },
+   "note": "Neither warm: A vivid cool cyan, B murky cool purple"
+  },
+  "e2ef6107abe6": {
+   "preference": "A",
+   "target_kept": {
+    "A": "partly",
+    "B": "yes"
+   },
+   "note": "A calm painterly street scene; B cool sharp intense neon"
+  },
+  "e3f4d86f076b": {
+   "preference": "B",
+   "target_kept": {
+    "A": "yes",
+    "B": "partly"
+   },
+   "note": "B painterly calm blur fits mix; A cool sharp intense"
+  },
+  "e84b259ba770": {
+   "preference": "B",
+   "target_kept": {
+    "A": "yes",
+    "B": "partly"
+   },
+   "note": "B painterly calm blur fits mix; A cool sharp intense"
+  },
+  "e9182cd0f1d0": {
+   "preference": "B",
+   "target_kept": {
+    "A": "partly",
+    "B": "yes"
+   },
+   "note": "B cool cel-shaded cyan matches; A muddy purple portrait unclear"
+  },
+  "eb0c4031b37a": {
+   "preference": "B",
+   "target_kept": {
+    "A": "yes",
+    "B": "no"
+   },
+   "note": "B warm red soft blotches; A cool sharp cyan no match"
+  },
+  "efb5aeabb3d1": {
+   "preference": "B",
+   "target_kept": {
+    "A": "yes",
+    "B": "no"
+   },
+   "note": "B pale calm warm-neutral wash; A cool sharp intense neon"
+  },
+  "eff68031eba6": {
+   "preference": "B",
+   "target_kept": {
+    "A": "yes",
+    "B": "partly"
+   },
+   "note": "B painterly calm blur fits mix; A cool sharp intense"
+  },
+  "285b07b3309c": {
+   "preference": "A",
+   "target_kept": {
+    "A": "yes",
+    "B": "no"
+   },
+   "note": "A cool cel calm portrait; B warm pink blur no subject"
+  },
+  "448fe6b87fb4": {
+   "preference": "A",
+   "target_kept": {
+    "A": "no",
+    "B": "yes"
+   },
+   "note": "A painterly blob some warmth; B cool cel mismatches warm"
+  },
+  "486c1f07b5af": {
+   "preference": "A",
+   "target_kept": {
+    "A": "no",
+    "B": "yes"
+   },
+   "note": "A mixed warm/cool blob closer to blend; B pure cool"
+  },
+  "4de74e24aa37": {
+   "preference": "A",
+   "target_kept": {
+    "A": "yes",
+    "B": "no"
+   },
+   "note": "A calm cel portrait; B chaotic blob unclear mood"
+  },
+  "657d84bf0367": {
+   "preference": "A",
+   "target_kept": {
+    "A": "yes",
+    "B": "no"
+   },
+   "note": "A calm cel portrait; B chaotic blob unclear mood"
+  },
+  "6f1b51908aa2": {
+   "preference": "A",
+   "target_kept": {
+    "A": "yes",
+    "B": "no"
+   },
+   "note": "A cool cel calm portrait; B blurry purple blob no lineart"
+  },
+  "717284705e81": {
+   "preference": "B",
+   "target_kept": {
+    "A": "yes",
+    "B": "no"
+   },
+   "note": "B red warm blocks match warm-lean; A pure cool blue"
+  },
+  "77147371773b": {
+   "preference": "A",
+   "target_kept": {
+    "A": "yes",
+    "B": "no"
+   },
+   "note": "A calm cel matches; B green hair wrong, no skyline"
+  },
+  "7f22c081a2af": {
+   "preference": "B",
+   "target_kept": {
+    "A": "partly",
+    "B": "yes"
+   },
+   "note": "B cool cel matches; A mixed warm gradient, no skyline"
+  },
+  "8e732492eaab": {
+   "preference": "A",
+   "target_kept": {
+    "A": "yes",
+    "B": "no"
+   },
+   "note": "A calm cel portrait; B blank page no subject"
+  },
+  "96654bfbd4c5": {
+   "preference": "B",
+   "target_kept": {
+    "A": "yes",
+    "B": "no"
+   },
+   "note": "B warm bokeh painterly matches; but girl not man, no skyline"
+  },
+  "97bbf689aba4": {
+   "preference": "B",
+   "target_kept": {
+    "A": "no",
+    "B": "yes"
+   },
+   "note": "B calm cel matches some; A blank pale blob no texture"
+  },
+  "9b86ad2b22e5": {
+   "preference": "A",
+   "target_kept": {
+    "A": "yes",
+    "B": "no"
+   },
+   "note": "A cool cel calm strong match; B blurry purple no lineart"
+  },
+  "a18f48353e24": {
+   "preference": "B",
+   "target_kept": {
+    "A": "no",
+    "B": "yes"
+   },
+   "note": "B calm cel matches mixed request; A blank pink no texture"
+  },
+  "a44489bf67fe": {
+   "preference": "A",
+   "target_kept": {
+    "A": "yes",
+    "B": "no"
+   },
+   "note": "A calm cel matches mixed; B girl not man, no skyline"
+  },
+  "b973efdcccf1": {
+   "preference": "A",
+   "target_kept": {
+    "A": "yes",
+    "B": "partly"
+   },
+   "note": "A cel-shading cool matches best; B similar cool but painterly, no skyline"
+  },
+  "cac4514f4cbe": {
+   "preference": "A",
+   "target_kept": {
+    "A": "no",
+    "B": "yes"
+   },
+   "note": "A painterly blob some warm cream; B cool cel mismatches warm"
+  },
+  "d04c97630763": {
+   "preference": "B",
+   "target_kept": {
+    "A": "no",
+    "B": "yes"
+   },
+   "note": "B is only coherent image though pure cool; A blank pink blob"
+  },
+  "d207d544b7c6": {
+   "preference": "tie",
+   "target_kept": {
+    "A": "yes",
+    "B": "no"
+   },
+   "note": "A calm cel matches; B red warm but no subject or texture"
+  },
+  "d8e15100f9a5": {
+   "preference": "B",
+   "target_kept": {
+    "A": "no",
+    "B": "yes"
+   },
+   "note": "B cool cel calm matches; A red warm blob mismatches cool"
+  },
+  "e033b7ccf099": {
+   "preference": "B",
+   "target_kept": {
+    "A": "yes",
+    "B": "no"
+   },
+   "note": "B genuinely warm amber toned; but blond hair, no skyline"
+  },
+  "e064928f52e5": {
+   "preference": "A",
+   "target_kept": {
+    "A": "no",
+    "B": "yes"
+   },
+   "note": "A strong warm golden light matches; blond hair, no skyline"
+  },
+  "ec4659bf0bbc": {
+   "preference": "A",
+   "target_kept": {
+    "A": "no",
+    "B": "yes"
+   },
+   "note": "A mixed warm/cool blob closer to blend; B pure cool"
+  },
+  "f7a3b21bc915": {
+   "preference": "B",
+   "target_kept": {
+    "A": "yes",
+    "B": "no"
+   },
+   "note": "B warm amber bokeh matches lean; girl not man, no skyline"
+  }
+ }
+}

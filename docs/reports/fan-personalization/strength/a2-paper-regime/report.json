@@ -1,0 +1,226 @@
+{
+  "experiment": "a2-paper-regime",
+  "experiment_kind": "diagnostic",
+  "versions": {
+    "python": "3.10.16",
+    "torch": "2.14.0+cu130",
+    "diffusers": "0.39.0",
+    "transformers": "4.57.6",
+    "device": "NVIDIA GeForce RTX 4090"
+  },
+  "settings": {
+    "model": "stabilityai/stable-diffusion-xl-base-1.0",
+    "size": 1024,
+    "steps": 50,
+    "guidance_scale": 5.0,
+    "skip": -2,
+    "skip_pa": [
+      0
+    ],
+    "use_attn_mask": false,
+    "sample_size": 0.0,
+    "negative_prompt": null
+  },
+  "topics": [
+    {
+      "id": "cat",
+      "prompt": "A brown-haired girl with green eyes wearing a sweater, holding a cat by a window."
+    },
+    {
+      "id": "tokyo",
+      "prompt": "A young man with short black hair wearing a jacket, with the Tokyo skyline at night."
+    }
+  ],
+  "histories": [
+    {
+      "id": "warm-sentence",
+      "refs": [
+        {
+          "ref_id": "warm-sentence-color",
+          "text": "An illustration with a warm color palette of amber and orange tones.",
+          "weight": 3.0
+        },
+        {
+          "ref_id": "warm-sentence-light",
+          "text": "A scene lit by warm golden hour light with gentle shadows.",
+          "weight": 3.0
+        },
+        {
+          "ref_id": "warm-sentence-texture",
+          "text": "A watercolor painting with soft brushwork and a painterly texture.",
+          "weight": 3.0
+        },
+        {
+          "ref_id": "warm-sentence-mood",
+          "text": "A picture with a calm and quiet atmosphere.",
+          "weight": 3.0
+        }
+      ]
+    },
+    {
+      "id": "cool-sentence",
+      "refs": [
+        {
+          "ref_id": "cool-sentence-color",
+          "text": "An illustration with a cool color palette of blue and teal tones.",
+          "weight": 3.0
+        },
+        {
+          "ref_id": "cool-sentence-light",
+          "text": "A scene lit by soft diffused light.",
+          "weight": 3.0
+        },
+        {
+          "ref_id": "cool-sentence-texture",
+          "text": "A cel-shaded anime illustration with clean lineart and flat anime coloring.",
+          "weight": 3.0
+        },
+        {
+          "ref_id": "cool-sentence-mood",
+          "text": "A picture with a calm and quiet atmosphere.",
+          "weight": 3.0
+        }
+      ]
+    }
+  ],
+  "alphas": [
+    0.0,
+    0.4,
+    0.7
+  ],
+  "seeds": [
+    42
+  ],
+  "images": [
+    {
+      "file": "cat-plain-alpha0.0-seed42.png",
+      "topic": "cat",
+      "history": null,
+      "alpha": 0.0,
+      "seed": 42,
+      "seconds": 6.421,
+      "cosine_vs_alpha0": {
+        "hidden": 1.0,
+        "pooled": 1.0
+      },
+      "pixel_mae_vs_alpha0": 0.0
+    },
+    {
+      "file": "cat-warm-sentence-alpha0.4-seed42.png",
+      "topic": "cat",
+      "history": "warm-sentence",
+      "alpha": 0.4,
+      "seed": 42,
+      "seconds": 6.195,
+      "cosine_vs_alpha0": {
+        "hidden": 0.94669729,
+        "pooled": 0.94764358
+      },
+      "pixel_mae_vs_alpha0": 20.8745
+    },
+    {
+      "file": "cat-warm-sentence-alpha0.7-seed42.png",
+      "topic": "cat",
+      "history": "warm-sentence",
+      "alpha": 0.7,
+      "seed": 42,
+      "seconds": 6.178,
+      "cosine_vs_alpha0": {
+        "hidden": 0.82477015,
+        "pooled": 0.62999737
+      },
+      "pixel_mae_vs_alpha0": 28.5801
+    },
+    {
+      "file": "cat-cool-sentence-alpha0.4-seed42.png",
+      "topic": "cat",
+      "history": "cool-sentence",
+      "alpha": 0.4,
+      "seed": 42,
+      "seconds": 6.19,
+      "cosine_vs_alpha0": {
+        "hidden": 0.94715565,
+        "pooled": 0.93986976
+      },
+      "pixel_mae_vs_alpha0": 35.3179
+    },
+    {
+      "file": "cat-cool-sentence-alpha0.7-seed42.png",
+      "topic": "cat",
+      "history": "cool-sentence",
+      "alpha": 0.7,
+      "seed": 42,
+      "seconds": 6.193,
+      "cosine_vs_alpha0": {
+        "hidden": 0.82818627,
+        "pooled": 0.65439129
+      },
+      "pixel_mae_vs_alpha0": 40.1413
+    },
+    {
+      "file": "tokyo-plain-alpha0.0-seed42.png",
+      "topic": "tokyo",
+      "history": null,
+      "alpha": 0.0,
+      "seed": 42,
+      "seconds": 6.16,
+      "cosine_vs_alpha0": {
+        "hidden": 1.0,
+        "pooled": 1.0
+      },
+      "pixel_mae_vs_alpha0": 0.0
+    },
+    {
+      "file": "tokyo-warm-sentence-alpha0.4-seed42.png",
+      "topic": "tokyo",
+      "history": "warm-sentence",
+      "alpha": 0.4,
+      "seed": 42,
+      "seconds": 6.199,
+      "cosine_vs_alpha0": {
+        "hidden": 0.9466728,
+        "pooled": 0.93925965
+      },
+      "pixel_mae_vs_alpha0": 18.5981
+    },
+    {
+      "file": "tokyo-warm-sentence-alpha0.7-seed42.png",
+      "topic": "tokyo",
+      "history": "warm-sentence",
+      "alpha": 0.7,
+      "seed": 42,
+      "seconds": 6.19,
+      "cosine_vs_alpha0": {
+        "hidden": 0.81938601,
+        "pooled": 0.57619768
+      },
+      "pixel_mae_vs_alpha0": 28.3145
+    },
+    {
+      "file": "tokyo-cool-sentence-alpha0.4-seed42.png",
+      "topic": "tokyo",
+      "history": "cool-sentence",
+      "alpha": 0.4,
+      "seed": 42,
+      "seconds": 6.191,
+      "cosine_vs_alpha0": {
+        "hidden": 0.94649369,
+        "pooled": 0.92804956
+      },
+      "pixel_mae_vs_alpha0": 19.6717
+    },
+    {
+      "file": "tokyo-cool-sentence-alpha0.7-seed42.png",
+      "topic": "tokyo",
+      "history": "cool-sentence",
+      "alpha": 0.7,
+      "seed": 42,
+      "seconds": 6.192,
+      "cosine_vs_alpha0": {
+        "hidden": 0.82019114,
+        "pooled": 0.61702043
+      },
+      "pixel_mae_vs_alpha0": 30.9648
+    }
+  ]
+}

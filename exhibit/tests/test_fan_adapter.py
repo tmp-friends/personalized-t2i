@@ -254,3 +254,169 @@ def test_diagnostic_policy_specs_reject_missing_invalid_or_duplicate_entries(spe
 
     with pytest.raises((TypeError, ValueError)):
         validate_policy_specs(specs)
+
+
+@pytest.fixture
+def recorded_gain(monkeypatch):
+    """The fake tensors carry no arithmetic, so record the gain application."""
+    from exhibit import fan_adapter
+
+    applied = []
+
+    def apply(hidden, plain_hidden, gain):
+        applied.append((hidden, plain_hidden, gain))
+        return Tensor("hidden-gained")
+
+    monkeypatch.setattr(fan_adapter, "_apply_embed_gain", apply)
+    return applied
+
+
+@pytest.fixture
+def recorded_eos(monkeypatch):
+    from exhibit import fan_adapter
+
+    pooled_calls = []
+
+    def encode(encoder, prompt, refs, effective):
+        pooled_calls.append({"prompt": prompt, "refs": refs, "policy": effective})
+        return Tensor("pooled-eos")
+
+    monkeypatch.setattr(fan_adapter, "_encode_eos_pooled", encode)
+    return pooled_calls
+
+
+def test_a_neutral_embed_gain_leaves_the_encoding_and_the_trace_untouched(
+    fake_torch, recorded_gain
+):
+    encoder, calls, _ = make_encoder(lambda *args, **kwargs: [[0]])
+
+    result = encode_conditioning(
+        encoder, "target", refs(), {**policy(), "embed_gain": 1.0}, collect_trace=True
+    )
+
+    assert "embed_gain" not in result["effective_policy"]
+    assert "embed_gain" not in result["trace"]
+    assert result["hidden"].name == "hidden-personal"
+    assert recorded_gain == []
+    assert len(calls) == 1
+
+
+def test_embed_gain_adds_the_reference_free_encoding_even_for_fan_pooled(
+    fake_torch, recorded_gain
+):
+    encoder, calls, _ = make_encoder(lambda *args, **kwargs: [[0]])
+
+    result = encode_conditioning(
+        encoder, "target", refs(), {**policy(), "embed_gain": 2.0}, collect_trace=True
+    )
+
+    assert result["effective_policy"]["embed_gain"] == 2.0
+    assert [call["refs"] for call in calls] == [
+        ["warm palette", "cool palette"],
+        None,
+    ]
+    assert calls[1]["alpha"] is None
+    ((hidden, plain_hidden, gain),) = recorded_gain
+    assert hidden.name == "hidden-personal"
+    assert plain_hidden.name == "hidden-plain"
+    assert gain == 2.0
+    assert result["hidden"].name == "hidden-gained"
+    # The pooled channel still comes from FAN; only the hidden states are scaled.
+    assert result["pooled"].name == "pooled-personal"
+    assert result["trace"]["embed_gain"] == 2.0
+    assert result["trace"]["pooled_source"] == "fan"
+
+
+def test_embed_gain_applies_on_top_of_the_plain_pooled_encoding(
+    fake_torch, recorded_gain
+):
+    encoder, calls, _ = make_encoder(lambda *args, **kwargs: [[0]])
+
+    result = encode_conditioning(
+        encoder,
+        "target",
+        refs(),
+        {**policy(pooled_mode="plain"), "embed_gain": 1.5},
+        collect_trace=False,
+    )
+
+    # One personalized and one reference-free call, shared by both features.
+    assert len(calls) == 2
+    assert recorded_gain[0][2] == 1.5
+    assert result["hidden"].name == "hidden-gained"
+    assert result["pooled"].name == "pooled-plain"
+
+
+def test_fan_eos_pooling_replaces_the_pooled_channel_and_labels_the_trace(
+    fake_torch, recorded_eos
+):
+    encoder, calls, _ = make_encoder(lambda *args, **kwargs: [[0]])
+
+    result = encode_conditioning(
+        encoder, "target", refs(), policy(pooled_mode="fan_eos"), collect_trace=True
+    )
+
+    assert result["pooled"].name == "pooled-eos"
+    assert result["hidden"].name == "hidden-personal"
+    assert result["trace"]["pooled_source"] == "fan_eos"
+    assert len(calls) == 1
+    assert recorded_eos[0]["prompt"] == "target"
+    assert recorded_eos[0]["refs"] == refs()
+    assert recorded_eos[0]["policy"]["alpha"] == 0.4
+
+
+def test_reference_free_encodings_never_scale_or_repool(
+    fake_torch, recorded_gain, recorded_eos
+):
+    for mode, gain in (("fan_eos", 1.0), ("fan", 2.0), ("plain", 2.5)):
+        encoder, calls, _ = make_encoder(lambda *args, **kwargs: [[0]])
+        result = encode_conditioning(
+            encoder, "negative", None, {**policy(pooled_mode=mode), "embed_gain": gain}
+        )
+        assert result["hidden"].name == "hidden-plain"
+        assert result["pooled"].name == "pooled-plain"
+        assert result["trace"]["pooled_source"] == "plain"
+        assert "embed_gain" not in result["trace"]
+        assert len(calls) == 1
+    assert recorded_gain == []
+    assert recorded_eos == []
+
+
+def test_an_empty_prompt_is_only_allowed_without_references(fake_torch):
+    encoder, calls, _ = make_encoder(lambda *args, **kwargs: [[0]])
+
+    # The official sampler comparison drops the negative prompt entirely.
+    result = encode_conditioning(encoder, "", None, policy())
+    assert result["hidden"].name == "hidden-plain"
+    assert calls[0]["prompt"] == ""
+
+    with pytest.raises(ValueError, match="prompt"):
+        encode_conditioning(encoder, "", refs(), policy())
+    assert len(calls) == 1
+
+
+@pytest.mark.parametrize("gain", [5, -0.1, True, float("nan"), "1.5"])
+def test_embed_gain_is_rejected_outside_the_declared_range(fake_torch, gain):
+    encoder, calls, _ = make_encoder(lambda *args, **kwargs: [[0]])
+
+    with pytest.raises(ValueError, match="embed_gain"):
+        encode_conditioning(encoder, "target", refs(), {**policy(), "embed_gain": gain})
+    assert calls == []
+
+
+def test_unknown_policy_keys_stay_rejected_next_to_the_optional_gain(fake_torch):
+    encoder, _, _ = make_encoder(lambda *args, **kwargs: [[0]])
+
+    with pytest.raises(ValueError, match="supported settings"):
+        encode_conditioning(encoder, "target", refs(), {**policy(), "embed_boost": 2.0})
+
+
+def test_the_supported_pooled_modes_are_plain_fan_and_fan_eos():
+    from exhibit.fan_adapter import POOLED_MODES, embed_gain, freeze_policy
+
+    assert POOLED_MODES == {"plain", "fan", "fan_eos"}
+    assert freeze_policy(policy(pooled_mode="fan_eos"))["pooled_mode"] == "fan_eos"
+    assert embed_gain(freeze_policy(policy())) == 1.0
+    assert embed_gain(freeze_policy({**policy(), "embed_gain": 0})) == 0.0
+    with pytest.raises(ValueError, match="pooled_mode"):
+        freeze_policy(policy(pooled_mode="eos"))
