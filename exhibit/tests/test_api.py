@@ -346,7 +346,8 @@ def test_tech_page_is_served_from_the_shipped_asset():
     response = TestClient(module.app).get("/tech")
     assert response.status_code == 200
     assert response.headers["content-type"].startswith("text/html")
-    assert "言わないこと" in response.text
+    assert "FAN の仕組み" in response.text
+    assert "言わないこと" not in response.text
 
 
 def test_tech_page_is_rebuilt_from_the_current_configs():
@@ -367,8 +368,10 @@ def test_tech_page_is_rebuilt_from_the_current_configs():
         f"<dt>CFG</dt><dd>{generation['guidance_scale']}</dd>",
         f"<code>alpha</code> = {policy['alpha']}",
         f"<code>pooled_mode</code> = {policy['pooled_mode']}",
-        f"{CONFIG['idle_seconds']}秒",
-        f"{CONFIG['timeout_seconds']}秒",
+        "12層のうち 8〜10 層目の3層",
+        "32層のうち 8〜30 層目の23層",
+        CONFIG["fan"]["decoders"]["bigG.pth"][:12],
+        "data:image/png;base64,",
         generation["revision"][:12],
         generation["vae"]["model"],
     ):
@@ -378,3 +381,27 @@ def test_tech_page_is_rebuilt_from_the_current_configs():
     assert "@import" not in page
     assert not re.search(r'src="https?://', page)
     assert not re.search(r"url\((?!data:)", page)
+
+
+def test_the_welcome_pair_is_one_sample_beside_the_plain_image_of_its_seed(
+    client, assets, monkeypatch
+):
+    from exhibit import app as app_module
+    from exhibit.config import read_json
+
+    hero = client.get("/api/config").json()["hero"]
+    sample_id, index = app_module.HERO
+    root = assets
+    sample = next(s for s in read_json(root / "samples.json") if s["id"] == sample_id)
+    plain = read_json(root / "manifest.json")["images"][f"{sample['topic_id']}-{index}"]
+    assert hero == {
+        "sample_id": sample_id,
+        "topic_id": sample["topic_id"],
+        "plain_url": "/assets/" + plain["path"],
+        "personal_url": "/assets/" + sample["images"][index]["path"],
+    }
+    assert plain["seed"] == sample["images"][index]["seed"]
+
+    # A pair that cannot be matched is not offered; the page falls back on its own.
+    monkeypatch.setattr(app_module, "HERO", ("no-such-sample", 0))
+    assert client.get("/api/config").json()["hero"] is None

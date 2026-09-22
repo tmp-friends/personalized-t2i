@@ -4,11 +4,9 @@ import {
   createPoller,
   createSelectionWriter,
   createTicket,
-  currentRound,
   draftFromSnapshot,
   draftMatchesSnapshot,
   emptyDraft,
-  feedbackVisible,
   gainIndex,
   GAIN_LABELS,
   GAIN_STEPS,
@@ -16,8 +14,6 @@ import {
   likeAll,
   pollIdentity,
   removeCard,
-  roundNotice,
-  roundNumber,
   schemaSupported,
   setGain,
   setStrength,
@@ -82,7 +78,7 @@ const num = (value) =>
 const MODES = {
   live: "この場で生成",
   "exact-cache": "同じ内容の描き直し",
-  sample: "事前生成サンプル",
+  sample: "サンプル",
 };
 
 function error(text) {
@@ -232,53 +228,46 @@ function goto(next) {
 }
 
 /* ---------------------------------------------------------------- welcome */
-function sampleControl() {
-  return cfg.samples?.length
-    ? `<div class="sample-picker"><span class="sample-lead">まずは結果だけ見る</span><select id="sample-id" aria-label="事前生成サンプル">${cfg.samples
-        .map(
-          (s) =>
-            `<option value="${esc(s.id)}">${esc(s.label || `${s.id} · ${topicLabel(s.topic_id)}`)}</option>`,
-        )
-        .join(
-          "",
-        )}</select><button class="secondary" id="sample">サンプルを見る</button></div>`
-    : "";
-}
-function bindSample() {
-  bind("sample", async () => {
-    if (!session) await start(false);
-    // A sample is somebody else's preference; the visitor's draft is untouched.
-    adoptSession(
-      await api(`/sessions/${session.id}/sample`, "POST", {
-        sample_id: document.querySelector("#sample-id").value,
-      }),
-    );
-    renderedRun = JSON.stringify(session.run);
-    say("");
-    goto("compare");
-  });
-}
 /** Same prompt, same seed: the plain picture beside a sample's personalized one. */
 function heroArt() {
+  // The server names the pair; without it, fall back to the first sample's first seed.
   const sample = cfg.samples?.find((x) => x.preview_url && topicOf(x.topic_id));
-  const plain = sample ? topicOf(sample.topic_id) : cfg.topics?.[0];
-  if (!plain?.preview_url) return "";
-  return `<div class="hero-art ${sample ? "pair" : ""}"><figure class="plain"><img src="${esc(plain.preview_url)}" alt="${esc(plain.label)}のパーソナライズなしの生成画像"><figcaption>パーソナライズなし</figcaption></figure>${
-    sample
-      ? `<figure class="mine"><img src="${esc(sample.preview_url)}" alt="${esc(plain.label)}の、パーソナライズありの生成サンプル"><figcaption>パーソナライズあり</figcaption></figure>`
+  const topicId = cfg.hero?.topic_id || sample?.topic_id;
+  const plain = topicOf(topicId) || cfg.topics?.[0];
+  const plainUrl = cfg.hero?.plain_url || plain?.preview_url;
+  const mineUrl = cfg.hero?.personal_url || sample?.preview_url;
+  if (!plainUrl) return "";
+  return `<div class="hero-art ${mineUrl ? "pair" : ""}"><figure class="plain"><img src="${esc(plainUrl)}" alt="${esc(plain.label)}のパーソナライズなしの生成画像"><figcaption>パーソナライズなし</figcaption></figure>${
+    mineUrl
+      ? `<figure class="mine"><img src="${esc(mineUrl)}" alt="${esc(plain.label)}の、パーソナライズありの生成サンプル"><figcaption>パーソナライズあり</figcaption></figure>`
       : ""
   }</div>`;
 }
+/** Where to follow up after the visit: the author's X account and the repository. */
+const LINKS = [
+  { name: "X", label: "@tmp_friends", url: "https://x.com/tmp_friends", qr: "qr-x.svg" },
+  {
+    name: "GitHub",
+    label: "tmp-friends/personalized-t2i",
+    url: "https://github.com/tmp-friends/personalized-t2i",
+    qr: "qr-github.svg",
+  },
+];
+function linksBand() {
+  return `<section class="links-band"><div class="links-lead"><h3>もっと知りたい方へ</h3><p>作者の X と、この展示のソースコードです。スマートフォンで読み取れます。</p></div>${LINKS.map(
+    (l) =>
+      `<a class="qr-link" href="${l.url}" target="_blank" rel="noopener"><img src="/static/${l.qr}" alt="${l.name} ${l.label} の QR コード" width="104" height="104"><span><b>${l.name}</b>${l.label}</span></a>`,
+  ).join("")}</section>`;
+}
 function welcome() {
-  app.innerHTML = `<section class="hero"><div class="hero-copy"><span class="pill">パーソナライズ画像生成 · 体験展示</span><h1>好きな絵を選ぶだけ。<br>あなた好みに描く、<em>パーソナライズ画像生成</em>。</h1><p class="intro">好きな絵を数枚選ぶだけで、あなたの好みを反映した画像をその場で生成します。入力文や生成モデルは変えず、絵がどこまで「あなた好み」に寄るのかを見比べられます。</p><button class="primary" id="start" ${cfg.ready ? "" : "disabled"}>体験をはじめる <span>→</span></button><ul class="facts"><li>約3分</li><li>登録不要</li><li>この端末の中だけで動作</li></ul>${
+  app.innerHTML = `<section class="hero"><div class="hero-copy"><span class="pill">パーソナライズ画像生成 · 体験展示</span><h1>好きな絵を選ぶだけ。<br>あなた好みに描く、<em>パーソナライズ画像生成</em>。</h1><p class="intro">好きな絵を数枚選ぶだけで、あなたの好みを反映した画像をその場で生成します。入力文や生成モデルは変えず、絵がどこまで「あなた好み」に寄るのかを見比べられます。</p><ol class="journey"><li><b>01</b><h3>好きな画像を選ぶ</h3><p>候補の一覧から、合計${limits.min}〜${limits.max}枚</p></li><li><b>02</b><h3>お題を選ぶ</h3><p>描いてほしい場面を選ぶ</p></li><li><b>03</b><h3>見比べる</h3><p>あなた向けの結果を見る</p></li></ol><button class="primary" id="start" ${cfg.ready ? "" : "disabled"}>体験をはじめる <span>→</span></button><ul class="facts"><li>約3分</li></ul>${
     cfg.ready
       ? ""
       : '<p class="note ready-note">画像を準備中です。準備が終わると体験できます。</p>'
-  }${sampleControl()}</div>${heroArt()}</section><ol class="journey"><li><b>01</b><h3>好きな画像を選ぶ</h3><p>${limits.round_size}枚ずつ、最大${limits.max_rounds}回。合計${limits.min}〜${limits.max}枚</p></li><li><b>02</b><h3>お題を選ぶ</h3><p>描いてほしい場面を選ぶ</p></li><li><b>03</b><h3>見比べる</h3><p>あなた向けの結果を見る</p></li></ol>`;
-  bind("start", () => start(true));
-  bindSample();
+  }</div>${heroArt()}</section>${linksBand()}`;
+  bind("start", start);
 }
-async function start(show) {
+async function start() {
   poller.stop();
   roundTicket.done();
   runTicket.done();
@@ -287,7 +276,8 @@ async function start(show) {
   topic = null;
   say("");
   lastActive = Date.now();
-  if (show) goto("cards");
+  await loadAllRounds();
+  goto("cards");
 }
 
 /* ------------------------------------------------ 01 好きな画像を選ぶ */
@@ -343,39 +333,33 @@ function bindPickRows() {
     edited();
   });
 }
+/** Every served round, in order: the visitor sees all candidates in one list. */
+const shownIds = () => [
+  ...new Set((session?.rounds || []).flatMap((round) => round.card_ids || [])),
+];
 function cardsScreen() {
-  const round = currentRound(session);
-  const ids = round?.card_ids || [];
+  const ids = shownIds();
   const blocker = commitBlocker(draft, limits);
-  const more = canRequestRound(session, limits);
-  const roundText = roundNotice(session, limits);
-  app.innerHTML = `${steps(1)}<div class="topline"><div><h2>好きな画像を選んでください。</h2><p>人物ではなく、色・光・描き方・雰囲気の好みで選びます。好きなものがなければ、選ばずに次の候補へ進めます。</p></div><div class="counter" aria-label="選んだ枚数"><b>${draft.selection.length}</b><small>/ ${limits.min}〜${limits.max}枚</small></div></div>${noticeLine()}<div class="roundline"><span class="round-tag">${roundNumber(session)} / ${limits.max_rounds}回目</span><span>この回の候補 ${ids.length}枚</span>${
-    roundText ? `<span class="round-note">${esc(roundText)}</span>` : ""
-  }</div><div class="card-grid">${ids
+  app.innerHTML = `${steps(1)}<div class="topline"><div><h2>好きな画像を選んでください。</h2><p>人物ではなく、色・光・描き方・雰囲気の好みで選びます。選んだ画像は最初「全部好き」になっているので、好きなところだけに絞り込めます。</p></div><div class="counter" aria-label="選んだ枚数"><b>${draft.selection.length}</b><small>/ ${limits.min}〜${limits.max}枚</small></div></div>${noticeLine()}<div class="roundline"><span>候補 ${ids.length}枚</span></div><div class="card-grid">${ids
     .map((id) => {
       const card = cardOf(id);
       if (!card) return "";
       const n = picked(id);
       return `<button class="card ${n >= 0 ? "selected" : ""}" data-card="${esc(id)}" aria-pressed="${n >= 0}" aria-label="${esc(card.label)}を${n >= 0 ? "選択解除" : "選ぶ"}"><img src="${esc(card.url)}" alt="${esc(card.label)}" loading="lazy">${n >= 0 ? `<span class="order">${n + 1}</span>` : ""}<span class="card-foot">${esc(card.subject_label || card.label)}</span></button>`;
     })
-    .join("")}</div><div class="round-actions">${
-    more
-      ? '<button id="more" class="secondary">ほかの候補も見る <span>→</span></button>'
-      : '<span class="note">候補はこれですべてです。</span>'
-  }<span class="note">選ばなかった画像を「嫌い」とは扱いません。</span></div>${trayBlock(
+    .join("")}</div><div class="round-actions"><span class="note">選ばなかった画像を「嫌い」とは扱いません。</span></div>${trayBlock(
     "選んだ画像",
-    "それぞれ、どこが好きかを教えてください。前の回で選んだ画像もここで直せます。",
+    "それぞれ、どこが好きかを教えてください。",
   )}<div class="action-row"><span class="note">${esc(
     BLOCK_TEXT(blocker) || `${draft.selection.length}枚をあなたの好みとして使います。`,
   )}</span><button id="commit" class="primary" ${blocker ? "disabled" : ""}>これで決定 <span>→</span></button></div>`;
   on("card", ({ card }) => {
-    const result = toggleCard(draft, card, limits);
+    const result = toggleCard(draft, card, limits, aspectKeys());
     draft = result.draft;
     if (result.error) return error(result.error);
     edited();
   });
   bindPickRows();
-  bind("more", nextRound);
   bind("commit", async () => {
     await save(true);
     const blocked = commitBlocker(draft, limits);
@@ -384,45 +368,41 @@ function cardsScreen() {
     goto("topics");
   });
 }
-/** One request per intended round: a second click while in flight does nothing. */
-async function nextRound() {
-  if (!canRequestRound(session, limits)) return;
-  await save(false);
-  const button = document.querySelector("#more");
-  const request_id = roundTicket.take();
-  if (!request_id) return;
-  if (button) button.disabled = true;
-  try {
-    for (let attempt = 0; ; attempt++) {
-      try {
-        // A round never changes the selection, so local edits are kept.
-        adoptSession(
-          await api(`/sessions/${session.id}/rounds`, "POST", {
-            request_id,
-            expected_revision: session.revision,
-          }),
-        );
-        roundTicket.done();
-        say("");
-        break;
-      } catch (e) {
-        if (e.status !== 409) throw e;
-        adoptAll(await api(`/sessions/${session.id}`));
-        if (!canRequestRound(session, limits)) {
-          roundTicket.done();
-          say("お見せできる画像はこれですべてです。");
+/**
+ * Serve every remaining round up front, one request at a time, so the candidates
+ * appear as one list. A retry reuses its request id: never an extra round.
+ */
+async function loadAllRounds() {
+  while (canRequestRound(session, limits)) {
+    const request_id = roundTicket.take();
+    if (!request_id) return;
+    try {
+      for (let attempt = 0; ; attempt++) {
+        try {
+          // A round never changes the selection, so local edits are kept.
+          adoptSession(
+            await api(`/sessions/${session.id}/rounds`, "POST", {
+              request_id,
+              expected_revision: session.revision,
+            }),
+          );
           break;
+        } catch (e) {
+          if (e.status !== 409) throw e;
+          adoptAll(await api(`/sessions/${session.id}`));
+          if (!canRequestRound(session, limits) || attempt >= 1) throw e;
+          await sleep(250);
         }
-        if (attempt >= 1) throw e;
-        await sleep(250);
       }
+      roundTicket.done();
+    } catch (e) {
+      if (!canRequestRound(session, limits)) {
+        roundTicket.done();
+        return;
+      }
+      roundTicket.fail();
+      throw e;
     }
-  } catch (e) {
-    roundTicket.fail(); // a retry stays the same request: never two rounds
-    throw e;
-  } finally {
-    render();
-    window.scrollTo(0, 0);
   }
 }
 
@@ -553,25 +533,6 @@ function inputsPanel(run) {
     p.refs || [],
   )}</div><p class="kv"><b>設定</b>　alpha ${esc(p.alpha ?? cfg.policy?.alpha ?? "—")} / policy ${esc(run.policy_id || "—")} / pooled ${esc(policy.pooled_mode || "—")} / 参照単位 ${esc(policy.reference_unit || "—")}</p><p class="kv"><b>内容ハッシュ</b>　<code>${esc(run.personalization_hash || "—")}</code></p><p>生成モデル・seed・負のプロンプト・生成設定は、パーソナライズなしの4枚とまったく同じです。</p></details>`;
 }
-function feedbackBlock(run) {
-  if (!feedbackVisible(run)) return "";
-  const chosen = run.feedback?.preference || null;
-  const options = [
-    ["plain", "通常"],
-    ["personal", "あなた向け"],
-    ["tie", "同じくらい"],
-  ];
-  return `<section class="feedback"><div class="picked-head"><h3>どちらが好みですか？</h3><span>任意です。答えても答えなくても、画像は変わりません。</span></div><div class="seg" role="group" aria-label="どちらが好みか">${options
-    .map(
-      ([value, label]) =>
-        `<button class="step ${chosen === value ? "on" : ""}" data-pref="${value}" aria-pressed="${chosen === value}">${label}</button>`,
-    )
-    .join("")}</div>${
-    chosen
-      ? '<p class="note">回答を受け取りました。いつでも選び直せます。</p>'
-      : ""
-  }</section>`;
-}
 function gainBlock() {
   return `<div class="gains" role="group" aria-label="側面ごとの強さ">${aspectKeys()
     .map((key) => {
@@ -634,13 +595,13 @@ function compareScreen() {
     sample
       ? '<p class="error-message">事前生成のサンプルです。あなたの選択を反映した結果ではありません。あなたの好みで試すには、下の「好きな画像を選ぶ」へ進んでください。</p>'
       : ""
-  }${feedbackBlock(run)}${adjustBlock(run)}<div class="action-row"><button id="reselect" class="secondary">好きな画像を選ぶ</button><button id="another" class="secondary" ${working ? "disabled" : ""}>別のお題で描く</button>${
+  }${adjustBlock(run)}<div class="action-row"><button id="reselect" class="secondary">好きな画像を選ぶ</button><button id="another" class="secondary" ${working ? "disabled" : ""}>別のお題で描く</button>${
     working ? '<button id="cancel" class="secondary">描くのを中止する</button>' : ""
   }<button id="finish" class="primary">体験を終了</button></div><p class="note">終了すると、この体験の選択・参照・生成画像は削除されます。${cfg.idle_seconds}秒の無操作でも終了します。${working ? "処理中は無操作リセットを止めています。" : ""}</p>`;
   bindAdjust(run);
-  on("pref", ({ pref }) => act(() => answer(pref)));
-  bind("reselect", () => {
+  bind("reselect", async () => {
     say("");
+    await loadAllRounds(); // fill in rounds a reload interrupted
     goto("cards");
   });
   bind("another", () => {
@@ -656,26 +617,6 @@ function compareScreen() {
     goto(session.run ? "compare" : "topics");
   });
   bind("finish", finish);
-}
-/** The optional, labelled answer about this finished comparison. */
-async function answer(preference) {
-  const run = session.run;
-  if (!feedbackVisible(run)) return;
-  try {
-    adoptSession(
-      await api(`/sessions/${session.id}/runs/${run.id}/feedback`, "PUT", {
-        expected_revision: session.revision,
-        preference,
-      }),
-    );
-    say("");
-  } catch (e) {
-    if (e.status !== 409) throw e;
-    adoptAll(await api(`/sessions/${session.id}`));
-    say("この結果には回答できませんでした。画面を最新にしました。");
-  }
-  renderedRun = JSON.stringify(session.run);
-  render();
 }
 function keepScroll(fn) {
   const y = window.scrollY;
@@ -767,6 +708,7 @@ setInterval(() => {
         screen = initialScreen(session, limits);
         renderedRun = JSON.stringify(session.run);
         if (session.run && session.run.status !== "done") poller.start();
+        if (screen === "cards") await loadAllRounds().catch((e) => error(e.message));
       } catch {
         sessionStorage.removeItem(SESSION_KEY);
         session = null;

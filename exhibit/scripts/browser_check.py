@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 """Real Chromium rehearsal of the multi-round FAN flow.
 
-Drives: welcome -> round 1 (pick 3, leave one card unanswered so the commit is
-refused) -> explicit aspects incl. 「全部好き」 -> round 2 (double click asks for
-one round) -> reload -> commit -> topic -> compare -> optional labelled answer ->
+Drives: welcome -> every round served up front as one list -> pick 3 (each starts
+at 「全部好き」; narrowing one to nothing refuses the commit) -> a pick from the last
+round -> reload -> commit -> topic -> compare (no preference question) ->
 adjust an aspect gain -> redraw -> back to identical content (exact cache) ->
-another topic -> cancel mid-generation -> finish -> sample (which must not fill
-the visitor's draft) -> reset. Desktop and ~390px viewports are both asserted to
-be free of horizontal overflow, console errors, failed and external requests.
+another topic -> cancel mid-generation -> finish -> the welcome's QR links.
+Desktop and ~390px viewports are both asserted to be free of horizontal
+overflow, console errors, failed and external requests.
 
 By default the script starts ``exhibit/tests/mock_api.mjs`` itself, so it needs
 no GPU. Point it at a running server with ``--url http://127.0.0.1:7860`` to
@@ -223,50 +223,53 @@ def run_checks(base_url, args, mock):
         limits = cfg["selection"]
         by_id = {card["id"]: card for card in cfg["cards"]}
 
-        # ------------------------------------------------------- 01 round one
+        # ------------------------------------------------------- 01 all rounds
         page.get_by_role("button", name="体験をはじめる").click()
         page.wait_for_selector(".card")
-        first_round = d.cards()
-        assert 0 < len(first_round) <= limits["round_size"], first_round
+        state = d.snapshot()
         assert (
-            len(first_round) < len(cfg["cards"])
-            or len(cfg["cards"]) <= limits["round_size"]
-        ), "the whole catalog must never be one grid"
-        picks = first_round[:3]
+            len(state["rounds"]) == limits["max_rounds"]
+            or not state["next_round_available"]
+        ), "every round is served before the list is shown"
+        listed = [cid for rnd in state["rounds"] for cid in rnd["card_ids"]]
+        assert len(set(listed)) == len(listed), "a card is never shown twice"
+        all_cards = d.cards()
+        assert all_cards == listed, "one list, in the order the rounds were served"
+        assert page.locator("#more").count() == 0, "no button asks for more"
+        served = len(rounds_requested)
+        picks = all_cards[:3]
         for card_id in picks:
             page.locator(f'.card[data-card="{card_id}"]').click()
         page.wait_for_function(
             "(n) => document.querySelectorAll('.ref-edit').length === n", arg=len(picks)
         )
         d.done(
-            f"round 1 shows {len(first_round)} of {len(cfg['cards'])} cards and 3 are chosen"
+            f"all {len(state['rounds'])} rounds show as one list of {len(all_cards)} cards"
+            " and 3 are chosen"
         )
 
-        # -------------------------------------------- 02 explicit aspects
-        assert page.locator("#commit").is_disabled(), "commit must wait for aspects"
-        assert page.locator(".ref-edit.needs").count() == len(picks)
+        # ------------------------------------------ 02 aspects start at 全部好き
         for card_id in picks:
             row = page.locator(f"#pick-{card_id}")
             for aspect in cfg["aspects"]:
                 expect(row.locator(f'.chip[data-aspect="{aspect}"]')).to_have_attribute(
-                    "aria-pressed", "false"
+                    "aria-pressed", "true"
                 )
-        page.screenshot(path=shots / "02-cards-unanswered.png", full_page=True)
-        d.done("a newly selected card answers no aspect and blocks 決定")
+        page.wait_for_function("() => !document.querySelector('#commit').disabled")
+        page.screenshot(path=shots / "02-cards-default.png", full_page=True)
+        d.done("a newly selected card starts at 「全部好き」 and 決定 is open")
 
-        chip = page.locator(f'.chip[data-aspect="color"][data-target="{picks[0]}"]')
-        chip.click()
-        expect(chip).to_have_attribute("aria-pressed", "true")
-        assert page.locator("#commit").is_disabled(), "one answered card is not enough"
+        # Narrow picks[0] to 色 only; empty picks[2], which blocks 決定, then give it 描画.
+        for aspect in cfg["aspects"]:
+            if aspect != "color":
+                page.locator(
+                    f'.chip[data-aspect="{aspect}"][data-target="{picks[0]}"]'
+                ).click()
+        for aspect in cfg["aspects"]:
+            page.locator(f'.chip[data-aspect="{aspect}"][data-target="{picks[2]}"]').click()
+        page.wait_for_function("() => document.querySelector('#commit').disabled")
         reason = page.locator(".action-row .note").first.inner_text()
         assert "1つ以上" in reason, reason
-        # The remaining two cards: one by 「全部好き」, one aspect plus とても好き.
-        page.locator(f'[data-likeall="{picks[1]}"]').click()
-        page.wait_for_function(
-            "(id) => [...document.querySelectorAll(`#pick-${id} .chip[data-aspect]`)]"
-            ".every(el => el.getAttribute('aria-pressed') === 'true')",
-            arg=picks[1],
-        )
         page.locator(f'.chip[data-aspect="texture"][data-target="{picks[2]}"]').click()
         strong = page.locator(f'.step[data-strength="2"][data-target="{picks[2]}"]')
         strong.click()
@@ -283,40 +286,23 @@ def run_checks(base_url, args, mock):
         answers = {row["card_id"]: row for row in state["selection"]}
         assert answers[picks[0]]["aspects"] == ["color"], answers[picks[0]]
         assert sorted(answers[picks[1]]["aspects"]) == sorted(cfg["aspects"])
+        assert answers[picks[2]]["aspects"] == ["texture"], answers[picks[2]]
         assert answers[picks[2]]["strength"] == 2
         page.screenshot(path=shots / "03-cards-answered.png", full_page=True)
-        d.done("aspects are explicit: one chip, 「全部好き」, and a strength of 2")
+        d.done("aspects narrow from 「全部好き」; an empty card blocks 決定 until answered")
 
-        # ---------------------------------------------------- 03 round two
-        before = len(rounds_requested)
-        # Two clicks in the same task: exactly one round may be requested.
-        page.evaluate(
-            "() => { const b = document.querySelector('#more'); b.click(); b.click(); }"
-        )
-        page.wait_for_function(
-            "() => document.querySelector('.round-tag')?.textContent.startsWith('2')"
-        )
-        page.wait_for_timeout(400)
-        assert len(rounds_requested) - before == 1, rounds_requested[before:]
-        state = d.snapshot()
-        assert len(state["rounds"]) == 2
-        second_round = d.cards()
-        assert set(second_round).isdisjoint(first_round), "a card is never shown twice"
-        assert len(second_round) == len(state["rounds"][1]["card_ids"])
-        assert page.locator(".ref-edit").count() == 3, "earlier picks stay editable"
-        extra = second_round[0]
+        # ------------------------------------------- 03 a pick from the last round
+        extra = state["rounds"][-1]["card_ids"][0]
         page.locator(f'.card[data-card="{extra}"]').click()
-        page.locator(f'[data-likeall="{extra}"]').click()
         d.settled(
             lambda value: any(
                 row["card_id"] == extra and row["aspects"] for row in value["selection"]
             )
         )
         assert len(d.snapshot()["selection"]) == 4
-        page.screenshot(path=shots / "04-round-two.png", full_page=True)
-        d.done(
-            "double clicking 「ほかの候補も見る」 asks for one round; earlier picks stay editable"
-        )
+        assert len(rounds_requested) == served, "choosing never asks for a round"
+        page.screenshot(path=shots / "04-last-round-pick.png", full_page=True)
+        d.done("a card from the last round is chosen from the same list")
 
         # ------------------------------------------------- 04 mobile, cards
         page.set_viewport_size({"width": 390, "height": 844})
@@ -325,17 +311,15 @@ def run_checks(base_url, args, mock):
         d.no_overflow("cards at 390px")
         page.screenshot(path=shots / "05-mobile-cards.png", full_page=True)
         page.set_viewport_size({"width": 1440, "height": 1100})
-        d.done("the round grid is 2-3 columns at 390px with no horizontal scroll")
+        d.done("the card grid is 2-3 columns at 390px with no horizontal scroll")
 
         # ---------------------------------------------------- 05 reload
         page.reload()
         page.wait_for_selector(".card")
-        assert d.cards() == second_round, "the reload resumes on the current round"
+        assert d.cards() == all_cards, "the reload restores the whole list"
         assert page.locator(".ref-edit").count() == 4
-        assert page.locator(".card.selected").count() == 1, (
-            "only round 2's pick is here"
-        )
-        d.done("a reload restores the round, the draft and the commit state")
+        assert page.locator(".card.selected").count() == 4
+        d.done("a reload restores the list, the draft and the commit state")
 
         # -------------------------------------------- 06 commit and generate
         with page.expect_response(lambda r: "/selection" in r.url):
@@ -389,28 +373,10 @@ def run_checks(base_url, args, mock):
             + ("" if mock else ", worker settings verified")
         )
 
-        # ------------------------------------------------- 07 optional answer
-        # A real worker exits a moment after its last image; the panel follows `done`.
-        feedback = page.locator(".feedback")
-        feedback.wait_for()
-        assert feedback.count() == 1
-        body = feedback.inner_text()
-        for banned in ("ブラインド", "評価実験", "当てて"):
-            assert banned not in body, body
-        assert "任意" in body, body
-        page.locator('[data-pref="personal"]').click()
-        page.wait_for_function(
-            "() => document.querySelector('[data-pref=\"personal\"]')"
-            ".getAttribute('aria-pressed') === 'true'"
-        )
-        assert d.snapshot()["run"]["feedback"]["preference"] == "personal"
-        page.locator('[data-pref="tie"]').click()
-        page.wait_for_function(
-            "() => document.querySelector('[data-pref=\"tie\"]')"
-            ".getAttribute('aria-pressed') === 'true'"
-        )
-        assert d.snapshot()["run"]["feedback"]["preference"] == "tie"
-        d.done("the optional labelled answer is stored and can be replaced")
+        # ------------------------------------------------ 07 no preference question
+        page.locator(".adjust").wait_for()
+        assert page.locator(".feedback, [data-pref]").count() == 0
+        d.done("the result screen asks no preference question")
 
         # --------------------------------------------- 08 adjust and redraw
         strengthen = page.locator('[data-gain="texture"][data-level="2"]')
@@ -501,25 +467,21 @@ def run_checks(base_url, args, mock):
         assert page.request.get(base_url + personal_image_url).status == 404
         d.done("finish deletes the session and the old personal image URL 404s")
 
-        # -------------------------------------------------------- 13 sample
-        if page.locator("#sample").count():
-            with page.expect_response(lambda r: "/sample" in r.url):
-                page.locator("#sample").click()
-            page.wait_for_selector(".shot")
-            assert page.locator(".shot").count() == 8
-            assert page.locator(".feedback").count() == 0, "a sample is never rated"
-            assert page.locator(".adjust").count() == 0
-            sample_state = d.snapshot()
-            assert sample_state["run"]["mode"] == "sample"
-            assert sample_state["selection"] == [], "a sample never fills the draft"
-            page.screenshot(path=shots / "13-sample.png", full_page=True)
-            page.locator("#reselect").click()
-            page.wait_for_selector(".card")
-            assert page.locator(".card.selected").count() == 0
-            assert page.locator(".ref-edit").count() == 0
-            d.done("a sample is labelled, unrated, and leaves the draft empty")
-            page.locator("#reset").click()
-            page.get_by_role("button", name="体験をはじめる").wait_for()
+        # ------------------------------------------------- 13 welcome extras
+        assert page.locator("#sample").count() == 0, "the welcome offers no sample"
+        links = page.locator(".links-band .qr-link")
+        assert links.count() == 2
+        for i in range(2):
+            qr = links.nth(i).locator("img")
+            assert qr.evaluate("img => img.complete && img.naturalWidth > 0"), (
+                qr.get_attribute("src")
+            )
+        hrefs = [links.nth(i).get_attribute("href") for i in range(2)]
+        assert hrefs == [
+            "https://x.com/tmp_friends",
+            "https://github.com/tmp-friends/personalized-t2i",
+        ], hrefs
+        d.done("the welcome shows the X and GitHub QR codes and no sample picker")
 
         d.no_overflow("welcome at 1440px")
         checks.append("reset")

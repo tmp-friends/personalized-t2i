@@ -18,7 +18,6 @@ from .service import Conflict, Service, active_catalog, default_policy
 
 service = Service()
 STATIC = Path(__file__).parent / "static"
-REPORT = REPO / "docs/reports/fan-personalization"
 
 
 @asynccontextmanager
@@ -123,6 +122,28 @@ class Sample(Body):
     sample_id: str = Field(max_length=100)
 
 
+# The welcome picture: one prepared sample beside the plain image of the same seed.
+# 「逆光と線のない平塗りを選んだ人 · 窓辺で猫と過ごす少女」, its first seed.
+HERO = ("s3-cat", 0)
+
+
+def hero_pair(samples, manifest, catalog):
+    sample_id, index = HERO
+    sample = next((s for s in samples if s["id"] == sample_id), None)
+    if sample is None or sample_errors(sample, ASSETS, catalog=catalog):
+        return None
+    images = sample["images"]
+    plain = (manifest.get("images") or {}).get(f"{sample['topic_id']}-{index}")
+    if index >= len(images) or not plain or plain["seed"] != images[index]["seed"]:
+        return None
+    return {
+        "sample_id": sample_id,
+        "topic_id": sample["topic_id"],
+        "plain_url": "/assets/" + plain["path"],
+        "personal_url": "/assets/" + images[index]["path"],
+    }
+
+
 @app.get("/api/config")
 def config():
     catalog = active_catalog()
@@ -182,6 +203,7 @@ def config():
             for s in samples
             if not sample_errors(s, ASSETS, catalog=catalog)
         ],
+        "hero": hero_pair(samples, manifest, catalog),
         "ready": len(catalog["cards"]) >= CONFIG["selection"]["min"]
         and manifest.get("generation") == CONFIG["generation"],
     }
@@ -297,5 +319,3 @@ def reference(name: str):
 
 app.mount("/static", StaticFiles(directory=STATIC), name="static")
 app.mount("/assets", StaticFiles(directory=ASSETS), name="assets")
-REPORT.mkdir(parents=True, exist_ok=True)
-app.mount("/report", StaticFiles(directory=REPORT, html=True), name="report")

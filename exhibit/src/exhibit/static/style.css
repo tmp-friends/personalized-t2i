@@ -410,25 +410,6 @@ select:hover {
   font-size: 13px;
   color: var(--mute);
 }
-.sample-picker {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  gap: 8px 10px;
-  max-width: 520px;
-  margin-top: 40px;
-  padding-top: 22px;
-  border-top: 1px solid var(--line);
-}
-.sample-lead {
-  grid-column: 1 / -1;
-  font-size: 13px;
-  color: var(--sub);
-}
-.sample-picker .secondary {
-  min-height: 46px;
-  padding: 10px 20px;
-  white-space: nowrap;
-}
 .hero-art {
   display: grid;
   grid-template-columns: repeat(12, 1fr);
@@ -478,11 +459,11 @@ select:hover {
 .journey {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 12px;
-  margin-top: 60px;
+  gap: 10px;
+  margin: 24px 0 30px;
 }
 .journey li {
-  padding: 18px 22px;
+  padding: 14px 16px;
   border: 1px solid var(--line);
   border-radius: var(--r-m);
   background: var(--panel);
@@ -492,12 +473,63 @@ select:hover {
   color: var(--a1);
 }
 .journey h3 {
-  margin-top: 4px;
-  font-size: 16px;
+  margin-top: 2px;
+  font-size: 15px;
   font-weight: 700;
 }
 .journey p {
   font-size: 13px;
+}
+.links-band {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px 20px;
+  margin-top: 60px;
+  padding: 18px 22px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-m);
+  background: var(--panel);
+}
+.links-lead {
+  flex: 1 1 240px;
+  min-width: 0;
+}
+.links-lead h3 {
+  font-size: 16px;
+  font-weight: 700;
+}
+.links-lead p {
+  font-size: 13px;
+}
+.qr-link {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 16px 10px 10px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-m);
+  background: var(--raise);
+  color: var(--sub);
+  font-size: 13px;
+  text-decoration: none;
+}
+.qr-link:hover {
+  border-color: color-mix(in srgb, var(--a1) 45%, var(--line));
+}
+.qr-link img {
+  width: 104px;
+  height: 104px;
+  border-radius: 8px;
+}
+.qr-link span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.qr-link b {
+  display: block;
+  font-size: 15px;
+  color: var(--ink);
 }
 /* ----------------------------------------------- 01 cards: 4 x 4 grid */
 .topline {
@@ -547,17 +579,6 @@ select:hover {
   margin-bottom: 14px;
   font-size: 13px;
   color: var(--mute);
-}
-.round-tag {
-  padding: 3px 12px;
-  border-radius: var(--pill);
-  background: var(--raise);
-  box-shadow: inset 0 0 0 1px var(--line);
-  font: 500 12px var(--mono);
-  color: var(--a1);
-}
-.round-note {
-  color: var(--warn);
 }
 .round-actions {
   display: flex;
@@ -787,7 +808,7 @@ select:hover {
 .ref-body .seg {
   margin-bottom: 10px;
 }
-/* ------------------------------------------------ adjust & feedback */
+/* ---------------------------------------------------------- adjust */
 .gains {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -809,16 +830,14 @@ select:hover {
   font-size: 14px;
   font-weight: 600;
 }
-.adjust,
-.feedback {
+.adjust {
   margin-top: 30px;
   padding: 22px;
   border: 1px solid var(--line);
   border-radius: 20px;
   background: var(--panel);
 }
-.adjust .picked-head,
-.feedback .picked-head {
+.adjust .picked-head {
   margin-top: 0;
 }
 .adjust .ref-edit {
@@ -826,9 +845,6 @@ select:hover {
 }
 .adjust .action-row {
   margin-top: 22px;
-}
-.feedback .seg {
-  background: var(--raise);
 }
 .statusbox.quiet-box {
   border-color: var(--line);
@@ -1131,7 +1147,7 @@ summary {
   object-fit: cover;
   border-radius: 5px;
 }
-/* --------------------------------------------------------- feedback */
+/* ----------------------------------------------------------- errors */
 .error-message {
   margin-top: 18px;
   padding: 14px 18px;
@@ -1218,12 +1234,9 @@ summary {
   .hero .primary {
     width: 100%;
   }
-  .sample-picker {
-    grid-template-columns: minmax(0, 1fr);
-  }
   .journey {
     grid-template-columns: minmax(0, 1fr);
-    margin-top: 40px;
+    margin: 20px 0 24px;
   }
   .stepbar {
     display: flex;
@@ -1247,8 +1260,7 @@ summary {
   .topic {
     border-radius: 12px;
   }
-  .adjust,
-  .feedback {
+  .adjust {
     margin-inline: -8px;
     padding: 16px 12px;
     border-radius: 16px;

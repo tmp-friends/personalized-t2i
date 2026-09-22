@@ -222,14 +222,14 @@ test("a short round and the end of the pool are explained in plain words", () =>
 
 /* ------------------------------------------------------- draft editing */
 
-test("a newly selected card starts with no answered aspect and 「全部好き」 is explicit", () => {
+test("a newly selected card starts at 「全部好き」 and can be narrowed", () => {
   let draft = emptyDraft(ASPECTS);
-  ({ draft } = toggleCard(draft, "c01", LIMITS));
+  ({ draft } = toggleCard(draft, "c01", LIMITS, ASPECTS));
   assert.deepEqual(draft.selection, [
-    { card_id: "c01", strength: 1, aspects: [] },
+    { card_id: "c01", strength: 1, aspects: ["color", "lighting", "mood", "texture"] },
   ]);
-  // Nothing but the explicit action fills every aspect in.
-  draft = toggleAspect(draft, "c01", "texture", ASPECTS);
+  for (const aspect of ["color", "lighting", "mood"])
+    draft = toggleAspect(draft, "c01", aspect, ASPECTS);
   assert.deepEqual(draft.selection[0].aspects, ["texture"]);
   draft = likeAll(draft, "c01", ASPECTS);
   assert.deepEqual(draft.selection[0].aspects, ["color", "lighting", "mood", "texture"]);

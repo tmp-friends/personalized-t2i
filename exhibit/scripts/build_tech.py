@@ -24,9 +24,15 @@ OUTPUT = ASSETS / "tech.html"
 LINKS = {
     "home": ("/", None),
     "fallback": ("/fallback", "fallback.html"),
-    "report": ("/report/", "../../docs/reports/fan-personalization/index.html"),
+    "tech": ("/tech", "tech.html"),
 }
 FAN_REPO = "https://github.com/Burf/FAN"
+# The paper's method figure, copied from the upstream repository (MIT License).
+FAN_FIGURE = ASSETS / "fan-method.png"
+# Transformer layers of SDXL's two text encoders.
+ENCODER_LAYERS = {"CLIP-L": 12, "OpenCLIP bigG": 32}
+# Example reference weights for the attention-share figure in section 2.
+EXAMPLE_WEIGHTS = (2, 1, 1)
 MODEL_PAGE = "https://huggingface.co/{}"
 
 
@@ -55,6 +61,12 @@ def link(name, label, cls=""):
     else:
         attrs += " data-server-only"
     return f'<a href="{e(href)}"{attrs}>{label}</a>'
+
+
+def pa_layers(n_layers, policy):
+    """Layers whose personalized attention reaches the hidden states actually used."""
+    used = n_layers + policy["skip"] + 1 if policy["skip"] < 0 else policy["skip"]
+    return [index for index in range(used) if index not in policy["skip_pa"]]
 
 
 def sampler_label(generation):
@@ -109,9 +121,6 @@ h1{margin-top:16px;font-size:clamp(30px,5.2vw,48px);font-weight:900;line-height:
 .lead{margin-top:16px;color:var(--sub);max-width:44em}
 p{color:var(--sub)}p+p{margin-top:12px}
 strong{color:var(--ink)}
-.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:24px}
-.chip{padding:6px 12px;border:1px solid var(--line);border-radius:10px;background:var(--panel);font-size:13px;color:var(--sub)}
-.chip b{font-family:var(--mono);font-weight:500;color:var(--ink);margin-left:6px}
 section{margin-top:72px}
 h2{display:flex;align-items:baseline;gap:12px;font-size:clamp(22px,3.2vw,28px);font-weight:900;
 line-height:1.4;letter-spacing:-.01em;margin-bottom:16px}
@@ -155,11 +164,26 @@ dl.kv dd small{display:block;color:var(--mute);font-size:12.5px;margin-top:2px}
 .card-example div:first-child{border-top:0;background:var(--panel);color:var(--ink);display:block}
 .card-example span{color:var(--mute)}
 .card-example code{background:none;padding:0;color:var(--ink)}
-ul.dont li{position:relative;padding:12px 0 12px 30px;border-bottom:1px solid var(--line);color:var(--sub)}
-ul.dont li:before{content:"×";position:absolute;left:4px;top:11px;color:var(--a2);font-weight:700}
-ul.dont b{color:var(--ink)}
-.more{margin-top:16px;font-size:14px}
-.more a{color:var(--a1)}
+.paper{margin-top:20px;border:1px solid var(--line);border-radius:20px;background:var(--panel);padding:16px}
+.paper img{display:block;width:100%;max-width:470px;height:auto;margin:auto;border-radius:12px;background:#fff;padding:8px}
+.paper figcaption{margin-top:12px;font-size:13px;color:var(--sub)}
+.paper dl{display:grid;grid-template-columns:auto 1fr;gap:4px 10px;margin-top:8px}
+.paper dt{font-family:var(--mono);color:var(--a1)}.paper dd{margin:0}
+.paper .credit{margin-top:8px;font-size:12px;color:var(--mute)}
+.batch{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px;margin-top:16px}
+.batch div{border:1px solid var(--line);border-radius:12px;background:var(--panel);padding:10px 12px;font-size:13px;color:var(--sub)}
+.batch b{display:block;color:var(--ink);font-size:14px}
+.batch .q{border-color:color-mix(in srgb,var(--a2) 55%,transparent);background:linear-gradient(160deg,var(--tint),var(--panel) 70%)}
+.batch .q b{color:var(--a1)}
+.share{margin:18px 0 16px}
+.share .bar{display:flex;height:44px;border-radius:12px;overflow:hidden;border:1px solid var(--line)}
+.share .bar span{display:grid;place-items:center;font-family:var(--mono);font-size:12px;min-width:0;
+white-space:nowrap;overflow:hidden;border-left:2px solid var(--bg)}
+.share .bar span:first-child{border-left:0}
+.share .t{background:var(--raise);color:var(--ink)}
+.share .r{background:color-mix(in srgb,var(--a2) 40%,var(--raise));color:var(--ink)}
+.share .r.alt{background:color-mix(in srgb,var(--a1) 34%,var(--raise))}
+.share .legend{display:flex;flex-wrap:wrap;gap:4px 16px;margin-top:8px;font-size:12.5px;color:var(--mute)}
 footer{border-top:1px solid var(--line);padding:20px max(16px,4vw);font-size:12px;color:var(--mute);
 display:flex;flex-wrap:wrap;gap:8px 20px;justify-content:space-between}
 footer a{color:var(--sub)}footer .links{display:flex;flex-wrap:wrap;gap:4px 16px}
@@ -208,23 +232,147 @@ def facts():
         "model_name": generation["model"].split("/")[-1].replace("-", " "),
         "sampler": sampler_label(generation),
         "seeds": CONFIG["seeds"],
-        "timeout": CONFIG["timeout_seconds"],
-        "idle": CONFIG["idle_seconds"],
         "selection": CONFIG["selection"],
         "aspects": CONFIG["aspect_labels"],
-        "topics": CONFIG["topics"],
         "fan": CONFIG["fan"],
         "default_id": default_id,
         "policy": thaw_policy(resolve_policy(default_id, FAN_POLICIES)),
         "other_policies": sorted(set(FAN_POLICIES["policies"]) - {default_id}),
         "manifest_matches": manifest.get("generation") == generation,
-        "generic_count": len(manifest.get("images", {})),
         "catalog_id": catalog["catalog_id"],
         "card_total": len(catalog["all_cards"]),
         "subjects": len(catalog_config.get("subjects", [])),
         "profiles": len(catalog_config.get("profiles", [])),
         "example": catalog["cards"][0] if catalog["cards"] else None,
     }
+
+
+def share_bar(alpha, weights=EXAMPLE_WEIGHTS):
+    """One target token's attention budget: 1 − α on the prompt, α split by weight."""
+    total = sum(weights)
+    shares = [("t", "お題", 1 - alpha)] + [
+        ("r alt" if index % 2 else "r", f"参照{index + 1}", alpha * weight / total)
+        for index, weight in enumerate(weights)
+    ]
+    bar = "".join(
+        f'<span class="{cls}" style="width:{share * 100:.2f}%">{e(label)} {share:.3g}</span>'
+        for cls, label, share in shares
+    )
+    listed = " / ".join(number(float(weight)) for weight in weights)
+    return (
+        f'<figure class="share" aria-label="お題の1トークンの注意の配分の例"><div class="bar">{bar}</div>'
+        f'<figcaption class="legend"><span>例：α = {number(alpha)}、参照3つの weight が {listed} のとき</span>'
+        "<span>参照の中でどのトークンを見るかは、Query と Key の近さで決まります</span></figcaption></figure>"
+    )
+
+
+def fan_section(f):
+    """Section 2: how FAN mixes the references in, following the upstream code."""
+    policy, commit, decoders = f["policy"], f["fan"]["commit"], f["fan"]["decoders"]
+    alpha = number(policy["alpha"])
+    skip_pa = layer_range(policy["skip_pa"])
+    sample_size = profiling_argument(policy)
+    figure = base64.b64encode(FAN_FIGURE.read_bytes()).decode()
+    layers = "".join(
+        f"<dt>{e(name)}</dt><dd>{n}層のうち {e(layer_range(pa_layers(n, policy)))} 層目の"
+        f"{len(pa_layers(n, policy))}層</dd>"
+        for name, n in ENCODER_LAYERS.items()
+    )
+    return (
+        '<section id="fan"><h2><span class="n">2</span>FAN の仕組み</h2>'
+        f'<p><a href="{FAN_REPO}">FAN</a>（Foundation Encoders Are All You Need for '
+        "Preference-Aware Personalization, CVPR 2026）は、画像生成モデルに好みを伝えるために"
+        "<strong>テキストエンコーダーの self-attention だけを組み替える</strong>手法です。"
+        "追加の学習も、アダプターのような追加の構造も使いません。展示は公式実装を固定 commit "
+        f"<code>{e(commit[:12])}</code> のまま、SDXL の2つのテキストエンコーダー"
+        "（CLIP-L と OpenCLIP bigG）の両方に適用しています。</p>"
+        '<figure class="paper">'
+        f'<img src="data:image/png;base64,{figure}" width="470" height="412" '
+        'alt="FAN の構成図。(a) 好みの参照の分布と、その中からの選別。(b) お題の Query と、'
+        "お題・参照を連結した Key/Value で計算する personalized attention。"
+        '(c) personalized attention の層と通常の self-attention の層を重ねたエンコーダー。">'
+        "<figcaption>論文の手法図。3つの要素でできています。<dl>"
+        "<dt>(a)</dt><dd><strong>Tailored profiling</strong>：たくさんの参照（青）の中から、"
+        "お題（赤）に対して好みを代表する参照を選ぶ。</dd>"
+        "<dt>(b)</dt><dd><strong>Personalized attention (PA)</strong>：お題のトークンが、"
+        "自分の文に加えて参照の文にも注意を向ける。重みは元の self-attention と共有。</dd>"
+        "<dt>(c)</dt><dd><strong>Conditioning optimization</strong>：PA の層と通常の "
+        "self-attention (SA) の層を組み合わせ、お題を保ったまま好みを反映した条件を作る。</dd>"
+        "</dl>"
+        '<p class="credit">出典：Kim, Ahn, Seo, CVPR 2026。図は公式リポジトリの '
+        "<code>asset/method.png</code>（© 2026 Hyungjin Kim, MIT License）。</p>"
+        "</figcaption></figure>"
+        # ---------------------------------------------------------------- batch
+        "<h3>1回のエンコードで起きること</h3>"
+        "<p>お題の文と参照の文をそれぞれ77トークンにそろえ、次の並びで1つのバッチにして"
+        "テキストエンコーダーへ入れます。</p>"
+        '<div class="batch">'
+        '<div class="q"><b>お題</b>PA で参照を混ぜる本体。最後にこの出力だけを使う</div>'
+        "<div><b>お題のコピー</b>通常の self-attention のまま進む</div>"
+        "<div><b>参照 1 … R</b>それぞれ通常の self-attention のまま進む</div>"
+        "</div>"
+        '<ol class="steps">'
+        '<li data-n="1"><b>コピーと参照は、ふつうにエンコードされる</b>'
+        "<span>各層で元の self-attention をそのまま通ります。参照どうしが混ざることもありません。</span></li>"
+        '<li data-n="2"><b>お題だけが personalized attention を行う</b>'
+        "<span>Query はお題自身から、Key と Value は<strong>同じ層</strong>の「お題のコピー」と"
+        "「全参照」を連結したものから作ります（図 (b) の ‖）。"
+        "Q・K・V の射影には元の層の重みをそのまま使います。</span></li>"
+        '<li data-n="3"><b>お題の出力だけを取り出す</b>'
+        "<span>エンコードが終わったら、お題の hidden states を <code>prompt_embeds</code> "
+        "として生成モデルへ渡します。差し替えたメソッドはエンコードのたびに元へ戻します。</span></li>"
+        "</ol>"
+        # ---------------------------------------------------------------- share
+        "<h3>注意の配分</h3>"
+        "<p>お題の各トークンの注意は、お題の文と参照の文に次の割合で分けられます。</p>"
+        '<div class="formula">注意 = (1 − α) × softmax(お題の文) ‖ α × Σ<sub>r</sub> '
+        "(w<sub>r</sub> / Σw) × softmax(参照 r の文)"
+        "<small>softmax は文ごとに別々に計算し、‖ は連結。w<sub>r</sub> は参照 r の weight</small></div>"
+        "<p>お題の文への注意は通常どおり softmax して合計 <strong>1 − α</strong>。"
+        "参照の側は、参照ごとにその77トークンの中で softmax してから weight を掛け、"
+        "参照全体の合計が <strong>α</strong> になるように割り直します。"
+        "つまり α は「参照全体にどれだけ回すか」、weight は「その中で参照どうしをどう分けるか」を決めます。"
+        f"展示の α は <strong>{alpha}</strong> です。</p>"
+        + share_bar(policy["alpha"])
+        + "<p>α = 0 なら、お題のコピー（参照なしでエンコードされた文）だけを見ることになり、"
+        "参照なしのエンコードと同じ結果になります。"
+        "また CLIP のテキストエンコーダーは前のトークンしか見ない因果マスクを持つため、"
+        "お題の i 番目のトークンが見られるのは、コピーと各参照でも先頭から i 番目までのトークンです。</p>"
+        # ---------------------------------------------------------------- layers
+        "<h3>どの層で混ぜるか</h3>"
+        "<p>公式実装では <code>skip_pa</code> で「PA を行わず通常の self-attention のままにする層」"
+        f"を指定できます（図 (c) の SA の層）。展示では入力側の {e(skip_pa)} 層目を SA のままにし、"
+        "それより出力側の層だけで参照を混ぜます。"
+        "hidden states は最終層の1つ手前から取るので、画像に効いている PA の層は次のとおりです。</p>"
+        f'<dl class="kv">{layers}</dl>'
+        # ---------------------------------------------------------------- pooled
+        "<h3>pooled 埋め込みと ClassTokenDecoder</h3>"
+        "<p>SDXL はトークンごとの hidden states に加えて、文全体を1本にまとめた pooled 埋め込みも使います。"
+        "通常は文末トークンの位置から取りますが、参照を混ぜた系列ではどの位置が文全体を代表するかが変わります。"
+        "そこで FAN は、最終層の hidden states から各トークンの得点を出す小さな分類器 "
+        "<strong>ClassTokenDecoder</strong>（2層の MLP）を使い、得点が最も高い位置から pooled を取ります。"
+        "重みは公式リポジトリ同梱の <code>weight/L.pth</code> と <code>weight/bigG.pth</code> で"
+        f"（sha256 は設定に固定：L <code>{e(decoders['L.pth'][:12])}…</code> / "
+        f"bigG <code>{e(decoders['bigG.pth'][:12])}…</code>）、"
+        "エンコーダー本体は学習し直しません。展示の既定設定では pooled を参照なしの値に置き換えるため（4章）、"
+        "画像に効いているのは hidden states 側の混合です。</p>"
+        # ---------------------------------------------------------------- profiling
+        "<h3>Tailored profiling（参照の選別）</h3>"
+        "<p>参照が多いとき、公式実装は <code>sample_size</code> の割合だけ参照を選びます。"
+        "まずお題とのトークン単位の類似度に weight を掛けた値で候補を絞り、"
+        "次にその中から、お題やすでに選んだ参照と似ていないものを順に選びます"
+        "（weight が大きい参照ほど選ばれやすくなります）。"
+        "近いものだけを集めるのではなく、好みの幅を少ない参照で覆うための選び方です。"
+        + (
+            "展示では選別せず、選ばれた参照をすべて使います（4章）。</p>"
+            if sample_size == 0
+            else f"展示では <code>sample_size</code> = <code>{e(sample_size)}</code> で使っています。</p>"
+        )
+        + '<div class="callout"><p><strong>来場者ごとの追加学習はしません。</strong>'
+        "生成モデルもテキストエンコーダーも更新しません。好みはエンコードのたびに、"
+        "参照の文として attention に混ぜるだけです。</p></div>"
+        "</section>"
+    )
 
 
 def render(f=None):
@@ -235,8 +383,6 @@ def render(f=None):
     alpha = number(policy["alpha"])
     size = f"{g['width']}×{g['height']}"
     seeds = len(f["seeds"])
-    commit = f["fan"]["commit"]
-    decoders = f["fan"]["decoders"]
     skip_pa = layer_range(policy["skip_pa"])
     sample_size = profiling_argument(policy)
     strengths = " / ".join(number(value) for value in STRENGTHS)
@@ -248,7 +394,7 @@ def render(f=None):
             '<!doctype html><html lang="ja"><head><meta charset="utf-8">'
             '<meta name="viewport" content="width=device-width,initial-scale=1">'
             '<meta name="theme-color" content="#100d0c">'
-            "<title>しくみ · パーソナライズ画像生成</title>"
+            "<title>技術解説 · パーソナライズ画像生成</title>"
             f'<link rel="icon" href="{ICON}">'
             "<style>"
             + font_face("Geist", "Geist-Variable.woff2")
@@ -258,33 +404,23 @@ def render(f=None):
             f'<header><span class="brand">{MARK}パーソナライズ画像生成</span>'
             '<span class="powered">powered by FAN</span><nav>'
             + link("home", "体験に戻る")
-            + link("fallback", "事前生成サンプル")
-            + link("report", "検証記録")
+            + link("fallback", "サンプル")
             + "</nav></header><main>"
             # ------------------------------------------------------------ hero
             '<span class="pill">技術解説</span>'
             '<h1>好みを選ぶだけで、<span class="grad">画像が変わるしくみ</span></h1>'
             '<p class="lead">この展示の実装が、どう動いているかを1ページにまとめました。'
-            "何を測って何が確認できたか（検証の記録と数値）は "
-            + link("report", "検証記録")
-            + " にあります。ここでは数値は要点だけにしています。</p>"
-            '<div class="chips">'
-            f'<span class="chip">モデル<b>{model}</b></span>'
-            f'<span class="chip">解像度<b>{size}</b></span>'
-            f'<span class="chip">steps<b>{g["steps"]}</b></span>'
-            f'<span class="chip">sampler<b>{e(f["sampler"])}</b></span>'
-            f'<span class="chip">CFG<b>{g["guidance_scale"]}</b></span>'
-            f'<span class="chip">alpha<b>{alpha}</b></span>'
-            "</div>"
+            "中心になるのは、テキストエンコーダーの中で好みを混ぜる FAN です。</p>"
             # ------------------------------------------------------------ 1
             '<section id="flow"><h2><span class="n">1</span>全体の流れ</h2>'
             "<p>来場者が決めるのは「どの画像のどこが好きか」だけです。"
             "それが参照の文になり、テキストエンコーダーの段階でお題の文に混ざります。</p>"
             '<ol class="steps">'
-            f'<li data-n="1"><b>好きな画像を選ぶ</b><span>1画面{sel["round_size"]}枚・'
-            f"最大{sel['max_rounds']}回で、合計{sel['min']}〜{sel['max']}枚。</span></li>"
-            f'<li data-n="2"><b>好きな側面を指定する</b><span>選んだ画像ごとに'
-            f"{e(aspect_names)}から1つ以上。強さ <code>strength</code> は {strengths}。</span></li>"
+            f'<li data-n="1"><b>好きな画像を選ぶ</b><span>最大{sel["round_size"] * sel["max_rounds"]}枚の'
+            f"候補の一覧から、合計{sel['min']}〜{sel['max']}枚。</span></li>"
+            f'<li data-n="2"><b>好きな側面を指定する</b><span>選んだ画像は最初「全部好き」'
+            f"（{e(aspect_names)}のすべて）になっていて、好きなところだけに絞れます。"
+            f"強さ <code>strength</code> は {strengths}。</span></li>"
             '<li data-n="3"><b>確認済みの説明文を参照にする</b><span>'
             "指定した側面に付いた短い英語の句を集めて、重み付きの参照リストにします。</span></li>"
             '<li data-n="4"><b>FAN でお題の文をエンコードする</b><span>'
@@ -307,33 +443,9 @@ def render(f=None):
             "反映の強さ <code>alpha</code> だけです。同じ seed の順に並べるので、"
             "同じ位置の2枚は同じ seed から描かれています。</figcaption></figure>"
             "</section>"
-            # ------------------------------------------------------------ 2
-            '<section id="fan"><h2><span class="n">2</span>FAN の仕組み</h2>'
-            f'<p><a href="{FAN_REPO}">FAN</a>（Foundation Encoders Are All You Need for '
-            "Preference-Aware Personalization, CVPR 2026）の公式実装を、固定 commit "
-            f"<code>{e(commit[:12])}</code> のまま使っています。"
-            "SDXL の2つのテキストエンコーダー（CLIP-L と OpenCLIP bigG）の両方で、"
-            "self-attention を <strong>personalized attention</strong> に差し替えます。</p>"
-            '<div class="formula">お題のトークンの注意 = (1 − α) × お題の文 ＋ α × 参照の文'
-            "<small>参照どうしの配分は参照ごとの weight で決まり、参照全体に回る割合は α で決まります</small></div>"
-            "<p>お題の文のトークンは、自分の文に加えて参照の文のトークンにも注意を向けます。"
-            "その結果の hidden states を <code>prompt_embeds</code> として生成モデルへ渡します。"
-            f"展示の α は <strong>{alpha}</strong> です。"
-            "weight を大きくしても、ほかの参照との比率が変わるだけで、参照全体の強さは α のままです。</p>"
-            "<h3>ClassTokenDecoder（追加の重み）</h3>"
-            "<p>参照を混ぜた系列から pooled 埋め込みを取るトークン位置を選ぶ小さな分類器で、"
-            "公式リポジトリ同梱の <code>weight/L.pth</code> と <code>weight/bigG.pth</code> を読み込みます"
-            f"（sha256 は設定に固定：L <code>{e(decoders['L.pth'][:12])}…</code> / "
-            f"bigG <code>{e(decoders['bigG.pth'][:12])}…</code>）。"
-            "展示の既定設定では pooled を参照なしの値に置き換えるため（4章）、"
-            "画像に効いているのは hidden states 側の混合です。</p>"
-            '<div class="callout"><p><strong>来場者ごとの追加学習はしません。</strong>'
-            "生成モデルもテキストエンコーダーも更新しません。"
-            "FAN 公式の ClassTokenDecoder の重みは読み込みますが、"
-            "展示の既定設定ではその出力を画像に使っていません（上記）。</p></div>"
-            "</section>"
         )
     ]
+    parts.append(fan_section(f))
     # ---------------------------------------------------------------- 3
     example = f["example"]
     example_rows = ""
@@ -407,9 +519,7 @@ def render(f=None):
             if others
             else ""
         )
-        + '<p class="more">各設定を比較した実測と判定は '
-        + link("report", "検証記録（/report/）")
-        + " を参照してください。</p></section>"
+        + "</section>"
     )
     # ---------------------------------------------------------------- 5
     vae_row = ""
@@ -450,50 +560,11 @@ def render(f=None):
         )
         + "</section>"
     )
-    # ---------------------------------------------------------------- 6
-    parts.append(
-        '<section id="system"><h2><span class="n">6</span>システム構成</h2>'
-        '<dl class="kv">'
-        "<dt>Web</dt><dd>FastAPI を1プロセスで起動します。モデルは Web プロセスに読み込みません。"
-        "体験は同時に1つだけです。</dd>"
-        "<dt>GPU ワーカー</dt><dd>生成ごとに別プロセスを起動し、FAN 専用の環境 "
-        f"<code>{e(f['fan']['python'])}</code> で動かします。"
-        "<small>FAN の attention の差し替えは transformers 5 系と互換がないため、環境を分けています。"
-        "GPU はファイルロック1つで排他し、ワーカーが終了してから解放します。</small></dd>"
-        "<dt>通常生成</dt><dd>お題 × seed の画像を事前に生成しておき"
-        f"（{len(f['topics'])}お題 × {seeds} = {f['generic_count']}枚）、"
-        "その場ではパーソナライズ生成の4枚だけを描きます。</dd>"
-        "<dt>run のモード</dt><dd><code>live</code>：その場で生成 / "
-        "<code>exact-cache</code>：同じ体験中に同じ内容で生成済みなら、その画像を再表示 / "
-        "<code>sample</code>：代表的な選択から事前生成したサンプル（来場者の選択の結果ではありません）</dd>"
-        f"<dt>時間の制限</dt><dd>{f['idle']}秒操作がなければ体験を終了し、一時データを削除します"
-        f"（生成中は止めます）。1回の生成（{seeds}枚）は {f['timeout']}秒で打ち切ります。</dd>"
-        "<dt>中止</dt><dd>比較が成立しないので、その run ごと破棄します。</dd>"
-        "<dt>オフライン</dt><dd>ワーカーは Hugging Face / Transformers の offline mode を強制します。"
-        "モデルと固定画像が準備済みなら、インターネット接続は要りません。</dd>"
-        "</dl></section>"
-    )
-    # ---------------------------------------------------------------- 7
-    parts.append(
-        '<section id="limits"><h2><span class="n">7</span>言わないこと</h2>'
-        "<p>説明を正確に保つため、次のことは主張しません。</p>"
-        '<ul class="dont">'
-        "<li><b>attention から因果を説明しない。</b>"
-        "attention の値から「この色はこの画像から来た」とは言いません。</li>"
-        "<li><b>比較表示は性能の主張ではない。</b>"
-        "通常生成とパーソナライズ生成を並べるのは違いを見てもらうためで、"
-        "どちらが優れているかを示すものではありません。強く反映するほど良いとも言いません。</li>"
-        "<li><b>論文の定量結果を展示の性能として扱わない。</b>"
-        f"公式のエンコーダー処理を {model} と展示のカードで動かしていますが、"
-        "論文の数値を再現したとは言いません。</li>"
-        "</ul></section>"
-    )
     parts.append(
         "</main><footer><span>このページは <code>exhibit/scripts/build_tech.py</code> が"
         '設定ファイルから生成しています。</span><span class="links">'
         + link("home", "体験に戻る")
-        + link("fallback", "事前生成サンプル")
-        + link("report", "検証記録")
+        + link("fallback", "サンプル")
         + "</span></footer>"
         + FILE_LINKS
         + "</body></html>\n"

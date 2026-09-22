@@ -184,8 +184,8 @@ const edit = (draft, cardId, change) =>
     ),
   );
 
-/** Selecting a card never answers its aspects; 「全部好き」 is a separate action. */
-export function toggleCard(draft, cardId, limits = DEFAULT_SELECTION) {
+/** A newly selected card starts at 「全部好き」; the visitor narrows it from there. */
+export function toggleCard(draft, cardId, limits = DEFAULT_SELECTION, keys = ASPECT_KEYS) {
   const lim = withLimits(limits);
   const selection = draft.selection || [];
   if (selection.some((entry) => entry.card_id === cardId))
@@ -204,7 +204,7 @@ export function toggleCard(draft, cardId, limits = DEFAULT_SELECTION) {
   return {
     draft: replace(draft, [
       ...selection,
-      { card_id: cardId, strength: 1, aspects: [] },
+      { card_id: cardId, strength: 1, aspects: canonicalAspects(keys, keys) },
     ]),
     error: null,
   };
@@ -231,7 +231,7 @@ export function toggleAspect(draft, cardId, aspect, keys = ASPECT_KEYS) {
   }));
 }
 
-/** The explicit 「全部好き」 action; nothing else may fill every aspect in. */
+/** 「全部好き」: fill every aspect back in after the visitor narrowed them. */
 export function likeAll(draft, cardId, keys = ASPECT_KEYS) {
   return edit(draft, cardId, () => ({ aspects: canonicalAspects(keys, keys) }));
 }
