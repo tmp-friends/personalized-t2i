@@ -5,24 +5,28 @@ import base64
 import html
 import io
 
+from build_tech import FILE_LINKS, ICON, MARK, font_face, link
+from build_tech import STYLE as TECH_STYLE
 from exhibit.catalog import load_catalog
 from exhibit.config import ASSETS, CONFIG, read_json
-from exhibit.domain import LEGACY_POLICY_ID, legacy_policy
 from exhibit.preflight import sample_errors
 from PIL import Image
 
+# The tech page's look (tokens, fonts, header, headings), plus the image grids.
 STYLE = (
-    "body{margin:0;color-scheme:dark;background:#0b0d0c;color:#f3f5ed;"
-    'font-family:"Noto Sans CJK JP","Hiragino Kaku Gothic ProN",system-ui,sans-serif;line-height:1.9}'
-    "main{max-width:1100px;margin:auto;padding:40px 24px}h1{font-size:40px;font-weight:900;letter-spacing:-1px}"
-    "h2{font-weight:900;margin-top:65px;border-top:1px solid #343c35;padding-top:24px}"
-    ".badge{background:#1c2816;color:#c5f55a;border:1px solid #425a2c;padding:10px 18px;display:inline-block;border-radius:2px}"
-    ".grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}"
-    ".cards{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}"
-    "img{width:100%;border-radius:2px}figure{margin:0}"
-    "figcaption{font-size:11px;font-family:monospace;color:#a2aba5}p{color:#a2aba5}"
-    "details{border:1px solid #343c35;padding:14px;margin-top:20px}summary{cursor:pointer;color:#c5f55a}"
-    "a{color:inherit}@media(max-width:600px){.grid,.cards{grid-template-columns:1fr 1fr}h1{font-size:28px}}"
+    TECH_STYLE
+    + """
+main{max-width:1100px}
+.grid,.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:12px}
+figure{margin:0}
+figure img{display:block;width:100%;height:auto;border-radius:12px;border:1px solid var(--line)}
+figcaption{margin-top:4px;font-family:var(--mono);font-size:11.5px;color:var(--mute)}
+.meta{font-family:var(--mono);font-size:13px;color:var(--mute)}
+details{margin-top:18px;border:1px solid var(--line);border-radius:14px;background:var(--panel);padding:12px 16px}
+summary{cursor:pointer;color:var(--a1);font-size:14px}
+details p{margin-top:10px;font-size:13px;overflow-wrap:anywhere}
+@media(max-width:640px){.grid,.cards{grid-template-columns:1fr 1fr}}
+"""
 )
 
 
@@ -51,42 +55,43 @@ def main():
     topic_images = (read_json(ASSETS / "manifest.json", {}) or {}).get("images", {})
     card_images = (read_json(ASSETS / "catalog-v2.json", {}) or {}).get("images", {})
     catalog = load_catalog(reviewed_only=True)
-    limits = CONFIG["selection"]
-    policy = legacy_policy()
     parts = [
         (
-            '<!doctype html><html lang="ja"><meta charset="utf-8">'
+            '<!doctype html><html lang="ja"><head><meta charset="utf-8">'
             '<meta name="viewport" content="width=device-width,initial-scale=1">'
-            "<title>FAN · 事前生成サンプル</title>"
-            f"<style>{STYLE}</style><main>"
-            '<span class="badge">事前生成サンプル · オフライン表示</span>'
-            "<h1>パーソナライズ画像生成 — FAN 体験展示</h1>"
-            "<p>好みを選ぶだけで、あなた向けの画像を生成する展示です。"
-            "このページは代表的な選択から事前に生成したサンプルです。いま選んだ内容を反映した結果ではありません。"
+            '<meta name="theme-color" content="#100d0c">'
+            "<title>サンプル · パーソナライズ画像生成</title>"
+            f'<link rel="icon" href="{ICON}">'
+            "<style>"
+            + font_face("Geist", "Geist-Variable.woff2")
+            + font_face("Geist Mono", "GeistMono-Variable.woff2")
+            + " ".join(STYLE.split("\n"))
+            + "</style></head><body>"
+            f'<header><span class="brand">{MARK}パーソナライズ画像生成</span>'
+            '<span class="powered">powered by FAN</span><nav>'
+            + link("home", "体験に戻る")
+            + link("tech", "技術解説")
+            + "</nav></header><main>"
+            '<span class="pill">サンプル</span>'
+            '<h1>代表的な好みで描いた、<span class="grad">サンプル</span></h1>'
+            '<p class="lead">好みを選ぶだけで、あなた向けの画像を生成する展示です。'
+            "このページは代表的な選択から事前に生成したサンプルです。"
+            "いま選んだ内容を反映した結果ではありません。"
             "画像はすべてローカルの Illustrious XL v2.0 で生成しています。</p>"
-            f"<p>好きな画像を{limits['min']}〜{limits['max']}枚選ぶ"
-            f"（1画面{limits['round_size']}枚・最大{limits['max_rounds']}回）→ "
-            "選んだ画像の好きな側面（色・光・描画・雰囲気）を指定する → "
-            "その側面に付いた確認済みの説明文を参照にする → "
-            "同じお題・同じ seed・同じ生成設定で、通常生成とパーソナライズ生成を並べる。"
-            "来場者ごとの追加学習はありません。ただし FAN 公式実装の ClassTokenDecoder"
-            "（<code>weight/L.pth</code> / <code>weight/bigG.pth</code>）を使います。</p>"
-            "<p>変わるのは参照の内容・重み <code>weight</code>・反映の強さ <code>alpha</code> だけで、"
-            "お題の文も負のプロンプトも生成モデルも同じです。強く反映するほど良いとは限りません。</p>"
-            f"<p>エンコーダー設定は <code>configs/fan-policies.json</code> の "
-            f"<code>{html.escape(LEGACY_POLICY_ID)}</code>（alpha {policy['alpha']} / "
-            f"pooled {html.escape(policy['pooled_mode'])} / "
-            f"参照単位 {html.escape(policy['reference_unit'])} / "
-            f"profiling {html.escape(policy['profiling']['mode'])}）です。</p>"
-            '<p>仕組みと設定の詳しい説明は <a href="/tech" data-file="tech.html">'
-            "技術解説ページ</a>にあります。</p>"
         )
     ]
+    number = 0
+
+    def heading(title):
+        nonlocal number
+        number += 1
+        return f'<section><h2><span class="n">{number}</span>{title}</h2>'
+
     prepared = [card for card in catalog["cards"] if card["id"] in card_images]
     if prepared:
         parts.append(
-            f"<h2>選べるカード（確認済み {len(prepared)}枚 / "
-            f"{html.escape(catalog['catalog_id'])}）</h2>"
+            heading("選べるカード") + f'<p class="meta">確認済み {len(prepared)}枚 / '
+            f"{html.escape(catalog['catalog_id'])}</p>"
         )
         parts.append('<div class="cards">')
         for card in prepared:
@@ -104,14 +109,14 @@ def main():
                 f"{html.escape(card['label'])}: {html.escape(card['ref_en'])}"
                 for card in prepared
             )
-            + "</p></details>"
+            + "</p></details></section>"
         )
     for sample in samples:
         topic = next(t for t in CONFIG["topics"] if t["id"] == sample["topic_id"])
         refs = sample["personalization"]["refs"]
         parts.append(
-            f"<h2>{html.escape(sample.get('label', sample['id']))}</h2>"
-            f"<p>お題：{html.escape(topic['label'])} / "
+            heading(html.escape(sample.get("label", sample["id"])))
+            + f'<p class="meta">お題：{html.escape(topic["label"])} / '
             f"policy {html.escape(sample['personalization']['policy_id'])} / "
             f"alpha {sample['personalization']['effective_policy']['alpha']} / "
             f"参照 {len(refs)}件</p>"
@@ -142,17 +147,21 @@ def main():
         prompt = sample["images"][0]["prompt"] if sample["images"] else ""
         parts.append(
             "<details><summary>使った参照の説明文とお題の文</summary>"
-            f"<p>{reference_lines}</p><p>{html.escape(prompt)}</p></details>"
+            f"<p>{reference_lines}</p><p>{html.escape(prompt)}</p></details></section>"
         )
     parts.append(
-        '<p>モデル・出典：<a href="https://huggingface.co/OnomaAIResearch/Illustrious-XL-v2.0">'
+        '<p class="note" style="margin-top:56px">モデル・出典：'
+        '<a href="https://huggingface.co/OnomaAIResearch/Illustrious-XL-v2.0">'
         "Illustrious XL v2.0</a> / FAN (Foundation Encoders Are All You Need for "
         "Preference-Aware Personalization, CVPR 2026) 公式実装。"
-        "論文の定量結果はこの展示の性能ではありません。</p></main>"
-        # On file:// the server path /tech is the sibling tech.html.
-        '<script>if(location.protocol==="file:")'
-        'for(const a of document.querySelectorAll("a[data-file]"))a.href=a.dataset.file'
-        "</script></html>"
+        "論文の定量結果はこの展示の性能ではありません。</p>"
+        "</main><footer><span>このページは <code>exhibit/scripts/build_fallback.py</code> が"
+        '準備済みの画像から生成しています。</span><span class="links">'
+        + link("home", "体験に戻る")
+        + link("tech", "技術解説")
+        + "</span></footer>"
+        + FILE_LINKS
+        + "</body></html>\n"
     )
     (ASSETS / "fallback.html").write_text("".join(parts))
 

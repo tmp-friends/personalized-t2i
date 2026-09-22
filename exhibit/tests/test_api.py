@@ -346,7 +346,8 @@ def test_tech_page_is_served_from_the_shipped_asset():
     response = TestClient(module.app).get("/tech")
     assert response.status_code == 200
     assert response.headers["content-type"].startswith("text/html")
-    assert "言わないこと" in response.text
+    assert "FAN の仕組み" in response.text
+    assert "言わないこと" not in response.text
 
 
 def test_tech_page_is_rebuilt_from_the_current_configs():
@@ -367,8 +368,10 @@ def test_tech_page_is_rebuilt_from_the_current_configs():
         f"<dt>CFG</dt><dd>{generation['guidance_scale']}</dd>",
         f"<code>alpha</code> = {policy['alpha']}",
         f"<code>pooled_mode</code> = {policy['pooled_mode']}",
-        f"{CONFIG['idle_seconds']}秒",
-        f"{CONFIG['timeout_seconds']}秒",
+        "12層のうち 8〜10 層目の3層",
+        "32層のうち 8〜30 層目の23層",
+        CONFIG["fan"]["decoders"]["bigG.pth"][:12],
+        "data:image/png;base64,",
         generation["revision"][:12],
         generation["vae"]["model"],
     ):
