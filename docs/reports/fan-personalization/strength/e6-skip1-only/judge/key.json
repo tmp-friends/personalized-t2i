@@ -1,0 +1,434 @@
+{
+  "0ad8692c5329": {
+    "candidate_side": "B",
+    "policy_id": "strong_v1",
+    "policy_hash": "5f2a92f3cbbcf32de330f0fa9ca2a07c51de1c59da53fd393d399a3ac651c9c0",
+    "topic_id": "cat",
+    "history_id": "sparse",
+    "seed": 230923,
+    "job_id": "2942d5c7bdbe9a510ff062ce88b3bc3932779c56e3e22034e3d6b6b4f62bfae7"
+  },
+  "14dd725045cf": {
+    "candidate_side": "B",
+    "policy_id": "strong_v1",
+    "policy_hash": "5f2a92f3cbbcf32de330f0fa9ca2a07c51de1c59da53fd393d399a3ac651c9c0",
+    "topic_id": "rain",
+    "history_id": "sparse",
+    "seed": 230924,
+    "job_id": "5a1bbb95858dd84f0d9bf67545a8a98c9c2e1faa94f5c20d0827040008955d3a"
+  },
+  "189f5cb4ce7d": {
+    "candidate_side": "A",
+    "policy_id": "legacy-skip1",
+    "policy_hash": "0cc84fda31f8cfe849ec5873be25f6c86f84283b5f8163fcf1a8d58a0a6f4f88",
+    "topic_id": "tokyo",
+    "history_id": "mixed",
+    "seed": 230924,
+    "job_id": "dea3c86c49469661044b5c688975a096590c2d6014e4fe51e44ab52cf96834b3"
+  },
+  "1a354ddf993b": {
+    "candidate_side": "A",
+    "policy_id": "legacy-skip1",
+    "policy_hash": "0cc84fda31f8cfe849ec5873be25f6c86f84283b5f8163fcf1a8d58a0a6f4f88",
+    "topic_id": "cat",
+    "history_id": "cool",
+    "seed": 230923,
+    "job_id": "59768536ded954ab09aec77ba5db1fadac2ba1d8e24d4934a2f10ac6f8fd16dd"
+  },
+  "1b115e5d3cdd": {
+    "candidate_side": "B",
+    "policy_id": "strong_v1",
+    "policy_hash": "5f2a92f3cbbcf32de330f0fa9ca2a07c51de1c59da53fd393d399a3ac651c9c0",
+    "topic_id": "tokyo",
+    "history_id": "mixed",
+    "seed": 230924,
+    "job_id": "cc6654e33f1510f3144959853aac6ba27d186bc846d6261fb78c2fdb81a01862"
+  },
+  "238a67a6d2b3": {
+    "candidate_side": "A",
+    "policy_id": "strong_v1",
+    "policy_hash": "5f2a92f3cbbcf32de330f0fa9ca2a07c51de1c59da53fd393d399a3ac651c9c0",
+    "topic_id": "cat",
+    "history_id": "mixed",
+    "seed": 230923,
+    "job_id": "3cd8cb609a6b1ac7a77c9f700fa84d42d1246aef226de9fec5789ec7aa025489"
+  },
+  "32c193755ca9": {
+    "candidate_side": "B",
+    "policy_id": "legacy-skip1",
+    "policy_hash": "0cc84fda31f8cfe849ec5873be25f6c86f84283b5f8163fcf1a8d58a0a6f4f88",
+    "topic_id": "cat",
+    "history_id": "warm",
+    "seed": 230924,
+    "job_id": "7eb9db39d38c9f37959b6a54c8192a24a14c4a240d0bd15ea73a686eda7e94cc"
+  },
+  "35083caf77d4": {
+    "candidate_side": "A",
+    "policy_id": "strong_v1",
+    "policy_hash": "5f2a92f3cbbcf32de330f0fa9ca2a07c51de1c59da53fd393d399a3ac651c9c0",
+    "topic_id": "tokyo",
+    "history_id": "sparse",
+    "seed": 230923,
+    "job_id": "8a854da960e4075baf0a97eab32368e17de6f84f23b38351577f2258b3bc5f3e"
+  },
+  "469cabb54925": {
+    "candidate_side": "A",
+    "policy_id": "legacy-skip1",
+    "policy_hash": "0cc84fda31f8cfe849ec5873be25f6c86f84283b5f8163fcf1a8d58a0a6f4f88",
+    "topic_id": "rain",
+    "history_id": "warm",
+    "seed": 230924,
+    "job_id": "34d548ab39eb9d8eb3c40c5a52825474336764f4245cab350f6b44731646527a"
+  },
+  "478c2c291a36": {
+    "candidate_side": "B",
+    "policy_id": "legacy-skip1",
+    "policy_hash": "0cc84fda31f8cfe849ec5873be25f6c86f84283b5f8163fcf1a8d58a0a6f4f88",
+    "topic_id": "rain",
+    "history_id": "sparse",
+    "seed": 230923,
+    "job_id": "f7b1eb4fe868e1460e1563e8f6c91caa1c4a9a125406cdadf29cd8abe34f06c7"
+  },
+  "47ce9d4cb866": {
+    "candidate_side": "B",
+    "policy_id": "strong_v1",
+    "policy_hash": "5f2a92f3cbbcf32de330f0fa9ca2a07c51de1c59da53fd393d399a3ac651c9c0",
+    "topic_id": "cat",
+    "history_id": "cool",
+    "seed": 230924,
+    "job_id": "dcc24a8b991cc41d9da0d747374508a6756d09f09bf344643fc187f445081dfb"
+  },
+  "492d7a90170a": {
+    "candidate_side": "B",
+    "policy_id": "legacy-skip1",
+    "policy_hash": "0cc84fda31f8cfe849ec5873be25f6c86f84283b5f8163fcf1a8d58a0a6f4f88",
+    "topic_id": "tokyo",
+    "history_id": "cool",
+    "seed": 230924,
+    "job_id": "87417ea4ea084a99b065ccf29c74197dbc68d6188d377b59b885950043a2393d"
+  },
+  "4a17d3047104": {
+    "candidate_side": "A",
+    "policy_id": "strong_v1",
+    "policy_hash": "5f2a92f3cbbcf32de330f0fa9ca2a07c51de1c59da53fd393d399a3ac651c9c0",
+    "topic_id": "rain",
+    "history_id": "cool",
+    "seed": 230923,
+    "job_id": "fe7d408919fdceb858f90dbdef56f96c7e08979406fe132ccb04bc34d2b36f24"
+  },
+  "4b1a2114961b": {
+    "candidate_side": "B",
+    "policy_id": "legacy-skip1",
+    "policy_hash": "0cc84fda31f8cfe849ec5873be25f6c86f84283b5f8163fcf1a8d58a0a6f4f88",
+    "topic_id": "cat",
+    "history_id": "mixed",
+    "seed": 230923,
+    "job_id": "bb19a4817f3ca3d71f559e36000e27443b36dc3eafa6f0fde3b00a179da6cd5a"
+  },
+  "54b3ec4add00": {
+    "candidate_side": "B",
+    "policy_id": "strong_v1",
+    "policy_hash": "5f2a92f3cbbcf32de330f0fa9ca2a07c51de1c59da53fd393d399a3ac651c9c0",
+    "topic_id": "rain",
+    "history_id": "mixed",
+    "seed": 230923,
+    "job_id": "9d0204f29e7be72174813280b004a9dbfc8746bdd7aad1a38921eaa699951c9d"
+  },
+  "5a5f51b11b76": {
+    "candidate_side": "A",
+    "policy_id": "legacy-skip1",
+    "policy_hash": "0cc84fda31f8cfe849ec5873be25f6c86f84283b5f8163fcf1a8d58a0a6f4f88",
+    "topic_id": "rain",
+    "history_id": "mixed",
+    "seed": 230924,
+    "job_id": "ee30bbc7cc8c5d50b1c8a88d213dc91c9ef63e4e5d7ddb1eab5b660e8b54bee5"
+  },
+  "5a87dd8006c5": {
+    "candidate_side": "B",
+    "policy_id": "legacy-skip1",
+    "policy_hash": "0cc84fda31f8cfe849ec5873be25f6c86f84283b5f8163fcf1a8d58a0a6f4f88",
+    "topic_id": "cat",
+    "history_id": "cool",
+    "seed": 230924,
+    "job_id": "e49f06084c6b368026471856443e4754141c4aac3091017d9aaeaca09ced4cdd"
+  },
+  "5d4c85ec9627": {
+    "candidate_side": "B",
+    "policy_id": "legacy-skip1",
+    "policy_hash": "0cc84fda31f8cfe849ec5873be25f6c86f84283b5f8163fcf1a8d58a0a6f4f88",
+    "topic_id": "cat",
+    "history_id": "warm",
+    "seed": 230923,
+    "job_id": "f53e66a2e2a3dde6c268198d92157d0f49f61ed6ab1f2936c9a5b97c1472a97e"
+  },
+  "645230a5aba7": {
+    "candidate_side": "B",
+    "policy_id": "strong_v1",
+    "policy_hash": "5f2a92f3cbbcf32de330f0fa9ca2a07c51de1c59da53fd393d399a3ac651c9c0",
+    "topic_id": "cat",
+    "history_id": "warm",
+    "seed": 230923,
+    "job_id": "d734b3f55392f04f364a65e758bccca5cc57dd3dbfaeff101e8366d0626b860a"
+  },
+  "6cf42deb0d23": {
+    "candidate_side": "B",
+    "policy_id": "legacy-skip1",
+    "policy_hash": "0cc84fda31f8cfe849ec5873be25f6c86f84283b5f8163fcf1a8d58a0a6f4f88",
+    "topic_id": "tokyo",
+    "history_id": "mixed",
+    "seed": 230923,
+    "job_id": "c3786b2f3501b423bcd9f587a2bee221cc5718266966e6dce83f8fe58a817ea8"
+  },
+  "716b125f5ceb": {
+    "candidate_side": "A",
+    "policy_id": "strong_v1",
+    "policy_hash": "5f2a92f3cbbcf32de330f0fa9ca2a07c51de1c59da53fd393d399a3ac651c9c0",
+    "topic_id": "cat",
+    "history_id": "cool",
+    "seed": 230923,
+    "job_id": "8792fd3e8729c11a1f719d2db5b31f6d5e05549f4b8c92f5ce74f02504779819"
+  },
+  "7883e34fe0c4": {
+    "candidate_side": "B",
+    "policy_id": "legacy-skip1",
+    "policy_hash": "0cc84fda31f8cfe849ec5873be25f6c86f84283b5f8163fcf1a8d58a0a6f4f88",
+    "topic_id": "cat",
+    "history_id": "sparse",
+    "seed": 230923,
+    "job_id": "77cb11416e88f18e59ebdccb459ad970467fa1dcd86b3bf7e208c27750424b63"
+  },
+  "7a86f7cc8482": {
+    "candidate_side": "B",
+    "policy_id": "strong_v1",
+    "policy_hash": "5f2a92f3cbbcf32de330f0fa9ca2a07c51de1c59da53fd393d399a3ac651c9c0",
+    "topic_id": "tokyo",
+    "history_id": "warm",
+    "seed": 230924,
+    "job_id": "6a8608c2baa7a98b68b316a9dcd9d4e55369a3bda4ebafd43a9b1575035e16d3"
+  },
+  "7dd094f51bce": {
+    "candidate_side": "B",
+    "policy_id": "legacy-skip1",
+    "policy_hash": "0cc84fda31f8cfe849ec5873be25f6c86f84283b5f8163fcf1a8d58a0a6f4f88",
+    "topic_id": "cat",
+    "history_id": "mixed",
+    "seed": 230924,
+    "job_id": "19a0b130055a83ef69708943d9a7202d39172299da75e77c7a7322597499aad8"
+  },
+  "84c71ba7ff9d": {
+    "candidate_side": "A",
+    "policy_id": "legacy-skip1",
+    "policy_hash": "0cc84fda31f8cfe849ec5873be25f6c86f84283b5f8163fcf1a8d58a0a6f4f88",
+    "topic_id": "tokyo",
+    "history_id": "sparse",
+    "seed": 230924,
+    "job_id": "0cb5bf527cdc51d7f851ad75c678025fd1c12d5764dd758aed11ce63cafeda94"
+  },
+  "98370594f38b": {
+    "candidate_side": "A",
+    "policy_id": "legacy-skip1",
+    "policy_hash": "0cc84fda31f8cfe849ec5873be25f6c86f84283b5f8163fcf1a8d58a0a6f4f88",
+    "topic_id": "rain",
+    "history_id": "warm",
+    "seed": 230923,
+    "job_id": "d64025f460658a29b1c571eb3fd2664629728d21b260d8d4d178a8c77b03aa1e"
+  },
+  "98643e6dab32": {
+    "candidate_side": "A",
+    "policy_id": "strong_v1",
+    "policy_hash": "5f2a92f3cbbcf32de330f0fa9ca2a07c51de1c59da53fd393d399a3ac651c9c0",
+    "topic_id": "cat",
+    "history_id": "sparse",
+    "seed": 230924,
+    "job_id": "d21eb3ed4966d4aa8fd5682560818a742fac02f0d9e21f72779af409ca03515d"
+  },
+  "9d209420a898": {
+    "candidate_side": "B",
+    "policy_id": "strong_v1",
+    "policy_hash": "5f2a92f3cbbcf32de330f0fa9ca2a07c51de1c59da53fd393d399a3ac651c9c0",
+    "topic_id": "tokyo",
+    "history_id": "sparse",
+    "seed": 230924,
+    "job_id": "9c958dc35914bb2fca904ffd5c75ca132036b49af26be6633cb50244a12eec30"
+  },
+  "9facc6c4095a": {
+    "candidate_side": "B",
+    "policy_id": "strong_v1",
+    "policy_hash": "5f2a92f3cbbcf32de330f0fa9ca2a07c51de1c59da53fd393d399a3ac651c9c0",
+    "topic_id": "cat",
+    "history_id": "warm",
+    "seed": 230924,
+    "job_id": "ae7cbd86a8dbb929b0f09975a3361a77fa704d1eba2f86f08b4055d6f3f8bc98"
+  },
+  "a1dd35664794": {
+    "candidate_side": "B",
+    "policy_id": "strong_v1",
+    "policy_hash": "5f2a92f3cbbcf32de330f0fa9ca2a07c51de1c59da53fd393d399a3ac651c9c0",
+    "topic_id": "tokyo",
+    "history_id": "mixed",
+    "seed": 230923,
+    "job_id": "bad5f6acad315222459545b4d802b035a1d61f2cbc1c71b3a6a565de8e57c7dc"
+  },
+  "a266414cfb7c": {
+    "candidate_side": "A",
+    "policy_id": "legacy-skip1",
+    "policy_hash": "0cc84fda31f8cfe849ec5873be25f6c86f84283b5f8163fcf1a8d58a0a6f4f88",
+    "topic_id": "rain",
+    "history_id": "mixed",
+    "seed": 230923,
+    "job_id": "67c55c4b49e60f4fca40ad2abd91707d01209eb07f5d28afe92fd2b3eaca4b4f"
+  },
+  "a753891babb3": {
+    "candidate_side": "B",
+    "policy_id": "legacy-skip1",
+    "policy_hash": "0cc84fda31f8cfe849ec5873be25f6c86f84283b5f8163fcf1a8d58a0a6f4f88",
+    "topic_id": "rain",
+    "history_id": "cool",
+    "seed": 230924,
+    "job_id": "84b48c466820525736e89e2a99002d44e4508a3252893709990bf9d276e7c479"
+  },
+  "b30b53a36219": {
+    "candidate_side": "A",
+    "policy_id": "strong_v1",
+    "policy_hash": "5f2a92f3cbbcf32de330f0fa9ca2a07c51de1c59da53fd393d399a3ac651c9c0",
+    "topic_id": "rain",
+    "history_id": "mixed",
+    "seed": 230924,
+    "job_id": "bc2fb6a57798c2fb0192e164cf5aaf85c1a2964be515fddd04b19de6d624353a"
+  },
+  "b5494747a9f3": {
+    "candidate_side": "B",
+    "policy_id": "strong_v1",
+    "policy_hash": "5f2a92f3cbbcf32de330f0fa9ca2a07c51de1c59da53fd393d399a3ac651c9c0",
+    "topic_id": "rain",
+    "history_id": "sparse",
+    "seed": 230923,
+    "job_id": "3d4d189f94ecb528b972b75eace4d4502f702e39c99d2f68becd2f2c385aabd4"
+  },
+  "b86c6bf6a16a": {
+    "candidate_side": "B",
+    "policy_id": "strong_v1",
+    "policy_hash": "5f2a92f3cbbcf32de330f0fa9ca2a07c51de1c59da53fd393d399a3ac651c9c0",
+    "topic_id": "tokyo",
+    "history_id": "cool",
+    "seed": 230923,
+    "job_id": "879fc3b109792f5c0a6e0fa454be758d5425a5627b915c3b55577cf31200a1da"
+  },
+  "b8b380e099cb": {
+    "candidate_side": "A",
+    "policy_id": "legacy-skip1",
+    "policy_hash": "0cc84fda31f8cfe849ec5873be25f6c86f84283b5f8163fcf1a8d58a0a6f4f88",
+    "topic_id": "tokyo",
+    "history_id": "warm",
+    "seed": 230924,
+    "job_id": "69f5e8e52ff3376e67f0380c66443a9b184c37037b6fa48d56b77f815a09d14c"
+  },
+  "ba71ecfc6a0f": {
+    "candidate_side": "B",
+    "policy_id": "strong_v1",
+    "policy_hash": "5f2a92f3cbbcf32de330f0fa9ca2a07c51de1c59da53fd393d399a3ac651c9c0",
+    "topic_id": "rain",
+    "history_id": "warm",
+    "seed": 230923,
+    "job_id": "c506bf61b27b40a9c4f406e750833f2b6320bff91da991bbae027dddbfb5f180"
+  },
+  "c0a6597bc4f1": {
+    "candidate_side": "A",
+    "policy_id": "legacy-skip1",
+    "policy_hash": "0cc84fda31f8cfe849ec5873be25f6c86f84283b5f8163fcf1a8d58a0a6f4f88",
+    "topic_id": "cat",
+    "history_id": "sparse",
+    "seed": 230924,
+    "job_id": "02eb82c6035a2ab28c71f09de18f4a1e28ea46cb8b3a70045a2d82b90ac7c066"
+  },
+  "c0acadceef83": {
+    "candidate_side": "B",
+    "policy_id": "strong_v1",
+    "policy_hash": "5f2a92f3cbbcf32de330f0fa9ca2a07c51de1c59da53fd393d399a3ac651c9c0",
+    "topic_id": "rain",
+    "history_id": "warm",
+    "seed": 230924,
+    "job_id": "673958dca0ac8ab0a5b8736774f2ec889ccebc51c826d03273cf882d32b8f5c4"
+  },
+  "c2b5fa856fba": {
+    "candidate_side": "B",
+    "policy_id": "strong_v1",
+    "policy_hash": "5f2a92f3cbbcf32de330f0fa9ca2a07c51de1c59da53fd393d399a3ac651c9c0",
+    "topic_id": "tokyo",
+    "history_id": "warm",
+    "seed": 230923,
+    "job_id": "c2b38df434b2960a3de41335f1416d739131dc4c9faf41e166c99d995822de85"
+  },
+  "c3330078cee7": {
+    "candidate_side": "A",
+    "policy_id": "legacy-skip1",
+    "policy_hash": "0cc84fda31f8cfe849ec5873be25f6c86f84283b5f8163fcf1a8d58a0a6f4f88",
+    "topic_id": "tokyo",
+    "history_id": "sparse",
+    "seed": 230923,
+    "job_id": "c05ac935edb17bdb7dcf3309d10eaa87fcb237317b9ff3e167210564c0e68733"
+  },
+  "c7264b38689e": {
+    "candidate_side": "A",
+    "policy_id": "legacy-skip1",
+    "policy_hash": "0cc84fda31f8cfe849ec5873be25f6c86f84283b5f8163fcf1a8d58a0a6f4f88",
+    "topic_id": "tokyo",
+    "history_id": "warm",
+    "seed": 230923,
+    "job_id": "38ede549e0fdcc071585084ca8f799770c7633c090d93c3a99980677111df85e"
+  },
+  "ccc67409d881": {
+    "candidate_side": "B",
+    "policy_id": "legacy-skip1",
+    "policy_hash": "0cc84fda31f8cfe849ec5873be25f6c86f84283b5f8163fcf1a8d58a0a6f4f88",
+    "topic_id": "rain",
+    "history_id": "sparse",
+    "seed": 230924,
+    "job_id": "f7806e01f400eef3158737e34fa14fcfbe0a04affd469488a99c204021c29329"
+  },
+  "d43d8fcdc1c4": {
+    "candidate_side": "A",
+    "policy_id": "legacy-skip1",
+    "policy_hash": "0cc84fda31f8cfe849ec5873be25f6c86f84283b5f8163fcf1a8d58a0a6f4f88",
+    "topic_id": "tokyo",
+    "history_id": "cool",
+    "seed": 230923,
+    "job_id": "262599a577351c72a82c56978091dfbde8c4ca4f1248e312e486e735b19cb2e6"
+  },
+  "e9aaeda01cbe": {
+    "candidate_side": "A",
+    "policy_id": "strong_v1",
+    "policy_hash": "5f2a92f3cbbcf32de330f0fa9ca2a07c51de1c59da53fd393d399a3ac651c9c0",
+    "topic_id": "rain",
+    "history_id": "cool",
+    "seed": 230924,
+    "job_id": "5e10ea21c8dfc2d77a535ec25d27fa074832fb5aa2fe094c261fb2e0db1543bf"
+  },
+  "eaf55de17889": {
+    "candidate_side": "B",
+    "policy_id": "legacy-skip1",
+    "policy_hash": "0cc84fda31f8cfe849ec5873be25f6c86f84283b5f8163fcf1a8d58a0a6f4f88",
+    "topic_id": "rain",
+    "history_id": "cool",
+    "seed": 230923,
+    "job_id": "22e8cdd01a972b25f1aebdfcf144e4cd1f2aa79d82817dcb73bf32829a451b1c"
+  },
+  "ee0cc7f531e1": {
+    "candidate_side": "A",
+    "policy_id": "strong_v1",
+    "policy_hash": "5f2a92f3cbbcf32de330f0fa9ca2a07c51de1c59da53fd393d399a3ac651c9c0",
+    "topic_id": "tokyo",
+    "history_id": "cool",
+    "seed": 230924,
+    "job_id": "be1b2f374403e67f5710515f6cf90e38eb39250c5987d1ee16dc357c6eb904cd"
+  },
+  "efacbb9fe17f": {
+    "candidate_side": "B",
+    "policy_id": "strong_v1",
+    "policy_hash": "5f2a92f3cbbcf32de330f0fa9ca2a07c51de1c59da53fd393d399a3ac651c9c0",
+    "topic_id": "cat",
+    "history_id": "mixed",
+    "seed": 230924,
+    "job_id": "8b5bb3d1657789a33dc1cfb4280409e8f9af8522e60e9728b2e444d5d9d25911"
+  }
+}

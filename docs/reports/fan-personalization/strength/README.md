@@ -1,6 +1,6 @@
 # FAN 強度実験 · 結果レポート
 
-生成日時: 2026-09-22 15:44:19 JST
+生成日時: 2026-09-22 20:50:24 JST
 
 `build_strength_report.py` がディスク上の成果物だけから作ります。
 実行されていない実験は **未実施** であり、成功でも失敗でもありません。
@@ -44,6 +44,9 @@ AI 判定も人による評価も、同じ形の JSON を `--judge-answers` に�
 | `e2-adapter` | 完了 | policy | あり | 計測 174 / 失敗 0 / 未計測 0（レコード 174 件） |
 | `e3-references` | 完了 | policy | あり | 計測 168 / 失敗 0 / 未計測 0（レコード 168 件） |
 | `e5-official-sampler` | 完了 | generation | なし | 計測 78 / 失敗 0 / 未計測 0（レコード 78 件） |
+| `e6-skip1-only` | 完了 | policy | あり | 計測 78 / 失敗 0 / 未計測 0（レコード 78 件） |
+| `e7-skip-ladder` | 完了 | policy | あり | 計測 198 / 失敗 0 / 未計測 0（レコード 198 件） |
+| `e8-skip1-alpha` | 完了 | policy | あり | 計測 78 / 失敗 0 / 未計測 0（レコード 78 件） |
 
 ## `e1-settings`
 
@@ -281,6 +284,142 @@ A6: 公式の生成設定に寄せた対照 (negative なし、非 SDE の DPM++
 3. 各ペアで「参照の好みに近いのはどちら？」と「お題(target)を保っているか」に答える。
 4. 「回答を書き出す」で JSON を保存し、`build_strength_report.py --judge-answers <保存した JSON>` に渡す。
 
+## `e6-skip1-only`
+
+legacy_exhibit から skip_pa だけ [0] に変えた設定（alpha 0.5・plain pooled・profiling all）。strong_v1 の目視結果が芳しくなかったため、profiling を legacy のまま skip_pa の効果だけを見る。
+
+- plan 項目: B2
+- 種別: policy（rules 拘束: あり）
+- 状態: **完了** — 計測 78 / 失敗 0 / 未計測 0（レコード 78 件）
+- experiment hash: `abca68252fcc115649eb2b44a3096f16e7a5e63d618da56e7b6b5e49985a84ab`
+- 出力: `exhibit/outputs/fan-evaluation/strength/abca68252fcc115649eb2b44a3096f16e7a5e63d618da56e7b6b5e49985a84ab`
+- 画像: [e6-skip1-only/index.md](e6-skip1-only/index.md)（シート 24 枚）
+
+![e6-skip1-only の概観](e6-skip1-only/overview.jpg)
+
+### policy 別
+
+| policy_id | alpha | skip_pa | pooled | profiling | mask | embed_gain | Δhistory vs legacy | Δtarget vs legacy | Δhistory vs plain | Δtarget vs plain | 判定 |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| `strong_v1` | 0.50 | [0] | plain | ratio 0.1 | なし | — | +0.0170 [+0.0129, +0.0223] | -0.0096 [-0.0176, -0.0015] | +0.0222 | -0.0154 | 合格 |
+| `legacy-skip1` | 0.50 | [0] | plain | all | なし | — | +0.0145 [+0.0085, +0.0205] | -0.0141 [-0.0221, -0.0033] | +0.0197 | -0.0198 | 不合格（target_non_degradation） |
+
+### 履歴別 Δhistory vs legacy
+
+| policy_id | warm | cool | mixed | sparse |
+|---|---|---|---|---|
+| `strong_v1` | +0.0252 | +0.0122 | +0.0136 | +0.0170 |
+| `legacy-skip1` | +0.0237 | +0.0083 | +0.0174 | +0.0087 |
+
+### AI 判定（plain との 2 枚比較）
+
+判定素材: `e6-skip1-only/judge/tasks.json`（48 ペア）、画像は `e6-skip1-only/judge/pairs/`。正解は `e6-skip1-only/judge/key.json` にあり、tasks.json には入っていません。
+
+回答は未実施。回答 JSON を `--judge-answers` に渡すと集計します。
+
+### 人による評価
+
+未実施。人の回答を代わりに作ることはしません。
+
+1. `review.html` をブラウザで開く（ファイルを直接開けます）。
+2. 氏名を入れると、ペアの並びがその氏名から決まる順に入れ替わります。
+3. 各ペアで「参照の好みに近いのはどちら？」と「お題(target)を保っているか」に答える。
+4. 「回答を書き出す」で JSON を保存し、`build_strength_report.py --judge-answers <保存した JSON>` に渡す。
+
+## `e7-skip-ladder`
+
+skip_pa の階段。legacy_exhibit（alpha 0.5・plain・profiling all）から skip_pa を [0] → [0..7] まで 1 層ずつ増やし、霞が消えて効きが残る境目を探す。 [0..7] は legacy_exhibit そのもの（暗黙の比較列）。
+
+- plan 項目: B1
+- 種別: policy（rules 拘束: あり）
+- 状態: **完了** — 計測 198 / 失敗 0 / 未計測 0（レコード 198 件）
+- experiment hash: `c255fdc72c8f4d95729225da7d5327d00b1ff4fbcc6257504dd00c8163f45930`
+- 出力: `exhibit/outputs/fan-evaluation/strength/c255fdc72c8f4d95729225da7d5327d00b1ff4fbcc6257504dd00c8163f45930`
+- 画像: [e7-skip-ladder/index.md](e7-skip-ladder/index.md)（シート 24 枚）
+
+![e7-skip-ladder の概観](e7-skip-ladder/overview.jpg)
+
+### policy 別
+
+| policy_id | alpha | skip_pa | pooled | profiling | mask | embed_gain | Δhistory vs legacy | Δtarget vs legacy | Δhistory vs plain | Δtarget vs plain | 判定 |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| `ladder-skip0to1` | 0.50 | [0,1] | plain | all | なし | — | +0.0161 [+0.0106, +0.0220] | -0.0168 [-0.0237, -0.0066] | +0.0213 | -0.0226 | 不合格（target_non_degradation） |
+| `ladder-skip0to0` | 0.50 | [0] | plain | all | なし | — | +0.0145 [+0.0085, +0.0205] | -0.0141 [-0.0221, -0.0033] | +0.0197 | -0.0198 | 不合格（target_non_degradation） |
+| `ladder-skip0to5` | 0.50 | [0,1,2,3,4,5] | plain | all | なし | — | +0.0038 [+0.0022, +0.0055] | -0.0004 [-0.0069, +0.0098] | +0.0090 | -0.0061 | 不合格（history_improvement） |
+| `ladder-skip0to3` | 0.50 | [0,1,2,3] | plain | all | なし | — | +0.0037 [-0.0007, +0.0081] | -0.0086 [-0.0147, +0.0008] | +0.0089 | -0.0144 | 不合格（history_improvement） |
+| `ladder-skip0to2` | 0.50 | [0,1,2] | plain | all | なし | — | +0.0037 [-0.0016, +0.0089] | -0.0071 [-0.0131, +0.0008] | +0.0089 | -0.0129 | 不合格（history_improvement） |
+| `ladder-skip0to4` | 0.50 | [0,1,2,3,4] | plain | all | なし | — | +0.0031 [-0.0010, +0.0071] | -0.0059 [-0.0128, +0.0042] | +0.0083 | -0.0117 | 不合格（history_improvement） |
+| `ladder-skip0to6` | 0.50 | [0,1,2,3,4,5,6] | plain | all | なし | — | +0.0027 [+0.0010, +0.0045] | +0.0007 [-0.0049, +0.0072] | +0.0079 | -0.0050 | 不合格（history_improvement） |
+
+### 履歴別 Δhistory vs legacy
+
+| policy_id | warm | cool | mixed | sparse |
+|---|---|---|---|---|
+| `ladder-skip0to1` | +0.0249 | +0.0080 | +0.0183 | +0.0133 |
+| `ladder-skip0to0` | +0.0237 | +0.0083 | +0.0174 | +0.0087 |
+| `ladder-skip0to5` | +0.0031 | +0.0049 | +0.0060 | +0.0013 |
+| `ladder-skip0to3` | +0.0099 | +0.0013 | +0.0063 | -0.0027 |
+| `ladder-skip0to2` | +0.0115 | +0.0004 | +0.0063 | -0.0035 |
+| `ladder-skip0to4` | +0.0076 | +0.0017 | +0.0066 | -0.0036 |
+| `ladder-skip0to6` | +0.0010 | +0.0009 | +0.0033 | +0.0056 |
+
+### AI 判定（plain との 2 枚比較）
+
+判定素材: `e7-skip-ladder/judge/tasks.json`（168 ペア）、画像は `e7-skip-ladder/judge/pairs/`。正解は `e7-skip-ladder/judge/key.json` にあり、tasks.json には入っていません。
+
+回答は未実施。回答 JSON を `--judge-answers` に渡すと集計します。
+
+### 人による評価
+
+未実施。人の回答を代わりに作ることはしません。
+
+1. `review.html` をブラウザで開く（ファイルを直接開けます）。
+2. 氏名を入れると、ペアの並びがその氏名から決まる順に入れ替わります。
+3. 各ペアで「参照の好みに近いのはどちら？」と「お題(target)を保っているか」に答える。
+4. 「回答を書き出す」で JSON を保存し、`build_strength_report.py --judge-answers <保存した JSON>` に渡す。
+
+## `e8-skip1-alpha`
+
+skip_pa [0]（全層で個人化）のまま alpha を 0.3 / 0.4 に下げ、霞が alpha に比例して薄まるかを見る。e7 の階段と対になる実験。
+
+- plan 項目: B2
+- 種別: policy（rules 拘束: あり）
+- 状態: **完了** — 計測 78 / 失敗 0 / 未計測 0（レコード 78 件）
+- experiment hash: `654e07cc2ce5d1559b97b02415494b528aec416a620b60291b0c2cf85ce782c5`
+- 出力: `exhibit/outputs/fan-evaluation/strength/654e07cc2ce5d1559b97b02415494b528aec416a620b60291b0c2cf85ce782c5`
+- 画像: [e8-skip1-alpha/index.md](e8-skip1-alpha/index.md)（シート 24 枚）
+
+![e8-skip1-alpha の概観](e8-skip1-alpha/overview.jpg)
+
+### policy 別
+
+| policy_id | alpha | skip_pa | pooled | profiling | mask | embed_gain | Δhistory vs legacy | Δtarget vs legacy | Δhistory vs plain | Δtarget vs plain | 判定 |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| `skip1-alpha0.4` | 0.40 | [0] | plain | all | なし | — | +0.0068 [+0.0018, +0.0118] | -0.0004 [-0.0059, +0.0078] | +0.0120 | -0.0061 | 合格 |
+| `skip1-alpha0.3` | 0.30 | [0] | plain | all | なし | — | +0.0020 [-0.0003, +0.0043] | +0.0037 [-0.0019, +0.0100] | +0.0072 | -0.0020 | 不合格（history_improvement） |
+
+### 履歴別 Δhistory vs legacy
+
+| policy_id | warm | cool | mixed | sparse |
+|---|---|---|---|---|
+| `skip1-alpha0.4` | +0.0134 | +0.0015 | +0.0103 | +0.0022 |
+| `skip1-alpha0.3` | +0.0038 | -0.0001 | +0.0048 | -0.0004 |
+
+### AI 判定（plain との 2 枚比較）
+
+判定素材: `e8-skip1-alpha/judge/tasks.json`（48 ペア）、画像は `e8-skip1-alpha/judge/pairs/`。正解は `e8-skip1-alpha/judge/key.json` にあり、tasks.json には入っていません。
+
+回答は未実施。回答 JSON を `--judge-answers` に渡すと集計します。
+
+### 人による評価
+
+未実施。人の回答を代わりに作ることはしません。
+
+1. `review.html` をブラウザで開く（ファイルを直接開けます）。
+2. 氏名を入れると、ペアの並びがその氏名から決まる順に入れ替わります。
+3. 各ペアで「参照の好みに近いのはどちら？」と「お題(target)を保っているか」に答える。
+4. 「回答を書き出す」で JSON を保存し、`build_strength_report.py --judge-answers <保存した JSON>` に渡す。
+
 ## 参考: 正式チェーンの run
 
 `fan-strength.json` の実験ではなく、screen / refine / heldout の正式チェーンの run です。目視 (P3) のためにシートだけを作ります。判定ペアと `review.html` には入りません。
@@ -316,6 +455,9 @@ PYTHONPATH=exhibit/src exhibit/.venv/bin/python exhibit/scripts/evaluate_fan.py 
 PYTHONPATH=exhibit/src exhibit/.venv/bin/python exhibit/scripts/evaluate_fan.py strength --config exhibit/configs/fan-strength.json --experiment e2-adapter --resume
 PYTHONPATH=exhibit/src exhibit/.venv/bin/python exhibit/scripts/evaluate_fan.py strength --config exhibit/configs/fan-strength.json --experiment e3-references --resume
 PYTHONPATH=exhibit/src exhibit/.venv/bin/python exhibit/scripts/evaluate_fan.py strength --config exhibit/configs/fan-strength.json --experiment e5-official-sampler --resume
+PYTHONPATH=exhibit/src exhibit/.venv/bin/python exhibit/scripts/evaluate_fan.py strength --config exhibit/configs/fan-strength.json --experiment e6-skip1-only --resume
+PYTHONPATH=exhibit/src exhibit/.venv/bin/python exhibit/scripts/evaluate_fan.py strength --config exhibit/configs/fan-strength.json --experiment e7-skip-ladder --resume
+PYTHONPATH=exhibit/src exhibit/.venv/bin/python exhibit/scripts/evaluate_fan.py strength --config exhibit/configs/fan-strength.json --experiment e8-skip1-alpha --resume
 PYTHONPATH=exhibit/src exhibit/.venv/bin/python exhibit/scripts/build_strength_report.py
 PYTHONPATH=exhibit/src exhibit/.venv/bin/python exhibit/scripts/build_strength_report.py \
   --judge-answers <回答1>.json <回答2>.json

@@ -1,0 +1,41 @@
+{
+  "experiment_id": "e8-skip1-alpha",
+  "pair_count": 48,
+  "ai": {
+    "judges": [],
+    "answered_pairs": 0,
+    "pair_count": 48,
+    "policies": [
+      {
+        "policy_id": "skip1-alpha0.3",
+        "policy_hash": "418f3372b6935d7ee94062f0631f099995a0d501012633cc10fb5976ecab807f",
+        "wins": 0,
+        "losses": 0,
+        "ties": 0,
+        "decided": 0,
+        "win_rate": null,
+        "target_yes": 0,
+        "target_answers": 0,
+        "target_kept_rate": null
+      },
+      {
+        "policy_id": "skip1-alpha0.4",
+        "policy_hash": "ec01ec598f1cc595e794d72bd060f60f6ae93a40003882e22703b8cc951168c4",
+        "wins": 0,
+        "losses": 0,
+        "ties": 0,
+        "decided": 0,
+        "win_rate": null,
+        "target_yes": 0,
+        "target_answers": 0,
+        "target_kept_rate": null
+      }
+    ],
+    "agreement": {
+      "pairs_with_multiple_judges": 0,
+      "pairs_in_agreement": 0,
+      "rate": null
+    }
+  },
+  "human": null
+}

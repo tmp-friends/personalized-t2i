@@ -7,6 +7,7 @@ import json
 from pathlib import Path
 
 import pytest
+
 from exhibit.domain import digest
 from exhibit.evaluation import (
     build_experiment,
@@ -79,9 +80,13 @@ def _roles(experiment):
 
 
 def test_every_declared_experiment_lists_its_description():
+    declared = set(json.loads(STRENGTH_PATH.read_text())["experiments"])
     listed = list_strength_experiments(STRENGTH_PATH)
 
-    assert set(listed) == set(EXPECTED)
+    # The set grows with every new experiment; the matrices below pin the four
+    # that must always be there.
+    assert set(listed) == declared
+    assert declared >= set(EXPECTED)
     assert all(text for text in listed.values())
 
 

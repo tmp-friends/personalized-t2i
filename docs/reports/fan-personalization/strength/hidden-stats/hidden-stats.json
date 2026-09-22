@@ -1,0 +1,3984 @@
+{
+  "topic": "cat",
+  "prompt": "masterpiece, best quality, amazing quality, very aesthetic, newest, safe, 1girl, solo, brown hair, green eyes, sweater, holding cat, window, upper body, detailed eyes, detailed illustration, absurdres, highres.",
+  "negative_prompt": "lowres, worst quality, bad quality, bad anatomy, bad hands, jpeg artifacts, poorly drawn, blurry, watermark, signature, artistic error, artistic failure, bad proportions, bad perspective, multiple views, text, artist sign, weibo username, extra digits, fewer digits, multiple people, 2girls, 2boys, nsfw, nude",
+  "device": "cpu",
+  "dtype": "float32",
+  "fan_commit": "9d0b76843f6437718195accac9cf3f050a25d26b",
+  "reference_sets": {
+    "warm-pair": [
+      {
+        "text": "warm color palette, amber tones",
+        "weight": 3.0
+      },
+      {
+        "text": "harsh sunlight, hard cast shadow, high contrast",
+        "weight": 3.0
+      }
+    ],
+    "flat-single": [
+      {
+        "text": "flat graphic illustration, solid color fill",
+        "weight": 3.0
+      }
+    ]
+  },
+  "policies": {
+    "legacy_exhibit": {
+      "alpha": 0.5,
+      "skip": -2,
+      "skip_pa": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "use_attn_mask": false,
+      "pooled_mode": "plain",
+      "profiling": {
+        "mode": "all"
+      },
+      "reference_unit": "aspect_phrase"
+    },
+    "nomask-skip1-alpha0.5": {
+      "alpha": 0.5,
+      "skip": -2,
+      "skip_pa": [
+        0
+      ],
+      "use_attn_mask": false,
+      "pooled_mode": "plain",
+      "profiling": {
+        "mode": "all"
+      },
+      "reference_unit": "aspect_phrase"
+    },
+    "nomask-skip1-alpha0.7": {
+      "alpha": 0.7,
+      "skip": -2,
+      "skip_pa": [
+        0
+      ],
+      "use_attn_mask": false,
+      "pooled_mode": "plain",
+      "profiling": {
+        "mode": "all"
+      },
+      "reference_unit": "aspect_phrase"
+    },
+    "mask-skip1-alpha0.5": {
+      "alpha": 0.5,
+      "skip": -2,
+      "skip_pa": [
+        0
+      ],
+      "use_attn_mask": true,
+      "pooled_mode": "plain",
+      "profiling": {
+        "mode": "all"
+      },
+      "reference_unit": "aspect_phrase"
+    },
+    "mask-skip1-alpha0.7": {
+      "alpha": 0.7,
+      "skip": -2,
+      "skip_pa": [
+        0
+      ],
+      "use_attn_mask": true,
+      "pooled_mode": "plain",
+      "profiling": {
+        "mode": "all"
+      },
+      "reference_unit": "aspect_phrase"
+    },
+    "mask-skip8-alpha0.5": {
+      "alpha": 0.5,
+      "skip": -2,
+      "skip_pa": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "use_attn_mask": true,
+      "pooled_mode": "plain",
+      "profiling": {
+        "mode": "all"
+      },
+      "reference_unit": "aspect_phrase"
+    },
+    "mask-skip1-alpha0.7+plain_token": {
+      "alpha": 0.7,
+      "skip": -2,
+      "skip_pa": [
+        0
+      ],
+      "use_attn_mask": true,
+      "pooled_mode": "plain",
+      "profiling": {
+        "mode": "all"
+      },
+      "reference_unit": "aspect_phrase",
+      "hidden_norm": "plain_token"
+    },
+    "mask-skip1-alpha0.5+plain_pad": {
+      "alpha": 0.5,
+      "skip": -2,
+      "skip_pa": [
+        0
+      ],
+      "use_attn_mask": true,
+      "pooled_mode": "plain",
+      "profiling": {
+        "mode": "all"
+      },
+      "reference_unit": "aspect_phrase",
+      "hidden_norm": "plain_pad"
+    },
+    "mask-skip1-alpha0.5+plain_pad_token": {
+      "alpha": 0.5,
+      "skip": -2,
+      "skip_pa": [
+        0
+      ],
+      "use_attn_mask": true,
+      "pooled_mode": "plain",
+      "profiling": {
+        "mode": "all"
+      },
+      "reference_unit": "aspect_phrase",
+      "hidden_norm": "plain_pad_token"
+    },
+    "mask-skip1-alpha0.7+plain_pad": {
+      "alpha": 0.7,
+      "skip": -2,
+      "skip_pa": [
+        0
+      ],
+      "use_attn_mask": true,
+      "pooled_mode": "plain",
+      "profiling": {
+        "mode": "all"
+      },
+      "reference_unit": "aspect_phrase",
+      "hidden_norm": "plain_pad"
+    },
+    "mask-skip1-alpha0.7+plain_pad_token": {
+      "alpha": 0.7,
+      "skip": -2,
+      "skip_pa": [
+        0
+      ],
+      "use_attn_mask": true,
+      "pooled_mode": "plain",
+      "profiling": {
+        "mode": "all"
+      },
+      "reference_unit": "aspect_phrase",
+      "hidden_norm": "plain_pad_token"
+    }
+  },
+  "token_counts": {
+    "clip_l": 50,
+    "clip_g": 50
+  },
+  "rows": [
+    {
+      "policy_id": "legacy_exhibit",
+      "reference_set": "warm-pair",
+      "views": {
+        "clip_l": {
+          "norm_ratio": {
+            "bos": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            },
+            "content": {
+              "mean": 0.9926,
+              "min": 0.8839,
+              "max": 1.0158
+            },
+            "eos": {
+              "mean": 0.9843,
+              "min": 0.9843,
+              "max": 0.9843
+            },
+            "pad": {
+              "mean": 0.9987,
+              "min": 0.994,
+              "max": 1.0019
+            }
+          },
+          "cosine_to_plain": {
+            "bos": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            },
+            "content": {
+              "mean": 0.9966,
+              "min": 0.9684,
+              "max": 1.0
+            },
+            "eos": {
+              "mean": 0.9966,
+              "min": 0.9966,
+              "max": 0.9966
+            },
+            "pad": {
+              "mean": 0.9999,
+              "min": 0.9998,
+              "max": 1.0
+            }
+          },
+          "collapse_personalized": 0.7422,
+          "collapse_plain": 0.7393,
+          "shift_over_guidance": 0.075,
+          "plain_token_norm_mean": 16.584,
+          "shift_over_guidance_per_token": {
+            "mean": 0.3706,
+            "min": 0.0003,
+            "max": 15.7652
+          }
+        },
+        "big_g": {
+          "norm_ratio": {
+            "bos": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            },
+            "content": {
+              "mean": 0.9988,
+              "min": 0.714,
+              "max": 1.3911
+            },
+            "eos": {
+              "mean": 0.9763,
+              "min": 0.9763,
+              "max": 0.9763
+            },
+            "pad": {
+              "mean": 0.9882,
+              "min": 0.5012,
+              "max": 1.1215
+            }
+          },
+          "cosine_to_plain": {
+            "bos": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            },
+            "content": {
+              "mean": 0.9354,
+              "min": 0.6151,
+              "max": 0.9976
+            },
+            "eos": {
+              "mean": 0.9885,
+              "min": 0.9885,
+              "max": 0.9885
+            },
+            "pad": {
+              "mean": 0.9583,
+              "min": 0.8527,
+              "max": 0.9986
+            }
+          },
+          "collapse_personalized": 0.5894,
+          "collapse_plain": 0.5864,
+          "shift_over_guidance": 0.3402,
+          "plain_token_norm_mean": 22.421,
+          "shift_over_guidance_per_token": {
+            "mean": 1.2055,
+            "min": 0.0295,
+            "max": 46.6908
+          }
+        },
+        "concat": {
+          "norm_ratio": {
+            "bos": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            },
+            "content": {
+              "mean": 0.9964,
+              "min": 0.8092,
+              "max": 1.3186
+            },
+            "eos": {
+              "mean": 0.977,
+              "min": 0.977,
+              "max": 0.977
+            },
+            "pad": {
+              "mean": 0.9855,
+              "min": 0.5321,
+              "max": 1.1066
+            }
+          },
+          "cosine_to_plain": {
+            "bos": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            },
+            "content": {
+              "mean": 0.9491,
+              "min": 0.6559,
+              "max": 0.9979
+            },
+            "eos": {
+              "mean": 0.9892,
+              "min": 0.9892,
+              "max": 0.9892
+            },
+            "pad": {
+              "mean": 0.9697,
+              "min": 0.887,
+              "max": 0.9987
+            }
+          },
+          "collapse_personalized": 0.6348,
+          "collapse_plain": 0.6318,
+          "shift_over_guidance": 0.2908,
+          "plain_token_norm_mean": 28.7,
+          "shift_over_guidance_per_token": {
+            "mean": 1.2185,
+            "min": 0.0193,
+            "max": 49.2805
+          }
+        }
+      }
+    },
+    {
+      "policy_id": "legacy_exhibit",
+      "reference_set": "flat-single",
+      "views": {
+        "clip_l": {
+          "norm_ratio": {
+            "bos": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            },
+            "content": {
+              "mean": 0.9926,
+              "min": 0.8837,
+              "max": 1.0288
+            },
+            "eos": {
+              "mean": 0.9864,
+              "min": 0.9864,
+              "max": 0.9864
+            },
+            "pad": {
+              "mean": 0.9981,
+              "min": 0.9944,
+              "max": 1.0019
+            }
+          },
+          "cosine_to_plain": {
+            "bos": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            },
+            "content": {
+              "mean": 0.9944,
+              "min": 0.9513,
+              "max": 1.0
+            },
+            "eos": {
+              "mean": 0.9946,
+              "min": 0.9946,
+              "max": 0.9946
+            },
+            "pad": {
+              "mean": 0.9999,
+              "min": 0.9998,
+              "max": 1.0
+            }
+          },
+          "collapse_personalized": 0.7412,
+          "collapse_plain": 0.7393,
+          "shift_over_guidance": 0.0892,
+          "plain_token_norm_mean": 16.584,
+          "shift_over_guidance_per_token": {
+            "mean": 1.3393,
+            "min": 0.0002,
+            "max": 63.3889
+          }
+        },
+        "big_g": {
+          "norm_ratio": {
+            "bos": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            },
+            "content": {
+              "mean": 1.0031,
+              "min": 0.7141,
+              "max": 1.3912
+            },
+            "eos": {
+              "mean": 0.9794,
+              "min": 0.9794,
+              "max": 0.9794
+            },
+            "pad": {
+              "mean": 0.99,
+              "min": 0.5563,
+              "max": 1.1286
+            }
+          },
+          "cosine_to_plain": {
+            "bos": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            },
+            "content": {
+              "mean": 0.9305,
+              "min": 0.6225,
+              "max": 0.9972
+            },
+            "eos": {
+              "mean": 0.9869,
+              "min": 0.9869,
+              "max": 0.9869
+            },
+            "pad": {
+              "mean": 0.9597,
+              "min": 0.8604,
+              "max": 0.9986
+            }
+          },
+          "collapse_personalized": 0.5884,
+          "collapse_plain": 0.5864,
+          "shift_over_guidance": 0.3491,
+          "plain_token_norm_mean": 22.421,
+          "shift_over_guidance_per_token": {
+            "mean": 3.0277,
+            "min": 0.0297,
+            "max": 137.2027
+          }
+        },
+        "concat": {
+          "norm_ratio": {
+            "bos": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            },
+            "content": {
+              "mean": 0.9979,
+              "min": 0.8082,
+              "max": 1.3184
+            },
+            "eos": {
+              "mean": 0.98,
+              "min": 0.98,
+              "max": 0.98
+            },
+            "pad": {
+              "mean": 0.9873,
+              "min": 0.5821,
+              "max": 1.1127
+            }
+          },
+          "cosine_to_plain": {
+            "bos": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            },
+            "content": {
+              "mean": 0.9446,
+              "min": 0.663,
+              "max": 0.9975
+            },
+            "eos": {
+              "mean": 0.9875,
+              "min": 0.9875,
+              "max": 0.9875
+            },
+            "pad": {
+              "mean": 0.971,
+              "min": 0.893,
+              "max": 0.9986
+            }
+          },
+          "collapse_personalized": 0.6343,
+          "collapse_plain": 0.6318,
+          "shift_over_guidance": 0.2994,
+          "plain_token_norm_mean": 28.7,
+          "shift_over_guidance_per_token": {
+            "mean": 3.2672,
+            "min": 0.0194,
+            "max": 151.1381
+          }
+        }
+      }
+    },
+    {
+      "policy_id": "nomask-skip1-alpha0.5",
+      "reference_set": "warm-pair",
+      "views": {
+        "clip_l": {
+          "norm_ratio": {
+            "bos": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            },
+            "content": {
+              "mean": 0.9991,
+              "min": 0.5223,
+              "max": 1.2875
+            },
+            "eos": {
+              "mean": 1.0484,
+              "min": 1.0484,
+              "max": 1.0484
+            },
+            "pad": {
+              "mean": 2.3674,
+              "min": 1.0116,
+              "max": 7.5636
+            }
+          },
+          "cosine_to_plain": {
+            "bos": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            },
+            "content": {
+              "mean": 0.9681,
+              "min": 0.6514,
+              "max": 0.9981
+            },
+            "eos": {
+              "mean": 0.98,
+              "min": 0.98,
+              "max": 0.98
+            },
+            "pad": {
+              "mean": 0.7711,
+              "min": -0.2956,
+              "max": 0.9989
+            }
+          },
+          "collapse_personalized": 0.7637,
+          "collapse_plain": 0.7393,
+          "shift_over_guidance": 0.2512,
+          "plain_token_norm_mean": 16.584,
+          "shift_over_guidance_per_token": {
+            "mean": 0.2433,
+            "min": 0.0138,
+            "max": 2.3872
+          }
+        },
+        "big_g": {
+          "norm_ratio": {
+            "bos": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            },
+            "content": {
+              "mean": 1.0905,
+              "min": 0.7581,
+              "max": 1.9227
+            },
+            "eos": {
+              "mean": 1.0657,
+              "min": 1.0657,
+              "max": 1.0657
+            },
+            "pad": {
+              "mean": 3.5698,
+              "min": 0.652,
+              "max": 12.8434
+            }
+          },
+          "cosine_to_plain": {
+            "bos": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            },
+            "content": {
+              "mean": 0.8551,
+              "min": 0.3781,
+              "max": 0.9949
+            },
+            "eos": {
+              "mean": 0.9786,
+              "min": 0.9786,
+              "max": 0.9786
+            },
+            "pad": {
+              "mean": 0.5122,
+              "min": -0.4897,
+              "max": 0.9988
+            }
+          },
+          "collapse_personalized": 0.6211,
+          "collapse_plain": 0.5864,
+          "shift_over_guidance": 0.6454,
+          "plain_token_norm_mean": 22.421,
+          "shift_over_guidance_per_token": {
+            "mean": 3.0691,
+            "min": 0.0351,
+            "max": 131.2005
+          }
+        },
+        "concat": {
+          "norm_ratio": {
+            "bos": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            },
+            "content": {
+              "mean": 1.0494,
+              "min": 0.7263,
+              "max": 1.6739
+            },
+            "eos": {
+              "mean": 1.0643,
+              "min": 1.0643,
+              "max": 1.0643
+            },
+            "pad": {
+              "mean": 3.1285,
+              "min": 0.6944,
+              "max": 11.3399
+            }
+          },
+          "cosine_to_plain": {
+            "bos": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            },
+            "content": {
+              "mean": 0.8744,
+              "min": 0.4734,
+              "max": 0.9949
+            },
+            "eos": {
+              "mean": 0.9787,
+              "min": 0.9787,
+              "max": 0.9787
+            },
+            "pad": {
+              "mean": 0.5582,
+              "min": -0.4151,
+              "max": 0.9988
+            }
+          },
+          "collapse_personalized": 0.6567,
+          "collapse_plain": 0.6318,
+          "shift_over_guidance": 0.5626,
+          "plain_token_norm_mean": 28.7,
+          "shift_over_guidance_per_token": {
+            "mean": 3.0204,
+            "min": 0.0252,
+            "max": 131.2222
+          }
+        }
+      }
+    },
+    {
+      "policy_id": "nomask-skip1-alpha0.5",
+      "reference_set": "flat-single",
+      "views": {
+        "clip_l": {
+          "norm_ratio": {
+            "bos": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            },
+            "content": {
+              "mean": 0.9974,
+              "min": 0.5293,
+              "max": 1.2782
+            },
+            "eos": {
+              "mean": 1.0537,
+              "min": 1.0537,
+              "max": 1.0537
+            },
+            "pad": {
+              "mean": 2.3225,
+              "min": 1.0088,
+              "max": 7.4222
+            }
+          },
+          "cosine_to_plain": {
+            "bos": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            },
+            "content": {
+              "mean": 0.9636,
+              "min": 0.5919,
+              "max": 0.9991
+            },
+            "eos": {
+              "mean": 0.9802,
+              "min": 0.9802,
+              "max": 0.9802
+            },
+            "pad": {
+              "mean": 0.7729,
+              "min": -0.2902,
+              "max": 0.9988
+            }
+          },
+          "collapse_personalized": 0.7607,
+          "collapse_plain": 0.7393,
+          "shift_over_guidance": 0.2566,
+          "plain_token_norm_mean": 16.584,
+          "shift_over_guidance_per_token": {
+            "mean": 1.0656,
+            "min": 0.0152,
+            "max": 43.2117
+          }
+        },
+        "big_g": {
+          "norm_ratio": {
+            "bos": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            },
+            "content": {
+              "mean": 1.0922,
+              "min": 0.7501,
+              "max": 1.9421
+            },
+            "eos": {
+              "mean": 1.0542,
+              "min": 1.0542,
+              "max": 1.0542
+            },
+            "pad": {
+              "mean": 3.5113,
+              "min": 0.6497,
+              "max": 12.5863
+            }
+          },
+          "cosine_to_plain": {
+            "bos": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            },
+            "content": {
+              "mean": 0.8526,
+              "min": 0.3781,
+              "max": 0.9942
+            },
+            "eos": {
+              "mean": 0.9736,
+              "min": 0.9736,
+              "max": 0.9736
+            },
+            "pad": {
+              "mean": 0.5144,
+              "min": -0.4871,
+              "max": 0.9988
+            }
+          },
+          "collapse_personalized": 0.6167,
+          "collapse_plain": 0.5864,
+          "shift_over_guidance": 0.6472,
+          "plain_token_norm_mean": 22.421,
+          "shift_over_guidance_per_token": {
+            "mean": 1.1443,
+            "min": 0.0355,
+            "max": 34.4002
+          }
+        },
+        "concat": {
+          "norm_ratio": {
+            "bos": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            },
+            "content": {
+              "mean": 1.0505,
+              "min": 0.6603,
+              "max": 1.6873
+            },
+            "eos": {
+              "mean": 1.0541,
+              "min": 1.0541,
+              "max": 1.0541
+            },
+            "pad": {
+              "mean": 3.0729,
+              "min": 0.692,
+              "max": 11.108
+            }
+          },
+          "cosine_to_plain": {
+            "bos": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            },
+            "content": {
+              "mean": 0.871,
+              "min": 0.4693,
+              "max": 0.9943
+            },
+            "eos": {
+              "mean": 0.9741,
+              "min": 0.9741,
+              "max": 0.9741
+            },
+            "pad": {
+              "mean": 0.56,
+              "min": -0.4121,
+              "max": 0.9987
+            }
+          },
+          "collapse_personalized": 0.6548,
+          "collapse_plain": 0.6318,
+          "shift_over_guidance": 0.5648,
+          "plain_token_norm_mean": 28.7,
+          "shift_over_guidance_per_token": {
+            "mean": 1.5109,
+            "min": 0.0259,
+            "max": 55.2324
+          }
+        }
+      }
+    },
+    {
+      "policy_id": "nomask-skip1-alpha0.7",
+      "reference_set": "warm-pair",
+      "views": {
+        "clip_l": {
+          "norm_ratio": {
+            "bos": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            },
+            "content": {
+              "mean": 1.0121,
+              "min": 0.483,
+              "max": 1.5556
+            },
+            "eos": {
+              "mean": 1.1841,
+              "min": 1.1841,
+              "max": 1.1841
+            },
+            "pad": {
+              "mean": 3.2968,
+              "min": 1.019,
+              "max": 9.4609
+            }
+          },
+          "cosine_to_plain": {
+            "bos": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            },
+            "content": {
+              "mean": 0.9432,
+              "min": 0.4945,
+              "max": 0.9963
+            },
+            "eos": {
+              "mean": 0.9585,
+              "min": 0.9585,
+              "max": 0.9585
+            },
+            "pad": {
+              "mean": 0.7478,
+              "min": -0.3465,
+              "max": 0.998
+            }
+          },
+          "collapse_personalized": 0.7734,
+          "collapse_plain": 0.7393,
+          "shift_over_guidance": 0.3338,
+          "plain_token_norm_mean": 16.584,
+          "shift_over_guidance_per_token": {
+            "mean": 0.3042,
+            "min": 0.0203,
+            "max": 2.1366
+          }
+        },
+        "big_g": {
+          "norm_ratio": {
+            "bos": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            },
+            "content": {
+              "mean": 1.1771,
+              "min": 0.4323,
+              "max": 3.3336
+            },
+            "eos": {
+              "mean": 1.0879,
+              "min": 1.0879,
+              "max": 1.0879
+            },
+            "pad": {
+              "mean": 5.7759,
+              "min": 0.428,
+              "max": 21.7008
+            }
+          },
+          "cosine_to_plain": {
+            "bos": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            },
+            "content": {
+              "mean": 0.7952,
+              "min": 0.1666,
+              "max": 0.9908
+            },
+            "eos": {
+              "mean": 0.9525,
+              "min": 0.9525,
+              "max": 0.9525
+            },
+            "pad": {
+              "mean": 0.4421,
+              "min": -0.5581,
+              "max": 0.9978
+            }
+          },
+          "collapse_personalized": 0.647,
+          "collapse_plain": 0.5864,
+          "shift_over_guidance": 0.7648,
+          "plain_token_norm_mean": 22.421,
+          "shift_over_guidance_per_token": {
+            "mean": 3.1389,
+            "min": 0.0496,
+            "max": 129.7629
+          }
+        },
+        "concat": {
+          "norm_ratio": {
+            "bos": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            },
+            "content": {
+              "mean": 1.0953,
+              "min": 0.5306,
+              "max": 2.6332
+            },
+            "eos": {
+              "mean": 1.096,
+              "min": 1.096,
+              "max": 1.096
+            },
+            "pad": {
+              "mean": 5.0232,
+              "min": 0.5033,
+              "max": 18.6281
+            }
+          },
+          "cosine_to_plain": {
+            "bos": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            },
+            "content": {
+              "mean": 0.8217,
+              "min": 0.2833,
+              "max": 0.9906
+            },
+            "eos": {
+              "mean": 0.9528,
+              "min": 0.9528,
+              "max": 0.9528
+            },
+            "pad": {
+              "mean": 0.4902,
+              "min": -0.4843,
+              "max": 0.9977
+            }
+          },
+          "collapse_personalized": 0.6763,
+          "collapse_plain": 0.6318,
+          "shift_over_guidance": 0.6715,
+          "plain_token_norm_mean": 28.7,
+          "shift_over_guidance_per_token": {
+            "mean": 3.0778,
+            "min": 0.0359,
+            "max": 129.7805
+          }
+        }
+      }
+    },
+    {
+      "policy_id": "nomask-skip1-alpha0.7",
+      "reference_set": "flat-single",
+      "views": {
+        "clip_l": {
+          "norm_ratio": {
+            "bos": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            },
+            "content": {
+              "mean": 1.0126,
+              "min": 0.4759,
+              "max": 1.5388
+            },
+            "eos": {
+              "mean": 1.1888,
+              "min": 1.1888,
+              "max": 1.1888
+            },
+            "pad": {
+              "mean": 3.2476,
+              "min": 1.0155,
+              "max": 9.3411
+            }
+          },
+          "cosine_to_plain": {
+            "bos": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            },
+            "content": {
+              "mean": 0.936,
+              "min": 0.4669,
+              "max": 0.9982
+            },
+            "eos": {
+              "mean": 0.9592,
+              "min": 0.9592,
+              "max": 0.9592
+            },
+            "pad": {
+              "mean": 0.7486,
+              "min": -0.3451,
+              "max": 0.9977
+            }
+          },
+          "collapse_personalized": 0.7681,
+          "collapse_plain": 0.7393,
+          "shift_over_guidance": 0.3383,
+          "plain_token_norm_mean": 16.584,
+          "shift_over_guidance_per_token": {
+            "mean": 0.9537,
+            "min": 0.0226,
+            "max": 34.1866
+          }
+        },
+        "big_g": {
+          "norm_ratio": {
+            "bos": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            },
+            "content": {
+              "mean": 1.1416,
+              "min": 0.294,
+              "max": 3.217
+            },
+            "eos": {
+              "mean": 1.0409,
+              "min": 1.0409,
+              "max": 1.0409
+            },
+            "pad": {
+              "mean": 5.6503,
+              "min": 0.4218,
+              "max": 21.5785
+            }
+          },
+          "cosine_to_plain": {
+            "bos": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            },
+            "content": {
+              "mean": 0.7952,
+              "min": 0.3207,
+              "max": 0.9897
+            },
+            "eos": {
+              "mean": 0.9392,
+              "min": 0.9392,
+              "max": 0.9392
+            },
+            "pad": {
+              "mean": 0.4429,
+              "min": -0.5633,
+              "max": 0.9977
+            }
+          },
+          "collapse_personalized": 0.6304,
+          "collapse_plain": 0.5864,
+          "shift_over_guidance": 0.7688,
+          "plain_token_norm_mean": 22.421,
+          "shift_over_guidance_per_token": {
+            "mean": 3.0965,
+            "min": 0.0516,
+            "max": 127.0112
+          }
+        },
+        "concat": {
+          "norm_ratio": {
+            "bos": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            },
+            "content": {
+              "mean": 1.0835,
+              "min": 0.4355,
+              "max": 2.5519
+            },
+            "eos": {
+              "mean": 1.0536,
+              "min": 1.0536,
+              "max": 1.0536
+            },
+            "pad": {
+              "mean": 4.9318,
+              "min": 0.4992,
+              "max": 18.5092
+            }
+          },
+          "cosine_to_plain": {
+            "bos": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            },
+            "content": {
+              "mean": 0.8198,
+              "min": 0.4045,
+              "max": 0.9897
+            },
+            "eos": {
+              "mean": 0.9403,
+              "min": 0.9403,
+              "max": 0.9403
+            },
+            "pad": {
+              "mean": 0.4917,
+              "min": -0.4886,
+              "max": 0.9976
+            }
+          },
+          "collapse_personalized": 0.666,
+          "collapse_plain": 0.6318,
+          "shift_over_guidance": 0.6754,
+          "plain_token_norm_mean": 28.7,
+          "shift_over_guidance_per_token": {
+            "mean": 3.1264,
+            "min": 0.0378,
+            "max": 131.5316
+          }
+        }
+      }
+    },
+    {
+      "policy_id": "mask-skip1-alpha0.5",
+      "reference_set": "warm-pair",
+      "views": {
+        "clip_l": {
+          "norm_ratio": {
+            "bos": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            },
+            "content": {
+              "mean": 0.9457,
+              "min": 0.5331,
+              "max": 1.0523
+            },
+            "eos": {
+              "mean": 1.0367,
+              "min": 1.0367,
+              "max": 1.0367
+            },
+            "pad": {
+              "mean": 0.7491,
+              "min": 0.1316,
+              "max": 2.5012
+            }
+          },
+          "cosine_to_plain": {
+            "bos": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            },
+            "content": {
+              "mean": 0.9771,
+              "min": 0.6543,
+              "max": 0.9993
+            },
+            "eos": {
+              "mean": 0.9956,
+              "min": 0.9956,
+              "max": 0.9956
+            },
+            "pad": {
+              "mean": 0.7414,
+              "min": 0.137,
+              "max": 0.9749
+            }
+          },
+          "collapse_personalized": 0.7378,
+          "collapse_plain": 0.7393,
+          "shift_over_guidance": 0.2834,
+          "plain_token_norm_mean": 16.584,
+          "shift_over_guidance_per_token": {
+            "mean": 0.1925,
+            "min": 0.0138,
+            "max": 2.3872
+          }
+        },
+        "big_g": {
+          "norm_ratio": {
+            "bos": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            },
+            "content": {
+              "mean": 0.9397,
+              "min": 0.4411,
+              "max": 1.2665
+            },
+            "eos": {
+              "mean": 1.0124,
+              "min": 1.0124,
+              "max": 1.0124
+            },
+            "pad": {
+              "mean": 0.5577,
+              "min": 0.068,
+              "max": 1.057
+            }
+          },
+          "cosine_to_plain": {
+            "bos": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            },
+            "content": {
+              "mean": 0.8831,
+              "min": 0.532,
+              "max": 0.9975
+            },
+            "eos": {
+              "mean": 0.9881,
+              "min": 0.9881,
+              "max": 0.9881
+            },
+            "pad": {
+              "mean": 0.6054,
+              "min": -0.1088,
+              "max": 0.9847
+            }
+          },
+          "collapse_personalized": 0.5752,
+          "collapse_plain": 0.5864,
+          "shift_over_guidance": 0.6486,
+          "plain_token_norm_mean": 22.421,
+          "shift_over_guidance_per_token": {
+            "mean": 2.9759,
+            "min": 0.0351,
+            "max": 131.2005
+          }
+        },
+        "concat": {
+          "norm_ratio": {
+            "bos": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            },
+            "content": {
+              "mean": 0.9344,
+              "min": 0.5102,
+              "max": 1.1953
+            },
+            "eos": {
+              "mean": 1.0144,
+              "min": 1.0144,
+              "max": 1.0144
+            },
+            "pad": {
+              "mean": 0.5878,
+              "min": 0.0731,
+              "max": 1.4154
+            }
+          },
+          "cosine_to_plain": {
+            "bos": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            },
+            "content": {
+              "mean": 0.8993,
+              "min": 0.5961,
+              "max": 0.9974
+            },
+            "eos": {
+              "mean": 0.9887,
+              "min": 0.9887,
+              "max": 0.9887
+            },
+            "pad": {
+              "mean": 0.5992,
+              "min": -0.041,
+              "max": 0.9793
+            }
+          },
+          "collapse_personalized": 0.6245,
+          "collapse_plain": 0.6318,
+          "shift_over_guidance": 0.5695,
+          "plain_token_norm_mean": 28.7,
+          "shift_over_guidance_per_token": {
+            "mean": 2.9424,
+            "min": 0.0252,
+            "max": 131.2222
+          }
+        }
+      }
+    },
+    {
+      "policy_id": "mask-skip1-alpha0.5",
+      "reference_set": "flat-single",
+      "views": {
+        "clip_l": {
+          "norm_ratio": {
+            "bos": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            },
+            "content": {
+              "mean": 0.9393,
+              "min": 0.5316,
+              "max": 1.0821
+            },
+            "eos": {
+              "mean": 1.0438,
+              "min": 1.0438,
+              "max": 1.0438
+            },
+            "pad": {
+              "mean": 0.7508,
+              "min": 0.1244,
+              "max": 2.5713
+            }
+          },
+          "cosine_to_plain": {
+            "bos": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            },
+            "content": {
+              "mean": 0.9697,
+              "min": 0.5706,
+              "max": 0.9991
+            },
+            "eos": {
+              "mean": 0.9929,
+              "min": 0.9929,
+              "max": 0.9929
+            },
+            "pad": {
+              "mean": 0.727,
+              "min": 0.1157,
+              "max": 0.9738
+            }
+          },
+          "collapse_personalized": 0.7349,
+          "collapse_plain": 0.7393,
+          "shift_over_guidance": 0.3003,
+          "plain_token_norm_mean": 16.584,
+          "shift_over_guidance_per_token": {
+            "mean": 1.0294,
+            "min": 0.0152,
+            "max": 43.2117
+          }
+        },
+        "big_g": {
+          "norm_ratio": {
+            "bos": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            },
+            "content": {
+              "mean": 0.9103,
+              "min": 0.3372,
+              "max": 1.259
+            },
+            "eos": {
+              "mean": 0.9996,
+              "min": 0.9996,
+              "max": 0.9996
+            },
+            "pad": {
+              "mean": 0.5435,
+              "min": 0.0673,
+              "max": 1.0574
+            }
+          },
+          "cosine_to_plain": {
+            "bos": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            },
+            "content": {
+              "mean": 0.8766,
+              "min": 0.5063,
+              "max": 0.9967
+            },
+            "eos": {
+              "mean": 0.9813,
+              "min": 0.9813,
+              "max": 0.9813
+            },
+            "pad": {
+              "mean": 0.5966,
+              "min": -0.1151,
+              "max": 0.9845
+            }
+          },
+          "collapse_personalized": 0.5649,
+          "collapse_plain": 0.5864,
+          "shift_over_guidance": 0.6572,
+          "plain_token_norm_mean": 22.421,
+          "shift_over_guidance_per_token": {
+            "mean": 1.0497,
+            "min": 0.0355,
+            "max": 34.4002
+          }
+        },
+        "concat": {
+          "norm_ratio": {
+            "bos": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            },
+            "content": {
+              "mean": 0.9128,
+              "min": 0.4497,
+              "max": 1.1955
+            },
+            "eos": {
+              "mean": 1.0032,
+              "min": 1.0032,
+              "max": 1.0032
+            },
+            "pad": {
+              "mean": 0.5764,
+              "min": 0.0719,
+              "max": 1.4371
+            }
+          },
+          "cosine_to_plain": {
+            "bos": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            },
+            "content": {
+              "mean": 0.891,
+              "min": 0.5763,
+              "max": 0.9967
+            },
+            "eos": {
+              "mean": 0.9822,
+              "min": 0.9822,
+              "max": 0.9822
+            },
+            "pad": {
+              "mean": 0.5892,
+              "min": -0.0488,
+              "max": 0.9788
+            }
+          },
+          "collapse_personalized": 0.6221,
+          "collapse_plain": 0.6318,
+          "shift_over_guidance": 0.5789,
+          "plain_token_norm_mean": 28.7,
+          "shift_over_guidance_per_token": {
+            "mean": 1.4351,
+            "min": 0.0259,
+            "max": 55.2324
+          }
+        }
+      }
+    },
+    {
+      "policy_id": "mask-skip1-alpha0.7",
+      "reference_set": "warm-pair",
+      "views": {
+        "clip_l": {
+          "norm_ratio": {
+            "bos": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            },
+            "content": {
+              "mean": 0.9301,
+              "min": 0.483,
+              "max": 1.0765
+            },
+            "eos": {
+              "mean": 1.0431,
+              "min": 1.0431,
+              "max": 1.0431
+            },
+            "pad": {
+              "mean": 0.9423,
+              "min": 0.1183,
+              "max": 3.6425
+            }
+          },
+          "cosine_to_plain": {
+            "bos": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            },
+            "content": {
+              "mean": 0.9558,
+              "min": 0.4625,
+              "max": 0.9985
+            },
+            "eos": {
+              "mean": 0.9896,
+              "min": 0.9896,
+              "max": 0.9896
+            },
+            "pad": {
+              "mean": 0.631,
+              "min": -0.1909,
+              "max": 0.9619
+            }
+          },
+          "collapse_personalized": 0.7383,
+          "collapse_plain": 0.7393,
+          "shift_over_guidance": 0.3712,
+          "plain_token_norm_mean": 16.584,
+          "shift_over_guidance_per_token": {
+            "mean": 0.2459,
+            "min": 0.0203,
+            "max": 2.1366
+          }
+        },
+        "big_g": {
+          "norm_ratio": {
+            "bos": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            },
+            "content": {
+              "mean": 0.8914,
+              "min": 0.2572,
+              "max": 3.3328
+            },
+            "eos": {
+              "mean": 1.0105,
+              "min": 1.0105,
+              "max": 1.0105
+            },
+            "pad": {
+              "mean": 0.4622,
+              "min": 0.0546,
+              "max": 1.128
+            }
+          },
+          "cosine_to_plain": {
+            "bos": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            },
+            "content": {
+              "mean": 0.8109,
+              "min": 0.1666,
+              "max": 0.9951
+            },
+            "eos": {
+              "mean": 0.9754,
+              "min": 0.9754,
+              "max": 0.9754
+            },
+            "pad": {
+              "mean": 0.3473,
+              "min": -0.2344,
+              "max": 0.9722
+            }
+          },
+          "collapse_personalized": 0.5732,
+          "collapse_plain": 0.5864,
+          "shift_over_guidance": 0.7477,
+          "plain_token_norm_mean": 22.421,
+          "shift_over_guidance_per_token": {
+            "mean": 3.0283,
+            "min": 0.0496,
+            "max": 129.7629
+          }
+        },
+        "concat": {
+          "norm_ratio": {
+            "bos": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            },
+            "content": {
+              "mean": 0.8778,
+              "min": 0.3998,
+              "max": 1.5715
+            },
+            "eos": {
+              "mean": 1.0132,
+              "min": 1.0132,
+              "max": 1.0132
+            },
+            "pad": {
+              "mean": 0.5752,
+              "min": 0.0599,
+              "max": 1.8972
+            }
+          },
+          "cosine_to_plain": {
+            "bos": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            },
+            "content": {
+              "mean": 0.8399,
+              "min": 0.2833,
+              "max": 0.9949
+            },
+            "eos": {
+              "mean": 0.9765,
+              "min": 0.9765,
+              "max": 0.9765
+            },
+            "pad": {
+              "mean": 0.355,
+              "min": -0.1031,
+              "max": 0.9614
+            }
+          },
+          "collapse_personalized": 0.6338,
+          "collapse_plain": 0.6318,
+          "shift_over_guidance": 0.6632,
+          "plain_token_norm_mean": 28.7,
+          "shift_over_guidance_per_token": {
+            "mean": 2.9838,
+            "min": 0.0359,
+            "max": 129.7805
+          }
+        }
+      }
+    },
+    {
+      "policy_id": "mask-skip1-alpha0.7",
+      "reference_set": "flat-single",
+      "views": {
+        "clip_l": {
+          "norm_ratio": {
+            "bos": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            },
+            "content": {
+              "mean": 0.9259,
+              "min": 0.4759,
+              "max": 1.1202
+            },
+            "eos": {
+              "mean": 1.0593,
+              "min": 1.0593,
+              "max": 1.0593
+            },
+            "pad": {
+              "mean": 0.9765,
+              "min": 0.1199,
+              "max": 3.7787
+            }
+          },
+          "cosine_to_plain": {
+            "bos": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            },
+            "content": {
+              "mean": 0.9413,
+              "min": 0.4413,
+              "max": 0.9982
+            },
+            "eos": {
+              "mean": 0.9831,
+              "min": 0.9831,
+              "max": 0.9831
+            },
+            "pad": {
+              "mean": 0.6221,
+              "min": -0.2046,
+              "max": 0.9601
+            }
+          },
+          "collapse_personalized": 0.731,
+          "collapse_plain": 0.7393,
+          "shift_over_guidance": 0.3874,
+          "plain_token_norm_mean": 16.584,
+          "shift_over_guidance_per_token": {
+            "mean": 0.9205,
+            "min": 0.0226,
+            "max": 34.1866
+          }
+        },
+        "big_g": {
+          "norm_ratio": {
+            "bos": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            },
+            "content": {
+              "mean": 0.7882,
+              "min": 0.095,
+              "max": 1.2717
+            },
+            "eos": {
+              "mean": 0.9677,
+              "min": 0.9677,
+              "max": 0.9677
+            },
+            "pad": {
+              "mean": 0.4634,
+              "min": 0.0546,
+              "max": 1.1573
+            }
+          },
+          "cosine_to_plain": {
+            "bos": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            },
+            "content": {
+              "mean": 0.7777,
+              "min": 0.127,
+              "max": 0.9936
+            },
+            "eos": {
+              "mean": 0.9527,
+              "min": 0.9527,
+              "max": 0.9527
+            },
+            "pad": {
+              "mean": 0.3429,
+              "min": -0.2476,
+              "max": 0.9715
+            }
+          },
+          "collapse_personalized": 0.5112,
+          "collapse_plain": 0.5864,
+          "shift_over_guidance": 0.7693,
+          "plain_token_norm_mean": 22.421,
+          "shift_over_guidance_per_token": {
+            "mean": 2.9937,
+            "min": 0.0516,
+            "max": 127.0112
+          }
+        },
+        "concat": {
+          "norm_ratio": {
+            "bos": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            },
+            "content": {
+              "mean": 0.8216,
+              "min": 0.2491,
+              "max": 1.1728
+            },
+            "eos": {
+              "mean": 0.9754,
+              "min": 0.9754,
+              "max": 0.9754
+            },
+            "pad": {
+              "mean": 0.5859,
+              "min": 0.0599,
+              "max": 1.9654
+            }
+          },
+          "cosine_to_plain": {
+            "bos": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            },
+            "content": {
+              "mean": 0.8146,
+              "min": 0.3144,
+              "max": 0.9936
+            },
+            "eos": {
+              "mean": 0.9551,
+              "min": 0.9551,
+              "max": 0.9551
+            },
+            "pad": {
+              "mean": 0.3493,
+              "min": -0.0965,
+              "max": 0.9601
+            }
+          },
+          "collapse_personalized": 0.6226,
+          "collapse_plain": 0.6318,
+          "shift_over_guidance": 0.6832,
+          "plain_token_norm_mean": 28.7,
+          "shift_over_guidance_per_token": {
+            "mean": 3.0437,
+            "min": 0.0378,
+            "max": 131.5316
+          }
+        }
+      }
+    },
+    {
+      "policy_id": "mask-skip8-alpha0.5",
+      "reference_set": "warm-pair",
+      "views": {
+        "clip_l": {
+          "norm_ratio": {
+            "bos": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            },
+            "content": {
+              "mean": 0.9936,
+              "min": 0.8857,
+              "max": 1.0169
+            },
+            "eos": {
+              "mean": 0.9821,
+              "min": 0.9821,
+              "max": 0.9821
+            },
+            "pad": {
+              "mean": 0.9986,
+              "min": 0.9936,
+              "max": 1.0022
+            }
+          },
+          "cosine_to_plain": {
+            "bos": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            },
+            "content": {
+              "mean": 0.9965,
+              "min": 0.9684,
+              "max": 1.0
+            },
+            "eos": {
+              "mean": 0.9964,
+              "min": 0.9964,
+              "max": 0.9964
+            },
+            "pad": {
+              "mean": 0.9999,
+              "min": 0.9998,
+              "max": 1.0
+            }
+          },
+          "collapse_personalized": 0.7427,
+          "collapse_plain": 0.7393,
+          "shift_over_guidance": 0.0752,
+          "plain_token_norm_mean": 16.584,
+          "shift_over_guidance_per_token": {
+            "mean": 0.3713,
+            "min": 0.0003,
+            "max": 15.7652
+          }
+        },
+        "big_g": {
+          "norm_ratio": {
+            "bos": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            },
+            "content": {
+              "mean": 0.966,
+              "min": 0.6962,
+              "max": 1.3763
+            },
+            "eos": {
+              "mean": 0.9619,
+              "min": 0.9619,
+              "max": 0.9619
+            },
+            "pad": {
+              "mean": 0.9646,
+              "min": 0.6729,
+              "max": 1.2883
+            }
+          },
+          "cosine_to_plain": {
+            "bos": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            },
+            "content": {
+              "mean": 0.9385,
+              "min": 0.7087,
+              "max": 0.9985
+            },
+            "eos": {
+              "mean": 0.9897,
+              "min": 0.9897,
+              "max": 0.9897
+            },
+            "pad": {
+              "mean": 0.9085,
+              "min": 0.7586,
+              "max": 0.9968
+            }
+          },
+          "collapse_personalized": 0.5723,
+          "collapse_plain": 0.5864,
+          "shift_over_guidance": 0.4059,
+          "plain_token_norm_mean": 22.421,
+          "shift_over_guidance_per_token": {
+            "mean": 1.1946,
+            "min": 0.0295,
+            "max": 46.6908
+          }
+        },
+        "concat": {
+          "norm_ratio": {
+            "bos": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            },
+            "content": {
+              "mean": 0.974,
+              "min": 0.7924,
+              "max": 1.3063
+            },
+            "eos": {
+              "mean": 0.9635,
+              "min": 0.9635,
+              "max": 0.9635
+            },
+            "pad": {
+              "mean": 0.9704,
+              "min": 0.7984,
+              "max": 1.2594
+            }
+          },
+          "cosine_to_plain": {
+            "bos": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            },
+            "content": {
+              "mean": 0.9515,
+              "min": 0.7389,
+              "max": 0.9986
+            },
+            "eos": {
+              "mean": 0.9902,
+              "min": 0.9902,
+              "max": 0.9902
+            },
+            "pad": {
+              "mean": 0.9297,
+              "min": 0.7725,
+              "max": 0.9968
+            }
+          },
+          "collapse_personalized": 0.6274,
+          "collapse_plain": 0.6318,
+          "shift_over_guidance": 0.346,
+          "plain_token_norm_mean": 28.7,
+          "shift_over_guidance_per_token": {
+            "mean": 1.2091,
+            "min": 0.0193,
+            "max": 49.2805
+          }
+        }
+      }
+    },
+    {
+      "policy_id": "mask-skip8-alpha0.5",
+      "reference_set": "flat-single",
+      "views": {
+        "clip_l": {
+          "norm_ratio": {
+            "bos": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            },
+            "content": {
+              "mean": 0.9933,
+              "min": 0.8852,
+              "max": 1.0292
+            },
+            "eos": {
+              "mean": 0.9844,
+              "min": 0.9844,
+              "max": 0.9844
+            },
+            "pad": {
+              "mean": 0.998,
+              "min": 0.9939,
+              "max": 1.0022
+            }
+          },
+          "cosine_to_plain": {
+            "bos": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            },
+            "content": {
+              "mean": 0.9943,
+              "min": 0.9513,
+              "max": 1.0
+            },
+            "eos": {
+              "mean": 0.9945,
+              "min": 0.9945,
+              "max": 0.9945
+            },
+            "pad": {
+              "mean": 0.9998,
+              "min": 0.9996,
+              "max": 1.0
+            }
+          },
+          "collapse_personalized": 0.7417,
+          "collapse_plain": 0.7393,
+          "shift_over_guidance": 0.0898,
+          "plain_token_norm_mean": 16.584,
+          "shift_over_guidance_per_token": {
+            "mean": 1.3402,
+            "min": 0.0002,
+            "max": 63.3889
+          }
+        },
+        "big_g": {
+          "norm_ratio": {
+            "bos": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            },
+            "content": {
+              "mean": 0.9647,
+              "min": 0.6778,
+              "max": 1.3889
+            },
+            "eos": {
+              "mean": 0.9728,
+              "min": 0.9728,
+              "max": 0.9728
+            },
+            "pad": {
+              "mean": 0.9668,
+              "min": 0.6708,
+              "max": 1.2913
+            }
+          },
+          "cosine_to_plain": {
+            "bos": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            },
+            "content": {
+              "mean": 0.9365,
+              "min": 0.709,
+              "max": 0.9983
+            },
+            "eos": {
+              "mean": 0.9875,
+              "min": 0.9875,
+              "max": 0.9875
+            },
+            "pad": {
+              "mean": 0.9081,
+              "min": 0.7496,
+              "max": 0.9965
+            }
+          },
+          "collapse_personalized": 0.5698,
+          "collapse_plain": 0.5864,
+          "shift_over_guidance": 0.4078,
+          "plain_token_norm_mean": 22.421,
+          "shift_over_guidance_per_token": {
+            "mean": 3.0097,
+            "min": 0.0297,
+            "max": 137.2027
+          }
+        },
+        "concat": {
+          "norm_ratio": {
+            "bos": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            },
+            "content": {
+              "mean": 0.9732,
+              "min": 0.7901,
+              "max": 1.3165
+            },
+            "eos": {
+              "mean": 0.9738,
+              "min": 0.9738,
+              "max": 0.9738
+            },
+            "pad": {
+              "mean": 0.9723,
+              "min": 0.7965,
+              "max": 1.2619
+            }
+          },
+          "cosine_to_plain": {
+            "bos": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            },
+            "content": {
+              "mean": 0.9491,
+              "min": 0.7388,
+              "max": 0.9985
+            },
+            "eos": {
+              "mean": 0.9881,
+              "min": 0.9881,
+              "max": 0.9881
+            },
+            "pad": {
+              "mean": 0.9294,
+              "min": 0.764,
+              "max": 0.9965
+            }
+          },
+          "collapse_personalized": 0.626,
+          "collapse_plain": 0.6318,
+          "shift_over_guidance": 0.3486,
+          "plain_token_norm_mean": 28.7,
+          "shift_over_guidance_per_token": {
+            "mean": 3.2531,
+            "min": 0.0194,
+            "max": 151.1381
+          }
+        }
+      }
+    },
+    {
+      "policy_id": "mask-skip1-alpha0.7+plain_token",
+      "reference_set": "warm-pair",
+      "views": {
+        "clip_l": {
+          "norm_ratio": {
+            "bos": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            },
+            "content": {
+              "mean": 1.0,
+              "min": 0.9998,
+              "max": 1.0003
+            },
+            "eos": {
+              "mean": 1.0001,
+              "min": 1.0001,
+              "max": 1.0001
+            },
+            "pad": {
+              "mean": 1.0,
+              "min": 0.9998,
+              "max": 1.0003
+            }
+          },
+          "cosine_to_plain": {
+            "bos": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            },
+            "content": {
+              "mean": 0.9558,
+              "min": 0.4626,
+              "max": 0.9985
+            },
+            "eos": {
+              "mean": 0.9896,
+              "min": 0.9896,
+              "max": 0.9896
+            },
+            "pad": {
+              "mean": 0.631,
+              "min": -0.1909,
+              "max": 0.9618
+            }
+          },
+          "collapse_personalized": 0.7407,
+          "collapse_plain": 0.7393,
+          "shift_over_guidance": 0.3299,
+          "plain_token_norm_mean": 16.584,
+          "shift_over_guidance_per_token": {
+            "mean": 0.2421,
+            "min": 0.02,
+            "max": 2.1366
+          }
+        },
+        "big_g": {
+          "norm_ratio": {
+            "bos": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            },
+            "content": {
+              "mean": 1.0,
+              "min": 0.9999,
+              "max": 1.0001
+            },
+            "eos": {
+              "mean": 1.0001,
+              "min": 1.0001,
+              "max": 1.0001
+            },
+            "pad": {
+              "mean": 1.0,
+              "min": 0.9999,
+              "max": 1.0001
+            }
+          },
+          "cosine_to_plain": {
+            "bos": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            },
+            "content": {
+              "mean": 0.8109,
+              "min": 0.1666,
+              "max": 0.9951
+            },
+            "eos": {
+              "mean": 0.9754,
+              "min": 0.9754,
+              "max": 0.9754
+            },
+            "pad": {
+              "mean": 0.3473,
+              "min": -0.2344,
+              "max": 0.9722
+            }
+          },
+          "collapse_personalized": 0.5801,
+          "collapse_plain": 0.5864,
+          "shift_over_guidance": 0.9331,
+          "plain_token_norm_mean": 22.421,
+          "shift_over_guidance_per_token": {
+            "mean": 3.0474,
+            "min": 0.0395,
+            "max": 129.7629
+          }
+        },
+        "concat": {
+          "norm_ratio": {
+            "bos": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            },
+            "content": {
+              "mean": 1.0,
+              "min": 0.9999,
+              "max": 1.0001
+            },
+            "eos": {
+              "mean": 1.0001,
+              "min": 1.0001,
+              "max": 1.0001
+            },
+            "pad": {
+              "mean": 1.0,
+              "min": 0.9999,
+              "max": 1.0001
+            }
+          },
+          "cosine_to_plain": {
+            "bos": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            },
+            "content": {
+              "mean": 0.8475,
+              "min": 0.499,
+              "max": 0.995
+            },
+            "eos": {
+              "mean": 0.9765,
+              "min": 0.9765,
+              "max": 0.9765
+            },
+            "pad": {
+              "mean": 0.3796,
+              "min": -0.1906,
+              "max": 0.9721
+            }
+          },
+          "collapse_personalized": 0.6245,
+          "collapse_plain": 0.6318,
+          "shift_over_guidance": 0.8093,
+          "plain_token_norm_mean": 28.7,
+          "shift_over_guidance_per_token": {
+            "mean": 3.0044,
+            "min": 0.03,
+            "max": 129.7805
+          }
+        }
+      }
+    },
+    {
+      "policy_id": "mask-skip1-alpha0.7+plain_token",
+      "reference_set": "flat-single",
+      "views": {
+        "clip_l": {
+          "norm_ratio": {
+            "bos": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            },
+            "content": {
+              "mean": 1.0,
+              "min": 0.9998,
+              "max": 1.0002
+            },
+            "eos": {
+              "mean": 1.0001,
+              "min": 1.0001,
+              "max": 1.0001
+            },
+            "pad": {
+              "mean": 1.0,
+              "min": 0.9998,
+              "max": 1.0002
+            }
+          },
+          "cosine_to_plain": {
+            "bos": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            },
+            "content": {
+              "mean": 0.9413,
+              "min": 0.4413,
+              "max": 0.9982
+            },
+            "eos": {
+              "mean": 0.9831,
+              "min": 0.9831,
+              "max": 0.9831
+            },
+            "pad": {
+              "mean": 0.622,
+              "min": -0.2046,
+              "max": 0.9601
+            }
+          },
+          "collapse_personalized": 0.7334,
+          "collapse_plain": 0.7393,
+          "shift_over_guidance": 0.3529,
+          "plain_token_norm_mean": 16.584,
+          "shift_over_guidance_per_token": {
+            "mean": 0.9185,
+            "min": 0.0224,
+            "max": 34.1866
+          }
+        },
+        "big_g": {
+          "norm_ratio": {
+            "bos": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            },
+            "content": {
+              "mean": 1.0,
+              "min": 0.9998,
+              "max": 1.0002
+            },
+            "eos": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            },
+            "pad": {
+              "mean": 1.0,
+              "min": 0.9999,
+              "max": 1.0002
+            }
+          },
+          "cosine_to_plain": {
+            "bos": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            },
+            "content": {
+              "mean": 0.7777,
+              "min": 0.127,
+              "max": 0.9936
+            },
+            "eos": {
+              "mean": 0.9527,
+              "min": 0.9527,
+              "max": 0.9527
+            },
+            "pad": {
+              "mean": 0.3429,
+              "min": -0.2477,
+              "max": 0.9715
+            }
+          },
+          "collapse_personalized": 0.5342,
+          "collapse_plain": 0.5864,
+          "shift_over_guidance": 0.9807,
+          "plain_token_norm_mean": 22.421,
+          "shift_over_guidance_per_token": {
+            "mean": 3.0411,
+            "min": 0.0411,
+            "max": 127.0112
+          }
+        },
+        "concat": {
+          "norm_ratio": {
+            "bos": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            },
+            "content": {
+              "mean": 1.0,
+              "min": 0.9998,
+              "max": 1.0001
+            },
+            "eos": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            },
+            "pad": {
+              "mean": 1.0,
+              "min": 0.9999,
+              "max": 1.0002
+            }
+          },
+          "cosine_to_plain": {
+            "bos": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            },
+            "content": {
+              "mean": 0.8069,
+              "min": 0.2013,
+              "max": 0.9937
+            },
+            "eos": {
+              "mean": 0.9552,
+              "min": 0.9552,
+              "max": 0.9552
+            },
+            "pad": {
+              "mean": 0.3747,
+              "min": -0.2031,
+              "max": 0.9714
+            }
+          },
+          "collapse_personalized": 0.5972,
+          "collapse_plain": 0.6318,
+          "shift_over_guidance": 0.8513,
+          "plain_token_norm_mean": 28.7,
+          "shift_over_guidance_per_token": {
+            "mean": 3.0869,
+            "min": 0.0318,
+            "max": 131.5316
+          }
+        }
+      }
+    },
+    {
+      "policy_id": "mask-skip1-alpha0.5+plain_pad",
+      "reference_set": "warm-pair",
+      "views": {
+        "clip_l": {
+          "norm_ratio": {
+            "bos": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            },
+            "content": {
+              "mean": 0.9457,
+              "min": 0.5331,
+              "max": 1.0523
+            },
+            "eos": {
+              "mean": 1.0367,
+              "min": 1.0367,
+              "max": 1.0367
+            },
+            "pad": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            }
+          },
+          "cosine_to_plain": {
+            "bos": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            },
+            "content": {
+              "mean": 0.9771,
+              "min": 0.6543,
+              "max": 0.9993
+            },
+            "eos": {
+              "mean": 0.9956,
+              "min": 0.9956,
+              "max": 0.9956
+            },
+            "pad": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            }
+          },
+          "collapse_personalized": 0.7378,
+          "collapse_plain": 0.7393,
+          "shift_over_guidance": 0.1826,
+          "plain_token_norm_mean": 16.584,
+          "shift_over_guidance_per_token": {
+            "mean": 0.1925,
+            "min": 0.0138,
+            "max": 2.3872
+          }
+        },
+        "big_g": {
+          "norm_ratio": {
+            "bos": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            },
+            "content": {
+              "mean": 0.9397,
+              "min": 0.4411,
+              "max": 1.2665
+            },
+            "eos": {
+              "mean": 1.0124,
+              "min": 1.0124,
+              "max": 1.0124
+            },
+            "pad": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            }
+          },
+          "cosine_to_plain": {
+            "bos": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            },
+            "content": {
+              "mean": 0.8831,
+              "min": 0.532,
+              "max": 0.9975
+            },
+            "eos": {
+              "mean": 0.9881,
+              "min": 0.9881,
+              "max": 0.9881
+            },
+            "pad": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            }
+          },
+          "collapse_personalized": 0.5752,
+          "collapse_plain": 0.5864,
+          "shift_over_guidance": 0.423,
+          "plain_token_norm_mean": 22.421,
+          "shift_over_guidance_per_token": {
+            "mean": 2.9759,
+            "min": 0.0351,
+            "max": 131.2005
+          }
+        },
+        "concat": {
+          "norm_ratio": {
+            "bos": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            },
+            "content": {
+              "mean": 0.9344,
+              "min": 0.5102,
+              "max": 1.1953
+            },
+            "eos": {
+              "mean": 1.0144,
+              "min": 1.0144,
+              "max": 1.0144
+            },
+            "pad": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            }
+          },
+          "cosine_to_plain": {
+            "bos": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            },
+            "content": {
+              "mean": 0.8993,
+              "min": 0.5961,
+              "max": 0.9974
+            },
+            "eos": {
+              "mean": 0.9887,
+              "min": 0.9887,
+              "max": 0.9887
+            },
+            "pad": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            }
+          },
+          "collapse_personalized": 0.6245,
+          "collapse_plain": 0.6318,
+          "shift_over_guidance": 0.3711,
+          "plain_token_norm_mean": 28.7,
+          "shift_over_guidance_per_token": {
+            "mean": 2.9424,
+            "min": 0.0252,
+            "max": 131.2222
+          }
+        }
+      }
+    },
+    {
+      "policy_id": "mask-skip1-alpha0.5+plain_pad",
+      "reference_set": "flat-single",
+      "views": {
+        "clip_l": {
+          "norm_ratio": {
+            "bos": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            },
+            "content": {
+              "mean": 0.9393,
+              "min": 0.5316,
+              "max": 1.0821
+            },
+            "eos": {
+              "mean": 1.0438,
+              "min": 1.0438,
+              "max": 1.0438
+            },
+            "pad": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            }
+          },
+          "cosine_to_plain": {
+            "bos": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            },
+            "content": {
+              "mean": 0.9697,
+              "min": 0.5706,
+              "max": 0.9991
+            },
+            "eos": {
+              "mean": 0.9929,
+              "min": 0.9929,
+              "max": 0.9929
+            },
+            "pad": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            }
+          },
+          "collapse_personalized": 0.7349,
+          "collapse_plain": 0.7393,
+          "shift_over_guidance": 0.2004,
+          "plain_token_norm_mean": 16.584,
+          "shift_over_guidance_per_token": {
+            "mean": 1.0294,
+            "min": 0.0152,
+            "max": 43.2117
+          }
+        },
+        "big_g": {
+          "norm_ratio": {
+            "bos": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            },
+            "content": {
+              "mean": 0.9103,
+              "min": 0.3372,
+              "max": 1.259
+            },
+            "eos": {
+              "mean": 0.9996,
+              "min": 0.9996,
+              "max": 0.9996
+            },
+            "pad": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            }
+          },
+          "cosine_to_plain": {
+            "bos": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            },
+            "content": {
+              "mean": 0.8766,
+              "min": 0.5063,
+              "max": 0.9967
+            },
+            "eos": {
+              "mean": 0.9813,
+              "min": 0.9813,
+              "max": 0.9813
+            },
+            "pad": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            }
+          },
+          "collapse_personalized": 0.5649,
+          "collapse_plain": 0.5864,
+          "shift_over_guidance": 0.4308,
+          "plain_token_norm_mean": 22.421,
+          "shift_over_guidance_per_token": {
+            "mean": 1.0497,
+            "min": 0.0355,
+            "max": 34.4002
+          }
+        },
+        "concat": {
+          "norm_ratio": {
+            "bos": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            },
+            "content": {
+              "mean": 0.9128,
+              "min": 0.4497,
+              "max": 1.1955
+            },
+            "eos": {
+              "mean": 1.0032,
+              "min": 1.0032,
+              "max": 1.0032
+            },
+            "pad": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            }
+          },
+          "cosine_to_plain": {
+            "bos": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            },
+            "content": {
+              "mean": 0.891,
+              "min": 0.5763,
+              "max": 0.9967
+            },
+            "eos": {
+              "mean": 0.9822,
+              "min": 0.9822,
+              "max": 0.9822
+            },
+            "pad": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            }
+          },
+          "collapse_personalized": 0.6221,
+          "collapse_plain": 0.6318,
+          "shift_over_guidance": 0.38,
+          "plain_token_norm_mean": 28.7,
+          "shift_over_guidance_per_token": {
+            "mean": 1.4351,
+            "min": 0.0259,
+            "max": 55.2324
+          }
+        }
+      }
+    },
+    {
+      "policy_id": "mask-skip1-alpha0.5+plain_pad_token",
+      "reference_set": "warm-pair",
+      "views": {
+        "clip_l": {
+          "norm_ratio": {
+            "bos": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            },
+            "content": {
+              "mean": 1.0,
+              "min": 0.9997,
+              "max": 1.0002
+            },
+            "eos": {
+              "mean": 0.9999,
+              "min": 0.9999,
+              "max": 0.9999
+            },
+            "pad": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            }
+          },
+          "cosine_to_plain": {
+            "bos": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            },
+            "content": {
+              "mean": 0.9771,
+              "min": 0.6543,
+              "max": 0.9993
+            },
+            "eos": {
+              "mean": 0.9956,
+              "min": 0.9956,
+              "max": 0.9956
+            },
+            "pad": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            }
+          },
+          "collapse_personalized": 0.7397,
+          "collapse_plain": 0.7393,
+          "shift_over_guidance": 0.1844,
+          "plain_token_norm_mean": 16.584,
+          "shift_over_guidance_per_token": {
+            "mean": 0.1874,
+            "min": 0.0137,
+            "max": 2.3872
+          }
+        },
+        "big_g": {
+          "norm_ratio": {
+            "bos": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            },
+            "content": {
+              "mean": 1.0,
+              "min": 0.9998,
+              "max": 1.0001
+            },
+            "eos": {
+              "mean": 0.9999,
+              "min": 0.9999,
+              "max": 0.9999
+            },
+            "pad": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            }
+          },
+          "cosine_to_plain": {
+            "bos": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            },
+            "content": {
+              "mean": 0.8831,
+              "min": 0.5319,
+              "max": 0.9975
+            },
+            "eos": {
+              "mean": 0.9881,
+              "min": 0.9881,
+              "max": 0.9881
+            },
+            "pad": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            }
+          },
+          "collapse_personalized": 0.5771,
+          "collapse_plain": 0.5864,
+          "shift_over_guidance": 0.4319,
+          "plain_token_norm_mean": 22.421,
+          "shift_over_guidance_per_token": {
+            "mean": 2.976,
+            "min": 0.0298,
+            "max": 131.2005
+          }
+        },
+        "concat": {
+          "norm_ratio": {
+            "bos": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            },
+            "content": {
+              "mean": 1.0,
+              "min": 0.9999,
+              "max": 1.0001
+            },
+            "eos": {
+              "mean": 0.9999,
+              "min": 0.9999,
+              "max": 0.9999
+            },
+            "pad": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            }
+          },
+          "cosine_to_plain": {
+            "bos": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            },
+            "content": {
+              "mean": 0.902,
+              "min": 0.5813,
+              "max": 0.9974
+            },
+            "eos": {
+              "mean": 0.9887,
+              "min": 0.9887,
+              "max": 0.9887
+            },
+            "pad": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            }
+          },
+          "collapse_personalized": 0.626,
+          "collapse_plain": 0.6318,
+          "shift_over_guidance": 0.3786,
+          "plain_token_norm_mean": 28.7,
+          "shift_over_guidance_per_token": {
+            "mean": 2.9428,
+            "min": 0.0221,
+            "max": 131.2222
+          }
+        }
+      }
+    },
+    {
+      "policy_id": "mask-skip1-alpha0.5+plain_pad_token",
+      "reference_set": "flat-single",
+      "views": {
+        "clip_l": {
+          "norm_ratio": {
+            "bos": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            },
+            "content": {
+              "mean": 1.0,
+              "min": 0.9998,
+              "max": 1.0003
+            },
+            "eos": {
+              "mean": 1.0001,
+              "min": 1.0001,
+              "max": 1.0001
+            },
+            "pad": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            }
+          },
+          "cosine_to_plain": {
+            "bos": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            },
+            "content": {
+              "mean": 0.9697,
+              "min": 0.5706,
+              "max": 0.9991
+            },
+            "eos": {
+              "mean": 0.9929,
+              "min": 0.9929,
+              "max": 0.9929
+            },
+            "pad": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            }
+          },
+          "collapse_personalized": 0.7368,
+          "collapse_plain": 0.7393,
+          "shift_over_guidance": 0.2074,
+          "plain_token_norm_mean": 16.584,
+          "shift_over_guidance_per_token": {
+            "mean": 1.0253,
+            "min": 0.0151,
+            "max": 43.2117
+          }
+        },
+        "big_g": {
+          "norm_ratio": {
+            "bos": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            },
+            "content": {
+              "mean": 1.0,
+              "min": 0.9999,
+              "max": 1.0002
+            },
+            "eos": {
+              "mean": 1.0001,
+              "min": 1.0001,
+              "max": 1.0001
+            },
+            "pad": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            }
+          },
+          "cosine_to_plain": {
+            "bos": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            },
+            "content": {
+              "mean": 0.8766,
+              "min": 0.5063,
+              "max": 0.9967
+            },
+            "eos": {
+              "mean": 0.9813,
+              "min": 0.9813,
+              "max": 0.9813
+            },
+            "pad": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            }
+          },
+          "collapse_personalized": 0.5684,
+          "collapse_plain": 0.5864,
+          "shift_over_guidance": 0.4445,
+          "plain_token_norm_mean": 22.421,
+          "shift_over_guidance_per_token": {
+            "mean": 1.0532,
+            "min": 0.0304,
+            "max": 34.4002
+          }
+        },
+        "concat": {
+          "norm_ratio": {
+            "bos": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            },
+            "content": {
+              "mean": 1.0,
+              "min": 0.9999,
+              "max": 1.0001
+            },
+            "eos": {
+              "mean": 1.0001,
+              "min": 1.0001,
+              "max": 1.0001
+            },
+            "pad": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            }
+          },
+          "cosine_to_plain": {
+            "bos": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            },
+            "content": {
+              "mean": 0.8918,
+              "min": 0.5594,
+              "max": 0.9968
+            },
+            "eos": {
+              "mean": 0.9823,
+              "min": 0.9823,
+              "max": 0.9823
+            },
+            "pad": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            }
+          },
+          "collapse_personalized": 0.6206,
+          "collapse_plain": 0.6318,
+          "shift_over_guidance": 0.3922,
+          "plain_token_norm_mean": 28.7,
+          "shift_over_guidance_per_token": {
+            "mean": 1.4389,
+            "min": 0.0229,
+            "max": 55.2324
+          }
+        }
+      }
+    },
+    {
+      "policy_id": "mask-skip1-alpha0.7+plain_pad",
+      "reference_set": "warm-pair",
+      "views": {
+        "clip_l": {
+          "norm_ratio": {
+            "bos": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            },
+            "content": {
+              "mean": 0.9301,
+              "min": 0.483,
+              "max": 1.0765
+            },
+            "eos": {
+              "mean": 1.0431,
+              "min": 1.0431,
+              "max": 1.0431
+            },
+            "pad": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            }
+          },
+          "cosine_to_plain": {
+            "bos": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            },
+            "content": {
+              "mean": 0.9558,
+              "min": 0.4625,
+              "max": 0.9985
+            },
+            "eos": {
+              "mean": 0.9896,
+              "min": 0.9896,
+              "max": 0.9896
+            },
+            "pad": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            }
+          },
+          "collapse_personalized": 0.7383,
+          "collapse_plain": 0.7393,
+          "shift_over_guidance": 0.2412,
+          "plain_token_norm_mean": 16.584,
+          "shift_over_guidance_per_token": {
+            "mean": 0.2459,
+            "min": 0.0203,
+            "max": 2.1366
+          }
+        },
+        "big_g": {
+          "norm_ratio": {
+            "bos": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            },
+            "content": {
+              "mean": 0.8914,
+              "min": 0.2572,
+              "max": 3.3328
+            },
+            "eos": {
+              "mean": 1.0105,
+              "min": 1.0105,
+              "max": 1.0105
+            },
+            "pad": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            }
+          },
+          "cosine_to_plain": {
+            "bos": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            },
+            "content": {
+              "mean": 0.8109,
+              "min": 0.1666,
+              "max": 0.9951
+            },
+            "eos": {
+              "mean": 0.9754,
+              "min": 0.9754,
+              "max": 0.9754
+            },
+            "pad": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            }
+          },
+          "collapse_personalized": 0.5732,
+          "collapse_plain": 0.5864,
+          "shift_over_guidance": 0.4627,
+          "plain_token_norm_mean": 22.421,
+          "shift_over_guidance_per_token": {
+            "mean": 3.0283,
+            "min": 0.0496,
+            "max": 129.7629
+          }
+        },
+        "concat": {
+          "norm_ratio": {
+            "bos": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            },
+            "content": {
+              "mean": 0.8778,
+              "min": 0.3998,
+              "max": 1.5715
+            },
+            "eos": {
+              "mean": 1.0132,
+              "min": 1.0132,
+              "max": 1.0132
+            },
+            "pad": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            }
+          },
+          "cosine_to_plain": {
+            "bos": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            },
+            "content": {
+              "mean": 0.8399,
+              "min": 0.2833,
+              "max": 0.9949
+            },
+            "eos": {
+              "mean": 0.9765,
+              "min": 0.9765,
+              "max": 0.9765
+            },
+            "pad": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            }
+          },
+          "collapse_personalized": 0.6338,
+          "collapse_plain": 0.6318,
+          "shift_over_guidance": 0.4123,
+          "plain_token_norm_mean": 28.7,
+          "shift_over_guidance_per_token": {
+            "mean": 2.9838,
+            "min": 0.0359,
+            "max": 129.7805
+          }
+        }
+      }
+    },
+    {
+      "policy_id": "mask-skip1-alpha0.7+plain_pad",
+      "reference_set": "flat-single",
+      "views": {
+        "clip_l": {
+          "norm_ratio": {
+            "bos": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            },
+            "content": {
+              "mean": 0.9259,
+              "min": 0.4759,
+              "max": 1.1202
+            },
+            "eos": {
+              "mean": 1.0593,
+              "min": 1.0593,
+              "max": 1.0593
+            },
+            "pad": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            }
+          },
+          "cosine_to_plain": {
+            "bos": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            },
+            "content": {
+              "mean": 0.9413,
+              "min": 0.4413,
+              "max": 0.9982
+            },
+            "eos": {
+              "mean": 0.9831,
+              "min": 0.9831,
+              "max": 0.9831
+            },
+            "pad": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            }
+          },
+          "collapse_personalized": 0.731,
+          "collapse_plain": 0.7393,
+          "shift_over_guidance": 0.2631,
+          "plain_token_norm_mean": 16.584,
+          "shift_over_guidance_per_token": {
+            "mean": 0.9205,
+            "min": 0.0226,
+            "max": 34.1866
+          }
+        },
+        "big_g": {
+          "norm_ratio": {
+            "bos": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            },
+            "content": {
+              "mean": 0.7882,
+              "min": 0.095,
+              "max": 1.2717
+            },
+            "eos": {
+              "mean": 0.9677,
+              "min": 0.9677,
+              "max": 0.9677
+            },
+            "pad": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            }
+          },
+          "cosine_to_plain": {
+            "bos": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            },
+            "content": {
+              "mean": 0.7777,
+              "min": 0.127,
+              "max": 0.9936
+            },
+            "eos": {
+              "mean": 0.9527,
+              "min": 0.9527,
+              "max": 0.9527
+            },
+            "pad": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            }
+          },
+          "collapse_personalized": 0.5112,
+          "collapse_plain": 0.5864,
+          "shift_over_guidance": 0.4953,
+          "plain_token_norm_mean": 22.421,
+          "shift_over_guidance_per_token": {
+            "mean": 2.9937,
+            "min": 0.0516,
+            "max": 127.0112
+          }
+        },
+        "concat": {
+          "norm_ratio": {
+            "bos": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            },
+            "content": {
+              "mean": 0.8216,
+              "min": 0.2491,
+              "max": 1.1728
+            },
+            "eos": {
+              "mean": 0.9754,
+              "min": 0.9754,
+              "max": 0.9754
+            },
+            "pad": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            }
+          },
+          "cosine_to_plain": {
+            "bos": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            },
+            "content": {
+              "mean": 0.8146,
+              "min": 0.3144,
+              "max": 0.9936
+            },
+            "eos": {
+              "mean": 0.9551,
+              "min": 0.9551,
+              "max": 0.9551
+            },
+            "pad": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            }
+          },
+          "collapse_personalized": 0.6226,
+          "collapse_plain": 0.6318,
+          "shift_over_guidance": 0.4421,
+          "plain_token_norm_mean": 28.7,
+          "shift_over_guidance_per_token": {
+            "mean": 3.0437,
+            "min": 0.0378,
+            "max": 131.5316
+          }
+        }
+      }
+    },
+    {
+      "policy_id": "mask-skip1-alpha0.7+plain_pad_token",
+      "reference_set": "warm-pair",
+      "views": {
+        "clip_l": {
+          "norm_ratio": {
+            "bos": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            },
+            "content": {
+              "mean": 1.0,
+              "min": 0.9998,
+              "max": 1.0003
+            },
+            "eos": {
+              "mean": 1.0001,
+              "min": 1.0001,
+              "max": 1.0001
+            },
+            "pad": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            }
+          },
+          "cosine_to_plain": {
+            "bos": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            },
+            "content": {
+              "mean": 0.9558,
+              "min": 0.4626,
+              "max": 0.9985
+            },
+            "eos": {
+              "mean": 0.9896,
+              "min": 0.9896,
+              "max": 0.9896
+            },
+            "pad": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            }
+          },
+          "collapse_personalized": 0.7407,
+          "collapse_plain": 0.7393,
+          "shift_over_guidance": 0.253,
+          "plain_token_norm_mean": 16.584,
+          "shift_over_guidance_per_token": {
+            "mean": 0.2421,
+            "min": 0.02,
+            "max": 2.1366
+          }
+        },
+        "big_g": {
+          "norm_ratio": {
+            "bos": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            },
+            "content": {
+              "mean": 1.0,
+              "min": 0.9999,
+              "max": 1.0001
+            },
+            "eos": {
+              "mean": 1.0001,
+              "min": 1.0001,
+              "max": 1.0001
+            },
+            "pad": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            }
+          },
+          "cosine_to_plain": {
+            "bos": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            },
+            "content": {
+              "mean": 0.8109,
+              "min": 0.1666,
+              "max": 0.9951
+            },
+            "eos": {
+              "mean": 0.9754,
+              "min": 0.9754,
+              "max": 0.9754
+            },
+            "pad": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            }
+          },
+          "collapse_personalized": 0.5801,
+          "collapse_plain": 0.5864,
+          "shift_over_guidance": 0.5121,
+          "plain_token_norm_mean": 22.421,
+          "shift_over_guidance_per_token": {
+            "mean": 3.0474,
+            "min": 0.0395,
+            "max": 129.7629
+          }
+        },
+        "concat": {
+          "norm_ratio": {
+            "bos": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            },
+            "content": {
+              "mean": 1.0,
+              "min": 0.9999,
+              "max": 1.0001
+            },
+            "eos": {
+              "mean": 1.0001,
+              "min": 1.0001,
+              "max": 1.0001
+            },
+            "pad": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            }
+          },
+          "cosine_to_plain": {
+            "bos": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            },
+            "content": {
+              "mean": 0.8475,
+              "min": 0.499,
+              "max": 0.995
+            },
+            "eos": {
+              "mean": 0.9765,
+              "min": 0.9765,
+              "max": 0.9765
+            },
+            "pad": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            }
+          },
+          "collapse_personalized": 0.6245,
+          "collapse_plain": 0.6318,
+          "shift_over_guidance": 0.454,
+          "plain_token_norm_mean": 28.7,
+          "shift_over_guidance_per_token": {
+            "mean": 3.0044,
+            "min": 0.03,
+            "max": 129.7805
+          }
+        }
+      }
+    },
+    {
+      "policy_id": "mask-skip1-alpha0.7+plain_pad_token",
+      "reference_set": "flat-single",
+      "views": {
+        "clip_l": {
+          "norm_ratio": {
+            "bos": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            },
+            "content": {
+              "mean": 1.0,
+              "min": 0.9998,
+              "max": 1.0002
+            },
+            "eos": {
+              "mean": 1.0001,
+              "min": 1.0001,
+              "max": 1.0001
+            },
+            "pad": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            }
+          },
+          "cosine_to_plain": {
+            "bos": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            },
+            "content": {
+              "mean": 0.9413,
+              "min": 0.4413,
+              "max": 0.9982
+            },
+            "eos": {
+              "mean": 0.9831,
+              "min": 0.9831,
+              "max": 0.9831
+            },
+            "pad": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            }
+          },
+          "collapse_personalized": 0.7334,
+          "collapse_plain": 0.7393,
+          "shift_over_guidance": 0.2779,
+          "plain_token_norm_mean": 16.584,
+          "shift_over_guidance_per_token": {
+            "mean": 0.9185,
+            "min": 0.0224,
+            "max": 34.1866
+          }
+        },
+        "big_g": {
+          "norm_ratio": {
+            "bos": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            },
+            "content": {
+              "mean": 1.0,
+              "min": 0.9998,
+              "max": 1.0002
+            },
+            "eos": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            },
+            "pad": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            }
+          },
+          "cosine_to_plain": {
+            "bos": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            },
+            "content": {
+              "mean": 0.7777,
+              "min": 0.127,
+              "max": 0.9936
+            },
+            "eos": {
+              "mean": 0.9527,
+              "min": 0.9527,
+              "max": 0.9527
+            },
+            "pad": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            }
+          },
+          "collapse_personalized": 0.5342,
+          "collapse_plain": 0.5864,
+          "shift_over_guidance": 0.5945,
+          "plain_token_norm_mean": 22.421,
+          "shift_over_guidance_per_token": {
+            "mean": 3.0411,
+            "min": 0.0411,
+            "max": 127.0112
+          }
+        },
+        "concat": {
+          "norm_ratio": {
+            "bos": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            },
+            "content": {
+              "mean": 1.0,
+              "min": 0.9998,
+              "max": 1.0001
+            },
+            "eos": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            },
+            "pad": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            }
+          },
+          "cosine_to_plain": {
+            "bos": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            },
+            "content": {
+              "mean": 0.8069,
+              "min": 0.2013,
+              "max": 0.9937
+            },
+            "eos": {
+              "mean": 0.9552,
+              "min": 0.9552,
+              "max": 0.9552
+            },
+            "pad": {
+              "mean": 1.0,
+              "min": 1.0,
+              "max": 1.0
+            }
+          },
+          "collapse_personalized": 0.5972,
+          "collapse_plain": 0.6318,
+          "shift_over_guidance": 0.5246,
+          "plain_token_norm_mean": 28.7,
+          "shift_over_guidance_per_token": {
+            "mean": 3.0869,
+            "min": 0.0318,
+            "max": 131.5316
+          }
+        }
+      }
+    }
+  ],
+  "alpha_zero": [
+    {
+      "hidden_norm": "none",
+      "max_abs_diff": 0.00048828,
+      "pad_max_abs_diff": 0.00048828,
+      "real_max_abs_diff": 0.00048828
+    },
+    {
+      "hidden_norm": "plain_token",
+      "max_abs_diff": 0.00048828,
+      "pad_max_abs_diff": 0.00048828,
+      "real_max_abs_diff": 0.00048828
+    },
+    {
+      "hidden_norm": "plain_pad",
+      "max_abs_diff": 0.00048828,
+      "pad_max_abs_diff": 0.0,
+      "real_max_abs_diff": 0.00048828
+    },
+    {
+      "hidden_norm": "plain_pad_token",
+      "max_abs_diff": 0.00048828,
+      "pad_max_abs_diff": 0.0,
+      "real_max_abs_diff": 0.00048828
+    }
+  ]
+}

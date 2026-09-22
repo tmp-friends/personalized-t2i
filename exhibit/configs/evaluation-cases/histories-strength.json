@@ -145,6 +145,111 @@
      "weight": 1.0
     }
    ]
+  },
+  {
+   "id": "t2-current",
+   "refs": [
+    {
+     "ref_id": "t2-current-texture",
+     "text": "flat color, lineless, no lineart",
+     "weight": 3.0
+    }
+   ]
+  },
+  {
+   "id": "t2-cel-contrast",
+   "refs": [
+    {
+     "ref_id": "t2-cel-contrast-texture",
+     "text": "anime screencap, cel shading",
+     "weight": 3.0
+    }
+   ]
+  },
+  {
+   "id": "t2-flat-smooth",
+   "refs": [
+    {
+     "ref_id": "t2-flat-smooth-texture",
+     "text": "flat color, flat shading, smooth edges",
+     "weight": 3.0
+    }
+   ]
+  },
+  {
+   "id": "t2-flat-minimal",
+   "refs": [
+    {
+     "ref_id": "t2-flat-minimal-texture",
+     "text": "flat color illustration, minimal shading",
+     "weight": 3.0
+    }
+   ]
+  },
+  {
+   "id": "t2-flat-vector",
+   "refs": [
+    {
+     "ref_id": "t2-flat-vector-texture",
+     "text": "flat color, vector art, smooth shapes",
+     "weight": 3.0
+    }
+   ]
+  },
+  {
+   "id": "t2-flat-borderless",
+   "refs": [
+    {
+     "ref_id": "t2-flat-borderless-texture",
+     "text": "flat colors, borderless, soft edges",
+     "weight": 3.0
+    }
+   ]
+  },
+  {
+   "id": "t2-flat-matte",
+   "refs": [
+    {
+     "ref_id": "t2-flat-matte-texture",
+     "text": "flat color, matte, simple shapes",
+     "weight": 3.0
+    }
+   ]
+  },
+  {
+   "id": "t2-flat-fill",
+   "refs": [
+    {
+     "ref_id": "t2-flat-fill-texture",
+     "text": "flat color, solid color fill, smooth edges",
+     "weight": 3.0
+    }
+   ]
+  },
+  {
+   "id": "t2-flat-graphic",
+   "refs": [
+    {
+     "ref_id": "t2-flat-graphic-texture",
+     "text": "flat graphic illustration, solid color fill",
+     "weight": 3.0
+    }
+   ]
+  },
+  {
+   "id": "warm-sun",
+   "refs": [
+    {
+     "ref_id": "warm-sun-color",
+     "text": "warm color palette, amber tones",
+     "weight": 3.0
+    },
+    {
+     "ref_id": "warm-sun-light",
+     "text": "harsh sunlight, hard cast shadow, high contrast",
+     "weight": 3.0
+    }
+   ]
   }
  ]
 }
