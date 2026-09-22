@@ -1,0 +1,194 @@
+{
+ "schema_version": 1,
+ "tokenizer": {
+  "model": "OnomaAIResearch/Illustrious-xl-early-release-v0",
+  "revision": "dca0dac303e6dc4b0c31d8001bc685b89b5d0204"
+ },
+ "candidates": [
+  {
+   "history_id": "t2-current",
+   "text": "flat color, lineless, no lineart",
+   "note": "現行。CLIP で line が 2 回出る。否定は効かない",
+   "clip_l_tokens": 9,
+   "clip_g_tokens": 9,
+   "clip_l_pieces": [
+    "flat",
+    "color",
+    ",",
+    "line",
+    "less",
+    ",",
+    "no",
+    "line",
+    "art"
+   ],
+   "contains_line_token": true,
+   "worst_card_prompt_tokens": 77,
+   "worst_card": "student-c1-l0-t2-m3",
+   "limit": 77
+  },
+  {
+   "history_id": "t2-cel-contrast",
+   "text": "anime screencap, cel shading",
+   "note": "対極（texture 1）。対照用で候補ではない",
+   "clip_l_tokens": 6,
+   "clip_g_tokens": 6,
+   "clip_l_pieces": [
+    "anime",
+    "screen",
+    "cap",
+    ",",
+    "cel",
+    "shading"
+   ],
+   "contains_line_token": false,
+   "worst_card_prompt_tokens": 74,
+   "worst_card": "student-c1-l0-t2-m3",
+   "limit": 77
+  },
+  {
+   "history_id": "t2-flat-smooth",
+   "text": "flat color, flat shading, smooth edges",
+   "note": "",
+   "clip_l_tokens": 8,
+   "clip_g_tokens": 8,
+   "clip_l_pieces": [
+    "flat",
+    "color",
+    ",",
+    "flat",
+    "shading",
+    ",",
+    "smooth",
+    "edges"
+   ],
+   "contains_line_token": false,
+   "worst_card_prompt_tokens": 76,
+   "worst_card": "student-c1-l0-t2-m3",
+   "limit": 77
+  },
+  {
+   "history_id": "t2-flat-minimal",
+   "text": "flat color illustration, minimal shading",
+   "note": "",
+   "clip_l_tokens": 6,
+   "clip_g_tokens": 6,
+   "clip_l_pieces": [
+    "flat",
+    "color",
+    "illustration",
+    ",",
+    "minimal",
+    "shading"
+   ],
+   "contains_line_token": false,
+   "worst_card_prompt_tokens": 74,
+   "worst_card": "student-c1-l0-t2-m3",
+   "limit": 77
+  },
+  {
+   "history_id": "t2-flat-vector",
+   "text": "flat color, vector art, smooth shapes",
+   "note": "",
+   "clip_l_tokens": 8,
+   "clip_g_tokens": 8,
+   "clip_l_pieces": [
+    "flat",
+    "color",
+    ",",
+    "vector",
+    "art",
+    ",",
+    "smooth",
+    "shapes"
+   ],
+   "contains_line_token": false,
+   "worst_card_prompt_tokens": 76,
+   "worst_card": "student-c1-l0-t2-m3",
+   "limit": 77
+  },
+  {
+   "history_id": "t2-flat-borderless",
+   "text": "flat colors, borderless, soft edges",
+   "note": "borderless は border + less に割れる（弱い否定）",
+   "clip_l_tokens": 8,
+   "clip_g_tokens": 8,
+   "clip_l_pieces": [
+    "flat",
+    "colors",
+    ",",
+    "border",
+    "less",
+    ",",
+    "soft",
+    "edges"
+   ],
+   "contains_line_token": false,
+   "worst_card_prompt_tokens": 76,
+   "worst_card": "student-c1-l0-t2-m3",
+   "limit": 77
+  },
+  {
+   "history_id": "t2-flat-matte",
+   "text": "flat color, matte, simple shapes",
+   "note": "",
+   "clip_l_tokens": 7,
+   "clip_g_tokens": 7,
+   "clip_l_pieces": [
+    "flat",
+    "color",
+    ",",
+    "matte",
+    ",",
+    "simple",
+    "shapes"
+   ],
+   "contains_line_token": false,
+   "worst_card_prompt_tokens": 75,
+   "worst_card": "student-c1-l0-t2-m3",
+   "limit": 77
+  },
+  {
+   "history_id": "t2-flat-fill",
+   "text": "flat color, solid color fill, smooth edges",
+   "note": "自前の追加候補",
+   "clip_l_tokens": 9,
+   "clip_g_tokens": 9,
+   "clip_l_pieces": [
+    "flat",
+    "color",
+    ",",
+    "solid",
+    "color",
+    "fill",
+    ",",
+    "smooth",
+    "edges"
+   ],
+   "contains_line_token": false,
+   "worst_card_prompt_tokens": 77,
+   "worst_card": "student-c1-l0-t2-m3",
+   "limit": 77
+  },
+  {
+   "history_id": "t2-flat-graphic",
+   "text": "flat graphic illustration, solid color fill",
+   "note": "自前の追加候補",
+   "clip_l_tokens": 7,
+   "clip_g_tokens": 7,
+   "clip_l_pieces": [
+    "flat",
+    "graphic",
+    "illustration",
+    ",",
+    "solid",
+    "color",
+    "fill"
+   ],
+   "contains_line_token": false,
+   "worst_card_prompt_tokens": 75,
+   "worst_card": "student-c1-l0-t2-m3",
+   "limit": 77
+  }
+ ]
+}
