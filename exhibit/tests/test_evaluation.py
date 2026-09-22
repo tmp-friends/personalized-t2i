@@ -1405,7 +1405,7 @@ def test_heldout_runs_on_a_partly_reviewed_catalog_and_records_that_set():
     } | _referenced(heldout)
     identity = validate_heldout_catalog(heldout, catalog_loader=_loader_for(reviewed))
 
-    assert identity["reviewed_card_count"] == len(reviewed) == 35
+    assert identity["reviewed_card_count"] == len(reviewed) == 36
     assert identity["reviewed_card_ids_hash"] == digest(sorted(reviewed))
 
 
@@ -1429,7 +1429,7 @@ def test_heldout_names_the_gate_condition_that_failed():
     } | referenced
     raised = copy.deepcopy(heldout)
     raised["catalog_gate"]["min_reviewed_cards"] = 40
-    with pytest.raises(ValueError, match="too few reviewed cards: 35 of 64"):
+    with pytest.raises(ValueError, match="too few reviewed cards: 36 of 64"):
         validate_heldout_catalog(raised, catalog_loader=_loader_for(reviewed))
 
 
